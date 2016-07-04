@@ -93,6 +93,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements GradableJ
 	}
 	// does not retiurn a result
 	@Override
+	@Visible(false)
 	public void testAll() {
 		test();
 	}

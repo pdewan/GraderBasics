@@ -123,6 +123,7 @@ public class BasicProjectIntrospection {
 
 		aClasses = removeSuperTypes(aClasses);
 		 if (aClasses.size() != 1) {
+			 System.out.println ("Found multiple matching classes:" + aClasses);
 		 return null;
 		 }
 		 return aClasses.iterator().next();
@@ -192,6 +193,7 @@ public class BasicProjectIntrospection {
 		// recursively get all interfaces
 		for (Class aType: aTypes) {
 			Vector<Class> aSuperTypes = JavaIntrospectUtility.getTypes(aType);
+			aSuperTypes.remove(aType);
 			if (aSuperTypes.contains(aClass))
 				return true;
 		}
@@ -1120,6 +1122,8 @@ public class BasicProjectIntrospection {
 				.findClassAndInterfaces(aName, null, null, null);
 		Set<Class> aResult = new HashSet();
 		for (ClassDescription aDescription:aClassDescriptions) {
+			if (aDescription.getJavaClass().isInterface())
+				continue;
 			aResult.add(aDescription.getJavaClass());
 		}
 		return aResult;
@@ -1666,7 +1670,7 @@ public class BasicProjectIntrospection {
 			Class[] aConctructArgsTypes, Object[] anArgs) {
 		try {
 			Class anActualClass = BasicProjectIntrospection.findClass(
-					CurrentProjectHolder.getCurrentProject(), aProxyClass);
+					CurrentProjectHolder.getOrCreateCurrentProject(), aProxyClass);
 			if (anActualClass == null) {
 				return null;
 			}
