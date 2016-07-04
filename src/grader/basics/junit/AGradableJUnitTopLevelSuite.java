@@ -1,5 +1,7 @@
 package grader.basics.junit;
 
+import org.junit.runner.Description;
+
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
@@ -12,6 +14,13 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	@Visible(false)
 	public String getName() {
 		return super.getName();
+	}
+	public void testAll() {
+		Description aDescription = Description.createSuiteDescription(getJUnitClass());
+		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+		super.testAll();
+		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+
 	}
 	
 	@Override

@@ -36,6 +36,7 @@ public class AFileWriter extends RunListener {
 	public void testFinished(Description description) {
 		try {
 			super.testFinished(description);
+			
 //			System.out.println ("Test finished:"+ description);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -7,6 +7,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.runner.Description;
+
 import util.annotations.Position;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
@@ -59,7 +61,10 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements GradableJ
 	@Visible(false)
 	public void open(GradableJUnitTest aTest) {
 //		System.out.println ("opened: " + aTest);
+		Description aDescription = Description.createSuiteDescription(aTest.getJUnitClass());
+		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
 		aTest.test();
+		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 	}
 	@Visible(false)
 	public String getStatus() {
