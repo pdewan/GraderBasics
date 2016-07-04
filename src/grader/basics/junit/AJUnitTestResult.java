@@ -38,6 +38,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 
 	}
 
+	
 
 	@Override
 	public void testFailure(Failure aFailure) {
@@ -51,24 +52,26 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 						aThrowable.toString(), name, true);
 				return;
 			}
-			String[] aNotesAndScore = aMessage.split(":");
-			String aNotes = aNotesAndScore[0];
-			if (aNotesAndScore.length == 1) { // assume zero percentage
-				checkResult = new TestCaseResult(false, 
-						aNotes, name, true);
-			} else {
-				String aPercentageString = aNotesAndScore[aNotesAndScore.length - 1].trim();
-				try {
-				double aPercentage = Double.parseDouble(aPercentageString);
-				checkResult =new TestCaseResult(aPercentage, aNotes, name, true);
-
-				} catch (Exception e) {
-					checkResult = new TestCaseResult(false, 
-							aMessage, name, true);
-					
-				}
-				
-			}
+			NotesAndScore aNotesAndScore = NotesAndScore.create(aMessage);
+			checkResult = new TestCaseResult(aNotesAndScore.percentage, aNotesAndScore.notes, name, true); 
+//			String[] aNotesAndScore = aMessage.split(":");
+//			String aNotes = aNotesAndScore[0];
+//			if (aNotesAndScore.length == 1) { // assume zero percentage
+//				checkResult = new TestCaseResult(false, 
+//						aNotes, name, true);
+//			} else {
+//				String aPercentageString = aNotesAndScore[aNotesAndScore.length - 1].trim();
+//				try {
+//				double aPercentage = Double.parseDouble(aPercentageString);
+//				checkResult =new TestCaseResult(aPercentage, aNotes, name, true);
+//
+//				} catch (Exception e) {
+//					checkResult = new TestCaseResult(false, 
+//							aMessage, name, true);
+//					
+//				}
+//				
+//			}
 			RunNotifierFactory.getRunNotifier().fireTestFailure(aFailure);
 //			System.out.println ("Failure:" + failure);
 		} catch (Exception e) {
