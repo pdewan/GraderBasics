@@ -3,6 +3,11 @@ package grader.basics.junit;
 import grader.basics.project.BasicProjectIntrospection;
 //import grader.junit.GraderTestCase;
 
+
+
+import grader.basics.project.CurrentProjectHolder;
+import grader.basics.project.Project;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,7 +18,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.junit.runners.Suite;
+
+import bus.uigen.ObjectEditor;
 
 
 public class BasicJUnitUtils {
@@ -62,6 +72,27 @@ public class BasicJUnitUtils {
 	public  static GradableJUnitTest createGradable (String aKeyWord) {
 		Class aClass = BasicProjectIntrospection.findClassByKeyword(aKeyWord);
 		return toGradable(aClass);
+	}
+	
+	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
+		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
+		aGradable.testAll();
+		ObjectEditor.treeEdit(aGradable);
+	}
+	public static void interactiveTestAll(String aSourceFilePattern, Class<?> aJUnitSuiteClass) {
+		CurrentProjectHolder.setProject(aSourceFilePattern);
+		interactiveTestAll(aJUnitSuiteClass);
+	}
+	public static void jUnitCoreTestAll(Class<?> aJUnitSuiteClass) {
+		Result aResult = JUnitCore.runClasses(aJUnitSuiteClass);
+		for (Failure failure : aResult.getFailures()) {
+	         System.out.println("To string" + failure.toString());
+	         System.out.println("Header" + failure.getTestHeader());
+	         System.out.println ("Trace:" + failure.getTrace());
+	         System.out.println ("Description:" + failure.getDescription());
+	      }
+	    System.out.println(aResult.wasSuccessful());
+
 	}
 	public static GradableJUnitSuite toGradableTree (Class<?> aJUnitSuiteClass) {
 		if (aJUnitSuiteClass == null) {

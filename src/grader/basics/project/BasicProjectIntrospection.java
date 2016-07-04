@@ -123,7 +123,7 @@ public class BasicProjectIntrospection {
 
 		aClasses = removeSuperTypes(aClasses);
 		 if (aClasses.size() != 1) {
-			 System.out.println ("Found multiple matching classes:" + aClasses);
+//			 System.out.println ("Found multiple matching classes:" + aClasses);
 		 return null;
 		 }
 		 return aClasses.iterator().next();

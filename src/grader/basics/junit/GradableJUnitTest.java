@@ -47,5 +47,10 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer  {
 	double getComputedMaxScore();
 	int numLeafNodeDescendents();
 	int numInternalNodeDescendents();
+//	void setWriteToConsole(boolean newVal);
+//	boolean isWriteToConsole();
+//	boolean isWriteToFile();
+//	void setWriteToFile(boolean writeToFile);
+//	boolean isWriteToServer();
 
 }

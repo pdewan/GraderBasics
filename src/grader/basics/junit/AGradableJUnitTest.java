@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -36,6 +37,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	Class jUnitClass;
 	Color color = UNTESTED_COLOR;
 	boolean isExtra;
+//	boolean writeToConsole;
+//	boolean writeToFile;	
+//	boolean writeToServer;
 	boolean isRestriction;
 	Double maxScore;
 	Double computedMaxScore;
@@ -43,11 +47,14 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	String explanation;
 	String group = "";
 	RunNotifier runNotifier = new RunNotifier();
-	AJUnitRunToTestCaseResult runListener = new AJUnitRunToTestCaseResult();
+//	RunNotifier runNotifier = RunNotifierFactory.getRunNotifier();
+
+	AJUnitTestResult runListener = new AJUnitTestResult();
 	int numTests = 0;
 	double fractionComplete = 0;
 	String status = "Not Tested";
 	String message = "";
+	Failure failure;
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	TestCaseResult testCaseResult;
 	
@@ -227,6 +234,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
 			aRunner.run(runNotifier);
 			testCaseResult = runListener.getTestCaseResult();
+			failure = runListener.getFailure();
 			fractionComplete = testCaseResult.getPercentage();
 			showResult(testCaseResult);
 //			status = aTestCaseResult.getPercentage()*100 + " % complete";
@@ -407,6 +415,28 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+//	public void setWriteToServer(boolean writeToServer) {
+//		this.writeToServer = writeToServer;
+//	}
+//	@Override
+//	public void setWriteToConsole(boolean newVal) {
+//		writeToConsole = newVal;
+//	}
+//	@Override
+//	public boolean isWriteToConsole() {
+//		return writeToConsole;
+//	}
+//	@Override
+//	public boolean isWriteToFile() {
+//		return writeToFile;
+//	}
+//	@Override
+//	public void setWriteToFile(boolean writeToFile) {
+//		this.writeToFile = writeToFile;
+//	}
+//	@Override
+//	public boolean isWriteToServer() {
+//		return writeToServer;
+//	}
 	
 }

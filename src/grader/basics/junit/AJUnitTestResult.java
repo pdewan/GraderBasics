@@ -4,8 +4,9 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-public class AJUnitRunToTestCaseResult extends RunListener {
+public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 	TestCaseResult checkResult;
+	Failure failure;
 	String name = "";
 	
 	public void setJUnitName(String aName) {
@@ -15,16 +16,34 @@ public class AJUnitRunToTestCaseResult extends RunListener {
 	public String getJUnitName() {
 		return name;
 	}
+	@Override
+	public void testRunStarted(Description description) throws Exception {
+			super.testRunStarted(description);
+			RunNotifierFactory.getRunNotifier().fireTestRunStarted(description);
+			
+    }
+	@Override
 	public void testStarted(Description description) throws Exception {
 			checkResult = new TestCaseResult(true, 
 					"", name, true);
+			failure = null;
+			RunNotifierFactory.getRunNotifier().fireTestStarted(description);
+			
     }
+	@Override
+	public void testAssumptionFailure(Failure aFailure) {
+		super.testAssumptionFailure(aFailure);
+		RunNotifierFactory.getRunNotifier().fireTestAssumptionFailed(aFailure);
+
+	}
+
 
 	@Override
-	public void testFailure(Failure failure) {
+	public void testFailure(Failure aFailure) {
 	       try {
-			super.testFailure(failure);
-			Throwable aThrowable = failure.getException();
+			super.testFailure(aFailure);
+			failure = aFailure;
+			Throwable aThrowable = aFailure.getException();
 			String aMessage = aThrowable.getMessage();
 			if (aMessage == null) { // some exception
 				checkResult = new TestCaseResult(false, 
@@ -49,12 +68,14 @@ public class AJUnitRunToTestCaseResult extends RunListener {
 				}
 				
 			}
+			RunNotifierFactory.getRunNotifier().fireTestFailure(aFailure);
 //			System.out.println ("Failure:" + failure);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	@Override
 	public void testFinished(Description description) {
 		try {
 			super.testFinished(description);
@@ -64,9 +85,23 @@ public class AJUnitRunToTestCaseResult extends RunListener {
 			e.printStackTrace();
 		};
 		
+		RunNotifierFactory.getRunNotifier().fireTestFinished(description);
+
 	}
+	public void testIgnored(Description description) throws Exception {
+		super.testIgnored(description);
+		RunNotifierFactory.getRunNotifier().fireTestIgnored(description);
+
+	}
+
 	public TestCaseResult getTestCaseResult() {
 		return checkResult;
+	}
+
+	@Override
+	public Failure getFailure() {
+		// TODO Auto-generated method stub
+		return failure;
 	}
 
 }
