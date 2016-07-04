@@ -1,5 +1,6 @@
 package grader.basics.junit;
 
+import grader.basics.observers.FileWriterFactory;
 import grader.basics.project.BasicProjectIntrospection;
 //import grader.junit.GraderTestCase;
 
@@ -76,6 +77,7 @@ public class BasicJUnitUtils {
 	
 	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
+		RunNotifierFactory.getRunNotifier().addListener(FileWriterFactory.getFileWriter());
 		aGradable.testAll();
 		ObjectEditor.treeEdit(aGradable);
 	}
@@ -428,5 +430,8 @@ public class BasicJUnitUtils {
 			return null;
 		Class[] aTestClasses = aSuiteClassAnnotation.value();
 		return Arrays.asList(aTestClasses);
+	}
+	static {
+//		RunNotifierFactory.getRunNotifier().addListener(FileWriterFactory.getFileWriter());
 	}
 }

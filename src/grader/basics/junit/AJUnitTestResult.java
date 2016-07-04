@@ -24,6 +24,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
     }
 	@Override
 	public void testStarted(Description description) throws Exception {
+		super.testStarted(description);
 			checkResult = new TestCaseResult(true, 
 					"", name, true);
 			failure = null;
@@ -76,14 +77,10 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 		}
 	}
 	@Override
-	public void testFinished(Description description) {
-		try {
+	public void testFinished(Description description) throws Exception {
+	
 			super.testFinished(description);
 //			System.out.println ("Test finished:"+ description);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
 		
 		RunNotifierFactory.getRunNotifier().fireTestFinished(description);
 
