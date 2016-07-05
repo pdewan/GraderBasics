@@ -53,7 +53,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 				return;
 			}
 			NotesAndScore aNotesAndScore = NotesAndScore.create(aMessage);
-			checkResult = new TestCaseResult(aNotesAndScore.percentage, aNotesAndScore.notes, name, true); 
+			checkResult = new TestCaseResult(aNotesAndScore.getPercentage(), aNotesAndScore.getNotes(), name, true); 
 //			String[] aNotesAndScore = aMessage.split(":");
 //			String aNotes = aNotesAndScore[0];
 //			if (aNotesAndScore.length == 1) { // assume zero percentage

@@ -46,6 +46,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	Double score = 0.0;
 	String explanation;
 	String group = "";
+	Class[] leafClasses;
+	GradableJUnitSuite topLevelSuite;
 	RunNotifier runNotifier = new RunNotifier();
 //	RunNotifier runNotifier = RunNotifierFactory.getRunNotifier();
 
@@ -273,6 +275,15 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //		Runner aRunner = new BlockJUnit4ClassRunner(ACartesianPointParametrizedJUnitMultiTester.class);
 //		return null;
 	}
+	protected boolean isPass() {
+		return getFractionComplete() > 1.0;
+	}
+	protected boolean isPartialPass() {
+		return !isPass() && getFractionComplete() >  0.0;
+	}
+	protected boolean isFail() {
+		return getFractionComplete() == 0.0;
+	}
 	
 	@Visible(false)
 	@Override
@@ -437,6 +448,55 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //	@Override
 //	public boolean isWriteToServer() {
 //		return writeToServer;
+//	}
+	static protected Class[] emptyClassArray = {};
+
+	@Override
+	public Class[] getLeafClasses() {
+		if (leafClasses == null) {
+			leafClasses = new Class[] {getJUnitClass()};
+		}
+		// TODO Auto-generated method stub
+		return leafClasses;
+	}
+
+	@Override
+	public Class[] getPassClasses() {
+		if (isPass())
+			return getLeafClasses();
+		return emptyClassArray;
+	}
+
+	@Override
+	public Class[] getPartialPassClasses() {
+		if (isPartialPass())
+			return getLeafClasses();
+		return emptyClassArray;
+	}
+
+	@Override
+	public Class[] getFailedClasses() {
+		if (isFail())
+			return getLeafClasses();
+		return emptyClassArray;
+	}
+
+	@Override
+	public void setTopLevelSuite(GradableJUnitSuite newVal) {
+		topLevelSuite = newVal;
+		
+	}
+
+	@Override
+	public GradableJUnitSuite getTopLevelSuite() {
+		// TODO Auto-generated method stub
+		return topLevelSuite;
+	}
+
+//	@Override
+//	public Class[] getUntestedClasses() {
+//		// TODO Auto-generated method stub
+//		return null;
 //	}
 	
 }

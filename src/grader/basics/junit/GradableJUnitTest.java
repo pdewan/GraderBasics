@@ -7,6 +7,8 @@ import util.models.PropertyListenerRegisterer;
 
 
 public interface GradableJUnitTest extends PropertyListenerRegisterer  {
+	public static final String GRADING_STARTED = "TestRunStarted";
+	public static final String GRADIING_ENDED = "TestRunEnded";
 	public void init() ;
 	public Class getJUnitClass() ;
 	
@@ -47,6 +49,13 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer  {
 	double getComputedMaxScore();
 	int numLeafNodeDescendents();
 	int numInternalNodeDescendents();
+	Class[] getLeafClasses();
+	Class[] getPassClasses();
+	Class[] getPartialPassClasses();
+	Class[] getFailedClasses();
+	void setTopLevelSuite(GradableJUnitSuite newVal);
+	GradableJUnitSuite getTopLevelSuite();
+//	Class[] getUntestedClasses();
 //	void setWriteToConsole(boolean newVal);
 //	boolean isWriteToConsole();
 //	boolean isWriteToFile();

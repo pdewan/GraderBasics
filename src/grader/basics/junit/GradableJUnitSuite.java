@@ -8,7 +8,6 @@ public interface GradableJUnitSuite extends GradableJUnitTest{
 	public int size() ;
 	public void add(GradableJUnitTest anElement) ;
 	public void addAll(List<GradableJUnitTest> anElement) ;
-	void testAll();
-	
+	void testAll();	
 
 }
