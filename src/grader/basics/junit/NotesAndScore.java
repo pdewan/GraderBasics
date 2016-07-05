@@ -1,6 +1,7 @@
 package grader.basics.junit;
 
 public class NotesAndScore {
+	public static final char PERECTAGE_CHARACTER = '%';
 	public final String notes;
 	public final double percentage;
 	public NotesAndScore (String aNotes, double aPercentage) {
@@ -9,22 +10,24 @@ public class NotesAndScore {
 		
 	}
 	public static NotesAndScore create (String aMessage) {
-		String[] aNotesAndScore = aMessage.split(":");
-		String aNotes = aNotesAndScore[0];
-		double aPercentage = 0;
-		if (aNotesAndScore.length == 1) { // assume zero percentage
-			aPercentage = 0;
-		} else {
-			String aPercentageString = aNotesAndScore[aNotesAndScore.length - 1].trim();
+		String aNotes = aMessage;
+		double aPercentage = 0.0;
+		int aPercentageIndex = aMessage.lastIndexOf(PERECTAGE_CHARACTER);
+		if (aPercentageIndex >= 0) {
+		
+			String aPercentageString = aMessage.substring(aPercentageIndex + 1).trim();
 			try {
-			aPercentage = Double.parseDouble(aPercentageString);
+				aPercentage = Double.parseDouble(aPercentageString);
+				aNotes = aMessage.substring(0, aPercentageIndex);
 
-			} catch (Exception e) {
-				aPercentage = 0;
-				
-			}
+				} catch (Exception e) {
+					
+					
+				}			
 			
-		}
+		}		
+			
+		
 		return new NotesAndScore(aNotes, aPercentage);
 	}
 

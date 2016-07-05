@@ -31,12 +31,17 @@ public class BasicJUnitUtils {
 
 	public static void assertTrue (Throwable e, double aFractionComplete) {
 		if (e instanceof AssertionError) {
-			Assert.assertTrue(e.getMessage() + ":" + aFractionComplete, false);
+			Assert.assertTrue(e.getMessage() + NotesAndScore.PERECTAGE_CHARACTER + aFractionComplete, false);
 
 		} else {
-		Assert.assertTrue(e.getClass().getName() + " " + e.getMessage() + ":" + aFractionComplete, false);
+		Assert.assertTrue(e.getClass().getName() + " " + e.getMessage() + NotesAndScore.PERECTAGE_CHARACTER + aFractionComplete, false);
 		}
 	}
+	public static void assertTrue (String aMessage, double aFractionComplete, boolean aCondition) {
+		Assert.assertTrue(aMessage + NotesAndScore.PERECTAGE_CHARACTER + aFractionComplete, aCondition);
+
+	}
+
 //	public static  Map<String,List<GraderTestCase>>  toGraderTestCaseMap (Map<String,List<GradableJUnitTest>> aGradableJUnitTestCaseMap) {
 //		Map<String,List<GraderTestCase>> retVal = new HashMap();
 //		for (String aGroup:aGradableJUnitTestCaseMap.keySet()) {
