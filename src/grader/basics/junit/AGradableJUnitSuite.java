@@ -12,6 +12,8 @@ import java.util.Set;
 
 import org.junit.runner.Description;
 
+import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
+
 import util.annotations.Position;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
@@ -346,6 +348,11 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	@Override
 	public Set<Class> getPreviousPartialPassClasses() {		
 		return previousPartialPassClasses;
+	}
+	@Visible(false)
+	@Override
+	public double getPreviousScore() {
+		return previousScore;
 	}
 	protected void refreshPreviousClasses() {
 		previousScore = getScore();

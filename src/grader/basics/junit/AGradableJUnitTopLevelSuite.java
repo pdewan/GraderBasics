@@ -107,12 +107,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 
 	}
 	
-	public static List<Class> createSortedList(Set<Class> aSet) {
-		List<Class> aRetVal = new ArrayList();
-		aRetVal.addAll(aSet);
-		aRetVal.sort(new ClassComparator());
-		return aRetVal;
-	}
+
 //	// tests that were failed or partially successful that are now successful
 //	protected Set<Class> getNewlySuccesfulTests() {
 //		
