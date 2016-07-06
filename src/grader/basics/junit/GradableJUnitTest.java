@@ -1,14 +1,16 @@
 package grader.basics.junit;
 
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import util.models.PropertyListenerRegisterer;
 
 
-public interface GradableJUnitTest extends PropertyListenerRegisterer  {
-	public static final String GRADING_STARTED = "TestRunStarted";
-	public static final String GRADIING_ENDED = "TestRunEnded";
+public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializable  {
+	public static final String TEST_RUN_STARTED = "TestRunStarted";
+	public static final String TEST_RUN_FINISHED = "TestRunEnded";
 	public void init() ;
 	public Class getJUnitClass() ;
 	
@@ -49,17 +51,18 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer  {
 	double getComputedMaxScore();
 	int numLeafNodeDescendents();
 	int numInternalNodeDescendents();
-	Class[] getLeafClasses();
-	Class[] getPassClasses();
-	Class[] getPartialPassClasses();
-	Class[] getFailedClasses();
-	void setTopLevelSuite(GradableJUnitSuite newVal);
-	GradableJUnitSuite getTopLevelSuite();
+	Set<Class> getLeafClasses();
+	Set<Class> getPassClasses();
+	Set<Class> getPartialPassClasses();
+	Set<Class> getFailClasses();
+//	void setTopLevelSuite(GradableJUnitSuite newVal);
+//	GradableJUnitSuite getTopLevelSuite();
 //	Class[] getUntestedClasses();
 //	void setWriteToConsole(boolean newVal);
 //	boolean isWriteToConsole();
 //	boolean isWriteToFile();
 //	void setWriteToFile(boolean writeToFile);
 //	boolean isWriteToServer();
+	Set<Class> getUntestedClasses();
 
 }

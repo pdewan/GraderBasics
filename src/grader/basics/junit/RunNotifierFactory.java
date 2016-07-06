@@ -14,6 +14,7 @@ public class RunNotifierFactory {
 	public static RunNotifier getRunNotifier() {
 		RunNotifier aRunNotifier = projectToRunNotifier.get(CurrentProjectHolder.getOrCreateCurrentProject());
 		if (aRunNotifier == null) {
+//			aRunNotifier = new AGradableRunNotifier();
 			aRunNotifier = new RunNotifier();
 			projectToRunNotifier.put(CurrentProjectHolder.getOrCreateCurrentProject(), aRunNotifier);
 		}

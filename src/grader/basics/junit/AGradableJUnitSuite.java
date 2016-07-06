@@ -6,7 +6,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.runner.Description;
 
@@ -19,7 +21,8 @@ import util.annotations.Visible;
 @StructurePattern(StructurePatternNames.LIST_PATTERN)
 public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		GradableJUnitSuite, PropertyChangeListener {
-	Class[] previousPassClasses, previousFailClasses, previousPartialPassClasses;
+	Set<Class> previousPassClasses, previousFailClasses, previousPartialPassClasses;
+	double previousScore;
 	List<GradableJUnitTest> children = new ArrayList();
 	
 
@@ -38,7 +41,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	@Visible(false)
 	public void add(GradableJUnitTest anElement) {
-		anElement.setTopLevelSuite(getTopLevelSuite()); // asuume children are added top to bottom
+//		anElement.setTopLevelSuite(getTopLevelSuite()); // asuume children are added top to bottom
 		children.add(anElement);
 		anElement.addPropertyChangeListener(this);
 		// maybeSetChildrenMaxScores();
@@ -60,15 +63,30 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		}
 		// maybeSetChildrenMaxScores();
 	}
-	protected void testRunStarted() {
-		Description aDescription = Description.createTestDescription("a test", "a test", 0);
-		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+	protected void notifyTestRunStarted(GradableJUnitTest aTest) {
+		propertyChangeSupport.firePropertyChange(TEST_RUN_STARTED, aTest, null);
+//		
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aName = aTest.getExplanation();
+		
+	}
+	protected void notifyTestRunEnded(GradableJUnitTest aTest) {
+		propertyChangeSupport.firePropertyChange(TEST_RUN_FINISHED, aTest, null);
+//		
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aName = aTest.getExplanation();
+		
+	}
+	protected void testRunStarted(GradableJUnitTest aTest) {
+//		Description aDescription = Description.createTestDescription(getJUnitClass().getSimpleName(), getExplanation(), null);
+//		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+		notifyTestRunStarted(aTest);
 	}
 	
-	protected void testRunFinished() {
-		Description aDescription = Description.createTestDescription("a test", "a test", 0);
-		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);
-		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+	protected void testRunFinished(GradableJUnitTest aTest) {
+//		Description aDescription = Description.createTestDescription(GradableJUnitTest.TEST_RUN_STARTED, "a test", 0);
+//		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);
+		notifyTestRunStarted(aTest);
 
 	}
 	
@@ -84,11 +102,14 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	@Visible(false)
 	public void open(GradableJUnitTest aTest) {
 		// System.out.println ("opened: " + aTest);
-		Description aDescription = Description.createSuiteDescription(aTest
-				.getJUnitClass());
-		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+//		Description aDescription = Description.createSuiteDescription(aTest
+//				.getJUnitClass());
+//		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+		
+		testRunStarted(aTest);
 		aTest.test();
-		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+		testRunFinished(aTest);
+//		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 	}
 
 	@Visible(false)
@@ -268,40 +289,68 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	@Visible(false)
 	@Override
-	public Class[] getLeafClasses() {
+	public Set<Class> getLeafClasses() {
 		if (leafClasses == null) {
-			List<Class> aLeafClasses = new ArrayList();
+			Set<Class> aLeafClasses = new HashSet();
 			for (GradableJUnitTest aTest : children) {
-				aLeafClasses.addAll(Arrays.asList(aTest.getLeafClasses()));
+//				aLeafClasses.addAll(Arrays.asList(aTest.getLeafClasses()));
+				aLeafClasses.addAll(aTest.getLeafClasses());
+
 			}
-			leafClasses = aLeafClasses.toArray(emptyClassArray);
+			leafClasses = aLeafClasses;
 		}
 		return leafClasses;
 	}
 
 	@Visible(false)
 	@Override
-	public Class[] getPassClasses() {
+	public Set<Class> getPassClasses() {
 
-		List<Class> aChildrenClasses = new ArrayList();
+		Set<Class> aChildrenClasses = new HashSet();
 		for (GradableJUnitTest aTest : children) {
-			aChildrenClasses.addAll(Arrays.asList(aTest.getPassClasses()));
+			aChildrenClasses.addAll(aTest.getPassClasses());
 		}
-		return aChildrenClasses.toArray(emptyClassArray);
+		return aChildrenClasses;
 	}
 	@Visible(false)
 	@Override
-	public Class[] getFailedClasses() {
+	public Set<Class> getFailClasses() {
 
-		List<Class> aChildrenClasses = new ArrayList();
+		Set<Class> aChildrenClasses = new HashSet();
 		for (GradableJUnitTest aTest : children) {
-			aChildrenClasses.addAll(Arrays.asList(aTest.getFailedClasses()));
+			aChildrenClasses.addAll(aTest.getFailClasses());
 		}
-		return aChildrenClasses.toArray(emptyClassArray);
+		return aChildrenClasses;
+	}
+	@Visible(false)
+	@Override
+	public Set<Class> getUntestedClasses() {
+
+		Set<Class> aChildrenClasses = new HashSet();
+		for (GradableJUnitTest aTest : children) {
+			aChildrenClasses.addAll(aTest.getUntestedClasses());
+		}
+		return aChildrenClasses;
+	}
+	@Visible(false)
+	@Override
+	public Set<Class> getPreviousFailClasses() {		
+		return previousFailClasses;
+	}
+	@Visible(false)
+	@Override
+	public Set<Class> getPreviousPassClasses() {		
+		return previousPassClasses;
+	}
+	@Visible(false)
+	@Override
+	public Set<Class> getPreviousPartialPassClasses() {		
+		return previousPartialPassClasses;
 	}
 	protected void refreshPreviousClasses() {
+		previousScore = getScore();
 		previousPassClasses = getPassClasses();
-		previousFailClasses = getFailedClasses();
+		previousFailClasses = getFailClasses();
 		previousPartialPassClasses = getPartialPassClasses();
 	}
 

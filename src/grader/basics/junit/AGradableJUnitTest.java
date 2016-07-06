@@ -6,7 +6,9 @@ import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -46,7 +48,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	Double score = 0.0;
 	String explanation;
 	String group = "";
-	Class[] leafClasses;
+	Set<Class> leafClasses;
 	GradableJUnitSuite topLevelSuite;
 	RunNotifier runNotifier = new RunNotifier();
 //	RunNotifier runNotifier = RunNotifierFactory.getRunNotifier();
@@ -282,7 +284,10 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		return !isPass() && getFractionComplete() >  0.0;
 	}
 	protected boolean isFail() {
-		return getFractionComplete() == 0.0;
+		return getFractionComplete() == 0.0 & numTests!= 0;
+	}
+	protected boolean isUntested() {
+		return  numTests == 0;
 	}
 	
 	@Visible(false)
@@ -450,48 +455,64 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //		return writeToServer;
 //	}
 	static protected Class[] emptyClassArray = {};
+	static protected Set<Class> emptySet = new HashSet();
 
 	@Override
-	public Class[] getLeafClasses() {
+	@Visible(false)
+	public Set<Class> getLeafClasses() {
 		if (leafClasses == null) {
-			leafClasses = new Class[] {getJUnitClass()};
+//			leafClasses = new Class[] {getJUnitClass()};
+			leafClasses = new HashSet();
+			leafClasses.add(getJUnitClass());
+
 		}
 		// TODO Auto-generated method stub
 		return leafClasses;
 	}
 
 	@Override
-	public Class[] getPassClasses() {
+	@Visible(false)
+	public Set<Class> getPassClasses() {
 		if (isPass())
 			return getLeafClasses();
-		return emptyClassArray;
+		return emptySet;
 	}
 
 	@Override
-	public Class[] getPartialPassClasses() {
+	@Visible(false)
+	public Set<Class> getPartialPassClasses() {
 		if (isPartialPass())
 			return getLeafClasses();
-		return emptyClassArray;
+		return emptySet;
 	}
 
 	@Override
-	public Class[] getFailedClasses() {
+	@Visible(false)
+	public Set<Class> getFailClasses() {
 		if (isFail())
 			return getLeafClasses();
-		return emptyClassArray;
+		return emptySet;
 	}
-
+	
 	@Override
-	public void setTopLevelSuite(GradableJUnitSuite newVal) {
-		topLevelSuite = newVal;
-		
+	@Visible(false)
+	public Set<Class> getUntestedClasses() {
+		if (isFail())
+			return getLeafClasses();
+		return emptySet;
 	}
-
-	@Override
-	public GradableJUnitSuite getTopLevelSuite() {
-		// TODO Auto-generated method stub
-		return topLevelSuite;
-	}
+//
+//	@Override
+//	public void setTopLevelSuite(GradableJUnitSuite newVal) {
+//		topLevelSuite = newVal;
+//		
+//	}
+//
+//	@Override
+//	public GradableJUnitSuite getTopLevelSuite() {
+//		// TODO Auto-generated method stub
+//		return topLevelSuite;
+//	}
 
 //	@Override
 //	public Class[] getUntestedClasses() {

@@ -1,5 +1,14 @@
 package grader.basics.junit;
 
+import grader.basics.util.ClassComparator;
+
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.runner.Description;
 
 import util.annotations.StructurePattern;
@@ -16,12 +25,28 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 		return super.getName();
 	}
 	public void testAll() {
-		Description aDescription = Description.createSuiteDescription(getJUnitClass());
-		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+//		Description aDescription = Description.createSuiteDescription(getJUnitClass());
+//		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+		testRunStarted(this);
 		super.testAll();
-		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+		testRunFinished(this);
+//		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 
 	}
+//
+//	@Visible(false)
+//	public void open(GradableJUnitTest aTest) {
+//		// System.out.println ("opened: " + aTest);
+////		Description aDescription = Description.createSuiteDescription(aTest
+////				.getJUnitClass());
+////		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+//		
+//		testRunStarted();
+//		aTest.test();
+//		testRunFinished();
+////		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+//	}
+	
 	
 	@Override
 	public int numLeafNodeDescendents() {
@@ -46,6 +71,78 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 			
 		}
 		return retVal;
+	}
+	
+	protected void maybeProcessTestRunStarted(PropertyChangeEvent evt) {
+		if (!TEST_RUN_STARTED.equals(evt.getPropertyName())) {
+				return;
+		}
+		GradableJUnitTest aTest = (GradableJUnitTest) evt.getNewValue();
+		testRunStarted(aTest);
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aName = aTest.getExplanation();
+//		String anId = aTest.getJUnitClass().getName();
+//		// aClassName and aName not really needed, as aTest has that info.
+//		// aTest is not really an id, but we will ovrload it
+//		Description aDescription = Description.createTestDescription(aClassName, aName, aTest);
+//		refreshPreviousClasses();	
+//		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+	}
+	protected void testRunStarted(GradableJUnitTest aTest) {
+		String aClassName = aTest.getJUnitClass().getSimpleName();
+		String aName = aTest.getExplanation();
+//		String anId = aTest.getJUnitClass().getName();
+		// aClassName and aName not really needed, as aTest has that info.
+		Description aDescription = Description.createTestDescription(aClassName, aName, this);
+		refreshPreviousClasses();	
+		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+	}
+	
+	protected void testRunFinished(GradableJUnitTest aTest) {
+		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+
+//		Description aDescription = Description.createTestDescription(GradableJUnitTest.TEST_RUN_STARTED, "a test", 0);
+//		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);
+//		notifyTestRunStarted(aTest);
+
+	}
+	
+	public static List<Class> createSortedList(Set<Class> aSet) {
+		List<Class> aRetVal = new ArrayList();
+		aRetVal.addAll(aSet);
+		aRetVal.sort(new ClassComparator());
+		return aRetVal;
+	}
+//	// tests that were failed or partially successful that are now successful
+//	protected Set<Class> getNewlySuccesfulTests() {
+//		
+//	// tests that were failed that are now partially successful
+//    protected Set<Class> getPositivePartialSucessfulTests() {
+//		return null;
+//	}
+//	// tests that were suucessful that are now failed
+//	protected Set<Class>  getNegativePartialSuccessfulTests() {
+//		return null;
+//		
+//	}
+//	// tests that were not failed that are now failed
+//	protected Set<Class> getNewlyFailedTests () {
+//		return null;
+//
+//	}
+    protected void maybeProcessTestRunFinished(PropertyChangeEvent evt) {
+    	if (!TEST_RUN_FINISHED.equals(evt.getPropertyName())) {
+				return;
+    	}
+//		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+    	testRunFinished((GradableJUnitTest) evt.getNewValue());
+
+	}
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		maybeProcessTestRunStarted(evt);
+		maybeProcessTestRunFinished(evt);
+		super.propertyChange(evt);
 	}
 	
 //	public String getText() {
