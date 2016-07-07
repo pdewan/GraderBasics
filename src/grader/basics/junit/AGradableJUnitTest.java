@@ -278,13 +278,13 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //		return null;
 	}
 	protected boolean isPass() {
-		return getFractionComplete() > 1.0;
+		return getFractionComplete() == 1.0;
 	}
 	protected boolean isPartialPass() {
 		return !isPass() && getFractionComplete() >  0.0;
 	}
 	protected boolean isFail() {
-		return getFractionComplete() == 0.0 & numTests!= 0;
+		return getFractionComplete() == 0.0 & numTests != 0;
 	}
 	protected boolean isUntested() {
 		return  numTests == 0;
@@ -497,11 +497,12 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Override
 	@Visible(false)
 	public Set<Class> getUntestedClasses() {
-		if (isFail())
+		if (isUntested())
 			return getLeafClasses();
 		return emptySet;
 	}
-//
+	
+	
 //	@Override
 //	public void setTopLevelSuite(GradableJUnitSuite newVal) {
 //		topLevelSuite = newVal;

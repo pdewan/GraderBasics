@@ -1,6 +1,6 @@
 package grader.basics.junit;
 
-import grader.basics.observers.FileWriterFactory;
+import grader.basics.observers.TestLogFileWriterFactory;
 import grader.basics.project.BasicProjectIntrospection;
 //import grader.junit.GraderTestCase;
 
@@ -82,13 +82,23 @@ public class BasicJUnitUtils {
 	
 	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
-		RunNotifierFactory.getRunNotifier().addListener(FileWriterFactory.getFileWriter());
+		RunNotifierFactory.getRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		aGradable.testAll();
+		ObjectEditor.treeEdit(aGradable);
+	}
+	
+	public static void interactiveTest(Class<?> aJUnitSuiteClass) {
+		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
+		RunNotifierFactory.getRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		ObjectEditor.treeEdit(aGradable);
 	}
 	public static void interactiveTestAll(String aSourceFilePattern, Class<?> aJUnitSuiteClass) {
 		CurrentProjectHolder.setProject(aSourceFilePattern);
 		interactiveTestAll(aJUnitSuiteClass);
+	}
+	public static void interactiveTest(String aSourceFilePattern, Class<?> aJUnitSuiteClass) {
+		CurrentProjectHolder.setProject(aSourceFilePattern);
+		interactiveTest(aJUnitSuiteClass);
 	}
 	public static void jUnitCoreTestAll(Class<?> aJUnitSuiteClass) {
 		Result aResult = JUnitCore.runClasses(aJUnitSuiteClass);

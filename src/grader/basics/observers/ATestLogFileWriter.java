@@ -40,31 +40,36 @@ import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
 
 import grader.basics.util.ClassComparator;
 
+import org.junit.rules.TestName;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 
-public class AFileWriter extends RunListener {
+public class ATestLogFileWriter extends RunListener {
 	public static final String NAME_SEPARATOR = " ";
 	public static final String LOG_DIRECTORY = "Checks";
 	public static final String LOG_SUFFIX = ".csv";
 	// must be consecutine indices
-	public static final int DATE_INDEX = 0;
-	public static final int SCORE_INDEX = 1;
-	public static final int SCORE_INCREMENT_INDEX = 2;
-	public static final int PASS_INDEX = 3;
-	public static final int PARTIAL_PASS_INDEX = 4;
-	public static final int FAIL_INDEX = 5;
-	public static final int UNTESTED_INDEX = 6;
+	public static final int RUN_INDEX = 0; 
+	public static final int DATE_INDEX = 1;
+	public static final int SCORE_INDEX = 2;
+	public static final int SCORE_INCREMENT_INDEX = 3;
+	public static final int TEST_NAME_INDEX = 4;
+	public static final int PASS_INDEX = 5;
+	public static final int PARTIAL_PASS_INDEX = 6;
+	public static final int FAIL_INDEX = 7;
+	public static final int UNTESTED_INDEX = 8;
+	public static final String HEADER= "#,Time,Total,Change,Test,Pass,Partial,Fail,Untested";
 	int numRuns = 0;
 	
 	protected  PrintWriter out = null;
 	protected  BufferedWriter bufWriter;
 	protected String logFileName;
+	Field idField;
 	List<String[]> previousRunData = new ArrayList();
-	String[] previousRunLastLine = null;
+	String[] normalizedLastLines = null;
 	Set<String> previousPasses = new HashSet();
 	Set<String> previousPartialPasses = new HashSet();
 	Set<String> previousFails = new HashSet();
@@ -85,29 +90,34 @@ public class AFileWriter extends RunListener {
 	List<String> sortedUntested = new ArrayList();
 
 	
-	GradableJUnitSuite currentSuite;
+	GradableJUnitSuite currentTopSuite;
+	String currentTest;
+	String lastLine, lastLineNormalized;
 	
 
-	public AFileWriter() {
+	public ATestLogFileWriter() {
 		maybeCreateChecksFolder();
 	}
 	@Override
 	public void testRunStarted(Description description) throws Exception {
 		try {
 			super.testRunStarted(description);
-			Field id = Description.class.getDeclaredField("fUniqueId"); // ugh but why not give us the id?
-			id.setAccessible(true);
-			GradableJUnitSuite aSuite = (GradableJUnitSuite) id.get(description);
+			if (idField == null) {
+		    idField = Description.class.getDeclaredField("fUniqueId"); // ugh but why not give us the id?
+			idField.setAccessible(true);
+			}
+			GradableJUnitSuite aSuite = (GradableJUnitSuite) idField.get(description);
 //			System.out.println (aSuite.getJUnitClass().getName());
 //			Class aJunitClass = aSuite.getJUnitClass();
-			if (logFileName == null) {
-				logFileName = LOG_DIRECTORY + "/" + toFileName(aSuite);
+			if (numRuns == 0) {
+				logFileName = LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
 				maybeReadLastLineOfLogFile(logFileName);
-				maybeLoadPreviousSavedSets();
+				maybeLoadSavedSets();
 				maybeCreateOrLoadAppendableFile(logFileName);
 
 			}
-			currentSuite = aSuite;
+			currentTopSuite = aSuite;
+			saveState();
 //			System.out.println (toFileName(aSuite));
 			
 		} catch (NoSuchFieldException e) {
@@ -115,6 +125,12 @@ public class AFileWriter extends RunListener {
 		}
 			
     }
+	protected void closeFile() {
+		if (out == null)
+			return;
+		out.close();
+		bufWriter = null;
+	}
 	@Override
 	public void testStarted(Description description) throws Exception {
 		super.testStarted(description);
@@ -126,8 +142,112 @@ public class AFileWriter extends RunListener {
 		super.testAssumptionFailure(aFailure);
 
 	}
+	
+	
+	StringBuilder passStringBulder = new StringBuilder();
+	StringBuilder partialPassStringBulder = new StringBuilder();
+	StringBuilder failStringBulder = new StringBuilder();
+	StringBuilder untestedStringBuilder = new StringBuilder();
+	StringBuilder fullTrace = new StringBuilder();
+	
+	
 
+	public String getPassMarker(String aPass) {
+		if (previousPasses.contains(aPass)) {
+			return "";
+		}
+		return "+"; // things can only improve if put in pass
+	}
+	public String getPartialPassMarker(String aPartialPass) {
+		if (previousPartialPasses.contains(aPartialPass)) {
+			return "";
+		}
+		if (previousPasses.contains(aPartialPass))
+			return "-"; 
+		return "+"; // otherwise it is an improvement
+	}
+	public String getFailMarker(String aFail) {
+		if (previousFails.contains(aFail)) {
+			return "";
+		}
+		if (previousUntested.contains(aFail))
+			return "+"; 
+		return "-"; // otherwise it is a come down
+	}
+	public void composePassString() {
+		passStringBulder.setLength(0);
+		List<String> aPassList = sort(currentPasses);
+		boolean aFirstName = true;
 
+		for (String aPass:aPassList) {
+			if (!aFirstName) {
+				passStringBulder.append(NAME_SEPARATOR);
+			} else {
+				aFirstName = false;
+			}
+			passStringBulder.append(getPassMarker(aPass));
+			passStringBulder.append(aPass);
+		}
+	}
+	
+	public void composePartialPassString() {
+		partialPassStringBulder.setLength(0);
+		List<String> aParialPassList = sort(currentPartialPasses);
+		boolean aFirstName = true;
+
+		for (String aPartialPass:aParialPassList) {
+			if (!aFirstName) {
+				partialPassStringBulder.append(NAME_SEPARATOR);
+			} else {
+				aFirstName = false;
+			}
+			partialPassStringBulder.append(getPartialPassMarker(aPartialPass));
+			partialPassStringBulder.append(aPartialPass);
+		}
+	}
+	
+	public void composeFailString() {
+		failStringBulder.setLength(0);
+		List<String> aFailList = sort(currentFails);
+		boolean aFirstName = true;
+		for (String aFail:aFailList) {
+			if (!aFirstName) {
+				failStringBulder.append(NAME_SEPARATOR);
+			} else {
+				aFirstName = false;
+			}
+			failStringBulder.append(getFailMarker(aFail));
+			failStringBulder.append(aFail);
+			
+		}
+	}
+	public void composeUntestedString() {
+		untestedStringBuilder.setLength(0);
+		List<String> anUntestedList = sort(currentUntested);
+		for (String anUntested:anUntestedList) {
+			untestedStringBuilder.append(getFailMarker(anUntested));
+			untestedStringBuilder.append(anUntested);
+		}
+	}
+	public void composeTrace() {
+		fullTrace.setLength(0);
+		composePassString();
+		composePartialPassString();
+		composeFailString();
+		composeUntestedString();
+		fullTrace.append(""+numRuns);
+		Date aDate = new Date(System.currentTimeMillis());
+		fullTrace.append("," + aDate);
+		fullTrace.append("," + currentScore);
+		fullTrace.append("," + (currentScore - previousScore));
+		fullTrace.append("," + passStringBulder);
+		fullTrace.append("," + partialPassStringBulder);
+		fullTrace.append("," + failStringBulder);
+		fullTrace.append("," + untestedStringBuilder);
+		
+	}
+
+	
 	@Override
 	public void testFailure(Failure aFailure) throws Exception {
 	  
@@ -154,7 +274,10 @@ public class AFileWriter extends RunListener {
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
 		super.testRunFinished(aResult);
-		maybeLoadPreviousSets(currentSuite);
+		loadCurrentSets(currentTopSuite);
+		correctUntested();
+		composeTrace();
+		appendLine(fullTrace.toString());		
 		numRuns++;
 	}
 	
@@ -165,16 +288,23 @@ public class AFileWriter extends RunListener {
        
         File folder = new File(LOG_DIRECTORY);
         if (folder.mkdirs()) { // true if dirs made, false otherwise
-            CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), AFileWriter.class);
+            CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), ATestLogFileWriter.class);
         }
 
     }
+	
+	void appendLine(String aLine) {
+		out.println(aLine);
+		out.flush();
+	}
 	
 	 void maybeCreateOrLoadAppendableFile(String aFileName) {
 		 if (out != null && bufWriter != null) {
 			 return;
 		 }
-	        String aFullFileName = aFileName + LOG_SUFFIX;
+	        String aFullFileName = aFileName;
+	        File aFile = new File(aFullFileName);
+	        boolean aNewFile = !aFile.exists();
 	        try {
 	            bufWriter
 	                    = Files.newBufferedWriter(
@@ -184,6 +314,9 @@ public class AFileWriter extends RunListener {
 	                            StandardOpenOption.APPEND,
 	                            StandardOpenOption.CREATE);
 	            out = new PrintWriter(bufWriter, true);
+	            if (aNewFile) {
+	            	appendLine(HEADER);
+	            }
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            //Oh, no! Failed to create PrintWriter
@@ -227,8 +360,15 @@ public class AFileWriter extends RunListener {
 		if (!aFile.exists()) {
 			return;
 		}
-		String aLastLine = tail(aFile, 1);
-		previousRunLastLine = aLastLine.split(".");
+		String lastLine = tail(aFile, 1).trim();
+		if (lastLine.equals(HEADER)) {
+			System.err.println ("Cirrupt kog filem has only header");
+			return;
+		}
+//		String lastLineNormalized = lastLine.replaceAll("+|-", ""); // normalize it
+		String lastLineNormalized = lastLine.replaceAll("_", ""); // normalize it
+		lastLineNormalized = lastLineNormalized.replaceAll("-", "");
+		normalizedLastLines = lastLineNormalized.split(".");
 	}
 	public static String tail( File file, int lines) {
 	    java.io.RandomAccessFile fileHandler = null;
@@ -291,24 +431,46 @@ public class AFileWriter extends RunListener {
 		
 	}
 	
-	protected void maybeLoadPreviousSets(GradableJUnitSuite aSuite) {
-		if (numRuns == 0)
-			return;
-		currentScore = aSuite.getPreviousScore();
-		currentPasses = toStringSet(aSuite.getPreviousPassClasses());
-		currentPartialPasses = toStringSet(aSuite.getPreviousPartialPassClasses());
-		currentFails = toStringSet(aSuite.getPreviousFailClasses());
-		currentUntested = toStringSet(aSuite.getPreviousFailClasses());
+	protected void loadCurrentSets(GradableJUnitSuite aSuite) {
+		
+		currentScore = aSuite.getScore();
+		currentPasses = toStringSet(aSuite.getPassClasses());
+		currentPartialPasses = toStringSet(aSuite.getPartialPassClasses());
+		currentFails = toStringSet(aSuite.getFailClasses());
+		currentUntested = toStringSet(aSuite.getUntestedClasses());
 		
 	}
-	protected void loadCurentSets(GradableJUnitSuite aSuite) {
-		
-		currentScore = aSuite.getPreviousScore();
-		previousPasses = toStringSet(aSuite.getPassClasses());
-		previousPartialPasses = toStringSet(aSuite.getPartialPassClasses());
-		previousFails = toStringSet(aSuite.getFailClasses());
-		previousUntested = toStringSet(aSuite.getFailClasses());
-		
+	protected void correctUntested() {
+		Set<String> aCorrectUntested = new HashSet();
+		for (String aClass:currentUntested) {
+			if (previousPasses.contains(aClass)) {
+				currentPasses.add(aClass);
+			} else if (previousPartialPasses.contains(aClass)) {
+				currentPartialPasses.add(aClass);
+			} else if (previousFails.contains(aClass)) {
+				currentFails.add(aClass);
+			} else {
+				aCorrectUntested.add(aClass);
+			}
+		}
+		currentUntested = aCorrectUntested;
+	}
+//	protected void loadCurentSets(GradableJUnitSuite aSuite) {
+//		
+//		currentScore = aSuite.getPreviousScore();
+//		previousPasses = toStringSet(aSuite.getPassClasses());
+//		previousPartialPasses = toStringSet(aSuite.getPartialPassClasses());
+//		previousFails = toStringSet(aSuite.getFailClasses());
+//		previousUntested = toStringSet(aSuite.getFailClasses());
+//		
+//	}
+	
+	protected void saveState() {
+		previousPasses = currentPasses;
+		previousPartialPasses = currentPartialPasses;
+		previousFails = currentFails;
+		previousUntested = currentUntested;
+		previousScore = currentScore;
 	}
 	
 	protected List<String> sort(Set<String> aSet) {
@@ -326,20 +488,20 @@ public class AFileWriter extends RunListener {
 	
 	}
 	
-	protected void maybeLoadPreviousSavedSets() {
-		if (previousRunLastLine == null || numRuns > 0)
+	protected void maybeLoadSavedSets() {
+		if (normalizedLastLines == null || numRuns > 0)
 			return;
-		String aScore = previousRunLastLine[SCORE_INDEX].trim();
-		String aScoreIncrement = previousRunLastLine[SCORE_INCREMENT_INDEX].trim();
-		String[] aPasses = previousRunLastLine[PASS_INDEX].split(NAME_SEPARATOR);
-		String[] aPartialPasses = previousRunLastLine[PARTIAL_PASS_INDEX].split(NAME_SEPARATOR);
-		String[] aFails = previousRunLastLine[FAIL_INDEX].split(NAME_SEPARATOR);
-		String[] anUntested = previousRunLastLine[UNTESTED_INDEX].split(NAME_SEPARATOR);
-		previousScore = Double.parseDouble(aScore);
-		previousPasses = toSet(aPasses);
-		previousPartialPasses = toSet(aPartialPasses);
-		previousFails = toSet(aFails);
-		previousUntested = toSet(anUntested);
+		String aScore = normalizedLastLines[SCORE_INDEX].trim();
+		String aScoreIncrement = normalizedLastLines[SCORE_INCREMENT_INDEX].trim();
+		String[] aPasses = normalizedLastLines[PASS_INDEX].split(NAME_SEPARATOR);
+		String[] aPartialPasses = normalizedLastLines[PARTIAL_PASS_INDEX].split(NAME_SEPARATOR);
+		String[] aFails = normalizedLastLines[FAIL_INDEX].split(NAME_SEPARATOR);
+		String[] anUntested = normalizedLastLines[UNTESTED_INDEX].split(NAME_SEPARATOR);
+		currentScore = Double.parseDouble(aScore);
+		currentPasses = toSet(aPasses);
+		currentPartialPasses = toSet(aPartialPasses);
+		currentFails = toSet(aFails);
+		currentUntested = toSet(anUntested);
 	}
 //	public static void main (String[] anArgs) {
 //		long time = System.currentTimeMillis();

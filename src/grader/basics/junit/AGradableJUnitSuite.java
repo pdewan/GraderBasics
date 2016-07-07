@@ -314,6 +314,15 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		}
 		return aChildrenClasses;
 	}
+	@Override
+	public Set<Class> getPartialPassClasses() {
+
+		Set<Class> aChildrenClasses = new HashSet();
+		for (GradableJUnitTest aTest : children) {
+			aChildrenClasses.addAll(aTest.getPartialPassClasses());
+		}
+		return aChildrenClasses;
+	}
 	@Visible(false)
 	@Override
 	public Set<Class> getFailClasses() {
