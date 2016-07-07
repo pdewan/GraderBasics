@@ -315,6 +315,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		return aChildrenClasses;
 	}
 	@Override
+	@Visible(false)
 	public Set<Class> getPartialPassClasses() {
 
 		Set<Class> aChildrenClasses = new HashSet();

@@ -49,6 +49,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	
 	
 	@Override
+	@Visible(false)
 	public int numLeafNodeDescendents() {
 		int retVal = 0;
 		for (GradableJUnitTest aTest:children) {			
@@ -62,6 +63,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 		return retVal;
 	}
 	@Override
+	@Visible(false)
 	public int numInternalNodeDescendents() {
 		int retVal = 0;
 		for (GradableJUnitTest aTest:children) {			

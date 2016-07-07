@@ -46,6 +46,8 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+import util.trace.Tracer;
+
 
 public class ATestLogFileWriter extends RunListener {
 	public static final String NAME_SEPARATOR = " ";
@@ -61,8 +63,10 @@ public class ATestLogFileWriter extends RunListener {
 	public static final int PARTIAL_PASS_INDEX = 6;
 	public static final int FAIL_INDEX = 7;
 	public static final int UNTESTED_INDEX = 8;
-	public static final String HEADER= "#,Time,Total,Change,Test,Pass,Partial,Fail,Untested";
+	public static final String HEADER= "#,Time,%Passes,Change,Test,Pass,Partial,Fail,Untested";
 	int numRuns = 0;
+	int numTotalRuns = 0;
+	Integer totalTests = null;
 	
 	protected  PrintWriter out = null;
 	protected  BufferedWriter bufWriter;
@@ -75,6 +79,8 @@ public class ATestLogFileWriter extends RunListener {
 	Set<String> previousFails = new HashSet();
 	Set<String> previousUntested = new HashSet();
 	double previousScore = 0.0;
+	int previousPassPercentage = 0;
+	int currentPassPercentage = 0;
 	
 	// may not really use them
 	Set<String> currentPasses = new HashSet();
@@ -110,6 +116,7 @@ public class ATestLogFileWriter extends RunListener {
 //			System.out.println (aSuite.getJUnitClass().getName());
 //			Class aJunitClass = aSuite.getJUnitClass();
 			if (numRuns == 0) {
+				totalTests = aSuite.getLeafClasses().size();				
 				logFileName = LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
 				maybeReadLastLineOfLogFile(logFileName);
 				maybeLoadSavedSets();
@@ -117,10 +124,11 @@ public class ATestLogFileWriter extends RunListener {
 
 			}
 			currentTopSuite = aSuite;
+			currentTest = description.getClassName();
 			saveState();
 //			System.out.println (toFileName(aSuite));
 			
-		} catch (NoSuchFieldException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 			
@@ -185,8 +193,9 @@ public class ATestLogFileWriter extends RunListener {
 			} else {
 				aFirstName = false;
 			}
-			passStringBulder.append(getPassMarker(aPass));
 			passStringBulder.append(aPass);
+			passStringBulder.append(getPassMarker(aPass));
+
 		}
 	}
 	
@@ -201,8 +210,9 @@ public class ATestLogFileWriter extends RunListener {
 			} else {
 				aFirstName = false;
 			}
-			partialPassStringBulder.append(getPartialPassMarker(aPartialPass));
 			partialPassStringBulder.append(aPartialPass);
+			partialPassStringBulder.append(getPartialPassMarker(aPartialPass));
+
 		}
 	}
 	
@@ -216,16 +226,21 @@ public class ATestLogFileWriter extends RunListener {
 			} else {
 				aFirstName = false;
 			}
-			failStringBulder.append(getFailMarker(aFail));
 			failStringBulder.append(aFail);
+			failStringBulder.append(getFailMarker(aFail));
 			
 		}
 	}
 	public void composeUntestedString() {
 		untestedStringBuilder.setLength(0);
 		List<String> anUntestedList = sort(currentUntested);
+		boolean aFirstName = true;
 		for (String anUntested:anUntestedList) {
-			untestedStringBuilder.append(getFailMarker(anUntested));
+			if (!aFirstName) {
+				untestedStringBuilder.append(NAME_SEPARATOR);
+			} else {
+				aFirstName = false;
+			}
 			untestedStringBuilder.append(anUntested);
 		}
 	}
@@ -235,11 +250,12 @@ public class ATestLogFileWriter extends RunListener {
 		composePartialPassString();
 		composeFailString();
 		composeUntestedString();
-		fullTrace.append(""+numRuns);
+		fullTrace.append(""+numTotalRuns);
 		Date aDate = new Date(System.currentTimeMillis());
 		fullTrace.append("," + aDate);
-		fullTrace.append("," + currentScore);
-		fullTrace.append("," + (currentScore - previousScore));
+		fullTrace.append("," + currentPassPercentage);
+		fullTrace.append("," + (currentPassPercentage - previousPassPercentage));
+		fullTrace.append("," + currentTest);
 		fullTrace.append("," + passStringBulder);
 		fullTrace.append("," + partialPassStringBulder);
 		fullTrace.append("," + failStringBulder);
@@ -271,14 +287,25 @@ public class ATestLogFileWriter extends RunListener {
 		super.testIgnored(description);
 
 	}
+	protected void setPassPercentage() {
+		currentPassPercentage = (int) (100 * ((double) currentPasses.size())/totalTests);
+
+	}
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
+		try {
 		super.testRunFinished(aResult);
 		loadCurrentSets(currentTopSuite);
 		correctUntested();
+//		currentPassPercentage = (int) (100 * ((double) currentPasses.size())/totalTests);
+		setPassPercentage();
 		composeTrace();
 		appendLine(fullTrace.toString());		
 		numRuns++;
+		numTotalRuns++;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static String toDirectoryName(GradableJUnitTest aTest) {
@@ -294,6 +321,7 @@ public class ATestLogFileWriter extends RunListener {
     }
 	
 	void appendLine(String aLine) {
+		Tracer.info(this, aLine);
 		out.println(aLine);
 		out.flush();
 	}
@@ -366,9 +394,8 @@ public class ATestLogFileWriter extends RunListener {
 			return;
 		}
 //		String lastLineNormalized = lastLine.replaceAll("+|-", ""); // normalize it
-		String lastLineNormalized = lastLine.replaceAll("_", ""); // normalize it
-		lastLineNormalized = lastLineNormalized.replaceAll("-", "");
-		normalizedLastLines = lastLineNormalized.split(".");
+		String lastLineNormalized = lastLine.replaceAll("\\+|-", ""); // normalize it
+		normalizedLastLines = lastLineNormalized.split(",");
 	}
 	public static String tail( File file, int lines) {
 	    java.io.RandomAccessFile fileHandler = null;
@@ -439,6 +466,7 @@ public class ATestLogFileWriter extends RunListener {
 		currentFails = toStringSet(aSuite.getFailClasses());
 		currentUntested = toStringSet(aSuite.getUntestedClasses());
 		
+		
 	}
 	protected void correctUntested() {
 		Set<String> aCorrectUntested = new HashSet();
@@ -471,6 +499,7 @@ public class ATestLogFileWriter extends RunListener {
 		previousFails = currentFails;
 		previousUntested = currentUntested;
 		previousScore = currentScore;
+		previousPassPercentage = currentPassPercentage;
 	}
 	
 	protected List<String> sort(Set<String> aSet) {
@@ -484,24 +513,26 @@ public class ATestLogFileWriter extends RunListener {
 		sortedPasses = sort (currentPasses);
 		sortedPartialPasses = sort (currentPartialPasses);
 		sortedFails = sort (currentFails);
-		sortedUntested = sort (currentUntested);
-	
+		sortedUntested = sort (currentUntested);	
 	}
 	
 	protected void maybeLoadSavedSets() {
 		if (normalizedLastLines == null || numRuns > 0)
 			return;
-		String aScore = normalizedLastLines[SCORE_INDEX].trim();
+		String aRunsString = normalizedLastLines[RUN_INDEX];
+//		String aScore = normalizedLastLines[SCORE_INDEX].trim();
 		String aScoreIncrement = normalizedLastLines[SCORE_INCREMENT_INDEX].trim();
 		String[] aPasses = normalizedLastLines[PASS_INDEX].split(NAME_SEPARATOR);
 		String[] aPartialPasses = normalizedLastLines[PARTIAL_PASS_INDEX].split(NAME_SEPARATOR);
 		String[] aFails = normalizedLastLines[FAIL_INDEX].split(NAME_SEPARATOR);
 		String[] anUntested = normalizedLastLines[UNTESTED_INDEX].split(NAME_SEPARATOR);
-		currentScore = Double.parseDouble(aScore);
+//		currentScore = Double.parseDouble(aScore);
+		numTotalRuns = Integer.parseInt(aRunsString) + 1;
 		currentPasses = toSet(aPasses);
 		currentPartialPasses = toSet(aPartialPasses);
 		currentFails = toSet(aFails);
 		currentUntested = toSet(anUntested);
+		setPassPercentage();
 	}
 //	public static void main (String[] anArgs) {
 //		long time = System.currentTimeMillis();
