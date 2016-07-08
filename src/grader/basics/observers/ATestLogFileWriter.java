@@ -256,10 +256,10 @@ public class ATestLogFileWriter extends RunListener {
 		fullTrace.append("," + currentPassPercentage);
 		fullTrace.append("," + (currentPassPercentage - previousPassPercentage));
 		fullTrace.append("," + currentTest);
-		fullTrace.append("," + passStringBulder);
-		fullTrace.append("," + partialPassStringBulder);
-		fullTrace.append("," + failStringBulder);
-		fullTrace.append("," + untestedStringBuilder);
+		fullTrace.append("," + passStringBulder + NAME_SEPARATOR);
+		fullTrace.append("," + partialPassStringBulder + NAME_SEPARATOR);
+		fullTrace.append("," + failStringBulder  + NAME_SEPARATOR);
+		fullTrace.append("," + untestedStringBuilder + NAME_SEPARATOR + ",");
 		
 	}
 
@@ -389,13 +389,13 @@ public class ATestLogFileWriter extends RunListener {
 		if (!aFile.exists()) {
 			return;
 		}
-		String lastLine = tail(aFile, 1).trim();
-		if (lastLine.equals(HEADER)) {
-			System.err.println ("Cirrupt kog filem has only header");
+		lastLine = tail(aFile, 1).trim();
+		if (lastLine.startsWith("#")) {
+			System.err.println ("Corrupt kog filem has only header");
 			return;
 		}
 //		String lastLineNormalized = lastLine.replaceAll("+|-", ""); // normalize it
-		String lastLineNormalized = lastLine.replaceAll("\\+|-", ""); // normalize it
+		lastLineNormalized = lastLine.replaceAll("\\+|-", ""); // normalize it
 		normalizedLastLines = lastLineNormalized.split(",");
 	}
 	public static String tail( File file, int lines) {

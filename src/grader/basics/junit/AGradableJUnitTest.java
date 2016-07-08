@@ -325,7 +325,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		if (description == null) {
 		String aScore = "[" + getComputedMaxScore() + " pts" + "]";
 		String anExtra = isExtra?"(extra credit)":"";
-		description = explanation + aScore + anExtra;
+//		description = explanation + aScore + anExtra;
+		description = getJUnitClass().getSimpleName() + aScore + anExtra;
+
 		}
 		return description;
 	}

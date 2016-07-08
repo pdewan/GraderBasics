@@ -8,6 +8,7 @@ import grader.basics.project.BasicProjectIntrospection;
 
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
+import grader.basics.vetoers.AConsentFormVetoer;
 import grader.basics.vetoers.AnAlwaysNaySayer;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class BasicJUnitUtils {
 	
 	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
-		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
+		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		aGradable.testAll();
 		ObjectEditor.treeEdit(aGradable);
@@ -91,7 +92,8 @@ public class BasicJUnitUtils {
 	
 	public static void interactiveTest(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
-		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
+//		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
+		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		ObjectEditor.treeEdit(aGradable);
 	}

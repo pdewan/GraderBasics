@@ -33,7 +33,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 		super.testAll();
 		testRunFinished(this);
 		} catch (PropertyVetoException e) {
-			System.err.println("Test run veoted");
+			System.err.println(e.getMessage());
 		}
 //		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 
