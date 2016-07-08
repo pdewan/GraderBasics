@@ -8,6 +8,7 @@ import grader.basics.project.BasicProjectIntrospection;
 
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
+import grader.basics.vetoers.AnAlwaysNaySayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,14 +83,16 @@ public class BasicJUnitUtils {
 	
 	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
-		RunNotifierFactory.getRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
+		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
+		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		aGradable.testAll();
 		ObjectEditor.treeEdit(aGradable);
 	}
 	
 	public static void interactiveTest(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
-		RunNotifierFactory.getRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
+		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
+		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		ObjectEditor.treeEdit(aGradable);
 	}
 	public static void interactiveTestAll(String aSourceFilePattern, Class<?> aJUnitSuiteClass) {

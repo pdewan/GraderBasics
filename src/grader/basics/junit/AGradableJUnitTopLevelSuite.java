@@ -3,6 +3,7 @@ package grader.basics.junit;
 import grader.basics.util.ClassComparator;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,9 +28,13 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	public void testAll() {
 //		Description aDescription = Description.createSuiteDescription(getJUnitClass());
 //		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+		try {
 		testRunStarted(this);
 		super.testAll();
 		testRunFinished(this);
+		} catch (PropertyVetoException e) {
+			System.err.println("Test run veoted");
+		}
 //		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 
 	}
@@ -80,7 +85,12 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 				return;
 		}
 		GradableJUnitTest aTest = (GradableJUnitTest) evt.getNewValue();
-		testRunStarted(aTest);
+		try {
+			testRunStarted(aTest);
+		} catch (PropertyVetoException e) {
+			// this should never happen
+			e.printStackTrace();
+		}
 //		String aClassName = aTest.getJUnitClass().getSimpleName();
 //		String aName = aTest.getExplanation();
 //		String anId = aTest.getJUnitClass().getName();
@@ -90,18 +100,20 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 //		refreshPreviousClasses();	
 //		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
 	}
-	protected void testRunStarted(GradableJUnitTest aTest) {
+	protected void testRunStarted(GradableJUnitTest aTest) throws PropertyVetoException{
 		String aClassName = aTest.getJUnitClass().getSimpleName();
 		String aName = aTest.getExplanation();
 //		String anId = aTest.getJUnitClass().getName();
 		// aClassName and aName not really needed, as aTest has that info.
 		Description aDescription = Description.createTestDescription(aClassName, aName, this);
+		RunVetoerFactory.getOrCreateRunVetoer().vetoableChange(new PropertyChangeEvent(this, TEST_RUN_STARTED, this, null));
+
 		refreshPreviousClasses();	
-		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunStarted(aDescription);
 	}
 	
 	protected void testRunFinished(GradableJUnitTest aTest) {
-		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
+		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(null);
 
 //		Description aDescription = Description.createTestDescription(GradableJUnitTest.TEST_RUN_STARTED, "a test", 0);
 //		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);

@@ -11,7 +11,7 @@ public class RunNotifierFactory {
 //	static RunNotifier runNotifier = new RunNotifier();
 	static Hashcodetable<Project, RunNotifier> projectToRunNotifier = new Hashcodetable<>();
 
-	public static RunNotifier getRunNotifier() {
+	public static RunNotifier getOrCreateRunNotifier() {
 		RunNotifier aRunNotifier = projectToRunNotifier.get(CurrentProjectHolder.getOrCreateCurrentProject());
 		if (aRunNotifier == null) {
 //			aRunNotifier = new AGradableRunNotifier();
@@ -20,6 +20,10 @@ public class RunNotifierFactory {
 		}
 		return aRunNotifier;
 	}
+	public static RunNotifier getRunNotifier() {
+		return projectToRunNotifier.get(CurrentProjectHolder.getOrCreateCurrentProject());
+	}
+	
 
 	public static void setRunNotifier(RunNotifier runNotifier) {
 		projectToRunNotifier.put(CurrentProjectHolder.getOrCreateCurrentProject(), runNotifier);

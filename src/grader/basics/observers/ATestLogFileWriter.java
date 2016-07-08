@@ -383,6 +383,7 @@ public class ATestLogFileWriter extends RunListener {
 			return aClassName.replaceAll(".", "_");
 		}
 	}
+	
 	protected void maybeReadLastLineOfLogFile(String aLogFileName) {
 		File aFile = new File(aLogFileName);
 		if (!aFile.exists()) {

@@ -19,7 +19,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 	@Override
 	public void testRunStarted(Description description) throws Exception {
 			super.testRunStarted(description);
-			RunNotifierFactory.getRunNotifier().fireTestRunStarted(description);
+			RunNotifierFactory.getOrCreateRunNotifier().fireTestRunStarted(description);
 			
     }
 	@Override
@@ -28,13 +28,13 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			checkResult = new TestCaseResult(true, 
 					"", name, true);
 			failure = null;
-			RunNotifierFactory.getRunNotifier().fireTestStarted(description);
+			RunNotifierFactory.getOrCreateRunNotifier().fireTestStarted(description);
 			
     }
 	@Override
 	public void testAssumptionFailure(Failure aFailure) {
 		super.testAssumptionFailure(aFailure);
-		RunNotifierFactory.getRunNotifier().fireTestAssumptionFailed(aFailure);
+		RunNotifierFactory.getOrCreateRunNotifier().fireTestAssumptionFailed(aFailure);
 
 	}
 
@@ -72,7 +72,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 //				}
 //				
 //			}
-			RunNotifierFactory.getRunNotifier().fireTestFailure(aFailure);
+			RunNotifierFactory.getOrCreateRunNotifier().fireTestFailure(aFailure);
 //			System.out.println ("Failure:" + failure);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -85,12 +85,12 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			super.testFinished(description);
 //			System.out.println ("Test finished:"+ description);
 		
-		RunNotifierFactory.getRunNotifier().fireTestFinished(description);
+		RunNotifierFactory.getOrCreateRunNotifier().fireTestFinished(description);
 
 	}
 	public void testIgnored(Description description) throws Exception {
 		super.testIgnored(description);
-		RunNotifierFactory.getRunNotifier().fireTestIgnored(description);
+		RunNotifierFactory.getOrCreateRunNotifier().fireTestIgnored(description);
 
 	}
 

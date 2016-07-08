@@ -4,6 +4,7 @@ import grader.basics.project.NotGradableException;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -79,9 +80,17 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //		String aName = aTest.getExplanation();
 		
 	}
-	protected void testRunStarted(GradableJUnitTest aTest) {
+	protected void testRunStarted(GradableJUnitTest aTest) throws PropertyVetoException {
 //		Description aDescription = Description.createTestDescription(getJUnitClass().getSimpleName(), getExplanation(), null);
 //		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aName = aTest.getExplanation();
+////		String anId = aTest.getJUnitClass().getName();
+//		// aClassName and aName not really needed, as aTest has that info.
+//		Description aDescription = Description.createTestDescription(aClassName, aName, this);
+//		RunVetoerFactory.getRunVetoer().fireTestRunStarted(aDescription);
+		RunVetoerFactory.getOrCreateRunVetoer().vetoableChange(new PropertyChangeEvent(this, TEST_RUN_STARTED, this, null));
+
 		notifyTestRunStarted(aTest);
 	}
 	
@@ -107,10 +116,13 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //		Description aDescription = Description.createSuiteDescription(aTest
 //				.getJUnitClass());
 //		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
-		
+		try {
 		testRunStarted(aTest);
 		aTest.test();
 		testRunFinished(aTest);
+		} catch (PropertyVetoException e) {
+			System.err.println(e.getMessage());
+		}
 //		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 	}
 
