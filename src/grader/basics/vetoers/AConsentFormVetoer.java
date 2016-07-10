@@ -5,13 +5,12 @@ import grader.basics.observers.ATestLogFileWriter;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Panel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -21,18 +20,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import util.misc.Common;
-import bus.uigen.OEFrame;
-import bus.uigen.ObjectEditor;
 
 public class AConsentFormVetoer implements VetoableChangeListener {
 	boolean consentFormChecked = false;
-	public static final String CONSENT_FILE_NAME = "http://www.cs.unc.edu/~dewan/comp401/current/";
-	public static final String AGREE_FILE_NAME = "Agree.txt";
-	public static final String AGREE_FILE_FULL_NAME = ATestLogFileWriter.LOG_DIRECTORY
-			+ "/" + AGREE_FILE_NAME;
+	public static final String CONSENT_INFO_FILE_NAME = "http://www.cs.unc.edu/~dewan/comp401/current/";
+	public static final String CONSENT_FILE_NAME = "Consent.txt";
+	public static final String LOG_DIRECTORY = "Checks";
+	public static final String AGREE_FILE_FULL_NAME = LOG_DIRECTORY
+			+ "/" + CONSENT_FILE_NAME;
+	public static final String MESSAGE_CONTENTS = 
+			"I have the read the Adult Consent Form Dated March 24, 2016 for IRB STudy 09-1134.\n"
+					+ "I agree to participate in the study.\n."
+					+ "I agree to not modify or delete the collected data unless authorized by the study PI.";
+	
 
-	protected int showConfirmDialog() {
+	public static int showConfirmDialog() {
 		JPanel panel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
@@ -42,10 +44,11 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 
 		// We can use JTextArea or JLabel to display messages
 		JTextArea textArea = new JTextArea();
-		textArea.setText("I have the read the Adult Consent Form Dated March 24, 2016 for IRB STudy 09-1134.\n"
-				+ "I agree to particpate in the study.\n."
-				+ "I agree to not modify or delete the collected data unless authorized by the study PI."
-				);
+//		textArea.setText("I have the read the Adult Consent Form Dated March 24, 2016 for IRB STudy 09-1134.\n"
+//				+ "I agree to particpate in the study.\n."
+//				+ "I agree to not modify or delete the collected data unless authorized by the study PI."
+//				);
+		textArea.setText(MESSAGE_CONTENTS);
 		textArea.setEditable(false);
 		panel.setLayout(new BorderLayout());
 		panel.add(new JScrollPane(textArea));
@@ -56,6 +59,29 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 				JOptionPane.YES_NO_OPTION, // Options for JOptionPane
 				JOptionPane.DEFAULT_OPTION); // Message type
 	}
+	
+	public static boolean checkConstentForm(String aFileName) {
+		if (agreementFileExists(aFileName))
+			return true;
+		showConsentForm();
+		int retVal = showConfirmDialog();
+		if (retVal != 0) {
+			return false;
+		} else {
+			Date aDate = new Date(System.currentTimeMillis());
+			try {
+//				Common.writeText(AGREE_FILE_FULL_NAME, aDate.toString());
+				writeText(new File(aFileName), MESSAGE_CONTENTS + "\n" + aDate.toString());
+				return true;
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+
+			}
+		}
+	}
 
 	@Override
 	public void vetoableChange(PropertyChangeEvent evt)
@@ -63,21 +89,25 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 		if (consentFormChecked) {
 			return;
 		}
-		if (agreementFileExists())
-			return;
-		showConsentForm();
-		int retVal = showConfirmDialog();
-		if (retVal != 0) {
+		if (!checkConstentForm(AGREE_FILE_FULL_NAME))
 			throw new PropertyVetoException("Consent form not signed", evt);
-		} else {
-			Date aDate = new Date(System.currentTimeMillis());
-			try {
-				Common.writeText(AGREE_FILE_FULL_NAME, aDate.toString());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		if (agreementFileExists())
+//			return;
+//		showConsentForm();
+//		int retVal = showConfirmDialog();
+//		if (retVal != 0) {
+//			throw new PropertyVetoException("Consent form not signed", evt);
+//		} else {
+//			Date aDate = new Date(System.currentTimeMillis());
+//			try {
+////				Common.writeText(AGREE_FILE_FULL_NAME, aDate.toString());
+//				writeText(new File(AGREE_FILE_FULL_NAME), aDate.toString());
+//
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 
 		// if (JOptionPane.showConfirmDialog(null, "I Agree",
 		// "Consent to Participate in IRB Study 09-1134 (Virtual Radical-Co-location and Beyond)",
@@ -95,14 +125,19 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 	}
 
 	public static boolean agreementFileExists() {
-		File aFile = new File(AGREE_FILE_FULL_NAME);
+		return agreementFileExists(AGREE_FILE_FULL_NAME);
+//		File aFile = new File(AGREE_FILE_FULL_NAME);
+//		return aFile.exists();
+	}
+	public static boolean agreementFileExists(String aFileName) {
+		File aFile = new File(aFileName);
 		return aFile.exists();
 	}
 
 	public static void showConsentForm() {
 		if (Desktop.isDesktopSupported()) {
 			try {
-				Desktop.getDesktop().browse(new URI(CONSENT_FILE_NAME));
+				Desktop.getDesktop().browse(new URI(CONSENT_INFO_FILE_NAME));
 			} catch (IOException | URISyntaxException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -121,6 +156,28 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 		// e.printStackTrace();
 		// }
 
+	}
+	public static void writeText(File file, String text) throws IOException {
+		if (!file.exists()) {
+			File aFolder = file.getParentFile();
+			if (!aFolder.exists()) 
+				aFolder.mkdirs();
+			file.createNewFile();
+		}
+//		if (!file.exists())
+//			file.mkdirs();
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(file);
+			fos.write(text.getBytes());
+			fos.flush();
+			
+		} catch (IOException e) {
+			System.out.println(file.getName() + " " + e.getMessage());
+			fos.close();
+			throw e;
+		}
+		fos.close();
 	}
 
 }

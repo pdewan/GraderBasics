@@ -39,6 +39,7 @@ import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
 
 
 import grader.basics.util.ClassComparator;
+import grader.basics.vetoers.AConsentFormVetoer;
 
 import org.junit.rules.TestName;
 import org.junit.runner.Description;
@@ -51,7 +52,6 @@ import util.trace.Tracer;
 
 public class ATestLogFileWriter extends RunListener {
 	public static final String NAME_SEPARATOR = " ";
-	public static final String LOG_DIRECTORY = "Checks";
 	public static final String LOG_SUFFIX = ".csv";
 	// must be consecutine indices
 	public static final int RUN_INDEX = 0; 
@@ -117,7 +117,7 @@ public class ATestLogFileWriter extends RunListener {
 //			Class aJunitClass = aSuite.getJUnitClass();
 			if (numRuns == 0) {
 				totalTests = aSuite.getLeafClasses().size();				
-				logFileName = LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
+				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
 				maybeReadLastLineOfLogFile(logFileName);
 				maybeLoadSavedSets();
 				maybeCreateOrLoadAppendableFile(logFileName);
@@ -309,11 +309,11 @@ public class ATestLogFileWriter extends RunListener {
 	}
 	
 	public static String toDirectoryName(GradableJUnitTest aTest) {
-		return LOG_DIRECTORY + "/" + toFileName(aTest);
+		return AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTest);
 	}
 	public static void maybeCreateChecksFolder() {
        
-        File folder = new File(LOG_DIRECTORY);
+        File folder = new File(AConsentFormVetoer.LOG_DIRECTORY);
         if (folder.mkdirs()) { // true if dirs made, false otherwise
             CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), ATestLogFileWriter.class);
         }
