@@ -123,7 +123,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public void setExplanation (Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(Explanation.class)) {
 			Explanation anExplanation =  (Explanation) aJUnitClass.getAnnotation(Explanation.class);
-			explanation = anExplanation.value();
+			explanation = aJUnitClass.getSimpleName() + ":" + anExplanation.value();
 		} else {
 			explanation = aJUnitClass.getSimpleName();
 		}
