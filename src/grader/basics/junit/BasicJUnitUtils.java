@@ -33,14 +33,14 @@ public class BasicJUnitUtils {
 
 	public static void assertTrue (Throwable e, double aFractionComplete) {
 		if (e instanceof AssertionError) {
-			Assert.assertTrue(e.getMessage() + NotesAndScore.PERECTAGE_CHARACTER + aFractionComplete, false);
+			Assert.assertTrue(e.getMessage() + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete, false);
 
 		} else {
-		Assert.assertTrue(e.getClass().getName() + " " + e.getMessage() + NotesAndScore.PERECTAGE_CHARACTER + aFractionComplete, false);
+		Assert.assertTrue(e.getClass().getName() + " " + e.getMessage() + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete, false);
 		}
 	}
 	public static void assertTrue (String aMessage, double aFractionComplete, boolean aCondition) {
-		Assert.assertTrue(aMessage + NotesAndScore.PERECTAGE_CHARACTER + aFractionComplete, aCondition);
+		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete, aCondition);
 
 	}
 

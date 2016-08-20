@@ -2,7 +2,7 @@ package grader.basics.junit;
 
 public interface NotesAndScore {
 
-	public static final char PERECTAGE_CHARACTER = '%';
+	public static final  char PERCENTAGE_MARKER = '%';
 	public abstract String getNotes();
 
 	public abstract void setNotes(String notes);
@@ -13,7 +13,7 @@ public interface NotesAndScore {
 	public static ANotesAndScore create (String aMessage) {
 		String aNotes = aMessage;
 		double aPercentage = 0.0;
-		int aPercentageIndex = aMessage.lastIndexOf(PERECTAGE_CHARACTER);
+		int aPercentageIndex = aMessage.lastIndexOf(PERCENTAGE_MARKER);
 		if (aPercentageIndex >= 0) {
 		
 			String aPercentageString = aMessage.substring(aPercentageIndex + 1).trim();

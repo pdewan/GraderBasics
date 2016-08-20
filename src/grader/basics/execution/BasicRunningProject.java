@@ -185,7 +185,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //		if (aProcess == null) { // it will never be null
 //			return;
 //		}
-    	System.out.println ("New output " + newVal + " aprocess " + aProcess);
+//    	System.out.println ("New output " + newVal + " aprocess " + aProcess);
         // wonder why did not have this before
         if (newVal == null) {
             return;
