@@ -42,7 +42,7 @@ public class BasicGradingEnvironment {
     protected String diff;
     protected String browser;
     protected String classpathSeparator;
-    protected String classpath, canonicalClassPath, oeClassPath, junitClassPath;
+    protected String classpath, canonicalClassPath, oeClassPath, junitClassPath, localGraderClassPath;
     protected String assignmentName;
     protected String defaulAssignmentsDataFolderName;
     protected boolean forkMain;
@@ -98,6 +98,9 @@ public class BasicGradingEnvironment {
 	public String getOEClassPath() {
 		return oeClassPath;
 	}
+	public String getLocalGraderClassPath() {
+		return localGraderClassPath;
+	}
 	public String getJUnitClassPath() {
 		return junitClassPath;
 	}
@@ -114,11 +117,14 @@ public class BasicGradingEnvironment {
         return "";
     }
     // as the name indicates this is a badly designed method
+    // this is being overriden in the subclass and seems dangerous
   protected  String findSystemClasspathAndSetAssociatedClasspaths(String separator) {
 	  String retVal = System.getProperty("java.class.path");
 	  classpath = retVal;  // this is done twice, once here and once below
 	  oeClassPath = findOEClassPath(separator);
 	  junitClassPath = findJUnitClassPath(separator);
+	  localGraderClassPath = findLocalGraderClassPath(separator);
+
 	  return retVal;
   }
   
@@ -162,6 +168,21 @@ public class BasicGradingEnvironment {
 //    	return null;
     	return findLibInMyClassPath(separator, "oeall");
     }
+    protected String findLocalGraderClassPath(String separator) {
+    	String result = findLibInMyClassPath(separator, "graderbasics");
+    	if (result == null || result.isEmpty()) {
+    	 result = findLibInMyClassPath(separator, "local");
+    	}
+    	if (result == null || result.isEmpty()) {
+    		result = findLibInMyClassPath(separator, "basic");
+    	}
+    	if (result == null || result.isEmpty()) {
+    		// just use the entire clsas path of this grader
+    		result = System.getProperty("java.class.path");
+
+    	}
+    	return result;
+    }
     protected String findJUnitClassPath(String separator) {
 //    	String myClassPath = System.getProperty("java.class.path");
 //    	String[] paths = myClassPath.split(separator);
@@ -177,7 +198,7 @@ public class BasicGradingEnvironment {
     	String myClassPath = System.getProperty("java.class.path");
     	String[] paths = myClassPath.split(separator);
     	for (String aPath:paths) {
-    		if (aPath.contains(aLibName)) {
+    		if (aPath.toLowerCase().contains(aLibName.toLowerCase())) {
     			return aPath;
     		}
     	}
