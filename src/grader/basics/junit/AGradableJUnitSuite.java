@@ -203,13 +203,13 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		return retVal;
 	}
 
-	@Visible(true)
+	@Visible(false)
 	@Position(0)
 	@Override
-	public double getScore() {
+	public double getUnroundedScore() {
 		double retVal = 0;
 		for (GradableJUnitTest aTest : children) {
-			retVal += aTest.getScore();
+			retVal += aTest.getUnroundedScore();
 		}
 		return retVal;
 	}
@@ -254,7 +254,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	@Visible(false)
 	public String getText() {
-		String retVal = getName() + "," + getScore() + "\n";
+		String retVal = getName() + "," + getUnroundedScore() + "\n";
 		for (GradableJUnitTest aTest : children) {
 			retVal += aTest.getText() + "\n";
 		}
@@ -273,7 +273,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		// if (!"Status".equals(evt.getPropertyName()))
 		// return; // do not want this computed multiple times for different
 		// properties of test
-		if (!"Score".equals(evt.getPropertyName()))
+		if (!"DisplayedScore".equals(evt.getPropertyName()))
 			return; // do not want this computed multiple times for different
 					// properties of test
 		synthesizeAndDisplayPropertes();
@@ -377,7 +377,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		return previousScore;
 	}
 	protected void refreshPreviousClasses() {
-		previousScore = getScore();
+		previousScore = getUnroundedScore();
 		previousPassClasses = getPassClasses();
 		previousFailClasses = getFailClasses();
 		previousPartialPassClasses = getPartialPassClasses();

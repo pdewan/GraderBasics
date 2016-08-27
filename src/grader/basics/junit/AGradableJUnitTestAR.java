@@ -10,6 +10,8 @@ public class AGradableJUnitTestAR implements ExecutableCommand {
 	public Object execute(Object arg0) {
 		ObjectEditor.setAttribute(AGradableJUnitTest.class, AttributeNames.USE_NAME_AS_LABEL, true);
 		ObjectEditor.setPropertyAttribute(AGradableJUnitTest.class, "Status", AttributeNames.LABELLED, false);
+		ObjectEditor.setPropertyAttribute(AGradableJUnitTest.class, "DisplayedScore", AttributeNames.LABEL, "Score");
+
 //		ObjectEditor.setMethodAttribute(AGradableJUnitTest.class, "getExplanation", AttributeNames.RETURNS_CLASS_EXPLANATION, true);
 
 //		ObjectEditor.setPropertyAttribute(AGradableJUnitTest.class, "Message", AttributeNames.LABELLED, false);

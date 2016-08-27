@@ -46,7 +46,7 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializa
 	List<Double> getPercentages();
 	List<String> getMessages();
 	List<TestCaseResult> getTestCaseResults();
-	double getScore();
+	double getUnroundedScore();
 	String getText();
 	double getComputedMaxScore();
 	int numLeafNodeDescendents();
@@ -64,5 +64,9 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializa
 //	void setWriteToFile(boolean writeToFile);
 //	boolean isWriteToServer();
 	Set<Class> getUntestedClasses();
+	public static double round(double aDouble) {
+		return (double) Math.round(aDouble * 10)/10.0;
+	}
+	double getDisplayedScore();
 
 }

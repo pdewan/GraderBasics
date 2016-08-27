@@ -45,7 +45,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	boolean isRestriction;
 	Double maxScore;
 	Double computedMaxScore;
-	Double score = 0.0;
+	Double score = 0.0001;
 	String explanation;
 	String group = "";
 	Set<Class> leafClasses;
@@ -184,8 +184,14 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	}
 	protected void showScore() {
 		Double oldScore = score;
-		score = getScore();
-		propertyChangeSupport.firePropertyChange("Score", oldScore,
+//		Double oldScore = getDisplayedScore();
+
+//		score = getUnroundedScore();
+		score = getDisplayedScore();
+
+//		propertyChangeSupport.firePropertyChange("UnroundedScore", oldScore,
+//				score);
+		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore,
 				score);
 	}
 	protected void showResult (TestCaseResult aTestCaseResult) {
@@ -194,8 +200,10 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		double oldScore = score;
 		status = aTestCaseResult.getPercentage()*100 + "% complete";
 		message = aTestCaseResult.getNotes();
-		score = getScore();		
-		propertyChangeSupport.firePropertyChange("Score", oldScore, score);
+//		score = getUnroundedScore();	
+		score = getDisplayedScore();		
+
+		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore, getDisplayedScore());
 //		propertyChangeSupport.firePropertyChange("Status", oldStatus, status);
 
 		propertyChangeSupport.firePropertyChange("Message", oldMessage, message);
@@ -320,10 +328,11 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public void setExplanation(String newVal) {
 		explanation = newVal;		
 	}
+	
 	protected String description = null;
 	public String getName() {
 		if (description == null) {
-		String aScore = "[" + getComputedMaxScore() + " pts" + "]";
+		String aScore = "[" + GradableJUnitTest.round(getComputedMaxScore()) + " pts" + "]";
 		String anExtra = isExtra?"(extra credit)":"";
 //		description = explanation + aScore + anExtra;
 		description = getJUnitClass().getSimpleName() + aScore + anExtra;
@@ -398,16 +407,20 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		showColor();
 		
 	}
-	@Visible(true)
+	@Visible(false)
+	@Override
+	public double getUnroundedScore() {
+		return maxScore*fractionComplete;
+	}
 	@Position(0)
 	@Override
-	public double getScore() {
-		return maxScore*fractionComplete;
+	public double getDisplayedScore() {
+		return GradableJUnitTest.round(getUnroundedScore());
 	}
 	@Override
 	@Visible(false)
 	public String getText() {
-		return getName() + "," + getScore() +  "," + getMessage();
+		return getName() + "," + getUnroundedScore() +  "," + getMessage();
 	}
 	public String toString() {
 		return getName();

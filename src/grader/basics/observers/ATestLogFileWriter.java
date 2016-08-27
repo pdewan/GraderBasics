@@ -461,7 +461,7 @@ public class ATestLogFileWriter extends RunListener {
 	
 	protected void loadCurrentSets(GradableJUnitSuite aSuite) {
 		
-		currentScore = aSuite.getScore();
+		currentScore = aSuite.getUnroundedScore();
 		currentPasses = toStringSet(aSuite.getPassClasses());
 		currentPartialPasses = toStringSet(aSuite.getPartialPassClasses());
 		currentFails = toStringSet(aSuite.getFailClasses());
