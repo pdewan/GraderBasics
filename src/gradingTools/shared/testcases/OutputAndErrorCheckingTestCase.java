@@ -87,15 +87,28 @@ public abstract class OutputAndErrorCheckingTestCase {
 	}
 
 	protected String[] emptyStringArray = {};
+	
+	protected void traceMainCall(String aMainName, String anInput,
+			String[] anExpectedStrings) {
+		System.out.println ("Calling main in:" + aMainName);
+		System.out.println ("Providing input:" + anInput);
+		System.out.println("Expecting output:" + Arrays.toString(anExpectedStrings));
+		
+		
+	};
 
 	protected OutputErrorStatus test(String aMainName, String anInput,
 			String[] anExpectedStrings) {
+		traceMainCall(aMainName, anInput, anExpectedStrings);
 		// Project project = CurrentProjectHolder.getOrCreateCurrentProject();
 		// RunningProject runner = project.launch(anInput, 1);
 		// String output = runner.await();
 
 		ResultingOutErr aResult = BasicProjectExecution.callMain(aMainName,
 				emptyStringArray, anInput);
+//		System.out.println ("Input:" + anInput);
+//		System.out.println ("Output:" + aResult.out);
+//		System.out.println ("Errors:" + aResult.err);
 		if (aResult == null) {
 			return OutputErrorStatus.NO_OUTPUT;
 		}
