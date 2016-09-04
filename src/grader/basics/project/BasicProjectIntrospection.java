@@ -850,7 +850,20 @@ public class BasicProjectIntrospection {
 		// return findClass(aProject, aName, aName, aName, aName );
 	}
 	public static Class findClass(Project aProject, String aName) {
-		return findClass(aProject, aName, aName, aName, aName);			
+		Class aCachedClass = keyToClass.get(aName);
+		if (aCachedClass != null) {
+			if (Object.class.equals(aCachedClass))
+			return null;
+		}
+		
+		Class retVal = findClass(aProject, aName, aName, aName, aName);	
+		if (retVal == null) {
+			keyToClass.put(aName, Object.class);
+		} else {
+			keyToClass.put(aName, retVal);
+
+		}
+		return retVal;
 		// return findClass(aProject, null, aName, toRegex(aName),
 		// toRegex(aName) );
 		// return findClass(aProject, aName, aName, aName, aName );

@@ -9,18 +9,20 @@ import java.util.List;
 
 import util.misc.Common;
 
-public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest {
+public abstract class OutputAndErrorCheckingTestCase extends
+		MethodExecutionTest {
 	public static String MATCH_ANY = "(.*)";
-
-	
 
 	public static String toRegex(String aString) {
 		return MATCH_ANY + aString + MATCH_ANY;
 	}
+
 	static String[] emptyStrings = {};
+
 	protected String[] getExpectedOutputs() {
-		return emptyStrings ;
+		return emptyStrings;
 	}
+
 	protected String correctOutputButErrorsMessage() {
 		String aPrefix = "Correct output but errors";
 		String aReasons = possibleReasonsForErrors();
@@ -28,7 +30,7 @@ public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest
 			return aPrefix;
 		return aPrefix + ". Possible reasons:" + aReasons;
 	}
-	
+
 	protected double correctOutputButErrorsCredit() {
 		return 0.5;
 	}
@@ -87,6 +89,7 @@ public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest
 
 		return true;
 	}
+
 	protected boolean isValidOutput() {
 		return isValidOutput(getOutput(), getExpectedOutputs());
 	}
@@ -133,6 +136,7 @@ public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest
 	protected boolean hasError(String anError) {
 		return !anError.isEmpty();
 	}
+
 	protected boolean hasError() {
 		return !getError().isEmpty();
 	}
@@ -147,20 +151,37 @@ public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest
 				+ Arrays.toString(anExpectedStrings));
 
 	};
+
 	protected String[] getStringArgs() {
 		return emptyStringArray;
 	}
-	public void test() {
-		traceMainCall(getClassName(), getInput(), getExpectedOutputs());
-		resultingOutError = BasicProjectExecution.callMain(getClassName(),
-				getStringArgs(), getInput());
-		setOutputErrorStatus();
-		
+
+	@Override
+	public boolean doTest() {
+		String[] aMainClasses = getClassNames();
+		for (String aMainClass : aMainClasses) {
+			traceMainCall(aMainClass, getInput(), getExpectedOutputs());
+			// resultingOutError =
+			// BasicProjectExecution.callMain(getClassName(),
+			// getStringArgs(), getInput());
+			resultingOutError = BasicProjectExecution.callMain(aMainClass,
+					getStringArgs(), getInput());
+			if (resultingOutError != null) {
+				setOutputErrorStatus();
+				return true;
+			} else {
+				System.out.println("Could not execite main class");
+			}
+		}
+		return false;
+
 	}
+
 	protected void setOutputErrorStatus() {
 		outputErrorStatus = computeOutputErrorStatus();
 	}
-	protected OutputErrorStatus computeOutputErrorStatus(){
+
+	protected OutputErrorStatus computeOutputErrorStatus() {
 		ResultingOutErr aResult = getResultingOutErr();
 		if (aResult == null) {
 			return OutputErrorStatus.NO_OUTPUT;
@@ -178,6 +199,7 @@ public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest
 		}
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
+
 	protected OutputErrorStatus test(String aMainName, String anInput,
 			String[] anExpectedStrings) {
 		traceMainCall(aMainName, anInput, anExpectedStrings);

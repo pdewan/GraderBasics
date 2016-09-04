@@ -48,16 +48,43 @@ public abstract class MethodExecutionTest  {
 	protected  String getClassName() {
 		return null;
 	}
-	protected Object getTargetObject() {
-		return getTargetClass();
+	protected  String[] getClassNames() {
+		return new String[] {getClassName()};
 	}
+	protected Object getTargetObject() {
+		return null;
+	}
+	protected Object[] getTargetObjects() {
+		return new Object[] {getTargetObject()};
+	}
+	/*
+	 * This should not be called
+	 */
 	protected Class getTargetClass() {
-		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
+//		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
+		return getTargetClasses() [0];
 
 	}
-	protected Method getMethod() {
+	protected Class[] getTargetClasses() {
+		String[] aClassNames = getClassNames();
+		Class[] aTargetClasses = new Class[aClassNames.length];
+		for (int i = 0; i < aClassNames.length; i++) {
+			aTargetClasses[i] = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassNames[i]);
+		}
+//		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
+		return aTargetClasses;
+	}
+	protected Class getMethodClass (Object anObject) {
+		Class aClass;
+		if (anObject instanceof Class)
+			aClass = (Class) anObject;
+		else
+			aClass = anObject.getClass();
+		return aClass;
+	}
+	protected Method getMethod() {			
 		return 	BasicProjectIntrospection.findMethod(
-				getTargetClass(), getMethodName(), getArgTypes());
+				getMethodClass(getTargetObject()), getMethodName(), getArgTypes());
 	}
 	protected String getMethodName() {
 		return null;
@@ -98,16 +125,43 @@ public abstract class MethodExecutionTest  {
 	protected boolean isValidOutput() {
 		return true;
 	}
-
-	protected void invokeMethod() throws Throwable  {
+	protected boolean invokeMethod() throws Throwable  {
+		Object aTargetObject = null ;
+		Method aMethod = null;
+		for (Object anObject:getTargetObjects()) {
+			aTargetObject = anObject;
+			if (anObject == null) {
+				
+				continue;
+			}
+			Class aClass = getMethodClass(anObject);
+			aMethod = BasicProjectIntrospection.findMethod(
+					aClass, getMethodName(), getArgTypes());
+			if (aMethod != null ) {
+				break;
+			}
+		}
+		
 		if (isInteractive()) {
+//			resultWithOutput = BasicProjectExecution.
+//					proxyAwareGeneralizedInteractiveTimedInvoke(
+//							getTargetObject(),
+//							getMethod(),
+//							getArgs(),
+//							getInput(),
+//							getTimeOut());
 			resultWithOutput = BasicProjectExecution.
 					proxyAwareGeneralizedInteractiveTimedInvoke(
-							getTargetObject(),
-							getMethod(),
+							aTargetObject,
+							aMethod,
 							getArgs(),
 							getInput(),
 							getTimeOut());
+			if (resultWithOutput == null) {
+				returnValue = null;
+				resultingOutError = null;
+				return false;
+			}
 			returnValue = resultWithOutput.getResult();
 			resultingOutError = new ResultingOutErr(
 					resultWithOutput.getOutput(), 
@@ -118,16 +172,24 @@ public abstract class MethodExecutionTest  {
 					getMethod(),
 					getArgs(),
 					getTimeOut());
+			if (returnValue == null) {
+				return false;
+			}
 		}
+		return false;
 	}
-	protected void compareActualAndExcpectedReturnValue() {
-		
+	protected boolean processMethodExecutionResults() {
+		return true;
+	}
+	
+	protected boolean doTest() throws Throwable {
+		invokeMethod();
+    	return processMethodExecutionResults();
 	}
 	@Test
     public void test() {
         try {
-        	invokeMethod();
-            
+        	doTest();          
             
         } catch (Throwable e) {
         	BasicJUnitUtils.assertTrue(e, 0);
