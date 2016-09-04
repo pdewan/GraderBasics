@@ -9,15 +9,60 @@ import java.util.List;
 
 import util.misc.Common;
 
-public abstract class OutputAndErrorCheckingTestCase {
+public abstract class OutputAndErrorCheckingTestCase extends MethodExecutionTest {
+	public static String MATCH_ANY = "(.*)";
 
-	public enum OutputErrorStatus {
-		NO_OUTPUT,
-		CORRECT_OUTPUT_NO_ERRORS, CORRECT_OUTPUT_ERRORS, INCORRECT_OUTPUT_NO_ERRORS, INCORRECT_OUTPUT_ERRORS
+	
+
+	public static String toRegex(String aString) {
+		return MATCH_ANY + aString + MATCH_ANY;
+	}
+	static String[] emptyStrings = {};
+	protected String[] getExpectedOutputs() {
+		return emptyStrings ;
+	}
+	protected String correctOutputButErrorsMessage() {
+		String aPrefix = "Correct output but errors";
+		String aReasons = possibleReasonsForErrors();
+		if (aReasons.isEmpty())
+			return aPrefix;
+		return aPrefix + ". Possible reasons:" + aReasons;
+	}
+	
+	protected double correctOutputButErrorsCredit() {
+		return 0.5;
+	}
+
+	protected String incorrectOutputMessage() {
+		String aPrefix = "Incorrect output";
+		String aReasons = possibleReasonsForIncorrectOutput();
+		if (aReasons.isEmpty())
+			return aPrefix;
+		return aPrefix + ". Possible reasons:" + aReasons;
+	}
+
+	protected String noMainMessage() {
+		return "No main";
+	}
+
+	protected double incorrectOutputCredit() {
+		return 0.0;
+	}
+
+	protected double noMainCredit() {
+		return 0.0;
 	}
 
 	protected boolean outputsMustBeInDifferentLines() {
 		return true;
+	}
+
+	protected String possibleReasonsForIncorrectOutput() {
+		return "";
+	}
+
+	protected String possibleReasonsForErrors() {
+		return "";
 	}
 
 	public static boolean isValidOutputInDifferentLines(List<String> anOutput,
@@ -42,8 +87,11 @@ public abstract class OutputAndErrorCheckingTestCase {
 
 		return true;
 	}
+	protected boolean isValidOutput() {
+		return isValidOutput(getOutput(), getExpectedOutputs());
+	}
 
-	public boolean isValidOutput(String anOutput, String[] anExpectedStrings) {
+	protected boolean isValidOutput(String anOutput, String[] anExpectedStrings) {
 		List<String> anOutputLines = new ArrayList(Arrays.asList(anOutput
 				.split("\n")));
 
@@ -85,18 +133,51 @@ public abstract class OutputAndErrorCheckingTestCase {
 	protected boolean hasError(String anError) {
 		return !anError.isEmpty();
 	}
+	protected boolean hasError() {
+		return !getError().isEmpty();
+	}
 
 	protected String[] emptyStringArray = {};
-	
+
 	protected void traceMainCall(String aMainName, String anInput,
 			String[] anExpectedStrings) {
-		System.out.println ("Calling main in:" + aMainName);
-		System.out.println ("Providing input:" + anInput);
-		System.out.println("Expecting output:" + Arrays.toString(anExpectedStrings));
-		
-		
-	};
+		System.out.println("Calling main in:" + aMainName);
+		System.out.println("Providing input:" + anInput);
+		System.out.println("Expecting output:"
+				+ Arrays.toString(anExpectedStrings));
 
+	};
+	protected String[] getStringArgs() {
+		return emptyStringArray;
+	}
+	public void test() {
+		traceMainCall(getClassName(), getInput(), getExpectedOutputs());
+		resultingOutError = BasicProjectExecution.callMain(getClassName(),
+				getStringArgs(), getInput());
+		setOutputErrorStatus();
+		
+	}
+	protected void setOutputErrorStatus() {
+		outputErrorStatus = computeOutputErrorStatus();
+	}
+	protected OutputErrorStatus computeOutputErrorStatus(){
+		ResultingOutErr aResult = getResultingOutErr();
+		if (aResult == null) {
+			return OutputErrorStatus.NO_OUTPUT;
+		}
+		boolean validOutput = isValidOutput();
+		boolean hasError = hasError(aResult.err);
+		if (validOutput && !hasError) {
+			return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
+		}
+		if (validOutput && hasError) {
+			return OutputErrorStatus.CORRECT_OUTPUT_ERRORS;
+		}
+		if (!validOutput && !hasError) {
+			return OutputErrorStatus.INCORRECT_OUTPUT_NO_ERRORS;
+		}
+		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
+	}
 	protected OutputErrorStatus test(String aMainName, String anInput,
 			String[] anExpectedStrings) {
 		traceMainCall(aMainName, anInput, anExpectedStrings);
@@ -106,9 +187,9 @@ public abstract class OutputAndErrorCheckingTestCase {
 
 		ResultingOutErr aResult = BasicProjectExecution.callMain(aMainName,
 				emptyStringArray, anInput);
-//		System.out.println ("Input:" + anInput);
-//		System.out.println ("Output:" + aResult.out);
-//		System.out.println ("Errors:" + aResult.err);
+		// System.out.println ("Input:" + anInput);
+		// System.out.println ("Output:" + aResult.out);
+		// System.out.println ("Errors:" + aResult.err);
 		if (aResult == null) {
 			return OutputErrorStatus.NO_OUTPUT;
 		}

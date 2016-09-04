@@ -15,6 +15,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -27,11 +29,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.Assert;
+
 import util.misc.Common;
 import util.misc.TeePrintStream;
+import util.trace.Tracer;
 
 public class BasicProjectExecution {
-	static boolean useMethodAndConstructorTimeOut = false;
+	static boolean useMethodAndConstructorTimeOut = true;
 	
 	public static final String PRINTS = "System.out";
 	public static final String MISSING_CLASS = "Status.NoClass";
@@ -69,7 +74,7 @@ public class BasicProjectExecution {
 		BasicProjectExecution.methodTimeOut = methodTimeOut;
 	}
 	public static Object timedInvoke(Object anObject, Method aMethod,
-			long aMillSeconds, Object... anArgs) {
+			Object[] anArgs, long aMillSeconds) {
 //		 ExecutorService executor = Executors.newSingleThreadExecutor();
 		if (anArgs == null) {
 			anArgs = emptyObjectArray;
@@ -124,12 +129,36 @@ public class BasicProjectExecution {
 	}
         
 	public static Object timedInvoke(Object anObject, Method aMethod,
-			Object... anArgs) {
+			Object[] anArgs) {
 		if (isUseMethodAndConstructorTimeOut())
-			return timedInvoke(anObject, aMethod, getMethodTimeOut(), anArgs);
+			return timedInvoke(anObject, aMethod, anArgs, getMethodTimeOut());
 		else {
 			try {
 				return aMethod.invoke(anObject, anArgs);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+	}
+	public static ResultWithOutput timedInteractiveInvoke(Object anObject, Method aMethod,
+			Object... anArgs) {
+		if (isUseMethodAndConstructorTimeOut())
+			return timedInteractiveInvoke(anObject, aMethod,  anArgs, getMethodTimeOut());
+		else {
+			try {
+				redirectOutput();
+				Object aResult = aMethod.invoke(anObject, anArgs);
+				
+				String anOutput = restoreOutputAndGetRedirectedOutput();
+	//
+//				aFileStream.flush();
+//				aFileStream.close();
+//				String anOutput = Common.toText(tmpFile);
+//				tmpFile.delete();
+				
+				return new AResultWithOutput(aResult, anOutput);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
@@ -241,6 +270,29 @@ public class BasicProjectExecution {
 //			tmpFile.delete();
 			
 			return new AResultWithOutput(aResult, anOutput);
+		} catch (Exception e) {
+			return new AResultWithOutput(null, null);
+		} finally {
+			System.setOut(previousOut);
+
+		}
+	}
+	public static ResultWithOutput timedGeneralizedInteractiveInvoke(Object anObject,
+			Method aMethod,  Object[] anArgs, String anInput, long aMillSeconds ) {
+
+		try {
+
+			BasicProjectExecution.redirectInputOutputError(BasicProjectExecution.toInputString(anInput));		
+
+
+			Callable aCallable = new AMethodExecutionCallable(anObject,
+					aMethod, anArgs);
+			Future future = executor.submit(aCallable);
+			Object aResult = future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+			ResultingOutErr anOutErr =  restoreAndGetRedirectedIOStreams();
+
+			
+			return new AResultWithOutput(aResult, anOutErr.out, anOutErr.err);
 		} catch (Exception e) {
 			return new AResultWithOutput(null, null);
 		} finally {
@@ -825,7 +877,102 @@ public class BasicProjectExecution {
 			 return null;
 		 }
 		}
+	 
+	   public static Object invokeStatic (Class aClass, String aMethodName, Class[] anArgTypes, Object[] anArgs, long aTimeOut) throws Throwable {
+			
+		   Method anActualMethod = BasicProjectIntrospection.findMethod(aClass, aMethodName, anArgTypes);
+		   return proxyAwareTimedInvoke(aClass, anActualMethod, anArgs, aTimeOut);
+	   }
+	  
+	   public static Object invokeStatic (Class aClass, String aMethodName, Object[] anArgs, long aTimeOut) throws Throwable {
+		   Class[] anArgTypes = BasicProjectIntrospection.toClasses(anArgs);
+		   BasicProjectIntrospection.toPrimitiveTypes(anArgTypes);
+		   Method anActualMethod = BasicProjectIntrospection.findMethod(aClass, aMethodName, anArgTypes);
+		   return proxyAwareTimedInvoke(aClass, anActualMethod, anArgs, aTimeOut);
+	   }
+	   public static Object invokeStatic (String aClassName, String aMethodName, Class[] anArgTypes, Object[] anArgs, long aTimeOut) throws Throwable {
+			Class aClass = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassName);
+		   return invokeStatic(aClass, aMethodName, anArgTypes, anArgs, aTimeOut);
+	   }
+	   public static Object invokeStatic (String aClassName, String aMethodName,Object[] anArgs,long aTimeOut) throws Throwable {
+			Class aClass = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassName);
+		   return invokeStatic(aClass, aMethodName,  anArgs, aTimeOut);
+	   }
+	   
+	   public static void maybeReplaceProxies(Object[] args) {
+		   for (int i = 0; i < args.length; i++) {
+				if (args[i] instanceof Proxy) {
+					Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
+					if (anActualObject == null) {
+						Tracer.error("Could not get real object for proxy:" + args[i]);
+					}
+					args[i] = anActualObject;
+				}
+			}
+	   }
+	   public static Object maybeReturnProxy(Object aRetVal, Class aReturnType) {
+		   if (aRetVal == null)
+				return aRetVal;
+			if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
+				Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
+				if (aProxy != null)
+					return aProxy;
+				 aProxy = BasicProjectIntrospection.createProxy(aReturnType, aRetVal);
+				 if (aProxy != null) // it should always be non null
+					 return aProxy;
+				 
+				
+				
+			}
+			return aRetVal;
+			
+		
+	   }
+	 
+		public static Object proxyAwareTimedInvoke(Object actualObject, Method anActualMethod, Object[] args,long aTimeOut)
+				throws Throwable {
+			maybeReplaceProxies(args);
+			
+//			for (int i = 0; i < args.length; i++) {
+//				if (args[i] instanceof Proxy) {
+//					Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
+//					if (anActualObject == null) {
+//						Tracer.error("Could not get real object for proxy:" + args[i]);
+//					}
+//					args[i] = anActualObject;
+//				}
+//			}
+			
+			Object aRetVal = BasicProjectExecution.timedInvoke(actualObject, anActualMethod, args, aTimeOut);
+			return maybeReturnProxy(aRetVal, anActualMethod.getReturnType());
+//			if (aRetVal == null)
+//				return aRetVal;
+//			if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
+//				Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
+//				if (aProxy != null)
+//					return aProxy;
+//				 aProxy = BasicProjectIntrospection.createProxy(anActualMethod.getReturnType(), aRetVal);
+//				 if (aProxy != null) // it should always be non null
+//					 return aProxy;
+//				 
+//				
+//				
+//			}
+//			return aRetVal;
+			
+		}
+		public static ResultWithOutput proxyAwareGeneralizedInteractiveTimedInvoke(Object actualObject,  Method anActualMethod, Object[] anArgs, String anInput, long aTimeOut)
+				throws Throwable {
+			maybeReplaceProxies(anArgs);
+			
 
+			ResultWithOutput aResult = timedGeneralizedInteractiveInvoke(actualObject, anActualMethod, anArgs, anInput, aTimeOut);
+			Object aProxy = maybeReturnProxy(aResult.getResult(), anActualMethod.getReturnType());
+			aResult.setResult(aProxy);
+			return aResult;
+
+			
+		}
 	public static String toInputString(String... inputs) {
 		return toString (DEFAULT_INPUT_SEPARATOR, inputs);
 	}
