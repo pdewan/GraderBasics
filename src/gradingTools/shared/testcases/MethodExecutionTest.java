@@ -192,6 +192,9 @@ public abstract class MethodExecutionTest  {
 					+ NotesAndScore.PERCENTAGE_MARKER
 					+ noMethodCredit(), false);
 		}
+	
+				
+		
 		if (isInteractive()) {
 //			resultWithOutput = BasicProjectExecution.
 //					proxyAwareGeneralizedInteractiveTimedInvoke(
@@ -200,6 +203,12 @@ public abstract class MethodExecutionTest  {
 //							getArgs(),
 //							getInput(),
 //							getTimeOut());
+			System.out.println ("Calling  interactive method:" + 
+					aMethod.getName() + 
+					" with args " +
+					getArgs() +
+					" and input " +
+					getInput()); 
 			resultWithOutput = BasicProjectExecution.
 					proxyAwareGeneralizedInteractiveTimedInvoke(
 							aTargetObject,
@@ -218,6 +227,10 @@ public abstract class MethodExecutionTest  {
 					resultWithOutput.getError());
 			setOutputErrorStatus();
 		} else {
+			System.out.println ("Calling non interactive method:" + 
+					aMethod.getName() + 
+					" with args " +
+					getArgs()); 
 			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
 					aTargetObject,
 					aMethod,
@@ -243,7 +256,13 @@ public abstract class MethodExecutionTest  {
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ offByOneCredit(), false);
 	}
+	protected void traceProcessReturnValue() {
+		System.out.println(
+				"Comparing actial return value: " + getReturnValue() +
+				" with expected return value: " + getExpectedReturnValue());
+	}
 	protected boolean processReturnValue() {
+		traceProcessReturnValue();
 		if (returnValueIsExpected()) {
 			return true;
 		}
