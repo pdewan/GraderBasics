@@ -11,7 +11,6 @@ import util.misc.Common;
 
 public abstract class OutputAndErrorCheckingTestCase extends
 		MethodExecutionTest {
-	public static String MATCH_ANY = "(.*)";
 
 	public static String toRegex(String aString) {
 		return MATCH_ANY + aString + MATCH_ANY;
@@ -23,49 +22,42 @@ public abstract class OutputAndErrorCheckingTestCase extends
 		return emptyStrings;
 	}
 
-	protected String correctOutputButErrorsMessage() {
-		String aPrefix = "Correct output but errors";
-		String aReasons = possibleReasonsForErrors();
-		if (aReasons.isEmpty())
-			return aPrefix;
-		return aPrefix + ". Possible reasons:" + aReasons;
+//	protected String correctOutputButErrorsMessage() {
+//		String aPrefix = "Correct output but errors";
+//		String aReasons = possibleReasonsForErrors();
+//		if (aReasons.isEmpty())
+//			return aPrefix;
+//		return aPrefix + ". Possible reasons:" + aReasons;
+//	}
+
+//	protected double correctOutputButErrorsCredit() {
+//		return 0.5;
+//	}
+
+//	protected String incorrectOutputMessage() {
+//		String aPrefix = "Incorrect output";
+//		String aReasons = possibleReasonsForIncorrectOutput();
+//		if (aReasons.isEmpty())
+//			return aPrefix;
+//		return aPrefix + ". Possible reasons:" + aReasons;
+//	}
+	protected String getMethodName() {
+		return "main";
 	}
 
-	protected double correctOutputButErrorsCredit() {
-		return 0.5;
-	}
-
-	protected String incorrectOutputMessage() {
-		String aPrefix = "Incorrect output";
-		String aReasons = possibleReasonsForIncorrectOutput();
-		if (aReasons.isEmpty())
-			return aPrefix;
-		return aPrefix + ". Possible reasons:" + aReasons;
-	}
-
-	protected String noMainMessage() {
-		return "No main";
-	}
-
-	protected double incorrectOutputCredit() {
-		return 0.0;
-	}
-
-	protected double noMainCredit() {
-		return 0.0;
-	}
+	
 
 	protected boolean outputsMustBeInDifferentLines() {
 		return true;
 	}
 
-	protected String possibleReasonsForIncorrectOutput() {
-		return "";
-	}
-
-	protected String possibleReasonsForErrors() {
-		return "";
-	}
+//	protected String possibleReasonsForIncorrectOutput() {
+//		return "";
+//	}
+//
+//	protected String possibleReasonsForErrors() {
+//		return "";
+//	}
 
 	public static boolean isValidOutputInDifferentLines(List<String> anOutput,
 			String[] anExpectedStrings) {
@@ -133,13 +125,13 @@ public abstract class OutputAndErrorCheckingTestCase extends
 		return true;
 	}
 
-	protected boolean hasError(String anError) {
-		return !anError.isEmpty();
-	}
-
-	protected boolean hasError() {
-		return !getError().isEmpty();
-	}
+//	protected boolean hasError(String anError) {
+//		return !anError.isEmpty();
+//	}
+//
+//	protected boolean hasError() {
+//		return !getError().isEmpty();
+//	}
 
 	protected String[] emptyStringArray = {};
 
@@ -151,13 +143,14 @@ public abstract class OutputAndErrorCheckingTestCase extends
 				+ Arrays.toString(anExpectedStrings));
 
 	};
+	
 
 	protected String[] getStringArgs() {
 		return emptyStringArray;
 	}
 
 	@Override
-	public boolean doTest() {
+	protected boolean doTest() throws Throwable {
 		String[] aMainClasses = getClassNames();
 		for (String aMainClass : aMainClasses) {
 			traceMainCall(aMainClass, getInput(), getExpectedOutputs());
@@ -177,28 +170,28 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 	}
 
-	protected void setOutputErrorStatus() {
-		outputErrorStatus = computeOutputErrorStatus();
-	}
-
-	protected OutputErrorStatus computeOutputErrorStatus() {
-		ResultingOutErr aResult = getResultingOutErr();
-		if (aResult == null) {
-			return OutputErrorStatus.NO_OUTPUT;
-		}
-		boolean validOutput = isValidOutput();
-		boolean hasError = hasError(aResult.err);
-		if (validOutput && !hasError) {
-			return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
-		}
-		if (validOutput && hasError) {
-			return OutputErrorStatus.CORRECT_OUTPUT_ERRORS;
-		}
-		if (!validOutput && !hasError) {
-			return OutputErrorStatus.INCORRECT_OUTPUT_NO_ERRORS;
-		}
-		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
-	}
+//	protected void setOutputErrorStatus() {
+//		outputErrorStatus = computeOutputErrorStatus();
+//	}
+//
+//	protected OutputErrorStatus computeOutputErrorStatus() {
+//		ResultingOutErr aResult = getResultingOutErr();
+//		if (aResult == null) {
+//			return OutputErrorStatus.NO_OUTPUT;
+//		}
+//		boolean validOutput = isValidOutput();
+//		boolean hasError = hasError(aResult.err);
+//		if (validOutput && !hasError) {
+//			return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
+//		}
+//		if (validOutput && hasError) {
+//			return OutputErrorStatus.CORRECT_OUTPUT_ERRORS;
+//		}
+//		if (!validOutput && !hasError) {
+//			return OutputErrorStatus.INCORRECT_OUTPUT_NO_ERRORS;
+//		}
+//		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
+//	}
 
 	protected OutputErrorStatus test(String aMainName, String anInput,
 			String[] anExpectedStrings) {

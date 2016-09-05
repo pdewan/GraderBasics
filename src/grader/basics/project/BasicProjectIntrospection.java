@@ -1304,16 +1304,17 @@ public class BasicProjectIntrospection {
 			if (matchesTags(aSpecificationList, getTags(aMethod))) {
 				result.add(aMethod);
 			}
-			// Set anActualSet = new
-			// HashSet(Arrays.asList(getTags(aMethod).clone())) ;
-			// if (anActualSet.containsAll(aSpecificationList)) {
-			// result.add(aMethod);
-			// }
-			// for (String t : getTags(aMethod)) {
-			// if (t.equalsIgnoreCase(aSpecification)) {
-			// result.add(aMethod);
-			// }
-			// }
+			
+		}
+		if (result.isEmpty()) {
+			for (Method aMethod : aClass.getDeclaredMethods()) {
+
+				if (matchesTags(aSpecificationList, getTags(aMethod))) {
+					result.add(aMethod);
+					aMethod.setAccessible(true);
+				}
+
+			}
 		}
 		return result;
 	}
@@ -1352,6 +1353,18 @@ public class BasicProjectIntrospection {
 				}
 			}
 		}
+		if (result.isEmpty()) {
+			for (Method aMethod : aClass.getDeclaredMethods()) {
+
+				for (String t : getTags(aMethod)) {
+					if (t.matches(aSpecification)) {
+						result.add(aMethod);
+						aMethod.setAccessible(true);
+					}
+				}
+
+			}
+		}
 		return result;
 	}
 
@@ -1368,6 +1381,16 @@ public class BasicProjectIntrospection {
 				result.add(aMethod);
 			}
 
+		}
+		if (result.isEmpty()) {
+			for (Method aMethod : aClass.getDeclaredMethods()) {
+
+				if (aMethod.getName().matches(aSpecification)) {
+					result.add(aMethod);
+					aMethod.setAccessible(true);
+				}
+
+			}
 		}
 		return result;
 	}
@@ -1389,6 +1412,17 @@ public class BasicProjectIntrospection {
 			}
 
 		}
+		if (result.isEmpty()) {
+			for (Method aMethod : aClass.getDeclaredMethods()) {
+
+				if (aMethod.getName().equalsIgnoreCase(aSpecification)) {
+					result.add(aMethod);
+					aMethod.setAccessible(true);
+				}
+
+			}
+		}
+		
 		return result;
 	}
 	public static <T> Map<T, List<Integer>> findElementsIndices(T[] anElements) {

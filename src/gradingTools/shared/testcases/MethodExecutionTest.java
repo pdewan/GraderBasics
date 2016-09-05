@@ -1,6 +1,7 @@
 package gradingTools.shared.testcases;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
@@ -14,12 +15,13 @@ import grader.basics.project.NotGradableException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import util.awt.AnOutputQueue;
 
 
 public abstract class MethodExecutionTest  {
-	
+	public static String MATCH_ANY = "(.*)";
 	protected Object returnValue;
 	protected ResultWithOutput resultWithOutput;
 	protected String output;
@@ -34,7 +36,7 @@ public abstract class MethodExecutionTest  {
 	}
 	
 	protected boolean isInteractive() {
-		return true;
+		return false;
 	}
 	
 	protected Class[] getArgTypes() {
@@ -125,6 +127,34 @@ public abstract class MethodExecutionTest  {
 	protected boolean isValidOutput() {
 		return true;
 	}
+	protected void setOutputErrorStatus() {
+		outputErrorStatus = computeOutputErrorStatus();
+	}
+	protected boolean hasError(String anError) {
+		return !anError.isEmpty();
+	}
+
+	protected boolean hasError() {
+		return !getError().isEmpty();
+	}
+	protected OutputErrorStatus computeOutputErrorStatus() {
+		ResultingOutErr aResult = getResultingOutErr();
+		if (aResult == null) {
+			return OutputErrorStatus.NO_OUTPUT;
+		}
+		boolean validOutput = isValidOutput();
+		boolean hasError = hasError(aResult.err);
+		if (validOutput && !hasError) {
+			return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
+		}
+		if (validOutput && hasError) {
+			return OutputErrorStatus.CORRECT_OUTPUT_ERRORS;
+		}
+		if (!validOutput && !hasError) {
+			return OutputErrorStatus.INCORRECT_OUTPUT_NO_ERRORS;
+		}
+		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
+	}
 	protected boolean invokeMethod() throws Throwable  {
 		Object aTargetObject = null ;
 		Method aMethod = null;
@@ -134,14 +164,23 @@ public abstract class MethodExecutionTest  {
 				
 				continue;
 			}
-			Class aClass = getMethodClass(anObject);
+			Class aClass = getMethodClass(aTargetObject);
 			aMethod = BasicProjectIntrospection.findMethod(
 					aClass, getMethodName(), getArgTypes());
 			if (aMethod != null ) {
 				break;
 			}
 		}
-		
+		if (aTargetObject == null) {
+			Assert.assertTrue(noClassMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ noClassMessage(), false);
+		}
+		if (aMethod == null) {
+			Assert.assertTrue(noMethodMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ noMethodCredit(), false);
+		}
 		if (isInteractive()) {
 //			resultWithOutput = BasicProjectExecution.
 //					proxyAwareGeneralizedInteractiveTimedInvoke(
@@ -166,25 +205,143 @@ public abstract class MethodExecutionTest  {
 			resultingOutError = new ResultingOutErr(
 					resultWithOutput.getOutput(), 
 					resultWithOutput.getError());
+			setOutputErrorStatus();
 		} else {
 			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
-					getTargetObject(),
-					getMethod(),
+					aTargetObject,
+					aMethod,
 					getArgs(),
 					getTimeOut());
 			if (returnValue == null) {
 				return false;
 			}
 		}
-		return false;
+//		if (returnValueIsExpected()) {
+//			return true;
+//		}
+//		if (returnValueIsOffByOne()) {
+//			Assert.assertTrue(offByOneMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ offByOneCredit(), false);
+//		}
+//		return true;
+		return processReturnValue();
+	}
+	protected boolean processReturnValue() {
+		if (returnValueIsExpected()) {
+			return true;
+		}
+		if (returnValueIsOffByOne()) {
+			Assert.assertTrue(offByOneMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ offByOneCredit(), false);
+		}
+		return true;
+	}
+	protected boolean returnValueIsExpected() {
+		return getExpectedReturnValue().equals(getReturnValue());
+	}
+	protected boolean returnValueIsOffByOne() {
+		try {
+		return Math.abs(
+				(Integer) getExpectedReturnValue() - 
+				(Integer) getReturnValue()) == 1;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	protected boolean processMethodExecutionResults() {
 		return true;
+	}
+	protected String noMethodMessage() {
+		return "No method:" + getMethodName();
+	}
+	
+	protected String offByOneMessage() {
+		return "Expected value" + getExpectedReturnValue() + 
+				" is off by one from return value " + getReturnValue();
+	}
+	protected double offByOneCredit() {
+		return 0.8;
+	}
+	protected String noClassMessage() {
+		return "Did not find a class in:" + Arrays.toString(getClassNames());
+	}
+
+	protected double incorrectOutputCredit() {
+		return 0.0;
+	}
+
+	protected double noMethodCredit() {
+		return 0.0;
+	}
+	protected double noClassCredit() {
+		return 0.0;
 	}
 	
 	protected boolean doTest() throws Throwable {
 		invokeMethod();
     	return processMethodExecutionResults();
+	}
+	protected boolean processSuccessfulOutputErrrorStatus() {
+		OutputErrorStatus retVal = getOutputErrorStatus();
+
+		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS)
+			return true;
+		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_ERRORS) {
+			// String aMessage = correctOutputButErrorsMessage() +
+			// NotesAndScore.PERECTAGE_CHARACTER +
+			// + correctOutputButErrorsCredit();
+			// Assert.assertTrue(
+			// aMessage, false);
+			// This results in character becoming an int if marker is a
+			// character!
+			Assert.assertTrue(correctOutputButErrorsMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ correctOutputButErrorsCredit(), false);
+			return true; // will never be executed
+		}
+		return false;
+	}
+	protected double correctOutputButErrorsCredit() {
+		return 0.5;
+	}
+	protected String correctOutputButErrorsMessage() {
+		String aPrefix = "Correct output but errors";
+		String aReasons = possibleReasonsForErrors();
+		if (aReasons.isEmpty())
+			return aPrefix;
+		return aPrefix + ". Possible reasons:" + aReasons;
+	}
+	protected String incorrectOutputMessage() {
+		String aPrefix = "Incorrect output";
+		String aReasons = possibleReasonsForIncorrectOutput();
+		if (aReasons.isEmpty())
+			return aPrefix;
+		return aPrefix + ". Possible reasons:" + aReasons;
+	}
+	protected String possibleReasonsForIncorrectOutput() {
+		return "";
+	}
+
+	protected String possibleReasonsForErrors() {
+		return "";
+	}
+	protected boolean processUnsuccessfulOutputErrrorStatus() {
+		OutputErrorStatus retVal = getOutputErrorStatus();
+
+		if (retVal == OutputErrorStatus.NO_OUTPUT) {
+			Assert.assertTrue(noMethodMessage() + NotesAndScore.PERCENTAGE_MARKER
+					+ noMethodCredit(),
+
+			false);
+		}
+
+		Assert.assertTrue(incorrectOutputMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER + incorrectOutputCredit(),
+
+		false);
+		return true;
 	}
 	@Test
     public void test() {
