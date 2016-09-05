@@ -22,7 +22,7 @@ import util.awt.AnOutputQueue;
 
 public abstract class MethodExecutionTest  {
 	public static String MATCH_ANY = "(.*)";
-	protected Object returnValue;
+	protected Object returnValue, expectedReturnValue;
 	protected ResultWithOutput resultWithOutput;
 	protected String output;
 	protected OutputErrorStatus outputErrorStatus;
@@ -92,7 +92,7 @@ public abstract class MethodExecutionTest  {
 		return null;
 	}
 	protected Object getExpectedReturnValue() {
-		return null;
+		return expectedReturnValue;
 	}
 	protected OutputErrorStatus getOutputErrorStatus() {
 		return outputErrorStatus;
@@ -155,6 +155,16 @@ public abstract class MethodExecutionTest  {
 		}
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
+	protected void assertNoClass() {
+		Assert.assertTrue(noClassMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ noClassMessage(), false);
+	}
+	protected void assertNoMethod() {
+		Assert.assertTrue(noMethodMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ noMethodCredit(), false);
+	}
 	protected boolean invokeMethod() throws Throwable  {
 		Object aTargetObject = null ;
 		Method aMethod = null;
@@ -172,9 +182,10 @@ public abstract class MethodExecutionTest  {
 			}
 		}
 		if (aTargetObject == null) {
-			Assert.assertTrue(noClassMessage()
-					+ NotesAndScore.PERCENTAGE_MARKER
-					+ noClassMessage(), false);
+//			Assert.assertTrue(noClassMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ noClassMessage(), false);
+			assertNoClass();
 		}
 		if (aMethod == null) {
 			Assert.assertTrue(noMethodMessage()
@@ -227,14 +238,20 @@ public abstract class MethodExecutionTest  {
 //		return true;
 		return processReturnValue();
 	}
+	protected void assertOffByOne() {
+		Assert.assertTrue(offByOneMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ offByOneCredit(), false);
+	}
 	protected boolean processReturnValue() {
 		if (returnValueIsExpected()) {
 			return true;
 		}
 		if (returnValueIsOffByOne()) {
-			Assert.assertTrue(offByOneMessage()
-					+ NotesAndScore.PERCENTAGE_MARKER
-					+ offByOneCredit(), false);
+			assertOffByOne();
+//			Assert.assertTrue(offByOneMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ offByOneCredit(), false);
 		}
 		return true;
 	}
@@ -250,7 +267,7 @@ public abstract class MethodExecutionTest  {
 			return false;
 		}
 	}
-	protected boolean processMethodExecutionResults() {
+	protected boolean processInteractiveMethodExecutionResults() {
 		return true;
 	}
 	protected String noMethodMessage() {
@@ -281,7 +298,7 @@ public abstract class MethodExecutionTest  {
 	
 	protected boolean doTest() throws Throwable {
 		invokeMethod();
-    	return processMethodExecutionResults();
+    	return processInteractiveMethodExecutionResults();
 	}
 	protected boolean processSuccessfulOutputErrrorStatus() {
 		OutputErrorStatus retVal = getOutputErrorStatus();
@@ -323,7 +340,15 @@ public abstract class MethodExecutionTest  {
 	protected String possibleReasonsForIncorrectOutput() {
 		return "";
 	}
-
+	protected double wrongInterfaceCredit() {
+		return 0.1;
+	}
+	protected void assertWrongInterface(Class anActualClass, Class anInterface) {
+		Assert.assertTrue("Class " + anActualClass.getSimpleName() + 
+				" does not implement" + anInterface.getSimpleName()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ wrongInterfaceCredit(), false);
+	}
 	protected String possibleReasonsForErrors() {
 		return "";
 	}

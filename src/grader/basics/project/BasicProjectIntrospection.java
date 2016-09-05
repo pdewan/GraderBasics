@@ -1477,6 +1477,13 @@ public class BasicProjectIntrospection {
 		removeDuplicates(aMatch, aTargetParameterTypes);
 		return aMatch;
 	}
+	
+	public static Method getElaboration(Method aMethod1, Method aMethod2) {
+		if (!aMethod1.getName().equals(aMethod2.getName()) || aMethod1.getParameterTypes().equals(aMethod2.getParameterTypes()))
+			return null;
+		return aMethod1.getReturnType().isAssignableFrom(aMethod2.getReturnType())?aMethod2:aMethod1;
+			
+	}
 
 	public static Method selectMethodAndCacheIndices(String aTag, List<Method> aMethods,
 			Class[] aParameterTypes) {
@@ -1484,9 +1491,13 @@ public class BasicProjectIntrospection {
 		for (Method aMethod : aMethods) {
 //			if (Arrays.equals(aMethod.getParameterTypes(), aParameterTypes)) {
 			if (matchesParameters(aMethod.getParameterTypes(), aParameterTypes)) {
-				if (aRetVal != null)
-					return null;
+				if (aRetVal != null) {
+					aRetVal = getElaboration(aRetVal, aMethod);
+					if (aRetVal == null)
+						return null;
+				} else {
 				aRetVal = aMethod;
+				}
 				// return aMethod; // there can be other matching methods
 			}
 		}
