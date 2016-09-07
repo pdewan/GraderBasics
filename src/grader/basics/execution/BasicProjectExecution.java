@@ -529,7 +529,7 @@ public class BasicProjectExecution {
 //
 //		}
 	}
-	protected static String[] emptyArgs = {};
+	public static final String[] emptyArgs = {};
 	
 //	public static Map<String, Object> testBean (String aFeatureName, String aCheckName, Project aProject, 
 //			String[] aBeanDescriptions, 

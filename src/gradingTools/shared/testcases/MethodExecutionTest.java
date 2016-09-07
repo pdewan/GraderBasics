@@ -24,7 +24,8 @@ public abstract class MethodExecutionTest  {
 	public static String MATCH_ANY = "(.*)";
 	protected Object returnValue, expectedReturnValue;
 	protected ResultWithOutput resultWithOutput;
-	protected String output;
+	protected String output = "";
+	protected String error = "";
 	protected OutputErrorStatus outputErrorStatus;
 	protected ResultingOutErr resultingOutError;
 	
@@ -101,10 +102,13 @@ public abstract class MethodExecutionTest  {
 		return resultWithOutput;
 	}
 	protected String getOutput() {
-		return resultingOutError.out;
+//		return resultingOutError.out;
+		return output;
 	}
 	protected String getError() {
-		return resultingOutError.err;
+//		return resultingOutError.err;
+		return error;
+
 	}
 	protected ResultingOutErr getResultingOutErr() {
 		return resultingOutError;
@@ -165,7 +169,81 @@ public abstract class MethodExecutionTest  {
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ noMethodCredit(), false);
 	}
+	public  boolean invokeMethod(
+			Object aTargetObject,  
+			Method aMethod, 
+			Object[] anArgs)
+			throws Throwable {
+		if (isInteractive()) {
+//			resultWithOutput = BasicProjectExecution.
+//					proxyAwareGeneralizedInteractiveTimedInvoke(
+//							getTargetObject(),
+//							getMethod(),
+//							getArgs(),
+//							getInput(),
+//							getTimeOut());
+			System.out.println ("Calling  interactive method:" + 
+					aMethod.getName() + 
+					" with args " +
+					Arrays.toString(anArgs) +
+					" and input " +
+					getInput()); 
+			resultWithOutput = BasicProjectExecution.
+					proxyAwareGeneralizedInteractiveTimedInvoke(
+							aTargetObject,
+							aMethod,
+							anArgs,
+							getInput(),
+							getTimeOut());
+			if (resultWithOutput == null) {
+				returnValue = null;
+				resultingOutError = null;
+				return false;
+			}
+			returnValue = resultWithOutput.getResult();
+//			resultingOutError = new ResultingOutErr(
+//					resultWithOutput.getOutput(), 
+//					resultWithOutput.getError());
+			error += resultWithOutput.getError();
+			output += resultWithOutput.getOutput();
+			//should define seters in this class
+			resultingOutError = new ResultingOutErr(
+					output, 
+					error);
+			setOutputErrorStatus();
+			processOutputErrorStatus();
+		} else {
+			System.out.println ("Calling non interactive method:" + 
+					aMethod.getName() + 
+					" with args " +
+					Arrays.toString(anArgs)); 
+			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
+					aTargetObject,
+					aMethod,
+					anArgs,
+					getTimeOut());
+			if (returnValue == null) {
+				return false;
+			}
+		}
+//		if (returnValueIsExpected()) {
+//			return true;
+//		}
+//		if (returnValueIsOffByOne()) {
+//			Assert.assertTrue(offByOneMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ offByOneCredit(), false);
+//		}
+//		return true;
+		return true;
+		
+	}
+	protected void resetIO() {
+		error = "";
+		output = "";
+	}
 	protected boolean invokeMethod() throws Throwable  {
+		resetIO();
 		Object aTargetObject = null ;
 		Method aMethod = null;
 		for (Object anObject:getTargetObjects()) {
@@ -193,65 +271,57 @@ public abstract class MethodExecutionTest  {
 					+ noMethodCredit(), false);
 		}
 	
-				
-		
-		if (isInteractive()) {
+		boolean aResult = invokeMethod(aTargetObject, aMethod, getArgs());		
+		if (!aResult) {
+			return false;
+		}
+//		if (isInteractive()) {
+//
+//			System.out.println ("Calling  interactive method:" + 
+//					aMethod.getName() + 
+//					" with args " +
+//					getArgs() +
+//					" and input " +
+//					getInput()); 
 //			resultWithOutput = BasicProjectExecution.
 //					proxyAwareGeneralizedInteractiveTimedInvoke(
-//							getTargetObject(),
-//							getMethod(),
+//							aTargetObject,
+//							aMethod,
 //							getArgs(),
 //							getInput(),
 //							getTimeOut());
-			System.out.println ("Calling  interactive method:" + 
-					aMethod.getName() + 
-					" with args " +
-					getArgs() +
-					" and input " +
-					getInput()); 
-			resultWithOutput = BasicProjectExecution.
-					proxyAwareGeneralizedInteractiveTimedInvoke(
-							aTargetObject,
-							aMethod,
-							getArgs(),
-							getInput(),
-							getTimeOut());
-			if (resultWithOutput == null) {
-				returnValue = null;
-				resultingOutError = null;
-				return false;
-			}
-			returnValue = resultWithOutput.getResult();
-			resultingOutError = new ResultingOutErr(
-					resultWithOutput.getOutput(), 
-					resultWithOutput.getError());
-			setOutputErrorStatus();
-		} else {
-			System.out.println ("Calling non interactive method:" + 
-					aMethod.getName() + 
-					" with args " +
-					getArgs()); 
-			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
-					aTargetObject,
-					aMethod,
-					getArgs(),
-					getTimeOut());
-			if (returnValue == null) {
-				return false;
-			}
-		}
-//		if (returnValueIsExpected()) {
-//			return true;
+//			if (resultWithOutput == null) {
+//				returnValue = null;
+//				resultingOutError = null;
+//				return false;
+//			}
+//			returnValue = resultWithOutput.getResult();
+//			resultingOutError = new ResultingOutErr(
+//					resultWithOutput.getOutput(), 
+//					resultWithOutput.getError());
+//			setOutputErrorStatus();
+//		} else {
+//			System.out.println ("Calling non interactive method:" + 
+//					aMethod.getName() + 
+//					" with args " +
+//					getArgs()); 
+//			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
+//					aTargetObject,
+//					aMethod,
+//					getArgs(),
+//					getTimeOut());
+//			if (returnValue == null) {
+//				return false;
+//			}
 //		}
-//		if (returnValueIsOffByOne()) {
-//			Assert.assertTrue(offByOneMessage()
-//					+ NotesAndScore.PERCENTAGE_MARKER
-//					+ offByOneCredit(), false);
-//		}
-//		return true;
-		return processReturnValue();
+	return processReturnValue();
 	}
 	protected void assertOffByOne() {
+		Assert.assertTrue(offByOneMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ offByOneCredit(), false);
+	}
+	protected void assertWrongReturnValue() {
 		Assert.assertTrue(offByOneMessage()
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ offByOneCredit(), false);
@@ -271,11 +341,37 @@ public abstract class MethodExecutionTest  {
 //			Assert.assertTrue(offByOneMessage()
 //					+ NotesAndScore.PERCENTAGE_MARKER
 //					+ offByOneCredit(), false);
+		} else {
+			assertWrongReturnValue();
 		}
 		return true;
 	}
+	protected void processSingleTryOutputErrorStatus() {
+		OutputErrorStatus retVal = getOutputErrorStatus();
+		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS)
+			return;
+		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_ERRORS) {
+			// String aMessage = correctOutputButErrorsMessage() +
+			// NotesAndScore.PERECTAGE_CHARACTER +
+			// + correctOutputButErrorsCredit();
+			// Assert.assertTrue(
+			// aMessage, false);
+			// This results in character becoming an int if marker is a
+			// character!
+			Assert.assertTrue(correctOutputButErrorsMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ correctOutputButErrorsCredit(), false);
+			return;
+		}
+		Assert.assertTrue(incorrectOutputMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ incorrectOutputCredit(), false);
+	}
+	protected void processOutputErrorStatus() {
+		processSingleTryOutputErrorStatus();
+	}
 	protected boolean returnValueIsExpected() {
-		return getExpectedReturnValue().equals(getReturnValue());
+		return getExpectedReturnValue() == (getReturnValue()) || getExpectedReturnValue().equals(getReturnValue());
 	}
 	protected boolean returnValueIsOffByOne() {
 		try {
@@ -297,8 +393,15 @@ public abstract class MethodExecutionTest  {
 		return "Expected value" + getExpectedReturnValue() + 
 				" is off by one from return value " + getReturnValue();
 	}
+	protected String wrongReturnValueMessage() {
+		return "Expected value" + getExpectedReturnValue() + 
+				" is not same as return value " + getReturnValue();
+	}
 	protected double offByOneCredit() {
 		return 0.8;
+	}
+	protected double wrongReturnValueCredit() {
+		return 0.0;
 	}
 	protected String noClassMessage() {
 		return "Did not find a class in:" + Arrays.toString(getClassNames());
@@ -396,5 +499,7 @@ public abstract class MethodExecutionTest  {
         	BasicJUnitUtils.assertTrue(e, 0);
         }
     }
-	
+	public static String toRegex(String aString) {
+		return MATCH_ANY + aString + MATCH_ANY;
+	}
 }

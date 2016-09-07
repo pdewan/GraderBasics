@@ -10,11 +10,11 @@ import java.util.List;
 import util.misc.Common;
 
 public abstract class OutputAndErrorCheckingTestCase extends
-		MethodExecutionTest {
+		BeanExecutionTest {
 
-	public static String toRegex(String aString) {
-		return MATCH_ANY + aString + MATCH_ANY;
-	}
+//	public static String toRegex(String aString) {
+//		return MATCH_ANY + aString + MATCH_ANY;
+//	}
 
 	static String[] emptyStrings = {};
 
@@ -148,10 +148,9 @@ public abstract class OutputAndErrorCheckingTestCase extends
 	protected String[] getStringArgs() {
 		return emptyStringArray;
 	}
-
-	@Override
-	protected boolean doTest() throws Throwable {
+	protected boolean callInteractiveMain() throws Throwable {
 		String[] aMainClasses = getClassNames();
+		resetIO();
 		for (String aMainClass : aMainClasses) {
 			traceMainCall(aMainClass, getInput(), getExpectedOutputs());
 			// resultingOutError =
@@ -159,6 +158,8 @@ public abstract class OutputAndErrorCheckingTestCase extends
 			// getStringArgs(), getInput());
 			resultingOutError = BasicProjectExecution.callMain(aMainClass,
 					getStringArgs(), getInput());
+			output += resultingOutError.out;
+			error +=  resultingOutError.err;
 			if (resultingOutError != null) {
 				setOutputErrorStatus();
 				return true;
@@ -167,6 +168,29 @@ public abstract class OutputAndErrorCheckingTestCase extends
 			}
 		}
 		return false;
+
+	}
+
+	@Override
+	protected boolean doTest() throws Throwable {
+		return callInteractiveMain();
+//		String[] aMainClasses = getClassNames();
+//		for (String aMainClass : aMainClasses) {
+//			traceMainCall(aMainClass, getInput(), getExpectedOutputs());
+//			// resultingOutError =
+//			// BasicProjectExecution.callMain(getClassName(),
+//			// getStringArgs(), getInput());
+//			resultingOutError = BasicProjectExecution.callMain(aMainClass,
+//					getStringArgs(), getInput());
+//			if (resultingOutError != null) {
+//				setOutputErrorStatus();
+//				return true;
+//			} else {
+//				System.out.println("Could not execite main class");
+//			}
+//		}
+//		return false;
+		
 
 	}
 
