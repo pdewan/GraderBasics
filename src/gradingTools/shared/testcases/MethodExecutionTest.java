@@ -18,19 +18,32 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import util.awt.AnOutputQueue;
+import grader.basics.execution.GradingMode;
 
 
 public abstract class MethodExecutionTest  {
 	public static String MATCH_ANY = "(.*)";
-	protected Object returnValue, expectedReturnValue;
+	protected Object returnValue, expectedReturnValue, 
+		studentExpectedReturnValue, graderExpectedReturnValue;
 	protected ResultWithOutput resultWithOutput;
 	protected String output = "";
 	protected String error = "";
 	protected OutputErrorStatus outputErrorStatus;
 	protected ResultingOutErr resultingOutError;
 	
+	public Object[] getStudentArgs() {
+		return new Object[]{};
+	}
+	public Object[] getGraderArgs() {
+		return getStudentArgs();
+	}
+	
 	public Object[] getArgs() {
-		return new Object[] {} ;
+		if(GradingMode.getGraderRun()) {
+			return getGraderArgs();
+		} else {
+			return getStudentArgs();
+		}
 	}
 	public enum OutputErrorStatus {
 		NO_OUTPUT, CORRECT_OUTPUT_NO_ERRORS, CORRECT_OUTPUT_ERRORS, INCORRECT_OUTPUT_NO_ERRORS, INCORRECT_OUTPUT_ERRORS
@@ -93,7 +106,17 @@ public abstract class MethodExecutionTest  {
 		return null;
 	}
 	protected Object getExpectedReturnValue() {
-		return expectedReturnValue;
+		if(GradingMode.getGraderRun()) {
+			return getGraderExpectedReturnValue();
+		} else {
+			return getStudentExpectedReturnValue();
+		}
+	}
+	protected Object getStudentExpectedReturnValue() {
+		return studentExpectedReturnValue;
+	}
+	protected Object getGraderExpectedReturnValue() {
+		return getStudentExpectedReturnValue();
 	}
 	protected OutputErrorStatus getOutputErrorStatus() {
 		return outputErrorStatus;
@@ -115,6 +138,9 @@ public abstract class MethodExecutionTest  {
 	}
 	protected Object getReturnValue() {
 		return returnValue;
+	}
+	protected void setReturnValue(Object newVal) {
+		returnValue = newVal;
 	}
 	protected double getPercentage() {
 		return 0;
