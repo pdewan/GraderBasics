@@ -67,7 +67,9 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		// maybeSetChildrenMaxScores();
 	}
 	protected void notifyTestRunStarted(GradableJUnitTest aTest) {
-		propertyChangeSupport.firePropertyChange(TEST_RUN_STARTED, aTest, null);
+//		propertyChangeSupport.firePropertyChange(TEST_RUN_STARTED, aTest, null);
+		propertyChangeSupport.firePropertyChange(TEST_RUN_STARTED, null, aTest);
+
 //		
 //		String aClassName = aTest.getJUnitClass().getSimpleName();
 //		String aName = aTest.getExplanation();

@@ -23,8 +23,9 @@ import grader.basics.execution.GradingMode;
 
 public abstract class MethodExecutionTest  {
 	public static String MATCH_ANY = "(.*)";
-	protected Object returnValue, expectedReturnValue, 
-		studentExpectedReturnValue, graderExpectedReturnValue;
+	protected Object returnValue; 
+//		expectedReturnValue, 
+//		studentExpectedReturnValue, graderExpectedReturnValue;
 	protected ResultWithOutput resultWithOutput;
 	protected String output = "";
 	protected String error = "";
@@ -113,7 +114,7 @@ public abstract class MethodExecutionTest  {
 		}
 	}
 	protected Object getStudentExpectedReturnValue() {
-		return studentExpectedReturnValue;
+		return null;
 	}
 	protected Object getGraderExpectedReturnValue() {
 		return getStudentExpectedReturnValue();

@@ -854,6 +854,7 @@ public class BasicProjectIntrospection {
 		if (aCachedClass != null) {
 			if (Object.class.equals(aCachedClass))
 			return null;
+			else return aCachedClass;
 		}
 		
 		Class retVal = findClass(aProject, aName, aName, aName, aName);	

@@ -79,7 +79,7 @@ public class BasicProjectExecution {
 		if (anArgs == null) {
 			anArgs = emptyObjectArray;
 		}
-
+		System.out.println ("Calling on object " + anObject + " method:" + aMethod + " args:" + anArgs + "timeOut:" + aMillSeconds);
 		Future future = executor.submit(new AMethodExecutionCallable(anObject,
 				aMethod, anArgs));
 

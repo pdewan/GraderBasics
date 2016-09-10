@@ -137,9 +137,9 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 	protected void traceMainCall(String aMainName, String anInput,
 			String[] anExpectedStrings) {
-		System.out.println("Calling main in:" + aMainName);
-		System.out.println("Providing input:" + anInput);
-		System.out.println("Expecting output:"
+		System.out.println("Called main:" + aMainName);
+		System.out.println("Provided input:" + anInput);
+		System.out.println("Expected outputs:"
 				+ Arrays.toString(anExpectedStrings));
 
 	};
@@ -150,17 +150,20 @@ public abstract class OutputAndErrorCheckingTestCase extends
 	}
 	protected boolean callInteractiveMain() throws Throwable {
 		String[] aMainClasses = getClassNames();
-		resetIO();
 		for (String aMainClass : aMainClasses) {
-			traceMainCall(aMainClass, getInput(), getExpectedOutputs());
+			resetIO();
 			// resultingOutError =
 			// BasicProjectExecution.callMain(getClassName(),
 			// getStringArgs(), getInput());
 			resultingOutError = BasicProjectExecution.callMain(aMainClass,
 					getStringArgs(), getInput());
+			if (resultingOutError == null)
+				continue;
 			output += resultingOutError.out;
 			error +=  resultingOutError.err;
 			if (resultingOutError != null) {
+				traceMainCall(aMainClass, getInput(), getExpectedOutputs());
+
 				setOutputErrorStatus();
 				return true;
 			} else {
