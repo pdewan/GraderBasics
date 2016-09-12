@@ -143,7 +143,12 @@ public abstract class OutputAndErrorCheckingTestCase extends
 				+ Arrays.toString(anExpectedStrings));
 
 	};
-	
+	protected String toOutputString(String aToken) {
+		return aToken;
+	}
+	protected String[] postTokenOutputLines(String aToken) {
+		return emptyStringArray;
+	}
 
 	protected String[] getStringArgs() {
 		return emptyStringArray;
