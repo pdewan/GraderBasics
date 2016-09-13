@@ -53,12 +53,17 @@ public abstract class MethodExecutionTest  {
 	protected boolean isInteractive() {
 		return false;
 	}
-	
-	protected Class[] getArgTypes() {
-		Object[] anArgs = getArgs();
-		  Class[] anArgTypes = BasicProjectIntrospection.toClasses(anArgs);
+	public static Class[] toArgTypes(Object[] anArgs) {
+		 Class[] anArgTypes = BasicProjectIntrospection.toClasses(anArgs);
 		    BasicProjectIntrospection.toPrimitiveTypes(anArgTypes);
 		    return anArgTypes;
+	}
+	protected Class[] getArgTypes() {
+		Object[] anArgs = getArgs();
+		return toArgTypes(anArgs);
+//		  Class[] anArgTypes = BasicProjectIntrospection.toClasses(anArgs);
+//		    BasicProjectIntrospection.toPrimitiveTypes(anArgTypes);
+//		    return anArgTypes;
 	}
 	
 

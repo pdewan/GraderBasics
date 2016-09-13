@@ -24,7 +24,9 @@ public class BeanExecutionTest extends MethodExecutionTest{
 		return getClassNames();
 	}
 	protected Class[] getConstructorArgTypes() {
-		return null;
+			Object[] anArgs = getConstructorArgs();
+			return toArgTypes(anArgs);
+		
 	}
 	protected Object[] getConstructorArgs() {
 		if (GradingMode.getGraderRun())
