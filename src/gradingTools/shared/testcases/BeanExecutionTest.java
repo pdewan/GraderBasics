@@ -35,20 +35,26 @@ public class BeanExecutionTest extends MethodExecutionTest{
 			return getStudentConstructorArgs();
 	}
 	protected Object[] getStudentConstructorArgs() {
-		return null;
+		return emptyObjectArray;
 	}
 	protected Object[] getGraderConstructorArgs() {
 		return getStudentConstructorArgs();
 	}
-	
+	static String[] emptyStringArray = {};
+
+
 	protected String[] getOutputPropertyNames() {
-		return null;
+		return emptyStringArray;
 	}
+	static Map<String, Object> emptyStringObjectMap = new HashMap();
 	protected Map<String, Object> getInputPropertyValues() {
-		return null;
+		if (GradingMode.getGraderRun())
+			return getGraderInputPropertyValues();
+		else 
+			return getStudentInputPropertyValues();
 	}
 	protected Map<String, Object> getStudentInputPropertyValues() {
-		return null;
+		return emptyStringObjectMap;
 	}
 	protected Map<String, Object> getGraderInputPropertyValues() {
 		return getStudentInputPropertyValues();
@@ -77,6 +83,7 @@ public class BeanExecutionTest extends MethodExecutionTest{
 		String[] anOutputProperties = getOutputPropertyNames();
 		Object[] anExpectedValues = getExpectedOutputValues();
 		Map<String, Object> anActualOutputs = getOutputPropertyValues();
+		anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, true);
 		for (int i = 0; i < anOutputProperties.length; i++) {
 			Object anExpectedOutput = anExpectedValues[i];
 			Object anActualOutput;
