@@ -31,6 +31,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.junit.Assert;
 
+import util.annotations.IsRestriction;
 import util.misc.Common;
 import util.misc.TeePrintStream;
 import util.trace.Tracer;
@@ -50,9 +51,9 @@ public class BasicProjectExecution {
 	public static final String CLASS_MATCHED = "Status.ClassMatched";
 	
 	static ExecutorService executor = Executors.newSingleThreadExecutor();
-	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;
-	public static final int DEFAULT_METHOD_TIME_OUT = 2000;
-	public static final int PROCESS_TIME_OUT = 4000;
+	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in milliseconds
+	public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
+	public static final int PROCESS_TIME_OUT = 4; // in seconds
 	protected static int constructorTimeOut = DEFAULT_CONSTRUCTOR_TIME_OUT;
 	
 	protected static int methodTimeOut = DEFAULT_METHOD_TIME_OUT;
@@ -780,8 +781,18 @@ public class BasicProjectExecution {
 	 public static ResultingOutErr callCorrespondingMain(Class aProxyClass, String... anInput) throws NotRunnableException {
 		 return callCorrespondingMain(aProxyClass, emptyStringArray, anInput);
 	 }
+	 protected static boolean reRunInfiniteProcesses = false;
+	 public static void setReRunInfiniteProcesses(boolean newVal) {
+		 reRunInfiniteProcesses = newVal;
+	 }
+	 public static boolean isReRunInfiniteProceses() {
+		 return reRunInfiniteProcesses;
+	 }
 	 public static ResultingOutErr callMain(String aMainName, String[] args,
 				String... anInput) throws NotRunnableException {
+		 if (!isReRunInfiniteProceses() && 
+			  CurrentProjectHolder.getOrCreateCurrentProject().isInfinite())
+			 return null;
 		 if (BasicGradingEnvironment.get().isForkMain()) {
 			 return forkMain(aMainName, args, anInput);
 		 } else {
@@ -866,7 +877,13 @@ public class BasicProjectExecution {
 		 BasicProjectExecution.redirectInputOutputError(BasicProjectExecution.toInputString(anInput));		
 			
 			Method aMainMethod = BasicProjectIntrospection.findMethod(aMainClass, "main", new Class[] {String[].class});
-			BasicProjectExecution.timedInvoke(aMainClass, aMainMethod, new Object[] {args});
+			if (aMainMethod == null) {
+				return null;
+			}
+			Object retVal = BasicProjectExecution.timedInvoke(aMainClass, aMainMethod, new Object[] {args});
+			if( retVal == null) {
+				CurrentProjectHolder.getOrCreateCurrentProject().setInfinite(true);
+			}
 //			aMainMethod.invoke(aMainClass, new Object[] {args});		
 //			String anOutput = ProjectExecution.restoreOutputAndGetRedirectedOutput();
 			ResultingOutErr aResult = BasicProjectExecution.restoreAndGetRedirectedIOStreams();

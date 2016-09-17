@@ -888,6 +888,7 @@ public class BasicProcessRunner implements Runner {
 //			sakaiProject.setCurrentInput(input); // this should go or be append for subsequent input
 //			sakaiProject.setCurrentArgs(args);
 //		}
+//		TimedProcess result = null;
 		maybeSetInputAndArgs(input, args);
 		TimedProcess process = null;
 		try {
@@ -983,6 +984,7 @@ public class BasicProcessRunner implements Runner {
 			// Start the process
 			// TimedProcess process = new TimedProcess(builder, timeout);
 			process = new TimedProcess(builder, timeout);
+//			result = process; // may set to null if error
 			runner.setCurrentTimeProcess(process);
 
 			Process processObj = process.start();
@@ -1170,6 +1172,9 @@ public class BasicProcessRunner implements Runner {
 
 					System.out
 							.println("*** Timed out waiting for process to finish ***");
+//					result = null;
+					project.setInfinite(true);
+					
 					// avoiding hanging processes
 					// processIn.flush();
 					// processIn.close();

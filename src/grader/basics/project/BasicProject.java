@@ -29,7 +29,7 @@ import util.trace.TraceableLogFactory;
  */
 public class BasicProject implements Project {
     
-
+	protected boolean isInfinite;
     protected File directory;
     protected File sourceFolder;
     protected Option<ClassesManager> classesManager;
@@ -373,5 +373,13 @@ public class BasicProject implements Project {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    @Override
+    public boolean isInfinite() {
+    	return isInfinite;
+    }
+    @Override
+    public void setInfinite(boolean newVal) {
+    	isInfinite = newVal;
     }
 }

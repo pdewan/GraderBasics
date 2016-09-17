@@ -78,5 +78,9 @@ public interface Project {
 	RunningProject launch(String input, String[] anArgs, int timeout)
 			throws NotRunnableException;
 
+	boolean isInfinite();
+
+	void setInfinite(boolean newVal);
+
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }
