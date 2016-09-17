@@ -1,7 +1,9 @@
 package gradingTools.shared.testcases;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
@@ -89,10 +91,18 @@ public abstract class MethodExecutionTest  {
 	}
 	protected Class[] getTargetClasses() {
 		String[] aClassNames = getClassNames();
-		Class[] aTargetClasses = new Class[aClassNames.length];
+		List<Class> aClassList = new ArrayList();
+//		Class[] aTargetClasses = new Class[aClassNames.length];
 		for (int i = 0; i < aClassNames.length; i++) {
-			aTargetClasses[i] = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassNames[i]);
+			Class aFoundClass = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassNames[i]);
+			if (aClassList.contains(aFoundClass) || aFoundClass == null)
+				continue;
+			aClassList.add(aFoundClass);
+//			aTargetClasses[i] = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassNames[i]);
 		}
+		Class[] aTargetClasses = new Class[aClassList.size()];
+		aTargetClasses = aClassList.toArray(aTargetClasses);
+
 //		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
 		return aTargetClasses;
 	}
