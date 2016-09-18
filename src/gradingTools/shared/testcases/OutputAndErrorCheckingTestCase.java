@@ -172,9 +172,11 @@ public abstract class OutputAndErrorCheckingTestCase extends
 				setOutputErrorStatus();
 				return true;
 			} else {
-				System.out.println("Could not execite main class");
+				System.out.println("Could not execute main class");
 			}
 		}
+		System.out.println("Could not find main class in:" + Arrays.toString(getClassNames()));
+
 		return false;
 
 	}

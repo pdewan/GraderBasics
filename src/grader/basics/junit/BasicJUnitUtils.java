@@ -33,6 +33,9 @@ public class BasicJUnitUtils {
 
 	public static void assertTrue (Throwable e, double aFractionComplete) {
 		if (e instanceof AssertionError) {
+			if (e.getMessage().contains("" + NotesAndScore.PERCENTAGE_MARKER))
+				Assert.assertTrue(e.getMessage(), false);
+			else
 			Assert.assertTrue(e.getMessage() + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete, false);
 
 		} else {

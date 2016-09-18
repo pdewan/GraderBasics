@@ -100,7 +100,11 @@ public class BeanExecutionTest extends MethodExecutionTest{
 
 		}
 	}
-	protected  void testBean() throws Throwable {
+	protected void testBean() throws Throwable {
+		executeBean();
+		processBeanExecution();
+	}
+	protected  void executeBean() throws Throwable {
 		String anOutput;
 		Map<String, Object> anActualOutputs = new HashMap();
 		outputPropertyValues = anActualOutputs;
@@ -127,7 +131,7 @@ public class BeanExecutionTest extends MethodExecutionTest{
 
 			if (aClass == null) {
 				System.out.println("No class matching: "
-						+ Common.toString(aBeanDescriptions));
+						+aClass.getSimpleName());
 				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
 				// anActualOutputs = null;
 			} else {
@@ -228,7 +232,7 @@ public class BeanExecutionTest extends MethodExecutionTest{
 	
 	
 	protected String getsEqualsSetsErrorMessage() {
-		return "One or more fets does not return set";
+		return "One or more gets does not return set";
 	}
 	protected String expectedEqualsActualErrorMessage() {
 		return "One or more dependent properties is erroneous";
@@ -241,15 +245,15 @@ public class BeanExecutionTest extends MethodExecutionTest{
 	}
 	protected String getsSetsMessage() {
 		
-		String result = getsEqualSets()?getsEqualsSetsErrorMessage():"";
-		result += expectedEqualActual()?expectedEqualsActualErrorMessage():"";
+		String result = getsEqualSets()?"":getsEqualsSetsErrorMessage();
+		result += expectedEqualActual()?"":expectedEqualsActualErrorMessage();
 		return result;
 	}
 	protected void processGetsSets() {
 		double aCredit = getsSetsCredits();
 		String aMessage = getsSetsMessage();
-		if (aMessage.isEmpty())
-			return;
+//		if (aMessage.isEmpty())
+//			return;
 		Assert.assertTrue(aMessage
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ aCredit, false);
@@ -259,6 +263,25 @@ public class BeanExecutionTest extends MethodExecutionTest{
 	}
 	protected double expectedEqualsActualCredit() {
 		return 1.0 - getsEqualsSetsCredit();
+	}
+	protected void processBeanExecution() {
+		double aCredit = getsSetsCredits();
+		String aMessage = getsSetsMessage();
+		if (aCredit == 1.0)
+			return;
+		Assert.assertTrue(aMessage
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ aCredit, false);
+//		boolean aGetsEqualsSets = getsEqualSets();
+//		boolean anExpectedEqualsActual = expectedEqualActual();
+//		if (aGetsEqualsSets && anExpectedEqualsActual ) {
+//			return;
+//		}
+//		if (aGetsEqualsSets) {
+//			processGetsSets();
+//		} else if (anExpectedEqualsActual) {
+//			processGetsAndSetsAfterSucessfulOutput();
+//		}
 	}
 	protected void processGetsAndSetsAfterSucessfulOutput() {
 		if (!getsEqualSets()) {
