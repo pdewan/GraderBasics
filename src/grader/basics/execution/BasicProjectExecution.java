@@ -380,6 +380,8 @@ public class BasicProjectExecution {
 			FileOutputStream aFileStream = new FileOutputStream(
 					aNextTempFileName);
 			File aTmpFile = new File(aNextTempFileName);
+			System.out.println ("Creating:" + aNextTempFileName);
+
 			fileOutStack.push(aFileStream);
 			tmpOutFileStack.push(aTmpFile);
 			originalOutStack.push(previousOut); // this should be System.out;			
@@ -397,6 +399,8 @@ public class BasicProjectExecution {
 		try {
 		if (newIn != null) {
 			newIn.close();
+			System.out.println ("Creating:" + tmpInFileName);
+
 			File aTempInputFile = new File(tmpInFileName);
 			if (aTempInputFile.exists()) {
 				aTempInputFile.delete();
@@ -415,10 +419,11 @@ public class BasicProjectExecution {
 		File tmpOutFile = tmpOutFileStack.pop();
 //		ThreadSupport.sleep(2000);
 		String anOutput = Common.toText(tmpOutFile);
+		System.out.println ("Deleting:" + tmpOutFile.getName());
 		tmpOutFile.delete();
 		return anOutput;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println ("Could not delete file");
 			e.printStackTrace();
 		}	finally {
 			previousOut = originalOutStack.pop();
