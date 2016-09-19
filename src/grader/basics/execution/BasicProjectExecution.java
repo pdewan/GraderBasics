@@ -757,6 +757,9 @@ public class BasicProjectExecution {
 	}
 	 public static ResultingOutErr forkMain(String aMainClassName, String[] args,
 				String... input) throws NotRunnableException {	
+		 if (!isReRunInfiniteProceses() && 
+		  CurrentProjectHolder.getOrCreateCurrentProject().isInfinite())
+		 return null;
 		 return forkMain(aMainClassName, args, PROCESS_TIME_OUT, input);
 	 }
 	 public static ResultingOutErr forkMain(
@@ -795,9 +798,9 @@ public class BasicProjectExecution {
 	 }
 	 public static ResultingOutErr callMain(String aMainName, String[] args,
 				String... anInput) throws NotRunnableException {
-		 if (!isReRunInfiniteProceses() && 
-			  CurrentProjectHolder.getOrCreateCurrentProject().isInfinite())
-			 return null;
+//		 if (!isReRunInfiniteProceses() && 
+//			  CurrentProjectHolder.getOrCreateCurrentProject().isInfinite())
+//			 return null;
 		 if (BasicGradingEnvironment.get().isForkMain()) {
 			 return forkMain(aMainName, args, anInput);
 		 } else {
