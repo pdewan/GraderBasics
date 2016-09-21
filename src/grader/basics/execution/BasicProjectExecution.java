@@ -925,18 +925,39 @@ public class BasicProjectExecution {
 		   return invokeStatic(aClass, aMethodName,  anArgs, aTimeOut);
 	   }
 	   
-	   public static Object maybeGetProxy(Object anObject) {
+	   public static Object maybeGetActual(Object anObject) {
 		   if (anObject instanceof Proxy) {
 				Object anActualObject = BasicProjectIntrospection.getRealObject(anObject);
 				if (anActualObject == null) {
 					Tracer.error("Could not get real object for proxy:" + anObject);
 				}
-				anObject = anActualObject;
+				return anActualObject;
+				
 			} else if (anObject.getClass().isArray()) {
-				Object[] anArray = (Object[]) anObject;
-				for (int j = 0; j < anArray.length; j++) {
-					anArray[j] = maybeGetProxy(anArray[j]);
+				Object anActualObject = BasicProjectIntrospection.getRealObject(anObject);
+				if (anActualObject != null) {
+					return anActualObject;
+					
 				}
+				
+				Object[] aProxyArray = (Object[]) anObject;
+				Class aComponentType = aProxyArray.getClass().getComponentType();
+				
+				if (aProxyArray.length == 0 || BasicProjectIntrospection.isPredefinedType(aComponentType)) {
+					return aProxyArray;
+				}
+				Object aProxy = aProxyArray[0];
+				Object aRealObject = BasicProjectIntrospection.getRealObject(aProxy);
+				Class aRealClass = aRealObject.getClass();
+				
+				
+				
+				
+				Object[] aRealArray = (Object[]) Array.newInstance(aRealClass, aProxyArray.length);
+				for (int j = 0; j < aProxyArray.length; j++) {
+					aRealArray[j] = BasicProjectIntrospection.getRealObject(aProxyArray[j]);
+				}
+				BasicProjectIntrospection.associate(aRealArray, aProxyArray);
 			}
 		   return anObject;
 		
@@ -944,7 +965,7 @@ public class BasicProjectExecution {
 	   
 	   public static void maybeReplaceProxies(Object[] args) {
 		   for (int i = 0; i < args.length; i++) {
-			   args[i] = maybeGetProxy(args[i]);
+			   args[i] = maybeGetActual(args[i]);
 //				if (args[i] instanceof Proxy) {
 //					Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
 //					if (anActualObject == null) {
@@ -984,14 +1005,17 @@ public class BasicProjectExecution {
 	   public static Object maybeReturnProxy(Object aRetVal, Class aReturnType) {
 		   if (aRetVal == null)
 				return aRetVal;
-		   if (aReturnType.isArray()) {
-			   return returnArrayOfProxies(aRetVal, aReturnType);
-		   }
+//		   if (aReturnType.isArray()) {
+//			   return returnArrayOfProxies(aRetVal, aReturnType);
+//		   }
 		    
 			if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
 				Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
 				if (aProxy != null)
 					return aProxy;
+				 if (aReturnType.isArray()) {
+					   return returnArrayOfProxies(aRetVal, aReturnType);
+				   }
 				 aProxy = BasicProjectIntrospection.createProxy(aReturnType, aRetVal);
 				 if (aProxy != null) // it should always be non null
 					 return aProxy;

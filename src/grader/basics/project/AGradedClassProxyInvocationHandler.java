@@ -38,7 +38,8 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 			}
 		}
 		for (int i = 0; i < args.length; i++) {
-			args[i] = BasicProjectExecution.maybeGetProxy(args[i]);
+			args[i] = BasicProjectExecution.maybeGetActual(args[i]);
+//			args[i] = BasicProjectExecution.maybeGetProxy(args[i]);
 //			if (args[i] instanceof Proxy) {
 //				Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
 //				if (anActualObject == null) {
@@ -51,13 +52,14 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 		Object aRetVal = BasicProjectExecution.timedInvoke(actualObject, anActualMethod, args);
 		if (aRetVal == null)
 			return aRetVal;
-		 if (aReturnType.isArray()) {
-			   return BasicProjectExecution.returnArrayOfProxies(aRetVal, aReturnType);
-		   }
+		 
 		if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
 			Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
 			if (aProxy != null)
 				return aProxy;
+			if (aReturnType.isArray()) {
+				   return BasicProjectExecution.returnArrayOfProxies(aRetVal, aReturnType);
+			   }
 			 aProxy = BasicProjectIntrospection.createProxy(aProxyMethod.getReturnType(), aRetVal);
 			 if (aProxy != null) // it should always be non null
 				 return aProxy;
