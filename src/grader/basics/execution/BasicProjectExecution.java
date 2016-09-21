@@ -935,9 +935,22 @@ public class BasicProjectExecution {
 				}
 			}
 	   }
+	   public static Object returnArrayOfProxies(Object aRetVal, Class aReturnType) {
+			   Object[] aRetArray = (Object[]) aRetVal;
+			   Class anElementClass = aRetArray.getClass().getComponentType();
+			   for (int i = 0; i < aRetArray.length; i++) {
+				   aRetArray[i] = maybeReturnProxy(aRetArray[i], anElementClass);
+			   }
+		   
+		   return aRetVal;
+	   }
 	   public static Object maybeReturnProxy(Object aRetVal, Class aReturnType) {
 		   if (aRetVal == null)
 				return aRetVal;
+		   if (aReturnType.isArray()) {
+			   return returnArrayOfProxies(aRetVal, aReturnType);
+		   }
+		    
 			if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
 				Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
 				if (aProxy != null)

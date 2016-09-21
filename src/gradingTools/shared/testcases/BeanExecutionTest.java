@@ -105,6 +105,8 @@ public class BeanExecutionTest extends MethodExecutionTest{
 		Map<String, Object> anActualOutputs = getOutputPropertyValues();
 		anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, true);
 		for (int i = 0; i < anOutputProperties.length; i++) {
+			if (i >= anExpectedValues.length)
+				return;
 			Object anExpectedOutput = anExpectedValues[i];
 			Object anActualOutput;
 			Object outputProperty = anOutputProperties[i];
