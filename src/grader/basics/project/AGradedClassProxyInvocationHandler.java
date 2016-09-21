@@ -49,6 +49,9 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 		Object aRetVal = BasicProjectExecution.timedInvoke(actualObject, anActualMethod, args);
 		if (aRetVal == null)
 			return aRetVal;
+		 if (aRetVal.getClass().isArray()) {
+			   return BasicProjectExecution.returnArrayOfProxies(aRetVal, aRetVal.getClass());
+		   }
 		if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
 			Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
 			if (aProxy != null)
