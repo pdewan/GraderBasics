@@ -22,6 +22,7 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method aProxyMethod, Object[] args)
 			throws Throwable {
+		Class aReturnType = aProxyMethod.getReturnType();
 		Method anActualMethod = BasicProjectIntrospection.findMethod(actualClass, aProxyMethod);
 		Assert.assertTrue("Method matching " + aProxyMethod.getName() + " not found in class: " + actualClass, anActualMethod != null);
 		if (anActualMethod == null) {
@@ -49,8 +50,8 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 		Object aRetVal = BasicProjectExecution.timedInvoke(actualObject, anActualMethod, args);
 		if (aRetVal == null)
 			return aRetVal;
-		 if (aRetVal.getClass().isArray()) {
-			   return BasicProjectExecution.returnArrayOfProxies(aRetVal, aRetVal.getClass());
+		 if (aReturnType.isArray()) {
+			   return BasicProjectExecution.returnArrayOfProxies(aRetVal, aReturnType);
 		   }
 		if (!BasicProjectIntrospection.isPredefinedType(aRetVal.getClass())) {
 			Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);

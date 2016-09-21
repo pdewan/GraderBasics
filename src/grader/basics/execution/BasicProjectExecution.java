@@ -924,6 +924,22 @@ public class BasicProjectExecution {
 		   return invokeStatic(aClass, aMethodName,  anArgs, aTimeOut);
 	   }
 	   
+//	   public static Object maybeGetProxy(Object anObject) {
+//		   if (args[i] instanceof Proxy) {
+//				Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
+//				if (anActualObject == null) {
+//					Tracer.error("Could not get real object for proxy:" + args[i]);
+//				}
+//				args[i] = anActualObject;
+//			} else if (args[i].getClass().isArray()) {
+//				Object[] anArray = (Object[]) args[i];
+//				for (int j = 0; i < anArray.length; j++) {
+//					anArray[i] = 
+//				}
+//			}
+//		}
+//	   }
+	   
 	   public static void maybeReplaceProxies(Object[] args) {
 		   for (int i = 0; i < args.length; i++) {
 				if (args[i] instanceof Proxy) {
@@ -932,6 +948,11 @@ public class BasicProjectExecution {
 						Tracer.error("Could not get real object for proxy:" + args[i]);
 					}
 					args[i] = anActualObject;
+				} else if (args[i].getClass().isArray()) {
+					Object[] anArray = (Object[]) args[i];
+					for (int j = 0; i < anArray.length; j++) {
+//						anArray[i] = 
+					}
 				}
 			}
 	   }
