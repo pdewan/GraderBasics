@@ -924,21 +924,22 @@ public class BasicProjectExecution {
 		   return invokeStatic(aClass, aMethodName,  anArgs, aTimeOut);
 	   }
 	   
-//	   public static Object maybeGetProxy(Object anObject) {
-//		   if (args[i] instanceof Proxy) {
-//				Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
-//				if (anActualObject == null) {
-//					Tracer.error("Could not get real object for proxy:" + args[i]);
-//				}
-//				args[i] = anActualObject;
-//			} else if (args[i].getClass().isArray()) {
-//				Object[] anArray = (Object[]) args[i];
-//				for (int j = 0; i < anArray.length; j++) {
-//					anArray[i] = 
-//				}
-//			}
-//		}
-//	   }
+	   public static Object maybeGetProxy(Object anObject) {
+		   if (anObject instanceof Proxy) {
+				Object anActualObject = BasicProjectIntrospection.getRealObject(anObject);
+				if (anActualObject == null) {
+					Tracer.error("Could not get real object for proxy:" + anObject);
+				}
+				anObject = anActualObject;
+			} else if (anObject.getClass().isArray()) {
+				Object[] anArray = (Object[]) anObject;
+				for (int j = 0; j < anArray.length; j++) {
+					anArray[j] = maybeGetProxy(anArray[j]);
+				}
+			}
+		   return anObject;
+		
+	   }
 	   
 	   public static void maybeReplaceProxies(Object[] args) {
 		   for (int i = 0; i < args.length; i++) {
@@ -958,13 +959,22 @@ public class BasicProjectExecution {
 	   }
 	   public static Object returnArrayOfProxies(Object aRetVal, Class aReturnType) {
 			   Object[] aRetArray = (Object[]) aRetVal;
-			   Class anElementClass = aRetArray.getClass().getComponentType();
+			   Class anElementClass = aReturnType.getComponentType();
 			   for (int i = 0; i < aRetArray.length; i++) {
 				   aRetArray[i] = maybeReturnProxy(aRetArray[i], anElementClass);
 			   }
 		   
 		   return aRetVal;
 	   }
+//	   public static Object returnArrayOfProxies(Object aRetVal, Class aReturnType, Class anElementClass) {
+//		   Object[] aRetArray = (Object[]) aRetVal;
+//		   for (int i = 0; i < aRetArray.length; i++) {
+//			   aRetArray[i] = maybeReturnProxy(aRetArray[i], anElementClass);
+//		   }
+//	   
+//	   return aRetVal;
+//   }
+	   
 	   public static Object maybeReturnProxy(Object aRetVal, Class aReturnType) {
 		   if (aRetVal == null)
 				return aRetVal;
