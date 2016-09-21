@@ -21,19 +21,28 @@ import util.trace.Tracer;
 
 public class BeanExecutionTest extends MethodExecutionTest{
 	protected Map<String, Object> outputPropertyValues;
+	Object[] constructorArgs;
+	protected Object[] expectedOutputValues;
+	Map<String, Object> inputPropertyValues;
 	protected String[] getBeanDescriptions() {
 		return getClassNames();
 	}
-	protected Class[] getConstructorArgTypes() {
+	public Class[] getConstructorArgTypes() {
 			Object[] anArgs = getConstructorArgs();
 			return toArgTypes(anArgs);
 		
 	}
+	public void setConstructorArgs(Object[] newVal) {
+		constructorArgs = newVal;
+	}
 	protected Object[] getConstructorArgs() {
+		if (constructorArgs != null) {
+			return constructorArgs;
+		}
 		if (GradingMode.getGraderRun())
 			return getGraderConstructorArgs();
-		else
-			return getStudentConstructorArgs();
+		
+		return getStudentConstructorArgs();
 	}
 	protected Object[] getStudentConstructorArgs() {
 		return emptyObjectArray;
@@ -48,13 +57,16 @@ public class BeanExecutionTest extends MethodExecutionTest{
 		return emptyStringArray;
 	}
 	static Map<String, Object> emptyStringObjectMap = new HashMap();
-	protected Map<String, Object> getInputPropertyValues() {
+	public Map<String, Object> getInputPropertyValues() {
+		if (inputPropertyValues != null) {
+			return inputPropertyValues;
+		}
 		if (GradingMode.getGraderRun())
 			return getGraderInputPropertyValues();
-		else 
-			return getStudentInputPropertyValues();
+		 
+		return getStudentInputPropertyValues();
 	}
-	protected Map<String, Object> getStudentInputPropertyValues() {
+	public Map<String, Object> getStudentInputPropertyValues() {
 		return emptyStringObjectMap;
 	}
 	protected Map<String, Object> getGraderInputPropertyValues() {
@@ -64,14 +76,21 @@ public class BeanExecutionTest extends MethodExecutionTest{
 		return outputPropertyValues;
 	}
 	static Object[] emptyObjectArray = {};
-	protected Object[] getExpectedOutputValues() {
+	
+	public Object[] getExpectedOutputValues() {
+		if (expectedOutputValues != null) {
+			return expectedOutputValues;
+		}
 		if (GradingMode.getGraderRun()) {
 			return getExpectedGraderOutputValues();
-		} else {
-			return getExpectedStudentOutputValues();
-		}
+		} 
+		return getExpectedStudentOutputValues();
+		
 	}
-	protected Object[] getExpectedStudentOutputValues() {
+	public void setExpectedOutputValues(Object[] newVal) {
+		expectedOutputValues = newVal;
+	}
+	public Object[] getExpectedStudentOutputValues() {
 		return emptyObjectArray;
 	}
 	
