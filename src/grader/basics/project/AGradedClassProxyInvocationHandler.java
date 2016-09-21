@@ -38,13 +38,14 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 			}
 		}
 		for (int i = 0; i < args.length; i++) {
-			if (args[i] instanceof Proxy) {
-				Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
-				if (anActualObject == null) {
-					Tracer.error("Could not get real object for proxy:" + args[i]);
-				}
-				args[i] = anActualObject;
-			}
+			args[i] = BasicProjectExecution.maybeGetProxy(args[i]);
+//			if (args[i] instanceof Proxy) {
+//				Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
+//				if (anActualObject == null) {
+//					Tracer.error("Could not get real object for proxy:" + args[i]);
+//				}
+//				args[i] = anActualObject;
+//			}
 		}
 		}
 		Object aRetVal = BasicProjectExecution.timedInvoke(actualObject, anActualMethod, args);

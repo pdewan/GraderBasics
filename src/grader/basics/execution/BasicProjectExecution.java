@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -943,28 +944,33 @@ public class BasicProjectExecution {
 	   
 	   public static void maybeReplaceProxies(Object[] args) {
 		   for (int i = 0; i < args.length; i++) {
-				if (args[i] instanceof Proxy) {
-					Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
-					if (anActualObject == null) {
-						Tracer.error("Could not get real object for proxy:" + args[i]);
-					}
-					args[i] = anActualObject;
-				} else if (args[i].getClass().isArray()) {
-					Object[] anArray = (Object[]) args[i];
-					for (int j = 0; i < anArray.length; j++) {
-//						anArray[i] = 
-					}
-				}
+			   args[i] = maybeGetProxy(args[i]);
+//				if (args[i] instanceof Proxy) {
+//					Object anActualObject = BasicProjectIntrospection.getRealObject(args[i]);
+//					if (anActualObject == null) {
+//						Tracer.error("Could not get real object for proxy:" + args[i]);
+//					}
+//					args[i] = anActualObject;
+//				} else if (args[i].getClass().isArray()) {
+//					Object[] anArray = (Object[]) args[i];
+//					for (int j = 0; i < anArray.length; j++) {
+////						anArray[i] = 
+//					}
+//				}
 			}
 	   }
 	   public static Object returnArrayOfProxies(Object aRetVal, Class aReturnType) {
-			   Object[] aRetArray = (Object[]) aRetVal;
+			   
+		   	   Object[] anOriginalArray = (Object[]) aRetVal;
 			   Class anElementClass = aReturnType.getComponentType();
-			   for (int i = 0; i < aRetArray.length; i++) {
-				   aRetArray[i] = maybeReturnProxy(aRetArray[i], anElementClass);
+		   	   Object[] aReturnArray = (Object[]) Array.newInstance(anElementClass, anOriginalArray.length);
+
+			   for (int i = 0; i < anOriginalArray.length; i++) {
+				   aReturnArray[i] = maybeReturnProxy(anOriginalArray[i], anElementClass);
 			   }
 		   
-		   return aRetVal;
+			   BasicProjectIntrospection.associate(anOriginalArray, aReturnArray);
+		   return aReturnArray;
 	   }
 //	   public static Object returnArrayOfProxies(Object aRetVal, Class aReturnType, Class anElementClass) {
 //		   Object[] aRetArray = (Object[]) aRetVal;

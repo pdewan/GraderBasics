@@ -1766,7 +1766,11 @@ public class BasicProjectIntrospection {
 	public static Object getProxyObject (Object aRealObject) {
 		return  objectToProxy.get(aRealObject);
 	}
-
+	
+	public static void associate(Object aRealObject, Object aProxyObject) {
+		proxyToObject.put(aProxyObject, aRealObject);
+		objectToProxy.put(aRealObject, aProxyObject);
+	}
 	public static List<Method> findMethod(Class aJavaClass, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
 		List<Method> result = new ArrayList();
