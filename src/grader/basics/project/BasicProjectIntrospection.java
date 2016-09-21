@@ -221,17 +221,59 @@ public class BasicProjectIntrospection {
 		
 	}
 	
+	public static boolean matchesParameterTypes(Class aCandidate, Class aProxy) {
+		
+			if (aCandidate == aProxy)
+				return true;
+			// types in two different systems
+			if (aCandidate.isInterface()) {
+				return matchCandidateInterface(aCandidate, aProxy);
+			} else if (aCandidate.isArray()) {
+				if (!aProxy.isArray())
+					return false;
+				return matchesParameterTypes(aCandidate.getComponentType(), 
+						aProxy.getComponentType());
+			}
+			
+			else {
+				return matchCandidateClass(aCandidate, aProxy);
+			}
+//
+//			String aProxySimpleName = aProxies[anIndex].getSimpleName();
+//			String aCandidateSimpleName = aCandidates[anIndex].getSimpleName();
+//			if (
+//					BasicProjectIntrospection.getCachedClass(aProxySimpleName) != aCandidates[anIndex] &&
+//					!aProxySimpleName.equals(aCandidateSimpleName)) { // if am inteface and the class has not been looked up
+//				return false;
+//			}
+			
+//			if (aProxies[anIndex].getCanonicalName().startsWith("java")) {
+//				return false; // means this is not a user defined class
+//			}
+		
+		
+	}
 	public static boolean matchesParameters(Class[] aCandidates, Class[] aProxies) {
 		if (aCandidates.length != aProxies.length) return false;
 		for (int anIndex = 0; anIndex < aProxies.length; anIndex++) {
-			if (aCandidates[anIndex] == aProxies[anIndex])
-				continue;
-			// types in two different systems
-			if (aCandidates[anIndex].isInterface()) {
-				return matchCandidateInterface(aCandidates[anIndex], aProxies[anIndex]);
-			} else {
-				return matchCandidateClass(aCandidates[anIndex], aProxies[anIndex]);
-			}
+			Class aCandidate = aCandidates[anIndex];
+			Class aProxy = aProxies[anIndex];
+			if (!matchesParameterTypes(aCandidate, aProxy))
+				return false;
+//			if (aCandidate == aProxy)
+//				continue;
+//			// types in two different systems
+//			if (aCandidate.isInterface()) {
+//				return matchCandidateInterface(aCandidate, aProxy);
+//			} else if (aCandidate.isArray()) {
+//				if (!aProxy.isArray())
+//					return false;
+//				return aCandidate.getComponentType().eqaProxy.getComponentType();
+//			}
+//			
+//			else {
+//				return matchCandidateClass(aCandidates[anIndex], aProxies[anIndex]);
+//			}
 //
 //			String aProxySimpleName = aProxies[anIndex].getSimpleName();
 //			String aCandidateSimpleName = aCandidates[anIndex].getSimpleName();
