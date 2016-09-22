@@ -25,6 +25,8 @@ import grader.basics.execution.GradingMode;
 
 public abstract class MethodExecutionTest  {
 	public static String MATCH_ANY = "(.*)";
+	protected Object lastTargetObject;
+
 	protected Object returnValue; 
 //		expectedReturnValue, 
 //		studentExpectedReturnValue, graderExpectedReturnValue;
@@ -51,7 +53,9 @@ public abstract class MethodExecutionTest  {
 	public enum OutputErrorStatus {
 		NO_OUTPUT, CORRECT_OUTPUT_NO_ERRORS, CORRECT_OUTPUT_ERRORS, INCORRECT_OUTPUT_NO_ERRORS, INCORRECT_OUTPUT_ERRORS
 	}
-	
+	public Object getLastTargetObject() {
+		return lastTargetObject;
+	}
 	protected boolean isInteractive() {
 		return false;
 	}
@@ -211,11 +215,14 @@ public abstract class MethodExecutionTest  {
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ noMethodCredit(), false);
 	}
+	
 	public  boolean invokeMethod(
 			Object aTargetObject,  
 			Method aMethod, 
 			Object[] anArgs)
 			throws Throwable {
+		resetIO();
+		lastTargetObject =aTargetObject;
 		if (isInteractive()) {
 //			resultWithOutput = BasicProjectExecution.
 //					proxyAwareGeneralizedInteractiveTimedInvoke(
@@ -284,7 +291,53 @@ public abstract class MethodExecutionTest  {
 		error = "";
 		output = "";
 	}
-	protected boolean invokeMethod() throws Throwable  {
+	protected void maybeNoMethod(Method aMethod) {
+		if (aMethod == null) {
+			Assert.assertTrue(noMethodMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ noMethodCredit(), false);
+		}
+	}
+	protected Method findMethod (Object aTargetObject) {
+		Class aClass = getMethodClass(aTargetObject);
+		Method aMethod = BasicProjectIntrospection.findMethod(
+				aClass, getMethodName(), getArgTypes());
+		return aMethod;
+		
+	}
+	protected void maybeExceptionMethod(Boolean aResult) {
+		if (!aResult) {
+			Assert.assertTrue(exceptionMethodMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ exceptionMethodCredit(), false);
+		}
+	}
+	public boolean invokeMethod(Object aTargetObject) throws Throwable  {
+		resetIO();
+		
+		Method aMethod = findMethod(aTargetObject);
+
+		
+			
+		maybeNoMethod(aMethod);
+//		if (aMethod == null) {
+//			Assert.assertTrue(noMethodMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ noMethodCredit(), false);
+//		}
+	
+		boolean aResult = invokeMethod(aTargetObject, aMethod, getArgs());	
+		maybeExceptionMethod(aResult);
+//		if (!aResult) {
+//			Assert.assertTrue(exceptionMethodMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ exceptionMethodCredit(), false);
+//		}
+
+	return processReturnValue();
+	}
+	
+	public boolean invokeMethod() throws Throwable  {
 		resetIO();
 		Object aTargetObject = null ;
 		Method aMethod = null;
@@ -294,9 +347,10 @@ public abstract class MethodExecutionTest  {
 				
 				continue;
 			}
-			Class aClass = getMethodClass(aTargetObject);
-			aMethod = BasicProjectIntrospection.findMethod(
-					aClass, getMethodName(), getArgTypes());
+			aMethod = findMethod(aTargetObject);
+//			Class aClass = getMethodClass(aTargetObject);
+//			aMethod = BasicProjectIntrospection.findMethod(
+//					aClass, getMethodName(), getArgTypes());
 			if (aMethod != null ) {
 				break;
 			}
@@ -313,10 +367,14 @@ public abstract class MethodExecutionTest  {
 					+ noMethodCredit(), false);
 		}
 	
-		boolean aResult = invokeMethod(aTargetObject, aMethod, getArgs());		
-		if (!aResult) {
-			return false;
-		}
+		boolean aResult = invokeMethod(aTargetObject, aMethod, getArgs());	
+		maybeExceptionMethod(aResult);
+//		if (!aResult) {
+//			Assert.assertTrue(exceptionMethodMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ exceptionMethodCredit(), false);
+////			return false;
+//		}
 //		if (isInteractive()) {
 //
 //			System.out.println ("Calling  interactive method:" + 
@@ -431,6 +489,13 @@ public abstract class MethodExecutionTest  {
 		return "No method:" + getMethodName();
 	}
 	
+	protected String exceptionMethodMessage() {
+		return "Method throws tieout or other exception:" + getMethodName();
+	}
+	protected double exceptionMethodCredit() {
+		return 0.2;
+	}
+	
 	protected String offByOneMessage() {
 		return "Expected value" + getExpectedReturnValue() + 
 				" is off by one from return value " + getReturnValue();
@@ -456,6 +521,7 @@ public abstract class MethodExecutionTest  {
 	protected double noMethodCredit() {
 		return 0.0;
 	}
+	
 	protected double noClassCredit() {
 		return 0.0;
 	}

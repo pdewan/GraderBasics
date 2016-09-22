@@ -24,7 +24,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 	protected Map<String, Object> outputPropertyValues;
 	protected boolean invokeSetters = true;
 	Object[] constructorArgs;
-	protected Object beanObject;
+//	protected Object beanObject;
 	protected Object[] expectedOutputValues;
 	Map<String, Object> inputPropertyValues;
 
@@ -367,17 +367,17 @@ public class BeanExecutionTest extends MethodExecutionTest {
 	public Map<String, Object> executeBean(Object anObject) throws Throwable {
 		// Cannot do reflection onproxies
 		if (anObject instanceof Proxy) {
-			beanObject = BasicProjectIntrospection.getRealObject(anObject);
-			anObject = beanObject;
+			lastTargetObject = BasicProjectIntrospection.getRealObject(anObject);
+			anObject = lastTargetObject;
 		} else {
-			beanObject = anObject;
-			anObject = beanObject;
+			lastTargetObject = anObject;
+			anObject = lastTargetObject;
 		}
 		String anOutput;
 		Map<String, Object> anActualOutputs = new HashMap();
 		outputPropertyValues = anActualOutputs;
 //		Class aClass = getTargetClass();
-		Class aClass = beanObject.getClass();
+		Class aClass = lastTargetObject.getClass();
 
 		Map<String, Object> anInputs = getInputPropertyValues();
 		String[] anOutputProperties = getOutputPropertyNames();

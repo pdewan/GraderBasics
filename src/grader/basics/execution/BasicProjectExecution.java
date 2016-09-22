@@ -52,6 +52,7 @@ public class BasicProjectExecution {
 	public static final String CLASS_MATCHED = "Status.ClassMatched";
 
 	static ExecutorService executor = Executors.newSingleThreadExecutor();
+	
 	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
 																// milliseconds
 	public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
@@ -84,7 +85,7 @@ public class BasicProjectExecution {
 		if (anArgs == null) {
 			anArgs = emptyObjectArray;
 		}
-		System.out.println("Calling on object " + anObject + " method:"
+		System.out.println("Calling on object " + anObject + " " + anObject.hashCode() + " method:"
 				+ aMethod + " args:" + anArgs + "timeOut:" + aMillSeconds);
 		Future future = executor.submit(new AMethodExecutionCallable(anObject,
 				aMethod, anArgs));
@@ -97,11 +98,14 @@ public class BasicProjectExecution {
 			future.cancel(true); // not needed really
 			System.err.println("Terminated execution after milliseconds:"
 					+ aMillSeconds);
+			executor = Executors.newSingleThreadExecutor();
 			return null;
 		} catch (ExecutionException e) {
 			System.err
 					.println("Execution exception caused by invocation exception caused by:");
 			e.getCause().getCause().printStackTrace();
+//			executor = Executors.newSingleThreadExecutor();
+
 			return null;
 
 		} finally {
@@ -120,8 +124,10 @@ public class BasicProjectExecution {
 
 		try {
 			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
-		} catch (CancellationException | InterruptedException e) {
+		} catch (CancellationException | InterruptedException | TimeoutException e) {
 			future.cancel(true); // not needed really
+			executor = Executors.newSingleThreadExecutor();
+
 			// e.printStackTrace();
 			System.err.println("Terminated execution after milliseconds:"
 					+ aMillSeconds);
@@ -220,8 +226,15 @@ public class BasicProjectExecution {
 
 		try {
 			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
-		} catch (Exception e) {
+		}catch (TimeoutException e) {
+			executor = Executors.newSingleThreadExecutor();
 			e.printStackTrace();
+			return null;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			executor = Executors.newSingleThreadExecutor();
+
 			future.cancel(true);
 			System.out.println("Terminated!");
 			return null;
@@ -241,7 +254,11 @@ public class BasicProjectExecution {
 
 		try {
 			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
-		} catch (Exception e) {
+		} catch (TimeoutException e) {
+			executor = Executors.newSingleThreadExecutor();
+			throw e;
+		}
+		catch (Exception e) {
 			future.cancel(true);
 			System.out.println("Terminated!");
 			throw e;
@@ -282,7 +299,12 @@ public class BasicProjectExecution {
 			// tmpFile.delete();
 
 			return new AResultWithOutput(aResult, anOutput);
+		} catch (TimeoutException e) {
+			executor = Executors.newSingleThreadExecutor();
+			return new AResultWithOutput(null, null);
+
 		} catch (Exception e) {
+			
 			return new AResultWithOutput(null, null);
 		} finally {
 			System.setOut(previousOut);
@@ -307,7 +329,11 @@ public class BasicProjectExecution {
 			ResultingOutErr anOutErr = restoreAndGetRedirectedIOStreams();
 
 			return new AResultWithOutput(aResult, anOutErr.out, anOutErr.err);
-		} catch (Exception e) {
+		} catch (TimeoutException e) {
+			executor = Executors.newSingleThreadExecutor();
+			return new AResultWithOutput(null, null);
+		}
+		catch (Exception e) {
 			return new AResultWithOutput(null, null);
 		} finally {
 			System.setOut(previousOut);
@@ -548,7 +574,12 @@ public class BasicProjectExecution {
 			// tmpFile.delete();
 
 			return new AResultWithOutput(aResult, anOutput);
-		} catch (Exception e) {
+		} catch (TimeoutException e) {
+			executor = Executors.newSingleThreadExecutor();
+			return new AResultWithOutput(null, null);
+		}
+		
+		catch (Exception e) {
 			return new AResultWithOutput(null, null);
 		}
 		// finally {
