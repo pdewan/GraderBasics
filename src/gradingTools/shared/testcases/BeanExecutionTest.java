@@ -9,6 +9,7 @@ import grader.basics.project.Project;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,87 +20,117 @@ import org.junit.Assert;
 import util.misc.Common;
 import util.trace.Tracer;
 
-public class BeanExecutionTest extends MethodExecutionTest{
+public class BeanExecutionTest extends MethodExecutionTest {
 	protected Map<String, Object> outputPropertyValues;
+	protected boolean invokeSetters = true;
 	Object[] constructorArgs;
+	protected Object beanObject;
 	protected Object[] expectedOutputValues;
 	Map<String, Object> inputPropertyValues;
+
 	protected String[] getBeanDescriptions() {
 		return getClassNames();
 	}
-	public Class[] getConstructorArgTypes() {
-			Object[] anArgs = getConstructorArgs();
-			return toArgTypes(anArgs);
-		
+
+	public boolean isInvokeSetters() {
+		return invokeSetters;
 	}
+	
+
+
+	public void setInvokeSetters(boolean newValue) {
+		invokeSetters = newValue;
+	}
+
+	public Class[] getConstructorArgTypes() {
+		Object[] anArgs = getConstructorArgs();
+		return toArgTypes(anArgs);
+
+	}
+
 	public void setConstructorArgs(Object[] newVal) {
 		constructorArgs = newVal;
 	}
+
 	protected Object[] getConstructorArgs() {
 		if (constructorArgs != null) {
 			return constructorArgs;
 		}
 		if (GradingMode.getGraderRun())
 			return getGraderConstructorArgs();
-		
+
 		return getStudentConstructorArgs();
 	}
+
 	protected Object[] getStudentConstructorArgs() {
 		return emptyObjectArray;
 	}
+
 	protected Object[] getGraderConstructorArgs() {
 		return getStudentConstructorArgs();
 	}
-	static String[] emptyStringArray = {};
 
+	static String[] emptyStringArray = {};
 
 	protected String[] getOutputPropertyNames() {
 		return emptyStringArray;
 	}
+
 	static Map<String, Object> emptyStringObjectMap = new HashMap();
+	
+	public void setInputPropertyValues(Map<String, Object> newVal) {
+		inputPropertyValues = newVal;
+	}
 	public Map<String, Object> getInputPropertyValues() {
 		if (inputPropertyValues != null) {
 			return inputPropertyValues;
 		}
 		if (GradingMode.getGraderRun())
 			return getGraderInputPropertyValues();
-		 
+
 		return getStudentInputPropertyValues();
 	}
+
 	public Map<String, Object> getStudentInputPropertyValues() {
 		return emptyStringObjectMap;
 	}
-	protected Map<String, Object> getGraderInputPropertyValues() {
+
+	public Map<String, Object> getGraderInputPropertyValues() {
 		return getStudentInputPropertyValues();
 	}
+
 	public Map<String, Object> getOutputPropertyValues() {
 		return outputPropertyValues;
 	}
+
 	static Object[] emptyObjectArray = {};
-	
+
 	public Object[] getExpectedOutputValues() {
 		if (expectedOutputValues != null) {
 			return expectedOutputValues;
 		}
 		if (GradingMode.getGraderRun()) {
 			return getExpectedGraderOutputValues();
-		} 
+		}
 		return getExpectedStudentOutputValues();
-		
+
 	}
+
 	public void setExpectedOutputValues(Object[] newVal) {
 		expectedOutputValues = newVal;
 	}
+
 	public Object[] getExpectedStudentOutputValues() {
 		return emptyObjectArray;
 	}
-	
+
 	protected Object[] getExpectedGraderOutputValues() {
 		return getExpectedStudentOutputValues();
 	}
+
 	protected void compareOutputWithExpected() {
 		Map<String, Object> anInputs = getInputPropertyValues();
-		
+
 		String[] anOutputProperties = getOutputPropertyNames();
 		Object[] anExpectedValues = getExpectedOutputValues();
 		Map<String, Object> anActualOutputs = getOutputPropertyValues();
@@ -114,163 +145,176 @@ public class BeanExecutionTest extends MethodExecutionTest{
 					.get(outputProperty);
 			// anActualOutput = anActualOutputs.get(outputProperty);
 			if (!Common.equal(anExpectedOutput, anActualOutput)) {
-				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
-				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL + "."
-						+ anOutputProperties[i], false);
-				System.out.println ("Property:" +outputProperty + " expected value:" + anExpectedOutput + " actual output:" + anActualOutput );
+				anActualOutputs.put(
+						BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
+				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL
+						+ "." + anOutputProperties[i], false);
+				System.out.println("Property:" + outputProperty
+						+ " expected value:" + anExpectedOutput
+						+ " actual output:" + anActualOutput);
 			}
 
 		}
 	}
+
 	public void testBean() throws Throwable {
 		executeBean();
 		processBeanExecution();
 	}
-//	protected  Map<String, Object> executeBean() throws Throwable {
-//		String anOutput;
-//		Map<String, Object> anActualOutputs = new HashMap();
-//		outputPropertyValues = anActualOutputs;
-//		String[] aBeanDescriptions = getBeanDescriptions();
-//		Class[] aConstructorArgTypes = getConstructorArgTypes();
-//		Object[] aConstructorArgs = getConstructorArgs();
-//		Map<String, Object> anInputs = getInputPropertyValues();
-//		String[] anOutputProperties = getOutputPropertyNames();
-//		try {
-//			// String[] aBeanDescriptions = aBeanDescription.split(",");
-////			if (aBeanDescriptions.length != 4) {
-////				Tracer.error("Bean description  in testBean should have 4 elements instead of: "
-////						+ aBeanDescriptions.length);
-////			}
-////			BasicProjectExecution.redirectOutput();
-////			System.out.println("Testcase:" + aCheckName);
-////			System.out.println("Finding classes matching:"
-////					+ Common.toString(aBeanDescriptions));
-////			Class aClass = BasicProjectIntrospection.findClass(aProject,
-////					aBeanDescriptions[0], aBeanDescriptions[1],
-////					aBeanDescriptions[2], aBeanDescriptions[3]);
-//			
-//			Class aClass = getTargetClass();
-//
-//			if (aClass == null) {
-//				System.out.println("No class matching: "
-//						+aClass.getSimpleName());
-//				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
-//				// anActualOutputs = null;
-//			} else {
-//				System.out.println("Finding constructor matching:"
-//						+ Common.toString(aConstructorArgTypes));
-//				// anActualOutputs.put(CLASS_MATCHED,
-//				// aClass.getCanonicalName());
-//				anActualOutputs.put(BasicProjectExecution.CLASS_MATCHED, aClass);
-//
-//				Constructor aConstructor = aClass
-//						.getConstructor(aConstructorArgTypes);
-//				if (aConstructor == null) {
-//					outputPropertyValues.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
-//				}
-//				aConstructor = aClass.getConstructor();
-//				
-//				Object anObject = BasicProjectExecution.timedInvoke(aConstructor, aConstructorArgs,
-//						BasicProjectExecution.getMethodTimeOut());
-//				for (String aPropertyName : anInputs.keySet()) {
-//					if (aPropertyName == null)
-//						continue;
-//					PropertyDescriptor aProperty = BasicProjectIntrospection
-//							.findProperty(aClass, aPropertyName);
-//					if (aProperty == null) {
-//						anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
-//						anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
-//								+ aPropertyName, true);
-//						 System.out.println("Property " + aPropertyName + "not found in " + aClass.getSimpleName());
-//						continue;
-//					}
-//					Method aWriteMethod = aProperty.getWriteMethod();
-//					if (aWriteMethod == null) {
-//						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE, true);
-//						anActualOutputs.put(
-//								BasicProjectExecution.MISSING_WRITE + "." + aPropertyName, true);
-//						System.out.println("Missing write method for property "
-//								+ aPropertyName);
-//						continue;
-//					}
-//					Object aValue = anInputs.get(aPropertyName);
-////					timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
-////							new Object[] { aValue });
-////					BasicProjectExecution.timedInvoke(anObject, aWriteMethod, 
-////							new Object[] { aValue }, BasicProjectExecution.getMethodTimeOut());
-////				
-//					invokeMethod(anObject, aWriteMethod, new Object[] { aValue });
-//				
-//				}
-//				for (String anOutputPropertyName : anOutputProperties) {
-//					if (anOutputPropertyName == null)
-//						continue;
-//					PropertyDescriptor aProperty = BasicProjectIntrospection
-//							.findProperty(aClass, anOutputPropertyName);
-//					if (aProperty == null) {
-//
-//						// System.out.println("Property " + aPropertyName +
-//						// "not found");
-//						continue;
-//					}
-//					Method aReadMethod = aProperty.getReadMethod();
-//					if (aReadMethod == null) {
-//						System.out.println("Missing read method for property "
-//								+ anOutputPropertyName);
-//						anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
-//						anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
-//								+ anOutputPropertyName, true);
-//						continue;
-//					}
-////					Object result = timedInvoke(anObject, aReadMethod,
-////							getMethodTimeOut(), emptyArgs);
-////					Object result = BasicProjectExecution.timedInvoke(anObject, aReadMethod,
-////							BasicProjectExecution.emptyArgs, BasicProjectExecution.getMethodTimeOut());
-//					invokeMethod(anObject, aReadMethod, BasicProjectExecution.emptyArgs);
-//					anActualOutputs.put(anOutputPropertyName, returnValue);
-//				}
-//			}
-//
-//		} catch (NoSuchMethodException e) {
-//			System.out.println("Constructor not found:" + e.getMessage());
-//			anActualOutputs.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
-//			// e.printStackTrace();
-//		} catch (SecurityException e) {
-//			// TODO Auto-generated catch block
-//			anActualOutputs = null;
-//
-//			e.printStackTrace();
-//		} finally {
-////			anOutput = BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
-////			if (anOutput != null && !anOutput.isEmpty()) {
-////				ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
-////						anOutput);
-////			}
-////			anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
-//
-//		}
-//		boolean getsReturnSets = getsReturnedSets(
-//				anInputs, anActualOutputs);
-//		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS, getsReturnSets);
-//		compareOutputWithExpected();
-//		return anActualOutputs;
-//	}
-	public  Map<String, Object> executeBean() throws Throwable {
+
+	// protected Map<String, Object> executeBean() throws Throwable {
+	// String anOutput;
+	// Map<String, Object> anActualOutputs = new HashMap();
+	// outputPropertyValues = anActualOutputs;
+	// String[] aBeanDescriptions = getBeanDescriptions();
+	// Class[] aConstructorArgTypes = getConstructorArgTypes();
+	// Object[] aConstructorArgs = getConstructorArgs();
+	// Map<String, Object> anInputs = getInputPropertyValues();
+	// String[] anOutputProperties = getOutputPropertyNames();
+	// try {
+	// // String[] aBeanDescriptions = aBeanDescription.split(",");
+	// // if (aBeanDescriptions.length != 4) {
+	// //
+	// Tracer.error("Bean description  in testBean should have 4 elements instead of: "
+	// // + aBeanDescriptions.length);
+	// // }
+	// // BasicProjectExecution.redirectOutput();
+	// // System.out.println("Testcase:" + aCheckName);
+	// // System.out.println("Finding classes matching:"
+	// // + Common.toString(aBeanDescriptions));
+	// // Class aClass = BasicProjectIntrospection.findClass(aProject,
+	// // aBeanDescriptions[0], aBeanDescriptions[1],
+	// // aBeanDescriptions[2], aBeanDescriptions[3]);
+	//
+	// Class aClass = getTargetClass();
+	//
+	// if (aClass == null) {
+	// System.out.println("No class matching: "
+	// +aClass.getSimpleName());
+	// anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
+	// // anActualOutputs = null;
+	// } else {
+	// System.out.println("Finding constructor matching:"
+	// + Common.toString(aConstructorArgTypes));
+	// // anActualOutputs.put(CLASS_MATCHED,
+	// // aClass.getCanonicalName());
+	// anActualOutputs.put(BasicProjectExecution.CLASS_MATCHED, aClass);
+	//
+	// Constructor aConstructor = aClass
+	// .getConstructor(aConstructorArgTypes);
+	// if (aConstructor == null) {
+	// outputPropertyValues.put(BasicProjectExecution.MISSING_CONSTRUCTOR,
+	// true);
+	// }
+	// aConstructor = aClass.getConstructor();
+	//
+	// Object anObject = BasicProjectExecution.timedInvoke(aConstructor,
+	// aConstructorArgs,
+	// BasicProjectExecution.getMethodTimeOut());
+	// for (String aPropertyName : anInputs.keySet()) {
+	// if (aPropertyName == null)
+	// continue;
+	// PropertyDescriptor aProperty = BasicProjectIntrospection
+	// .findProperty(aClass, aPropertyName);
+	// if (aProperty == null) {
+	// anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
+	// anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
+	// + aPropertyName, true);
+	// System.out.println("Property " + aPropertyName + "not found in " +
+	// aClass.getSimpleName());
+	// continue;
+	// }
+	// Method aWriteMethod = aProperty.getWriteMethod();
+	// if (aWriteMethod == null) {
+	// anActualOutputs.put(BasicProjectExecution.MISSING_WRITE, true);
+	// anActualOutputs.put(
+	// BasicProjectExecution.MISSING_WRITE + "." + aPropertyName, true);
+	// System.out.println("Missing write method for property "
+	// + aPropertyName);
+	// continue;
+	// }
+	// Object aValue = anInputs.get(aPropertyName);
+	// // timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
+	// // new Object[] { aValue });
+	// // BasicProjectExecution.timedInvoke(anObject, aWriteMethod,
+	// // new Object[] { aValue }, BasicProjectExecution.getMethodTimeOut());
+	// //
+	// invokeMethod(anObject, aWriteMethod, new Object[] { aValue });
+	//
+	// }
+	// for (String anOutputPropertyName : anOutputProperties) {
+	// if (anOutputPropertyName == null)
+	// continue;
+	// PropertyDescriptor aProperty = BasicProjectIntrospection
+	// .findProperty(aClass, anOutputPropertyName);
+	// if (aProperty == null) {
+	//
+	// // System.out.println("Property " + aPropertyName +
+	// // "not found");
+	// continue;
+	// }
+	// Method aReadMethod = aProperty.getReadMethod();
+	// if (aReadMethod == null) {
+	// System.out.println("Missing read method for property "
+	// + anOutputPropertyName);
+	// anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
+	// anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
+	// + anOutputPropertyName, true);
+	// continue;
+	// }
+	// // Object result = timedInvoke(anObject, aReadMethod,
+	// // getMethodTimeOut(), emptyArgs);
+	// // Object result = BasicProjectExecution.timedInvoke(anObject,
+	// aReadMethod,
+	// // BasicProjectExecution.emptyArgs,
+	// BasicProjectExecution.getMethodTimeOut());
+	// invokeMethod(anObject, aReadMethod, BasicProjectExecution.emptyArgs);
+	// anActualOutputs.put(anOutputPropertyName, returnValue);
+	// }
+	// }
+	//
+	// } catch (NoSuchMethodException e) {
+	// System.out.println("Constructor not found:" + e.getMessage());
+	// anActualOutputs.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+	// // e.printStackTrace();
+	// } catch (SecurityException e) {
+	// // TODO Auto-generated catch block
+	// anActualOutputs = null;
+	//
+	// e.printStackTrace();
+	// } finally {
+	// // anOutput =
+	// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+	// // if (anOutput != null && !anOutput.isEmpty()) {
+	// // ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+	// // anOutput);
+	// // }
+	// // anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+	//
+	// }
+	// boolean getsReturnSets = getsReturnedSets(
+	// anInputs, anActualOutputs);
+	// anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
+	// getsReturnSets);
+	// compareOutputWithExpected();
+	// return anActualOutputs;
+	// }
+	public Map<String, Object> executeBean() throws Throwable {
 		String anOutput;
 		Map<String, Object> anActualOutputs = new HashMap();
-//		outputPropertyValues = anActualOutputs;
-//		String[] aBeanDescriptions = getBeanDescriptions();
+		// outputPropertyValues = anActualOutputs;
+		// String[] aBeanDescriptions = getBeanDescriptions();
 		Class[] aConstructorArgTypes = getConstructorArgTypes();
 		Object[] aConstructorArgs = getConstructorArgs();
-//		Map<String, Object> anInputs = getInputPropertyValues();
-//		String[] anOutputProperties = getOutputPropertyNames();
+		// Map<String, Object> anInputs = getInputPropertyValues();
+		// String[] anOutputProperties = getOutputPropertyNames();
 		try {
 
 			Class aClass = getTargetClass();
 
 			if (aClass == null) {
 				System.out.println("No class matching: "
-						+aClass.getSimpleName());
+						+ aClass.getSimpleName());
 				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
 				// anActualOutputs = null;
 			} else {
@@ -278,27 +322,31 @@ public class BeanExecutionTest extends MethodExecutionTest{
 						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
-				anActualOutputs.put(BasicProjectExecution.CLASS_MATCHED, aClass);
+				anActualOutputs
+						.put(BasicProjectExecution.CLASS_MATCHED, aClass);
 
 				Constructor aConstructor = aClass
 						.getConstructor(aConstructorArgTypes);
 				if (aConstructor == null) {
-					outputPropertyValues.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
-					System.out.println("Trying to find parameterless constructor");
+					outputPropertyValues.put(
+							BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+					System.out
+							.println("Trying to find parameterless constructor");
 					aConstructor = aClass.getConstructor();
 
-				} 
-				
-				Object anObject = BasicProjectExecution.timedInvoke(aConstructor, aConstructorArgs,
+				}
+
+				Object anObject = BasicProjectExecution.timedInvoke(
+						aConstructor, aConstructorArgs,
 						BasicProjectExecution.getMethodTimeOut());
-				anActualOutputs =
-						executeBean(anObject);
-						
+				anActualOutputs = executeBean(anObject);
+
 			}
 
 		} catch (NoSuchMethodException e) {
 			System.out.println("Constructor not found:" + e.getMessage());
-			anActualOutputs.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			anActualOutputs
+					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -307,86 +355,107 @@ public class BeanExecutionTest extends MethodExecutionTest{
 			e.printStackTrace();
 		} finally {
 
-
 		}
-//		boolean getsReturnSets = getsReturnedSets(
-//				anInputs, anActualOutputs);
-//		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS, getsReturnSets);
-//		compareOutputWithExpected();
+		// boolean getsReturnSets = getsReturnedSets(
+		// anInputs, anActualOutputs);
+		// anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
+		// getsReturnSets);
+		// compareOutputWithExpected();
 		return anActualOutputs;
 	}
-	public  Map<String, Object> executeBean(Object anObject) throws Throwable {
+
+	public Map<String, Object> executeBean(Object anObject) throws Throwable {
+		// Cannot do reflection onproxies
+		if (anObject instanceof Proxy) {
+			beanObject = BasicProjectIntrospection.getRealObject(anObject);
+			anObject = beanObject;
+		} else {
+			beanObject = anObject;
+			anObject = beanObject;
+		}
 		String anOutput;
 		Map<String, Object> anActualOutputs = new HashMap();
 		outputPropertyValues = anActualOutputs;
-		Class aClass = getTargetClass();
+//		Class aClass = getTargetClass();
+		Class aClass = beanObject.getClass();
 
 		Map<String, Object> anInputs = getInputPropertyValues();
 		String[] anOutputProperties = getOutputPropertyNames();
 		try {
-			
+			if (invokeSetters) {
 				for (String aPropertyName : anInputs.keySet()) {
 					if (aPropertyName == null)
 						continue;
 					PropertyDescriptor aProperty = BasicProjectIntrospection
 							.findProperty(aClass, aPropertyName);
 					if (aProperty == null) {
-						anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
-						anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
-								+ aPropertyName, true);
-						 System.out.println("Property " + aPropertyName + "not found in " + aClass.getSimpleName());
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_PROPERTY, true);
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_PROPERTY + "."
+										+ aPropertyName, true);
+						System.out.println("Property " + aPropertyName
+								+ "not found in " + aClass.getSimpleName());
 						continue;
 					}
 					Method aWriteMethod = aProperty.getWriteMethod();
 					if (aWriteMethod == null) {
-						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(
-								BasicProjectExecution.MISSING_WRITE + "." + aPropertyName, true);
+								BasicProjectExecution.MISSING_WRITE, true);
+						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
+								+ "." + aPropertyName, true);
 						System.out.println("Missing write method for property "
 								+ aPropertyName);
 						continue;
 					}
 					Object aValue = anInputs.get(aPropertyName);
-//					timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
-//							new Object[] { aValue });
-//					BasicProjectExecution.timedInvoke(anObject, aWriteMethod, 
-//							new Object[] { aValue }, BasicProjectExecution.getMethodTimeOut());
-//				
-					invokeMethod(anObject, aWriteMethod, new Object[] { aValue });
-				
-				}
-				for (String anOutputPropertyName : anOutputProperties) {
-					if (anOutputPropertyName == null)
-						continue;
-					PropertyDescriptor aProperty = BasicProjectIntrospection
-							.findProperty(aClass, anOutputPropertyName);
-					if (aProperty == null) {
+					// timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
+					// new Object[] { aValue });
+					// BasicProjectExecution.timedInvoke(anObject, aWriteMethod,
+					// new Object[] { aValue },
+					// BasicProjectExecution.getMethodTimeOut());
+					//
+					invokeMethod(anObject, aWriteMethod,
+							new Object[] { aValue });
 
-						// System.out.println("Property " + aPropertyName +
-						// "not found");
-						continue;
-					}
-					Method aReadMethod = aProperty.getReadMethod();
-					if (aReadMethod == null) {
-						System.out.println("Missing read method for property "
-								+ anOutputPropertyName);
-						anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
-						anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
-								+ anOutputPropertyName, true);
-						continue;
-					}
-//					Object result = timedInvoke(anObject, aReadMethod,
-//							getMethodTimeOut(), emptyArgs);
-//					Object result = BasicProjectExecution.timedInvoke(anObject, aReadMethod,
-//							BasicProjectExecution.emptyArgs, BasicProjectExecution.getMethodTimeOut());
-					invokeMethod(anObject, aReadMethod, BasicProjectExecution.emptyArgs);
-					anActualOutputs.put(anOutputPropertyName, returnValue);
 				}
-			
+			}
+			for (String anOutputPropertyName : anOutputProperties) {
+				if (anOutputPropertyName == null)
+					continue;
+				PropertyDescriptor aProperty = BasicProjectIntrospection
+						.findProperty(aClass, anOutputPropertyName);
+				if (aProperty == null) {
+
+					// System.out.println("Property " + aPropertyName +
+					// "not found");
+					continue;
+				}
+				Method aReadMethod = aProperty.getReadMethod();
+				if (aReadMethod == null) {
+					System.out.println("Missing read method for property "
+							+ anOutputPropertyName);
+					anActualOutputs.put(BasicProjectExecution.MISSING_READ,
+							true);
+					anActualOutputs.put(BasicProjectExecution.MISSING_READ
+							+ "." + anOutputPropertyName, true);
+					continue;
+				}
+				// Object result = timedInvoke(anObject, aReadMethod,
+				// getMethodTimeOut(), emptyArgs);
+				// Object result = BasicProjectExecution.timedInvoke(anObject,
+				// aReadMethod,
+				// BasicProjectExecution.emptyArgs,
+				// BasicProjectExecution.getMethodTimeOut());
+				invokeMethod(anObject, aReadMethod,
+						BasicProjectExecution.emptyArgs);
+				anActualOutputs.put(anOutputPropertyName, returnValue);
+			}
 
 		} catch (NoSuchMethodException e) {
 			System.out.println("Constructor not found:" + e.getMessage());
-			anActualOutputs.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			anActualOutputs
+					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -394,118 +463,133 @@ public class BeanExecutionTest extends MethodExecutionTest{
 
 			e.printStackTrace();
 		} finally {
-//			anOutput = BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
-//			if (anOutput != null && !anOutput.isEmpty()) {
-//				ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
-//						anOutput);
-//			}
-//			anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+			// anOutput =
+			// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
+			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
 
 		}
-		boolean getsReturnSets = getsReturnedSets(
-				anInputs, anActualOutputs);
-		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS, getsReturnSets);
+		boolean getsReturnSets = getsReturnedSets(anInputs, anActualOutputs);
+		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
+				getsReturnSets);
 		compareOutputWithExpected();
 		return anActualOutputs;
 	}
-	
-	
-	
+
 	protected String getsEqualsSetsErrorMessage() {
 		return "One or more gets does not return set";
 	}
+
 	protected String expectedEqualsActualErrorMessage() {
 		return "One or more dependent properties is erroneous";
 	}
-	protected double completeCredit() {
-		
-		double aReturnValue = getsEqualSets()?getsEqualsSetsCredit():0;
-		aReturnValue += expectedEqualActual()?expectedEqualsActualCredit():0;
-		aReturnValue += hasConstructor()?correctConstructorCredit():0;
+
+	public double completeCredit() {
+
+		double aReturnValue = getsEqualSets() ? getsEqualsSetsCredit() : 0;
+		aReturnValue += expectedEqualActual() ? expectedEqualsActualCredit()
+				: 0;
+		aReturnValue += hasConstructor() ? correctConstructorCredit() : 0;
 		return aReturnValue;
 	}
+
 	protected double correctConstructorCredit() {
 		return 0.4;
 	}
+
 	protected boolean hasConstructor() {
-		Boolean aMissingConstructor = 
-				(Boolean) outputPropertyValues.get(BasicProjectExecution.MISSING_CONSTRUCTOR);
-		return 
-				aMissingConstructor == null ||
-				!aMissingConstructor;
-				
+		Boolean aMissingConstructor = (Boolean) outputPropertyValues
+				.get(BasicProjectExecution.MISSING_CONSTRUCTOR);
+		return aMissingConstructor == null || !aMissingConstructor;
+
 	}
+
 	protected String missingConstructorMessage() {
-		return hasConstructor()?"": "Constructor not found with args:" + 
-				Arrays.toString(getConstructorArgTypes());
+		return hasConstructor() ? "" : "Constructor not found with args:"
+				+ Arrays.toString(getConstructorArgTypes());
 	}
-	protected String completeMessage() {
-		
-		String result = getsEqualSets()?"":getsEqualsSetsErrorMessage();
-		result += expectedEqualActual()?"":expectedEqualsActualErrorMessage();
-		result += hasConstructor()?"":missingConstructorMessage();
+
+	public String completeMessage() {
+
+		String result = getsEqualSets() ? "" : getsEqualsSetsErrorMessage();
+		result += expectedEqualActual() ? ""
+				: expectedEqualsActualErrorMessage();
+		result += hasConstructor() ? "" : missingConstructorMessage();
 		return result;
 	}
+
 	protected void processGetsSets() {
 		double aCredit = completeCredit();
 		String aMessage = completeMessage();
-//		if (aMessage.isEmpty())
-//			return;
-		Assert.assertTrue(aMessage
-				+ NotesAndScore.PERCENTAGE_MARKER
-				+ aCredit, false);
+		// if (aMessage.isEmpty())
+		// return;
+		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + aCredit,
+				false);
 	}
+
 	protected double getsEqualsSetsCredit() {
 		return 0.3;
 	}
-	
+
 	protected double expectedEqualsActualCredit() {
 		return 0.3;
 	}
+
 	protected void processBeanExecution() {
 		double aCredit = completeCredit();
 		String aMessage = completeMessage();
 		if (aCredit == 1.0)
 			return;
-		Assert.assertTrue(aMessage
-				+ NotesAndScore.PERCENTAGE_MARKER
-				+ aCredit, false);
-//		boolean aGetsEqualsSets = getsEqualSets();
-//		boolean anExpectedEqualsActual = expectedEqualActual();
-//		if (aGetsEqualsSets && anExpectedEqualsActual ) {
-//			return;
-//		}
-//		if (aGetsEqualsSets) {
-//			processGetsSets();
-//		} else if (anExpectedEqualsActual) {
-//			processGetsAndSetsAfterSucessfulOutput();
-//		}
+		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + aCredit,
+				false);
+		// boolean aGetsEqualsSets = getsEqualSets();
+		// boolean anExpectedEqualsActual = expectedEqualActual();
+		// if (aGetsEqualsSets && anExpectedEqualsActual ) {
+		// return;
+		// }
+		// if (aGetsEqualsSets) {
+		// processGetsSets();
+		// } else if (anExpectedEqualsActual) {
+		// processGetsAndSetsAfterSucessfulOutput();
+		// }
 	}
+
 	protected void processGetsAndSetsAfterSucessfulOutput() {
 		if (!getsEqualSets()) {
 			Assert.assertTrue(getsEqualsSetsErrorMessage()
 					+ NotesAndScore.PERCENTAGE_MARKER
 					+ (1.0 - getsEqualsSetsCredit()), false);
-			}		
+		}
 	}
+
 	protected void processExpectedAndActualsAfterSucessfulOutput() {
 		if (!getsEqualSets()) {
 			Assert.assertTrue(getsEqualsSetsErrorMessage()
 					+ NotesAndScore.PERCENTAGE_MARKER
 					+ (1.0 - expectedEqualsActualCredit()), false);
-			}		
+		}
 	}
+
 	protected boolean getsEqualSets() {
 		Map<String, Object> anOutputPropertyValues = getOutputPropertyValues();
-		Object aGettersEqualsSetters = anOutputPropertyValues.get(BasicProjectExecution.GETS_EQUAL_SETS);
-		return(aGettersEqualsSetters != null && aGettersEqualsSetters.equals(true)) ;
+		Object aGettersEqualsSetters = anOutputPropertyValues
+				.get(BasicProjectExecution.GETS_EQUAL_SETS);
+		return (aGettersEqualsSetters != null && aGettersEqualsSetters
+				.equals(true));
 	}
+
 	protected boolean expectedEqualActual() {
 		Map<String, Object> anOutputPropertyValues = getOutputPropertyValues();
-		Object aExectedEqualsExpected = anOutputPropertyValues.get(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL);
-		return(aExectedEqualsExpected != null && aExectedEqualsExpected.equals(true)) ;
+		Object aExectedEqualsExpected = anOutputPropertyValues
+				.get(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL);
+		return (aExectedEqualsExpected != null && aExectedEqualsExpected
+				.equals(true));
 	}
-	public static  Map<String, Object> testBean(String aFeatureName,
+
+	public static Map<String, Object> testBean(String aFeatureName,
 			String aCheckName, Project aProject, String[] aBeanDescriptions,
 			Class[] aConstructorArgTypes, Object[] aConstructorArgs,
 			Map<String, Object> anInputs, String[] anOutputProperties) {
@@ -536,39 +620,44 @@ public class BeanExecutionTest extends MethodExecutionTest{
 						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
-				anActualOutputs.put(BasicProjectExecution.CLASS_MATCHED, aClass);
+				anActualOutputs
+						.put(BasicProjectExecution.CLASS_MATCHED, aClass);
 
 				Constructor aConstructor = aClass
 						.getConstructor(aConstructorArgTypes);
-				Object anObject = BasicProjectExecution.timedInvoke(aConstructor, aConstructorArgs,
-						600);
+				Object anObject = BasicProjectExecution.timedInvoke(
+						aConstructor, aConstructorArgs, 600);
 				for (String aPropertyName : anInputs.keySet()) {
 					if (aPropertyName == null)
 						continue;
 					PropertyDescriptor aProperty = BasicProjectIntrospection
 							.findProperty(aClass, aPropertyName);
 					if (aProperty == null) {
-						anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
-						anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
-								+ aPropertyName, true);
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_PROPERTY, true);
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_PROPERTY + "."
+										+ aPropertyName, true);
 						// System.out.println("Property " + aPropertyName +
 						// "not found");
 						continue;
 					}
 					Method aWriteMethod = aProperty.getWriteMethod();
 					if (aWriteMethod == null) {
-						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(
-								BasicProjectExecution.MISSING_WRITE + "." + aPropertyName, true);
+								BasicProjectExecution.MISSING_WRITE, true);
+						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
+								+ "." + aPropertyName, true);
 						System.out.println("Missing write method for property "
 								+ aPropertyName);
 						continue;
 					}
 					Object aValue = anInputs.get(aPropertyName);
-//					timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
-//							new Object[] { aValue });
-					BasicProjectExecution.timedInvoke(anObject, aWriteMethod, 
-							new Object[] { aValue }, BasicProjectExecution.getMethodTimeOut());
+					// timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
+					// new Object[] { aValue });
+					BasicProjectExecution.timedInvoke(anObject, aWriteMethod,
+							new Object[] { aValue },
+							BasicProjectExecution.getMethodTimeOut());
 				}
 				for (String anOutputPropertyName : anOutputProperties) {
 					if (anOutputPropertyName == null)
@@ -585,22 +674,25 @@ public class BeanExecutionTest extends MethodExecutionTest{
 					if (aReadMethod == null) {
 						System.out.println("Missing read method for property "
 								+ anOutputPropertyName);
-						anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
-						anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
-								+ anOutputPropertyName, true);
+						anActualOutputs.put(BasicProjectExecution.MISSING_READ,
+								true);
+						anActualOutputs.put(BasicProjectExecution.MISSING_READ
+								+ "." + anOutputPropertyName, true);
 						continue;
 					}
-//					Object result = timedInvoke(anObject, aReadMethod,
-//							getMethodTimeOut(), emptyArgs);
-					Object result = BasicProjectExecution.timedInvoke(anObject, aReadMethod,
-							BasicProjectExecution.emptyArgs, BasicProjectExecution.getMethodTimeOut());
+					// Object result = timedInvoke(anObject, aReadMethod,
+					// getMethodTimeOut(), emptyArgs);
+					Object result = BasicProjectExecution.timedInvoke(anObject,
+							aReadMethod, BasicProjectExecution.emptyArgs,
+							BasicProjectExecution.getMethodTimeOut());
 					anActualOutputs.put(anOutputPropertyName, result);
 				}
 			}
 
 		} catch (NoSuchMethodException e) {
 			System.out.println("Constructor not found:" + e.getMessage());
-			anActualOutputs.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			anActualOutputs
+					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -608,40 +700,44 @@ public class BeanExecutionTest extends MethodExecutionTest{
 
 			e.printStackTrace();
 		} finally {
-			anOutput = BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
-//			if (anOutput != null && !anOutput.isEmpty()) {
-//				ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
-//						anOutput);
-//			}
+			anOutput = BasicProjectExecution
+					.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
 			anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
 
 		}
 		boolean getsReturnSets = BasicProjectExecution.getsReturnedSets(
 				anInputs, anActualOutputs);
-		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS, getsReturnSets);
+		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
+				getsReturnSets);
 		return anActualOutputs;
 	}
-	 public static boolean getsReturnedSets(Map<String, Object> anInputs, 
-			 Map<String, Object> anActualOutputs) {
-		 if (anInputs == null || anActualOutputs == null) 
-			 return false;
-		 Set<String> anOutputProperties = anActualOutputs.keySet();
-		 for (String anInputProperty:anInputs.keySet()) {
-			 if (!anOutputProperties.contains(anInputProperty))
-				 continue;
-			 Object aGetterValue = anActualOutputs.get(anInputProperty);
-			 Object aSetterValue = anInputs.get(anInputProperty);
-			if (! Common.equal(aGetterValue, aSetterValue) ) {
-				System.out.println ("For property:" + anInputProperty + " getter returned:" + aGetterValue + 
-						" instead of:" + aSetterValue);
+
+	public static boolean getsReturnedSets(Map<String, Object> anInputs,
+			Map<String, Object> anActualOutputs) {
+		if (anInputs == null || anActualOutputs == null)
+			return false;
+		Set<String> anOutputProperties = anActualOutputs.keySet();
+		for (String anInputProperty : anInputs.keySet()) {
+			if (!anOutputProperties.contains(anInputProperty))
+				continue;
+			Object aGetterValue = anActualOutputs.get(anInputProperty);
+			Object aSetterValue = anInputs.get(anInputProperty);
+			if (!Common.equal(aGetterValue, aSetterValue)) {
+				System.out.println("For property:" + anInputProperty
+						+ " getter returned:" + aGetterValue + " instead of:"
+						+ aSetterValue);
 				return false;
 			}
-		 }
-		 return true;
-	    	
-	    }
+		}
+		return true;
 
-	public static  Map<String, Object> testBean(String aFeatureName,
+	}
+
+	public static Map<String, Object> testBean(String aFeatureName,
 			String aTestCase, Project aProject, String[] aBeanDescriptions,
 			Class[] aConstructorArgTypes, Object[] aConstructorArgs,
 			Map<String, Object> anInputs, String[] anOutputProperties,
@@ -661,9 +757,10 @@ public class BeanExecutionTest extends MethodExecutionTest{
 					.get(outputProperty);
 			// anActualOutput = anActualOutputs.get(outputProperty);
 			if (!Common.equal(anExpectedOutput, anActualOutput)) {
-				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
-				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL + "."
-						+ anOutputProperties[i], false);
+				anActualOutputs.put(
+						BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
+				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL
+						+ "." + anOutputProperties[i], false);
 			}
 
 		}
@@ -671,7 +768,7 @@ public class BeanExecutionTest extends MethodExecutionTest{
 
 	}
 
-	public static  Map<String, Object> testBeanWithStringConstructor(
+	public static Map<String, Object> testBeanWithStringConstructor(
 			String aFeatureName, String aTestCase, Project aProject,
 			String[] aBeanDescriptions, String aConstructorArg,
 			String anIndependentPropertyName, Object anIndepentValue,
@@ -688,7 +785,7 @@ public class BeanExecutionTest extends MethodExecutionTest{
 
 	}
 
-	public static  Map<String, Object> testBeanWithNoConstructor(
+	public static Map<String, Object> testBeanWithNoConstructor(
 			String aFeatureName, String aTestCase, Project aProject,
 			String[] aBeanDescriptions, String anIndependentPropertyName,
 			Object anIndepentValue, String anOutputPropertyName,
