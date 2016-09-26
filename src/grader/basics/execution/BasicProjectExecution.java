@@ -903,11 +903,15 @@ public class BasicProjectExecution {
 
 	public static ResultingOutErr callMain(String aMainName, String[] args,
 			String... anInput) throws NotRunnableException {
-		if (!isReRunInfiniteProceses()
-				&& CurrentProjectHolder.getOrCreateCurrentProject()
-						.isInfinite())
-			return null;
+//		if (!isReRunInfiniteProceses()
+//				&& CurrentProjectHolder.getOrCreateCurrentProject()
+//						.isInfinite())
+//			return null;
 		if (BasicGradingEnvironment.get().isForkMain()) {
+			if (!isReRunInfiniteProceses()
+					&& CurrentProjectHolder.getOrCreateCurrentProject()
+							.isInfinite())
+				return null;
 			return forkMain(aMainName, args, anInput);
 		} else {
 			return invokeMain(aMainName, args, anInput);

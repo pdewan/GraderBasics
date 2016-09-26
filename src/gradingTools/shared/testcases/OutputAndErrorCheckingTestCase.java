@@ -175,7 +175,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 				System.out.println("Could not execute main class");
 			}
 		}
-		System.out.println("Could not find main class in:" + Arrays.toString(getClassNames()));
+		System.out.println("Could not find main class in:" + Arrays.toString(getClassNames())+ " or previous main run was infinite.");
 
 		return false;
 
