@@ -26,7 +26,7 @@ import grader.basics.execution.GradingMode;
 public abstract class MethodExecutionTest  {
 	public static String MATCH_ANY = "(.*)";
 	protected Object lastTargetObject;
-
+	protected double fractionComplete;
 	protected Object returnValue; 
 //		expectedReturnValue, 
 //		studentExpectedReturnValue, graderExpectedReturnValue;
