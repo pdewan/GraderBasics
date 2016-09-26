@@ -38,6 +38,8 @@ public class BasicProjectIntrospection {
 	static Map<Object, Object> userObjects = new HashMap();
 	static Hashcodetable<Object, Object> proxyToObject = new Hashcodetable<>();
 	static Hashcodetable<Object, Object> objectToProxy = new Hashcodetable<>();
+	static Hashcodetable<Class, Object> classToProxy = new Hashcodetable<>();
+
 	static Set<String> predefinedPackages = new HashSet();
 	static Set<GradableJUnitSuite> topLevelSuites = null;
 	public static void clearProjectCaches() {
@@ -1724,6 +1726,12 @@ public class BasicProjectIntrospection {
 		return createInstance(aProxyClass, emptyClassArray, new Object[]{});
 	}
 	
+	public static Object createOrGetLastInstance(Class aProxyClass, Object[] anArgs) {
+		Object result = classToProxy.get(aProxyClass);
+		return result != null?result:createInstance(aProxyClass, anArgs);
+	}
+
+
 	public static Object createInstance(Class aProxyClass, Object[] anArgs) {
 		Class[] aParameterTypes = toClasses(anArgs);
 		toPrimitiveTypes(aParameterTypes);
@@ -1755,6 +1763,7 @@ public class BasicProjectIntrospection {
 				getInterfaces(aProxyClass), aHandler);
 		proxyToObject.put(aProxy, anActualObject);
 		objectToProxy.put(anActualObject, aProxy);
+		classToProxy.put(aProxyClass, aProxy);
 		return aProxy;
 	}
 	public static Set<GradableJUnitSuite> findTopLevelGradabableTrees() {
