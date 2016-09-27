@@ -86,7 +86,7 @@ public class BasicProjectExecution {
 			anArgs = emptyObjectArray;
 		}
 		System.out.println("Calling on object " + anObject + " " + anObject.hashCode() + " method:"
-				+ aMethod + " args:" + anArgs + "timeOut:" + aMillSeconds);
+				+ aMethod + " args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
 		Future future = executor.submit(new AMethodExecutionCallable(anObject,
 				aMethod, anArgs));
 
@@ -97,7 +97,7 @@ public class BasicProjectExecution {
 			e.printStackTrace();
 			future.cancel(true); // not needed really
 			System.err.println("Terminated execution after milliseconds:"
-					+ aMillSeconds);
+					+ aMillSeconds + " suspecting infinite loop");
 			executor = Executors.newSingleThreadExecutor();
 			return null;
 		} catch (ExecutionException e) {
@@ -220,6 +220,7 @@ public class BasicProjectExecution {
 	public static Object timedInvoke(Constructor aConstructor, Object[] anArgs,
 			long aMillSeconds) {
 		// ExecutorService executor = Executors.newSingleThreadExecutor();
+		System.out.println("Calling constructor " + aConstructor + "with args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
 
 		Future future = executor.submit(new AConstructorExecutionCallable(
 				aConstructor, anArgs));
@@ -228,7 +229,9 @@ public class BasicProjectExecution {
 			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
 		}catch (TimeoutException e) {
 			executor = Executors.newSingleThreadExecutor();
-			e.printStackTrace();
+			System.err.println("Terminated execution after milliseconds:"
+					+ aMillSeconds + " suspecting infinite loop");
+			e.printStackTrace();			
 			return null;
 		}
 		catch (Exception e) {
