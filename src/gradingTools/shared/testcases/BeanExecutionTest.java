@@ -395,7 +395,8 @@ public class BeanExecutionTest extends MethodExecutionTest {
 								BasicProjectExecution.MISSING_PROPERTY + "."
 										+ aPropertyName, true);
 						System.out.println("Property " + aPropertyName
-								+ "not found in " + aClass.getSimpleName());
+								+ " not found in " + aClass.getSimpleName() + 
+								"\nDefine a getter for the property (named: get"+ aPropertyName + ")");
 						continue;
 					}
 					Method aWriteMethod = aProperty.getWriteMethod();
