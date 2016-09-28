@@ -2,6 +2,7 @@ package gradingTools.shared.testcases;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.ResultingOutErr;
+import grader.basics.project.CurrentProjectHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,6 +154,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 	protected String[] getStringArgs() {
 		return emptyStringArray;
 	}
+	
 	protected boolean callInteractiveMain() throws Throwable {
 		String[] aMainClasses = getClassNames();
 		for (String aMainClass : aMainClasses) {
@@ -162,8 +164,11 @@ public abstract class OutputAndErrorCheckingTestCase extends
 			// getStringArgs(), getInput());
 			resultingOutError = BasicProjectExecution.callMain(aMainClass,
 					getStringArgs(), getInput());
-			if (resultingOutError == null)
+			
+			if (resultingOutError == null) {
+//				maybeAssertInfinite();
 				continue;
+			}
 			output += resultingOutError.out;
 			error +=  resultingOutError.err;
 			if (resultingOutError != null) {

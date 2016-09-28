@@ -215,6 +215,15 @@ public abstract class MethodExecutionTest  {
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ noMethodCredit(), false);
 	}
+	protected void maybeAssertInfinite() {
+		if (CurrentProjectHolder.getOrCreateCurrentProject().isInfinite()) {
+			Assert.assertTrue(infiniteRunMessage()
+					+ NotesAndScore.PERCENTAGE_MARKER
+					+ infiniteRunCredit(), false);
+		}
+
+		
+	}
 	
 	public  boolean invokeMethod(
 			Object aTargetObject,  
@@ -488,6 +497,9 @@ public abstract class MethodExecutionTest  {
 	protected String noMethodMessage() {
 		return "No method:" + getMethodName();
 	}
+	protected String infiniteRunMessage() {
+		return "Call did not terminate withing expected time";
+	}
 	
 	protected String exceptionMethodMessage() {
 		return "Method throws tieout or other exception:" + getMethodName();
@@ -520,6 +532,9 @@ public abstract class MethodExecutionTest  {
 
 	protected double noMethodCredit() {
 		return 0.0;
+	}
+	protected double infiniteRunCredit() {
+		return 0.1;
 	}
 	
 	protected double noClassCredit() {
