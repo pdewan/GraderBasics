@@ -494,11 +494,17 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		aReturnValue += expectedEqualActual() ? expectedEqualsActualCredit()
 				: 0;
 		aReturnValue += hasConstructor() ? correctConstructorCredit() : 0;
+		aReturnValue += hasWriteMethod() ? correctWriteMethodCredit() : 0;
+
 		return aReturnValue;
 	}
 
 	protected double correctConstructorCredit() {
-		return 0.4;
+		return 0.2;
+	}
+	
+	protected double correctWriteMethodCredit() {
+		return 0.2;
 	}
 
 	protected boolean hasConstructor() {
@@ -507,10 +513,21 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		return aMissingConstructor == null || !aMissingConstructor;
 
 	}
+	protected boolean hasWriteMethod() {
+		Boolean aMissingWrite = (Boolean) outputPropertyValues
+				.get(BasicProjectExecution.MISSING_WRITE);
+		return aMissingWrite == null || !aMissingWrite;
+
+	}
 
 	protected String missingConstructorMessage() {
 		return hasConstructor() ? "" : "Constructor not found with args:"
 				+ Arrays.toString(getConstructorArgTypes());
+	}
+	protected String missingWriteMessage() {
+		return hasWriteMethod() ? "" :
+			"One or more write methods not found, see transcript"
+			;
 	}
 
 	public String completeMessage() {
@@ -519,6 +536,8 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		result += expectedEqualActual() ? ""
 				: expectedEqualsActualErrorMessage();
 		result += hasConstructor() ? "" : missingConstructorMessage();
+		result += hasWriteMethod() ? "" : missingWriteMessage();
+
 		return result;
 	}
 
