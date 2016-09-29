@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +22,12 @@ import util.misc.Common;
 import util.trace.Tracer;
 
 public class BeanExecutionTest extends MethodExecutionTest {
-	protected Map<String, Object> outputPropertyValues;
+	protected Map<String, Object> outputPropertyValues = new HashMap();
+	// The missing and wrong properties are not set right now
+	protected Set<String> missingGetters = new HashSet();
+	protected Set<String> missingSetters = new HashSet();
+	protected Set<String> wrongInputProperties = new HashSet();
+	protected Set<String> wrongOutputProperties = new HashSet();
 	protected boolean invokeSetters = true;
 	Object[] constructorArgs;
 //	protected Object beanObject;
@@ -140,7 +146,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				return;
 			Object anExpectedOutput = anExpectedValues[i];
 			Object anActualOutput;
-			Object outputProperty = anOutputProperties[i];
+			String outputProperty = anOutputProperties[i];
 			anActualOutput = outputProperty == null ? null : anActualOutputs
 					.get(outputProperty);
 			// anActualOutput = anActualOutputs.get(outputProperty);
@@ -152,6 +158,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				System.out.println("Property:" + outputProperty
 						+ " expected value:" + anExpectedOutput
 						+ " actual output:" + anActualOutput);
+				wrongOutputProperties.add(outputProperty);
 			}
 
 		}
@@ -314,8 +321,10 @@ public class BeanExecutionTest extends MethodExecutionTest {
 
 			if (aClass == null) {
 				System.out.println("No class matching: "
-						+ aClass.getSimpleName());
+						+ Arrays.toString(getClassNames()));
 				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
+				Assert.assertTrue("No class matching: "
+						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 				// anActualOutputs = null;
 			} else {
 				System.out.println("Finding constructor matching:"
@@ -364,6 +373,200 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		return anActualOutputs;
 	}
 
+	protected void invokeGetter(Object anObject, String anOutputPropertyName)
+			throws Throwable {
+		Map<String, Object> anActualOutputs = outputPropertyValues;
+
+		try {
+			String[] anOutputProperties = getOutputPropertyNames();
+			Class aClass = lastTargetObject.getClass();
+
+			if (anOutputPropertyName == null)
+				return;
+			PropertyDescriptor aProperty = BasicProjectIntrospection
+					.findProperty(aClass, anOutputPropertyName);
+			if (aProperty == null) {
+
+				// System.out.println("Property " + aPropertyName +
+				// "not found");
+				return;
+			}
+			Method aReadMethod = aProperty.getReadMethod();
+			if (aReadMethod == null) {
+				System.out.println("Missing read method for property "
+						+ anOutputPropertyName);
+				missingGetters.add(anOutputPropertyName);
+				anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
+				anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
+						+ anOutputPropertyName, true);
+				return;
+			}
+			// Object result = timedInvoke(anObject, aReadMethod,
+			// getMethodTimeOut(), emptyArgs);
+			// Object result = BasicProjectExecution.timedInvoke(anObject,
+			// aReadMethod,
+			// BasicProjectExecution.emptyArgs,
+			// BasicProjectExecution.getMethodTimeOut());
+			invokeMethod(anObject, aReadMethod, BasicProjectExecution.emptyArgs);
+			anActualOutputs.put(anOutputPropertyName, returnValue);
+
+		} catch (NoSuchMethodException e) {
+			System.out.println("Constructor not found:" + e.getMessage());
+			anActualOutputs
+					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			// e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			anActualOutputs = null;
+
+			e.printStackTrace();
+		} finally {
+			// anOutput =
+			// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
+			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+
+		}
+	}
+	
+	protected void invokeGetters (Object anObject) throws Throwable {
+		Map<String, Object> anActualOutputs = outputPropertyValues;
+		Map<String, Object> anInputs = getInputPropertyValues();
+
+		try {
+			String[] anOutputProperties = getOutputPropertyNames();
+			Class aClass = lastTargetObject.getClass();
+			for (String aPropertyName : anInputs.keySet()) {
+				invokeGetter(anObject, aPropertyName );
+			}
+			for (String anOutputPropertyName : anOutputProperties) {
+				invokeGetter(anObject, anOutputPropertyName );
+			}
+
+		
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			anActualOutputs = null;
+
+			e.printStackTrace();
+		} finally {
+			// anOutput =
+			// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
+			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+
+		}
+	}
+	protected void invokeSetters (Object anObject) throws Throwable {
+		Map<String, Object> anActualOutputs = outputPropertyValues;
+		Class aClass = lastTargetObject.getClass();
+		Map<String, Object> anInputs = getInputPropertyValues();
+
+
+		try {
+			if (invokeSetters) {
+				for (String aPropertyName : anInputs.keySet()) {
+					invokeSetter(anObject, aPropertyName);
+
+				}
+			}
+			
+
+		
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			anActualOutputs = null;
+
+			e.printStackTrace();
+		} finally {
+			// anOutput =
+			// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
+			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+
+		}
+	}
+	protected void invokeSetter (Object anObject, String aPropertyName) throws Throwable {
+		Map<String, Object> anActualOutputs = outputPropertyValues;
+		Class aClass = lastTargetObject.getClass();
+		Map<String, Object> anInputs = getInputPropertyValues();
+
+
+		try {
+			if (invokeSetters) {
+					if (aPropertyName == null)
+						return;
+					PropertyDescriptor aProperty = BasicProjectIntrospection
+							.findProperty(aClass, aPropertyName);
+					if (aProperty == null) {
+						missingSetters.add(aPropertyName);
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_PROPERTY, true);
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_PROPERTY + "."
+										+ aPropertyName, true);
+						System.out.println("Property " + aPropertyName
+								+ " not found in " + aClass.getSimpleName() + 
+								"\nDefine a getter for the property (named: get"+ aPropertyName + ")");
+						return;
+					}
+					Method aWriteMethod = aProperty.getWriteMethod();
+					if (aWriteMethod == null) {
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_WRITE, true);
+						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
+								+ "." + aPropertyName, true);
+						System.out.println("Missing write method for property "
+								+ aPropertyName);
+						return;
+					}
+					Object aValue = anInputs.get(aPropertyName);
+					// timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
+					// new Object[] { aValue });
+					// BasicProjectExecution.timedInvoke(anObject, aWriteMethod,
+					// new Object[] { aValue },
+					// BasicProjectExecution.getMethodTimeOut());
+					//
+					invokeMethod(anObject, aWriteMethod,
+							new Object[] { aValue });
+
+				}
+			
+			
+
+		
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			anActualOutputs = null;
+
+			e.printStackTrace();
+		} finally {
+			// anOutput =
+			// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
+			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+
+		}
+	}
+	protected void clearOutputs() {
+		outputPropertyValues.clear();
+		missingGetters.clear();
+		missingSetters.clear();
+		wrongInputProperties.clear();
+		wrongOutputProperties.clear();
+	}
 	public Map<String, Object> executeBean(Object anObject) throws Throwable {
 		// Cannot do reflection onproxies
 		if (anObject instanceof Proxy) {
@@ -374,8 +577,58 @@ public class BeanExecutionTest extends MethodExecutionTest {
 			anObject = lastTargetObject;
 		}
 		String anOutput;
-		Map<String, Object> anActualOutputs = new HashMap();
-		outputPropertyValues = anActualOutputs;
+//		outputPropertyValues.clear();
+		clearOutputs();
+//		Map<String, Object> anActualOutputs = new HashMap();
+		Map<String, Object> anActualOutputs = outputPropertyValues;
+
+//		outputPropertyValues = anActualOutputs;
+//		Class aClass = getTargetClass();
+		Class aClass = lastTargetObject.getClass();
+
+		Map<String, Object> anInputs = getInputPropertyValues();
+		String[] anOutputProperties = getOutputPropertyNames();
+		try {
+			invokeSetters(anObject);
+			invokeGetters(anObject);
+
+		
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			anActualOutputs = null;
+
+			e.printStackTrace();
+		} finally {
+			// anOutput =
+			// BasicProjectExecution.restoreOutputAndGetRedirectedOutput();
+			// if (anOutput != null && !anOutput.isEmpty()) {
+			// ARunningProject.appendToTranscriptFile(aProject, aFeatureName,
+			// anOutput);
+			// }
+			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
+
+		}
+		boolean getsReturnSets = getsReturnedSets(anInputs, anActualOutputs);
+		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
+				getsReturnSets);
+		compareOutputWithExpected();
+		return anActualOutputs;
+	}
+	public Map<String, Object> oldExecuteBean(Object anObject) throws Throwable {
+		// Cannot do reflection onproxies
+		if (anObject instanceof Proxy) {
+			lastTargetObject = BasicProjectIntrospection.getRealObject(anObject);
+			anObject = lastTargetObject;
+		} else {
+			lastTargetObject = anObject;
+			anObject = lastTargetObject;
+		}
+		String anOutput;
+		outputPropertyValues.clear();
+//		Map<String, Object> anActualOutputs = new HashMap();
+		Map<String, Object> anActualOutputs = outputPropertyValues;
+
+//		outputPropertyValues = anActualOutputs;
 //		Class aClass = getTargetClass();
 		Class aClass = lastTargetObject.getClass();
 
@@ -479,13 +732,12 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		compareOutputWithExpected();
 		return anActualOutputs;
 	}
-
 	protected String getsEqualsSetsErrorMessage() {
-		return "One or more gets does not return set";
+		return "Gets does not return sets for:" + wrongInputProperties;
 	}
 
 	protected String expectedEqualsActualErrorMessage() {
-		return "One or more dependent properties is erroneous";
+		return "Output property wrong:" + wrongOutputProperties;
 	}
 
 	public double completeCredit() {
@@ -495,16 +747,20 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				: 0;
 		aReturnValue += hasConstructor() ? correctConstructorCredit() : 0;
 		aReturnValue += hasWriteMethod() ? correctWriteMethodCredit() : 0;
-
+		aReturnValue += hasReadMethod() ? correctReadMethodCredit() : 0;
+		aReturnValue = Math.max(0.999999999, 1.0);
 		return aReturnValue;
 	}
 
 	protected double correctConstructorCredit() {
-		return 0.2;
+		return 0.1;
 	}
 	
 	protected double correctWriteMethodCredit() {
-		return 0.2;
+		return 0.1;
+	}
+	protected double correctReadMethodCredit() {
+		return 0.1;
 	}
 
 	protected boolean hasConstructor() {
@@ -519,6 +775,12 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		return aMissingWrite == null || !aMissingWrite;
 
 	}
+	protected boolean hasReadMethod() {
+		Boolean aMissingRead = (Boolean) outputPropertyValues
+				.get(BasicProjectExecution.MISSING_PROPERTY);
+		return aMissingRead == null || !aMissingRead;
+
+	}
 
 	protected String missingConstructorMessage() {
 		return hasConstructor() ? "" : "Constructor not found with args:"
@@ -526,7 +788,12 @@ public class BeanExecutionTest extends MethodExecutionTest {
 	}
 	protected String missingWriteMessage() {
 		return hasWriteMethod() ? "" :
-			"One or more write methods not found in " + inputPropertyValues.keySet() + " , see transcript"
+			"Setters not found for:" + missingSetters
+			;
+	}
+	protected String missingReadMessage() {
+		return hasReadMethod() ? "" :
+			"Geters not found for:" + missingGetters
 			;
 	}
 
@@ -537,6 +804,8 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				: expectedEqualsActualErrorMessage();
 		result += hasConstructor() ? "" : missingConstructorMessage();
 		result += hasWriteMethod() ? "" : missingWriteMessage();
+		result += hasReadMethod() ? "" : missingReadMessage();
+
 
 		return result;
 	}
@@ -551,11 +820,11 @@ public class BeanExecutionTest extends MethodExecutionTest {
 	}
 
 	protected double getsEqualsSetsCredit() {
-		return 0.3;
+		return 0.2;
 	}
 
 	protected double expectedEqualsActualCredit() {
-		return 0.3;
+		return 0.5;
 	}
 
 	protected void processBeanExecution() {
@@ -736,20 +1005,25 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		return anActualOutputs;
 	}
 
-	public static boolean getsReturnedSets(Map<String, Object> anInputs,
+	public  boolean getsReturnedSets(Map<String, Object> anInputs,
 			Map<String, Object> anActualOutputs) {
 		if (anInputs == null || anActualOutputs == null)
 			return false;
-		Set<String> anOutputProperties = anActualOutputs.keySet();
+//		Set<String> anOutputProperties = anActualOutputs.keySet();
+		Set<String> anOutputPropertyNames = new HashSet (Arrays.asList(getOutputPropertyNames()));
 		for (String anInputProperty : anInputs.keySet()) {
-			if (!anOutputProperties.contains(anInputProperty))
-				continue;
+//			if (!anOutputProperties.contains(anInputProperty))
+//			if (!anOutputPropertyNames.contains(anInputProperty))
+//
+//				continue;
+			// check all input properties
 			Object aGetterValue = anActualOutputs.get(anInputProperty);
 			Object aSetterValue = anInputs.get(anInputProperty);
 			if (!Common.equal(aGetterValue, aSetterValue)) {
 				System.out.println("For property:" + anInputProperty
 						+ " getter returned:" + aGetterValue + " instead of:"
 						+ aSetterValue);
+				wrongInputProperties.add(anInputProperty);
 				return false;
 			}
 		}

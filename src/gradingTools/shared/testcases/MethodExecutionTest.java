@@ -89,6 +89,8 @@ public abstract class MethodExecutionTest  {
 	 * This should not be called
 	 */
 	protected Class getTargetClass() {
+		Class[] aTargetClasses = getTargetClasses();
+		if (aTargetClasses.length == 0) return null;
 //		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
 		return getTargetClasses() [0];
 
@@ -271,10 +273,10 @@ public abstract class MethodExecutionTest  {
 			setOutputErrorStatus();
 			processOutputErrorStatus();
 		} else {
-			System.out.println ("Calling non interactive method:" + 
-					aMethod.getName() + 
-					" with args " +
-					Arrays.toString(anArgs)); 
+//			System.out.println ("Calling non interactive method:" + 
+//					aMethod.getName() + 
+//					" with args " +
+//					Arrays.toString(anArgs)); 
 			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
 					aTargetObject,
 					aMethod,

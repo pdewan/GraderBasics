@@ -16,9 +16,9 @@ public class AConstructorExecutionCallable implements Callable{
 	}
 	@Override
 	public Object call() throws Exception {
-		System.out.println ("calling constructor: " + constructor + " " + Common.toString(args));
+//		System.out.println ("calling constructor: " + constructor + " " + Common.toString(args));
 		Object retVal = constructor.newInstance(args);
-		System.out.println ("called constructor: " + constructor + " " + Common.toString(args));
+//		System.out.println ("called constructor: " + constructor + " " + Common.toString(args));
 
 		return retVal;
 	}
