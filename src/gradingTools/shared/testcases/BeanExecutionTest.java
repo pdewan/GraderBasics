@@ -526,7 +526,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 	}
 	protected String missingWriteMessage() {
 		return hasWriteMethod() ? "" :
-			"One or more write methods not found, see transcript"
+			"One or more write methods not found in " + inputPropertyValues.keySet() + " , see transcript"
 			;
 	}
 
