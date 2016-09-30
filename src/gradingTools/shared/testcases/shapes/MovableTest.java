@@ -14,7 +14,7 @@ public abstract class MovableTest extends LocatableTest{
 	}
 	protected TestMovable initializeMovable() {
 		
-		return (TestMovable) rootLocatable;
+		return (TestMovable) rootProxy;
 	}
     
 	@Override

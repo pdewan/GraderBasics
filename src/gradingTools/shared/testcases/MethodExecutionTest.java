@@ -35,6 +35,8 @@ public abstract class MethodExecutionTest  {
 	protected String error = "";
 	protected OutputErrorStatus outputErrorStatus;
 	protected ResultingOutErr resultingOutError;
+	protected String incorrectOutputDetails = "";
+
 	
 	public Object[] getStudentArgs() {
 		return new Object[]{};
@@ -579,6 +581,9 @@ public abstract class MethodExecutionTest  {
 	}
 	protected String incorrectOutputMessage() {
 		String aPrefix = "Incorrect output";
+		if (incorrectOutputDetails != null && !incorrectOutputDetails.isEmpty()){
+			aPrefix += " (" + incorrectOutputDetails + ") ";
+		}
 		String aReasons = possibleReasonsForIncorrectOutput();
 		if (aReasons.isEmpty())
 			return aPrefix;
@@ -626,5 +631,9 @@ public abstract class MethodExecutionTest  {
     }
 	public static String toRegex(String aString) {
 		return MATCH_ANY + aString + MATCH_ANY;
+	}
+	protected void assertMissingClass(String[] aTags) {
+		Assert.assertTrue("No class matching: "
+				+ Arrays.toString(aTags) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 	}
 }

@@ -785,10 +785,12 @@ public class BasicProjectIntrospection {
 
 		String aKey = null;
 
-		if (retVal == null)
+		if (retVal == null) {
 			retVal = Object.class;
-		else
+//			System.err.println("Could not find class matching:" + Arrays.toString(aTags));
+		} else {
 			aKey = constructKey(retVal, aProxyClass.getMethods());
+		}
 		aCachedClass = retVal;
 
 		if (aKey != null && !pendingMatches.contains(aKey)) {

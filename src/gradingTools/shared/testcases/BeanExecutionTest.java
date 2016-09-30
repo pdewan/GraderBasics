@@ -323,8 +323,9 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				System.out.println("No class matching: "
 						+ Arrays.toString(getClassNames()));
 				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
-				Assert.assertTrue("No class matching: "
-						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
+				assertMissingClass(getClassNames());
+//				Assert.assertTrue("No class matching: "
+//						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 				// anActualOutputs = null;
 			} else {
 				System.out.println("Finding constructor matching:"

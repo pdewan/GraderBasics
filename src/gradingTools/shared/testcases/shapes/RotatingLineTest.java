@@ -6,25 +6,25 @@ import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 public abstract class RotatingLineTest extends LocatableTest {
 
 	@Override
-	protected Class locatableClass() {
+	protected Class proxyClass() {
 		return TestRotatingLine.class;
 	}
 
 	protected TestRotatingLine getRotatingLine() {
-		return (TestRotatingLine) rootLocatable;
+		return (TestRotatingLine) rootProxy;
 	}
 
 	@Override
 	protected void executeOperations(Object aLocatable) {
-		leafLocatable().setX(inputX());
-		leafLocatable().setY(inputY());
+		leafProxy().setX(inputX());
+		leafProxy().setY(inputY());
 
 	}
 
 	@Override
 	protected void setActual(Object aLocatable) {
-		actualX = leafLocatable().getX();
-		actualY = leafLocatable().getY();
+		actualX = leafProxy().getX();
+		actualY =  leafProxy().getY();
 		actualHeight = getRotatingLine().getHeight();
 		actualWidth = getRotatingLine().getWidth();
 	}
@@ -35,8 +35,8 @@ public abstract class RotatingLineTest extends LocatableTest {
 		return true;
 	}
 	@Override
-	protected void setLeafLocatable() {
-		leafLocatable = (TestLocatable) rootLocatable();
+	protected void setLeafProxy() {
+		leafProxy = (TestLocatable) rootProxy();
 		
 	}
 }

@@ -15,60 +15,67 @@ import grader.basics.junit.NotesAndScore;
 import grader.basics.project.BasicProjectIntrospection;
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.OutputAndErrorCheckingTestCase;
+import gradingTools.shared.testcases.ProxyTest;
 import gradingTools.shared.testcases.shapes.interfaces.TestLine;
 import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
 import gradingTools.shared.testcases.shapes.interfaces.TestPolarLine;
 import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
-public abstract class LocatableTest extends MethodExecutionTest{
-	protected Object rootLocatable;
-	protected TestLocatable leafLocatable;
+public abstract class LocatableTest extends ProxyTest{
+//	protected Object rootProxy;
+//	protected TestLocatable leafProxy;
 	public static final double FRACTION_TOLERANCE = 0.1;
 	public static final double INT_TOLERANCE = 2;
 	
-	protected abstract Class locatableClass();
+//	protected abstract Class proxyClass();
 	protected int originalX, originalY, originalWidth, originalHeight;
 	protected int expectedX, expectedY, expectedWidth, expectedHeight;
 
 	protected int actualX, actualY, actualWidth, actualHeight;
 	protected double actualRadius, actualAngle;
 	
-	protected Object createLocatable(){
-		rootLocatable = BasicProjectIntrospection.createInstance(locatableClass(), getArgs());
-		setLeafLocatable();
-		return rootLocatable;
-	}
-	
-	protected Object createOrGetLastLocatable(){
-		rootLocatable = BasicProjectIntrospection.createOrGetLastInstance(locatableClass(), getArgs());
-		setLeafLocatable();
-		return rootLocatable;
-	}
+//	protected  void maybeCreateInstanceFailed (Object anObject  ) {
+//		if (anObject == null) {
+//			assertMissingClass(BasicProjectIntrospection.getTags(proxyClass()));
+//		}
+//	}
+//	protected Object createRootProxy(){
+//		rootProxy = BasicProjectIntrospection.createInstance(proxyClass(), getArgs());
+//		
+//		setLeafLocatable();
+//		return rootProxy;
+//	}
+//	
+//	protected Object createOrGetLastRootProxy(){
+//		rootProxy = BasicProjectIntrospection.createOrGetLastInstance(proxyClass(), getArgs());
+//		setLeafLocatable();
+//		return rootProxy;
+//	}
 	
 
 	protected void assertAngle(double aComputed, double aCorrect) {
-		Assert.assertTrue("In: " + leafLocatable  + " computedAngle " + aComputed + " != correctAngle " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
+		Assert.assertTrue("In: " + leafProxy  + " computedAngle " + aComputed + " != correctAngle " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
 
 	}
 	protected void assertRadius(double aComputed, double aCorrect) {
-		Assert.assertTrue("In: " + leafLocatable  + " computedRadius " + aComputed + " != correctRadius " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
+		Assert.assertTrue("In: " + leafProxy  + " computedRadius " + aComputed + " != correctRadius " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
 
 	}
 	protected void assertHeight(int aComputed, int aCorrect) {
-		Assert.assertTrue("In: " + leafLocatable  + " computedHeight " + aComputed + " != correctHeight " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < INT_TOLERANCE);
+		Assert.assertTrue("In: " + leafProxy  + " computedHeight " + aComputed + " != correctHeight " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < INT_TOLERANCE);
 
 	}
 	protected void assertWidth(int aComputed, int aCorrect) {
-		Assert.assertTrue("In: " + leafLocatable  + " computedWidth " + aComputed + " != correctWidth " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < INT_TOLERANCE);
+		Assert.assertTrue("In: " + leafProxy  + " computedWidth " + aComputed + " != correctWidth " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < INT_TOLERANCE);
 
 	}
 	
 	protected void assertX(int aComputed, int aCorrect) {
-		Assert.assertTrue("In: " + leafLocatable  + " computedX " + aComputed + " != correctX " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < INT_TOLERANCE);
+		Assert.assertTrue("In: " + leafProxy  + " computedX " + aComputed + " != correctX " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < INT_TOLERANCE);
 
 	}
 	protected void assertY(int aComputed, int aCorrect) {
-		Assert.assertTrue("In: " + leafLocatable  + " computedY " + aComputed + " != correctY " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= INT_TOLERANCE);
+		Assert.assertTrue("In: " + leafProxy  + " computedY " + aComputed + " != correctY " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= INT_TOLERANCE);
 
 	}
 	
@@ -127,22 +134,22 @@ public abstract class LocatableTest extends MethodExecutionTest{
 	protected void doExtraStep() {
 		
 	}
-	protected Object create() {
-		return createOrGetLastLocatable();
-	}
+//	protected Object create() {
+//		return createOrGetLastRootProxy();
+//	}
 	protected abstract boolean checkOutput(Object aLocatable);
 	protected void setDependentObjects() {
 		
 	}
-	protected boolean doTest() throws Throwable {
-		create();
-		setDependentObjects();
-		executeOperations(rootLocatable);
-		setExpected(rootLocatable);
-		setActual(rootLocatable);
-		return checkOutput(rootLocatable);
-		
-	}
+//	protected boolean doTest() throws Throwable {
+//		create();
+//		setDependentObjects();
+//		executeOperations(rootProxy);
+//		setExpected(rootProxy);
+//		setActual(rootProxy);
+//		return checkOutput(rootProxy);
+//		
+//	}
 	// Student test data
 	protected Double inputStudentAngle() {
 		return null;
@@ -377,30 +384,30 @@ public abstract class LocatableTest extends MethodExecutionTest{
 		return inputStudentYDelta();
 	}
 	
-	protected Object rootLocatable() {
-		return rootLocatable;
-	}
-	
-	protected TestLocatable leafLocatable() {
-		return leafLocatable;
-	}
-	protected abstract void setLeafLocatable();
+//	protected Object rootLocatable() {
+//		return rootProxy;
+//	}
+//	
+//	protected TestLocatable leafProxy() {
+//		return leafProxy;
+//	}
+//	protected abstract void setLeafLocatable();
 	protected void setOriginalLocation() {
-		originalX = leafLocatable().getX();
-		originalY = leafLocatable().getY();
+		originalX = leafProxy().getX();
+		originalY = leafProxy().getY();
 	}
 	protected void setOriginalBounds() {
-		originalWidth = leafLocatable().getWidth();
-		originalHeight = leafLocatable().getHeight();
+		originalWidth = leafProxy().getWidth();
+		originalHeight = leafProxy().getHeight();
 	}
 	protected void setActualLocation() {
-		actualX = leafLocatable().getX();
-		actualY = leafLocatable().getY();
+		actualX = leafProxy().getX();
+		actualY = leafProxy().getY();
 	}
 	
 	protected void setActualBounds() {
-		actualWidth = leafLocatable().getWidth();
-		actualHeight = leafLocatable().getHeight();
+		actualWidth = leafProxy().getWidth();
+		actualHeight = leafProxy().getHeight();
 	}
 	
 //	protected boolean returnValueIsExpected() {

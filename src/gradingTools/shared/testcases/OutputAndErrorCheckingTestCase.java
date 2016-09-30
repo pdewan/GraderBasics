@@ -60,24 +60,40 @@ public abstract class OutputAndErrorCheckingTestCase extends
 //		return "";
 //	}
 
-	public static boolean isValidOutputInDifferentLines(List<String> anOutput,
+	public  boolean isValidOutputInDifferentLines(List<String> anOutput,
 			String[] anExpectedStrings) {
 		for (String anExpectedString : anExpectedStrings) {
 			// if (!anOutput.contains(anExpectedString))
 			// if (!anOutput.match(anExpectedString))
-			if (!matchesConsuming(anOutput, anExpectedString))
+			if (!matchesConsuming(anOutput, anExpectedString)) {
+				setIncorrectOutputDetails(anOutput, anExpectedString);
+
 				return false;
+			}
 		}
 		return true;
 	}
+	protected void setIncorrectOutputDetails(List<String> anOutput, 
+			String anExpectedString) {
+		incorrectOutputDetails = "Pattern:" + anExpectedString + 
+				" not found in output line: " + anOutput;
+		System.err.println (incorrectOutputDetails);
+	}
+	
+//	protected String incorrectOutputDetails = ";";
 
-	public static boolean isValidOutputInSameOrDifferentLines(
+	public boolean isValidOutputInSameOrDifferentLines(
 			List<String> anOutput, String[] anExpectedStrings) {
 		for (String anExpectedString : anExpectedStrings) {
 			// if (!anOutput.contains(anExpectedString))
 			// if (!anOutput.match(anExpectedString))
-			if (!matchesNonConsuming(anOutput, anExpectedString))
+			if (!matchesNonConsuming(anOutput, anExpectedString)) {
+				setIncorrectOutputDetails(anOutput, anExpectedString);
+//				incorrectOutputDetails = "Pattern:" + anExpectedString + 
+//						" not found in output line: " + anOutput;
+//				System.err.println (incorrectOutputDetails);
 				return false;
+			}
 		}
 
 		return true;
@@ -96,6 +112,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 	protected boolean isValidOutput(List<String> anOutput,
 			String[] anExpectedStrings) {
+		incorrectOutputDetails = "";
 		if (outputsMustBeInDifferentLines())
 			return isValidOutputInDifferentLines(anOutput, anExpectedStrings);
 		return isValidOutputInSameOrDifferentLines(anOutput, anExpectedStrings);
@@ -135,15 +152,26 @@ public abstract class OutputAndErrorCheckingTestCase extends
 //	}
 
 	protected String[] emptyStringArray = {};
-
-	protected void traceMainCall(String aMainName, String anInput,
+	protected void traceStartMainCall(String aMainName, String anInput,
 			String[] anExpectedStrings) {
-		System.out.println("Called main:" + aMainName);
-		System.out.println("Provided input:" + anInput);
+		System.out.println(BasicProjectExecution.DELIMITER);
+		System.out.println("Providing input:" + anInput);
 		System.out.println("Expected outputs:"
 				+ Arrays.toString(anExpectedStrings));
 
 	};
+	protected void traceEndMainCall(String aMainName, String anInput,
+			String[] anExpectedStrings) {
+		System.out.println("Provided input:" + anInput);
+		System.out.println("Expected output:"
+				+ Arrays.toString(anExpectedStrings));
+		System.out.println(BasicProjectExecution.DELIMITER);
+
+	};
+	protected void traceEndMainCall() {
+		System.out.println(BasicProjectExecution.DELIMITER);
+
+	}
 	protected String toOutputString(String aToken) {
 		return aToken;
 	}
@@ -157,11 +185,15 @@ public abstract class OutputAndErrorCheckingTestCase extends
 	
 	protected boolean callInteractiveMain() throws Throwable {
 		String[] aMainClasses = getClassNames();
+		traceStartMainCall("", getInput(), getExpectedOutputs());
+
 		for (String aMainClass : aMainClasses) {
 			resetIO();
 			// resultingOutError =
 			// BasicProjectExecution.callMain(getClassName(),
 			// getStringArgs(), getInput());
+//			traceStartMainCall(aMainClass, getInput(), getExpectedOutputs());
+
 			resultingOutError = BasicProjectExecution.callMain(aMainClass,
 					getStringArgs(), getInput());
 			
@@ -172,7 +204,9 @@ public abstract class OutputAndErrorCheckingTestCase extends
 			output += resultingOutError.out;
 			error +=  resultingOutError.err;
 			if (resultingOutError != null) {
-				traceMainCall(aMainClass, getInput(), getExpectedOutputs());
+//				traceMainCall(aMainClass, getInput(), getExpectedOutputs());
+//				traceEndMainCall(aMainClass, getInput(), getExpectedOutputs());
+				traceEndMainCall();
 
 				setOutputErrorStatus();
 				return true;
@@ -234,7 +268,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 	protected OutputErrorStatus test(String aMainName, String anInput,
 			String[] anExpectedStrings) {
-		traceMainCall(aMainName, anInput, anExpectedStrings);
+		traceStartMainCall(aMainName, anInput, anExpectedStrings);
 		// Project project = CurrentProjectHolder.getOrCreateCurrentProject();
 		// RunningProject runner = project.launch(anInput, 1);
 		// String output = runner.await();

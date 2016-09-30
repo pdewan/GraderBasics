@@ -78,6 +78,8 @@ public class BasicProjectExecution {
 	public static void setMethodTimeOut(int methodTimeOut) {
 		BasicProjectExecution.methodTimeOut = methodTimeOut;
 	}
+	public static final String DELIMITER = 
+	"_________________________________________________________________________";
 
 	public static Object timedInvoke(Object anObject, Method aMethod,
 			Object[] anArgs, long aMillSeconds) {
@@ -127,10 +129,12 @@ public class BasicProjectExecution {
 		} catch (CancellationException | InterruptedException | TimeoutException e) {
 			future.cancel(true); // not needed really
 			executor = Executors.newSingleThreadExecutor();
-
+		
 			// e.printStackTrace();
 			System.err.println("Terminated execution after milliseconds:"
 					+ aMillSeconds);
+			CurrentProjectHolder.getOrCreateCurrentProject().setInfinite(
+					true);
 			throw e;
 		} catch (ExecutionException e) {
 			System.err.println("Future execution exception");
@@ -426,7 +430,7 @@ public class BasicProjectExecution {
 			FileOutputStream aFileStream = new FileOutputStream(
 					aNextTempFileName);
 			File aTmpFile = new File(aNextTempFileName);
-			System.out.println("Creating:" + aNextTempFileName);
+//			System.out.println("Creating:" + aNextTempFileName);
 
 			fileOutStack.push(aFileStream);
 			tmpOutFileStack.push(aTmpFile);
@@ -445,7 +449,7 @@ public class BasicProjectExecution {
 		try {
 			if (newIn != null) {
 				newIn.close();
-				System.out.println("Creating:" + tmpInFileName);
+//				System.out.println("Creating:" + tmpInFileName);
 
 				File aTempInputFile = new File(tmpInFileName);
 				if (aTempInputFile.exists()) {
@@ -467,7 +471,7 @@ public class BasicProjectExecution {
 			File tmpOutFile = tmpOutFileStack.pop();
 			// ThreadSupport.sleep(2000);
 			String anOutput = Common.toText(tmpOutFile);
-			System.out.println("Deleting:" + tmpOutFile.getName());
+//			System.out.println("Deleting:" + tmpOutFile.getName());
 			tmpOutFile.delete();
 			return anOutput;
 		} catch (IOException e) {
@@ -906,15 +910,15 @@ public class BasicProjectExecution {
 
 	public static ResultingOutErr callMain(String aMainName, String[] args,
 			String... anInput) throws NotRunnableException {
-//		if (!isReRunInfiniteProceses()
-//				&& CurrentProjectHolder.getOrCreateCurrentProject()
-//						.isInfinite())
-//			return null;
+		if (!isReRunInfiniteProceses()
+				&& CurrentProjectHolder.getOrCreateCurrentProject()
+						.isInfinite())
+			return null;
 		if (BasicGradingEnvironment.get().isForkMain()) {
-			if (!isReRunInfiniteProceses()
-					&& CurrentProjectHolder.getOrCreateCurrentProject()
-							.isInfinite())
-				return null;
+//			if (!isReRunInfiniteProceses()
+//					&& CurrentProjectHolder.getOrCreateCurrentProject()
+//							.isInfinite())
+//				return null;
 			return forkMain(aMainName, args, anInput);
 		} else {
 			return invokeMain(aMainName, args, anInput);
@@ -1019,10 +1023,10 @@ public class BasicProjectExecution {
 			}
 			Object retVal = BasicProjectExecution.timedInvoke(aMainClass,
 					aMainMethod, new Object[] { args });
-			if (retVal == null) {
-				CurrentProjectHolder.getOrCreateCurrentProject().setInfinite(
-						true);
-			}
+//			if (retVal == null) {
+//				CurrentProjectHolder.getOrCreateCurrentProject().setInfinite(
+//						true);
+//			}
 			// aMainMethod.invoke(aMainClass, new Object[] {args});
 			// String anOutput =
 			// ProjectExecution.restoreOutputAndGetRedirectedOutput();

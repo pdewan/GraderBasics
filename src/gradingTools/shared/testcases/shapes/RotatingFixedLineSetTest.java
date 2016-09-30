@@ -51,7 +51,7 @@ public class RotatingFixedLineSetTest extends RotatingLineTest{
 		return (int) Math.round(inputRadius()*Math.cos(inputAngle()));
 	}
 	@Override
-	protected void setLeafLocatable() {
+	protected void setLeafProxy() {
 		
 	}
 	

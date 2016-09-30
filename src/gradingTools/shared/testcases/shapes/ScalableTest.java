@@ -14,7 +14,7 @@ protected TestScalable scalable;
 		return scalable;
 	}
 	protected TestScalable initializeScalable() {
-		return (TestScalable) rootLocatable;
+		return (TestScalable) rootProxy;
 	}
 	@Override
 	protected void executeOperations(Object aLocatable) {
