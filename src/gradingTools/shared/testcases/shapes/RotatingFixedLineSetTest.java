@@ -44,16 +44,24 @@ public class RotatingFixedLineSetTest extends RotatingLineTest{
 		return inputStudentY;
 	}
 	@Override
+	protected void setActual(Object aLocatable) {	
+		actualHeight = getRotatingLine().getHeight();
+		actualWidth = getRotatingLine().getWidth();
+	}
+	@Override
+	protected void setExpected(Object aLocatable) {
+		expectedHeight = expectedHeight();
+		expectedWidth = expectedWidth();
+	}
+
+	@Override
 	protected Integer expectedHeight() {
 		return (int) Math.round(inputRadius()*Math.sin(inputAngle()));
 	}
 	protected Integer expectedWidth() {
 		return (int) Math.round(inputRadius()*Math.cos(inputAngle()));
 	}
-	@Override
-	protected void setLeafProxy() {
-		
-	}
+	
 	
 
 	
