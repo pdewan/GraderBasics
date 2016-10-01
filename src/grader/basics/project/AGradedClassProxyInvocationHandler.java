@@ -25,9 +25,10 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 		Class aReturnType = aProxyMethod.getReturnType();
 		Method anActualMethod = BasicProjectIntrospection.findMethod(actualClass, aProxyMethod);
 		Assert.assertTrue("Method matching " + aProxyMethod.getName() + " not found in class: " + actualClass, anActualMethod != null);
-		if (anActualMethod == null) {
-			return null;
-		}
+		// This will never be executed
+//		if (anActualMethod == null) {
+//			return null;
+//		}
 		if (args != null) {
 		Integer[] aPermutedIndices= BasicProjectIntrospection.getArgIndices(actualClass, aProxyMethod);
 		if (aPermutedIndices != null) {
