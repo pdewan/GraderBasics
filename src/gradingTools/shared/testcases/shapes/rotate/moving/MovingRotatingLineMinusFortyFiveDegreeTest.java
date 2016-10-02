@@ -7,11 +7,10 @@ import gradingTools.shared.testcases.shapes.rotate.fixed.RotatingFixedLineSetTes
 import gradingTools.shared.testcases.shapes.rotate.fixed.RotatingLineFortyFiveDegreeTest;
 
 @Explanation("Rotate and then move line")
-public class MovingRotatingLineFortyFiveDegreeTest extends DetachedRotatingLineFortyFiveDegreeTest{
-	protected void executeOperations(Object aLocatable) {
-		rotate();
-		setLocation();
-	}
+public class MovingRotatingLineMinusFortyFiveDegreeTest extends MovingRotatingLineFortyFiveDegreeTest{
 	
-
+	@Override
+	protected Double inputStudentAngle() {
+		return - Math.PI/4;
+	}
 }

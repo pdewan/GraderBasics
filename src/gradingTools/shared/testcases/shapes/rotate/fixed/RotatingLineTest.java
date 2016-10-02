@@ -5,7 +5,7 @@ import gradingTools.shared.testcases.shapes.MovableTest;
 import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
 import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
-public abstract class RotatingLineTest extends LocatableTest {
+public abstract class RotatingLineTest extends MovableTest {
 
 	@Override
 	protected Class proxyClass() {
