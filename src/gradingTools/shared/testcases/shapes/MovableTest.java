@@ -16,11 +16,13 @@ public abstract class MovableTest extends LocatableTest{
 		
 		return (TestMovable) rootProxy;
 	}
-    
+    protected void move() {
+    	setOriginalLocation();
+		movable().move(inputXDelta(), inputYDelta());
+    }
 	@Override
 	protected void executeOperations(Object aLocatable) {
-		setOriginalLocation();
-		movable().move(inputXDelta(), inputYDelta());
+		move();
 	}
 	
 	
@@ -30,16 +32,23 @@ public abstract class MovableTest extends LocatableTest{
 		setActualLocation();
 		
 	}
-	protected void setExpected(Object aLocatable) {
+	protected void setExpectedMove() {
 		expectedX = originalX + inputXDelta();
 		expectedY = originalY + inputYDelta();
+	}
+	protected void setExpected(Object aLocatable) {
+		setExpectedMove();
+	}
+	
+	protected boolean checkMove() {
+		assertWrongX();
+		assertWrongY();
+		return true;
 	}
 
 	@Override
 	protected boolean checkOutput(Object aLocatable) {
-		assertWrongX();
-		assertWrongY();
-		return true;
+		return checkMove();
 	}
 
 	

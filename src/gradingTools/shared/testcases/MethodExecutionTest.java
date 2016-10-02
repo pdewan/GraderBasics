@@ -626,7 +626,7 @@ public abstract class MethodExecutionTest  {
         	doTest();          
             
         } catch (Throwable e) {
-        	BasicJUnitUtils.assertTrue(e, 0);
+        	BasicJUnitUtils.assertTrue(e, fractionComplete);
         }
     }
 	public static String toRegex(String aString) {

@@ -5,6 +5,7 @@ import grader.basics.execution.GradingMode;
 import grader.basics.junit.NotesAndScore;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.Project;
+import gradingTools.shared.testcases.shapes.LocatableTest;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
@@ -21,7 +22,7 @@ import org.junit.Assert;
 import util.misc.Common;
 import util.trace.Tracer;
 
-public class BeanExecutionTest extends MethodExecutionTest {
+public abstract class BeanExecutionTest extends LocatableTest {
 	protected Map<String, Object> outputPropertyValues = new HashMap();
 	// The missing and wrong properties are not set right now
 	protected Set<String> missingGetters = new HashSet();
@@ -306,11 +307,8 @@ public class BeanExecutionTest extends MethodExecutionTest {
 	// compareOutputWithExpected();
 	// return anActualOutputs;
 	// }
-	public Map<String, Object> executeBean() throws Throwable {
-		String anOutput;
-		Map<String, Object> anActualOutputs = new HashMap();
-		// outputPropertyValues = anActualOutputs;
-		// String[] aBeanDescriptions = getBeanDescriptions();
+	@Override
+	protected Object create() {
 		Class[] aConstructorArgTypes = getConstructorArgTypes();
 		Object[] aConstructorArgs = getConstructorArgs();
 		// Map<String, Object> anInputs = getInputPropertyValues();
@@ -322,7 +320,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 			if (aClass == null) {
 				System.out.println("No class matching: "
 						+ Arrays.toString(getClassNames()));
-				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
+				outputPropertyValues.put(BasicProjectExecution.MISSING_CLASS, true);
 				assertMissingClass(getClassNames());
 //				Assert.assertTrue("No class matching: "
 //						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
@@ -332,7 +330,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
-				anActualOutputs
+				outputPropertyValues
 						.put(BasicProjectExecution.CLASS_MATCHED, aClass);
 
 				Constructor aConstructor = aClass
@@ -349,18 +347,87 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				Object anObject = BasicProjectExecution.timedInvoke(
 						aConstructor, aConstructorArgs,
 						BasicProjectExecution.getMethodTimeOut());
-				anActualOutputs = executeBean(anObject);
+				return anObject;
+//				anActualOutputs = executeBean(anObject);
 
 			}
 
 		} catch (NoSuchMethodException e) {
 			System.out.println("Constructor not found:" + e.getMessage());
-			anActualOutputs
+			outputPropertyValues
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
-			anActualOutputs = null;
+//			anActualOutputs = null;
+//
+//			e.printStackTrace();
+			throw e;
+		} finally {
+
+		}
+		return null;
+	}
+	public Map<String, Object> executeBean() throws Throwable {
+		Object anObject = create();
+		return executeBean(anObject);
+		
+	}
+	public Map<String, Object> oldExecuteBean() throws Throwable {
+		String anOutput;
+//		Map<String, Object> anActualOutputs = new HashMap();
+		// outputPropertyValues = anActualOutputs;
+		// String[] aBeanDescriptions = getBeanDescriptions();
+		Class[] aConstructorArgTypes = getConstructorArgTypes();
+		Object[] aConstructorArgs = getConstructorArgs();
+		// Map<String, Object> anInputs = getInputPropertyValues();
+		// String[] anOutputProperties = getOutputPropertyNames();
+		try {
+
+			Class aClass = getTargetClass();
+
+			if (aClass == null) {
+				System.out.println("No class matching: "
+						+ Arrays.toString(getClassNames()));
+				outputPropertyValues.put(BasicProjectExecution.MISSING_CLASS, true);
+				assertMissingClass(getClassNames());
+//				Assert.assertTrue("No class matching: "
+//						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
+				// anActualOutputs = null;
+			} else {
+				System.out.println("Finding constructor matching:"
+						+ Common.toString(aConstructorArgTypes));
+				// anActualOutputs.put(CLASS_MATCHED,
+				// aClass.getCanonicalName());
+				outputPropertyValues
+						.put(BasicProjectExecution.CLASS_MATCHED, aClass);
+
+				Constructor aConstructor = aClass
+						.getConstructor(aConstructorArgTypes);
+				if (aConstructor == null) {
+					outputPropertyValues.put(
+							BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+					System.out
+							.println("Trying to find parameterless constructor");
+					aConstructor = aClass.getConstructor();
+
+				}
+
+				Object anObject = BasicProjectExecution.timedInvoke(
+						aConstructor, aConstructorArgs,
+						BasicProjectExecution.getMethodTimeOut());
+				outputPropertyValues = executeBean(anObject);
+
+			}
+
+		} catch (NoSuchMethodException e) {
+			System.out.println("Constructor not found:" + e.getMessage());
+			outputPropertyValues
+					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			// e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			outputPropertyValues = null;
 
 			e.printStackTrace();
 		} finally {
@@ -371,7 +438,7 @@ public class BeanExecutionTest extends MethodExecutionTest {
 		// anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
 		// getsReturnSets);
 		// compareOutputWithExpected();
-		return anActualOutputs;
+		return outputPropertyValues;
 	}
 
 	protected void invokeGetter(Object anObject, String anOutputPropertyName)
@@ -1109,5 +1176,26 @@ public class BeanExecutionTest extends MethodExecutionTest {
 				aConstructorArgTypes, aConstructorArgs, anInputs,
 				anOutputProperties);
 
+	}
+	@Override
+	protected Class proxyClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	protected void executeOperations(Object aLocatable) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	protected void setActual(Object aLocatable) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	protected boolean checkOutput(Object aLocatable) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

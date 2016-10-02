@@ -1,18 +1,23 @@
-package gradingTools.shared.testcases.shapes;
+package gradingTools.shared.testcases.shapes.rotate.fixed;
 
 import util.assertions.Asserter;
 import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
 import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
 public class RotatingFixedLineSetTest extends RotatingLineTest{
-	protected static Integer inputStudentX = 0;
+	protected Integer inputStudentX = 0;
 	protected Integer inputStudentY = 0;
+	protected void rotate() {
+		getRotatingLine().setAngle(inputAngle());
+		getRotatingLine().setRadius(inputRadius());
+	
+	}
 	
 	@Override
 	protected void executeOperations(Object aLocatable) {
-		super.executeOperations(aLocatable);
-		getRotatingLine().setAngle(inputAngle());
-		getRotatingLine().setRadius(inputRadius());
+//		super.executeOperations(aLocatable);
+		setLocation();
+		rotate();
 	}
 //	@Override
 //	protected void setActual(TestLocatable aLocatable) {
@@ -20,11 +25,13 @@ public class RotatingFixedLineSetTest extends RotatingLineTest{
 //		actualWidth = getRotatingLine().getWidth();
 //		
 //	}
-	protected boolean checkOutput(Object aLocatable) {
-		super.checkOutput(aLocatable);
+	protected boolean checkRotate() {
 		assertWrongHeight();
 		assertWrongWidth();
 		return true;
+	}
+	protected boolean checkOutput(Object aLocatable) {
+		return checkRotate();
 	}
 	@Override
 	protected Integer expectedX() {
@@ -45,13 +52,18 @@ public class RotatingFixedLineSetTest extends RotatingLineTest{
 	}
 	@Override
 	protected void setActual(Object aLocatable) {	
-		actualHeight = getRotatingLine().getHeight();
-		actualWidth = getRotatingLine().getWidth();
+		super.setActual(aLocatable);
+//		actualHeight = getRotatingLine().getHeight();
+//		actualWidth = getRotatingLine().getWidth();
 	}
-	@Override
-	protected void setExpected(Object aLocatable) {
+	protected void setExpectedRotate() {
 		expectedHeight = expectedHeight();
 		expectedWidth = expectedWidth();
+	}
+
+	@Override
+	protected void setExpected(Object aLocatable) {
+		setExpectedRotate();
 	}
 
 	@Override

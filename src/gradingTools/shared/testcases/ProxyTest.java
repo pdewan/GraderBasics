@@ -20,7 +20,7 @@ import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
 public abstract class ProxyTest extends MethodExecutionTest{
 	protected Object rootProxy;
-	protected TestLocatable leafProxy;
+	protected Object leafProxy;
 //	public static final double FRACTION_TOLERANCE = 0.1;
 //	public static final double INT_TOLERANCE = 2;
 //	
@@ -52,11 +52,13 @@ public abstract class ProxyTest extends MethodExecutionTest{
 		return rootProxy;
 	}
 
-	protected TestLocatable leafProxy() {
+	protected  Object leafProxy() {
 		return leafProxy;
 	}
-	protected abstract void setLeafProxy();
-
+	protected void setLeafProxy() {
+		leafProxy = rootProxy();
+		
+	}
 //	protected void assertAngle(double aComputed, double aCorrect) {
 //		Assert.assertTrue("In: " + leafProxy  + " computedAngle " + aComputed + " != correctAngle " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
 //

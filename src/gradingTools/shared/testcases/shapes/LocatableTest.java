@@ -388,9 +388,9 @@ public abstract class LocatableTest extends ProxyTest{
 //		return rootProxy;
 //	}
 //	
-//	protected TestLocatable leafProxy() {
-//		return leafProxy;
-//	}
+	protected TestLocatable leafProxy() {
+		return (TestLocatable) leafProxy;
+	}
 //	protected abstract void setLeafLocatable();
 	protected void setOriginalLocation() {
 		originalX = leafProxy().getX();

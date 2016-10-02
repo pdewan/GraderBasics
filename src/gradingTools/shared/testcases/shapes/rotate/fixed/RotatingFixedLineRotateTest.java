@@ -1,4 +1,4 @@
-package gradingTools.shared.testcases.shapes;
+package gradingTools.shared.testcases.shapes.rotate.fixed;
 
 import org.junit.Assert;
 
@@ -46,7 +46,6 @@ public class RotatingFixedLineRotateTest extends RotatingLineTest{
 	}
 	
 	protected boolean checkOutput(Object aLocatable) {
-		super.checkOutput(aLocatable);
 		Assert.assertTrue("initial angle" + inputAngle() + " same as final angle " +
 					NotesAndScore.PERCENTAGE_MARKER + fractionComplete, 
 					Math.abs (inputAngle() - actualAngle) < FRACTION_TOLERANCE);
