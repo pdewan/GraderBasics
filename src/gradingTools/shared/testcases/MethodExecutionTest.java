@@ -209,6 +209,11 @@ public abstract class MethodExecutionTest  {
 		}
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
+	protected void assertTrue(String aMessage, boolean aCheck) {
+		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
+
+//		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
+	}
 	protected void assertNoClass() {
 		Assert.assertTrue(noClassMessage()
 				+ NotesAndScore.PERCENTAGE_MARKER
