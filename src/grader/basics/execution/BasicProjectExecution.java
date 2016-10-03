@@ -47,6 +47,7 @@ public class BasicProjectExecution {
 	public static final String MISSING_READ = "Status.NoRead";
 	public static final String GETS_EQUAL_SETS = "Status.GetsEqualSets";
 	public static final String EXPECTED_EQUAL_ACTUAL = "Status.ExpectedEqualActual";
+	public static final String NULL_OBJECT = "Status.NullObject";
 
 	public static final String MISSING_CONSTRUCTOR = "Status.MissingConstructor";
 	public static final String CLASS_MATCHED = "Status.ClassMatched";

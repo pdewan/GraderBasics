@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 
+import com.sun.org.apache.xpath.internal.FoundIndex;
+
 import util.misc.Common;
 import util.trace.Tracer;
 
@@ -29,6 +31,8 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	protected Set<String> missingSetters = new HashSet();
 	protected Set<String> wrongInputProperties = new HashSet();
 	protected Set<String> wrongOutputProperties = new HashSet();
+	protected boolean hasConstructor = false;
+
 	protected boolean invokeSetters = true;
 	Object[] constructorArgs;
 //	protected Object beanObject;
@@ -307,9 +311,25 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// compareOutputWithExpected();
 	// return anActualOutputs;
 	// }
+	protected Constructor getRequiredConstructor() {
+		Class[] aConstructorArgTypes = getConstructorArgTypes();
+		Class aClass = getTargetClass();
+		Constructor aConstructor;
+		try {
+//			System.out.println("Finding constructor matching:"
+//					+ Common.toString(aConstructorArgTypes));
+			aConstructor = aClass
+					.getConstructor(aConstructorArgTypes);
+		} catch (NoSuchMethodException | SecurityException e) {
+			System.out.println("Could not find constructor matching:"
+					+ Common.toString(aConstructorArgTypes));
+			return null;
+		}
+		return aConstructor;
+	}
 	@Override
 	protected Object create() {
-		Class[] aConstructorArgTypes = getConstructorArgTypes();
+//		Class[] aConstructorArgTypes = getConstructorArgTypes();
 		Object[] aConstructorArgs = getConstructorArgs();
 		// Map<String, Object> anInputs = getInputPropertyValues();
 		// String[] anOutputProperties = getOutputPropertyNames();
@@ -326,21 +346,26 @@ public abstract class BeanExecutionTest extends LocatableTest {
 //						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 				// anActualOutputs = null;
 			} else {
-				System.out.println("Finding constructor matching:"
-						+ Common.toString(aConstructorArgTypes));
+//				System.out.println("Finding constructor matching:"
+//						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
 				outputPropertyValues
 						.put(BasicProjectExecution.CLASS_MATCHED, aClass);
 
-				Constructor aConstructor = aClass
-						.getConstructor(aConstructorArgTypes);
+//				Constructor aConstructor = aClass
+//						.getConstructor(aConstructorArgTypes);
+				hasConstructor = true;
+
+				Constructor aConstructor = getRequiredConstructor();
 				if (aConstructor == null) {
 					outputPropertyValues.put(
 							BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 					System.out
 							.println("Trying to find parameterless constructor");
 					aConstructor = aClass.getConstructor();
+					aConstructorArgs = emptyObjectArray;
+					hasConstructor = false;
 
 				}
 
@@ -354,6 +379,8 @@ public abstract class BeanExecutionTest extends LocatableTest {
 
 		} catch (NoSuchMethodException e) {
 			System.out.println("Constructor not found:" + e.getMessage());
+			hasConstructor = false;
+
 			outputPropertyValues
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
@@ -628,6 +655,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 
 		}
 	}
+	
 	protected void clearOutputs() {
 		outputPropertyValues.clear();
 		missingGetters.clear();
@@ -644,7 +672,13 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			lastTargetObject = anObject;
 			anObject = lastTargetObject;
 		}
+			
 		String anOutput;
+		if (anObject ==  null) {
+			outputPropertyValues.put(BasicProjectExecution.NULL_OBJECT, true);
+			return outputPropertyValues;
+		}
+
 //		outputPropertyValues.clear();
 		clearOutputs();
 //		Map<String, Object> anActualOutputs = new HashMap();
@@ -778,6 +812,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			System.out.println("Constructor not found:" + e.getMessage());
 			anActualOutputs
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			anActualOutputs.put(BasicProjectExecution.NULL_OBJECT, true);
 			// e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -807,21 +842,36 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	protected String expectedEqualsActualErrorMessage() {
 		return "Output property wrong:" + wrongOutputProperties;
 	}
+	
+	protected String nullObjectMessage() {
+		
+		return "Null target object";
+		
+			
+	}
+	protected boolean isNullObject() {
+		Boolean isNull = (Boolean) outputPropertyValues.get(BasicProjectExecution.NULL_OBJECT);
+		return isNull != null && isNull;
+	}
+	
+
+	
 
 	public double completeCredit() {
-
+		
+		if (isNullObject())
+			return 0;
 		double aReturnValue = getsEqualSets() ? getsEqualsSetsCredit() : 0;
 		aReturnValue += expectedEqualActual() ? expectedEqualsActualCredit()
 				: 0;
 		aReturnValue += hasConstructor() ? correctConstructorCredit() : 0;
 		aReturnValue += hasWriteMethod() ? correctWriteMethodCredit() : 0;
 		aReturnValue += hasReadMethod() ? correctReadMethodCredit() : 0;
-		aReturnValue = Math.max(0.999999999, 1.0);
 		return aReturnValue;
 	}
 
 	protected double correctConstructorCredit() {
-		return 0.1;
+		return 0.2;
 	}
 	
 	protected double correctWriteMethodCredit() {
@@ -834,7 +884,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	protected boolean hasConstructor() {
 		Boolean aMissingConstructor = (Boolean) outputPropertyValues
 				.get(BasicProjectExecution.MISSING_CONSTRUCTOR);
-		return aMissingConstructor == null || !aMissingConstructor;
+		return hasConstructor && ( aMissingConstructor == null || !aMissingConstructor);
 
 	}
 	protected boolean hasWriteMethod() {
@@ -866,7 +916,8 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	}
 
 	public String completeMessage() {
-
+		if (isNullObject())
+			return nullObjectMessage();
 		String result = getsEqualSets() ? "" : getsEqualsSetsErrorMessage();
 		result += expectedEqualActual() ? ""
 				: expectedEqualsActualErrorMessage();
@@ -886,13 +937,13 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + aCredit,
 				false);
 	}
-
+	
 	protected double getsEqualsSetsCredit() {
 		return 0.2;
 	}
 
 	protected double expectedEqualsActualCredit() {
-		return 0.5;
+		return 0.4;
 	}
 
 	protected void processBeanExecution() {
