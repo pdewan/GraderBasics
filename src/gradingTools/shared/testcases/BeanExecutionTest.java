@@ -397,7 +397,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	}
 	public Map<String, Object> executeBean() throws Throwable {
 		Object anObject = create();
-		return executeBean(anObject);
+		return internalExecuteBean(anObject);
 		
 	}
 	public Map<String, Object> oldExecuteBean() throws Throwable {
@@ -664,6 +664,10 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		wrongOutputProperties.clear();
 	}
 	public Map<String, Object> executeBean(Object anObject) throws Throwable {
+		hasConstructor = true;
+		return internalExecuteBean(anObject);
+	}
+	public Map<String, Object> internalExecuteBean(Object anObject) throws Throwable {
 		// Cannot do reflection onproxies
 		if (anObject instanceof Proxy) {
 			lastTargetObject = BasicProjectIntrospection.getRealObject(anObject);
