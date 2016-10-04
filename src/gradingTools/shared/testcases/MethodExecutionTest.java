@@ -90,7 +90,7 @@ public abstract class MethodExecutionTest  {
 	/*
 	 * This should not be called
 	 */
-	protected Class getTargetClass() {
+	public Class getTargetClass() {
 		Class[] aTargetClasses = getTargetClasses();
 		if (aTargetClasses.length == 0) return null;
 //		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());

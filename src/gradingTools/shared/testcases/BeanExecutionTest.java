@@ -32,6 +32,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	protected Set<String> wrongInputProperties = new HashSet();
 	protected Set<String> wrongOutputProperties = new HashSet();
 	protected boolean hasConstructor = false;
+	protected boolean hasCorrectType = false;
+	protected boolean givenObject = false;	
+
 
 	protected boolean invokeSetters = true;
 	Object[] constructorArgs;
@@ -397,6 +400,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	}
 	public Map<String, Object> executeBean() throws Throwable {
 		Object anObject = create();
+		givenObject = false;
+		hasCorrectType = true;
+
 		return internalExecuteBean(anObject);
 		
 	}
@@ -663,8 +669,23 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		wrongInputProperties.clear();
 		wrongOutputProperties.clear();
 	}
+	public static Class getActualClass (Object anObjectOrProxy) {
+		if (anObjectOrProxy instanceof Proxy) {
+			return BasicProjectIntrospection.getRealObject(anObjectOrProxy).getClass();
+		} else {
+			return anObjectOrProxy.getClass();
+		}
+	}
 	public Map<String, Object> executeBean(Object anObject) throws Throwable {
 		hasConstructor = true;
+		givenObject = false;
+		if (anObject != null) {
+			hasCorrectType = getTargetClass().equals(getActualClass(anObject));
+		} else {
+		hasCorrectType = false;
+		}
+		hasCorrectType = true;
+
 		return internalExecuteBean(anObject);
 	}
 	public Map<String, Object> internalExecuteBean(Object anObject) throws Throwable {
@@ -840,16 +861,16 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		return anActualOutputs;
 	}
 	protected String getsEqualsSetsErrorMessage() {
-		return "Gets does not return sets for:" + wrongInputProperties;
+		return " Gets does not return sets for:" + wrongInputProperties;
 	}
 
 	protected String expectedEqualsActualErrorMessage() {
-		return "Output property wrong:" + wrongOutputProperties;
+		return " Output property wrong:" + wrongOutputProperties;
 	}
 	
 	protected String nullObjectMessage() {
 		
-		return "Null target object";
+		return " Null target object";
 		
 			
 	}
@@ -877,6 +898,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	protected double correctConstructorCredit() {
 		return 0.2;
 	}
+	protected double correctTyeCredit() {
+		return correctConstructorCredit();
+	}
 	
 	protected double correctWriteMethodCredit() {
 		return 0.1;
@@ -885,12 +909,17 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		return 0.1;
 	}
 
-	protected boolean hasConstructor() {
+	public boolean hasConstructor() {
 		Boolean aMissingConstructor = (Boolean) outputPropertyValues
 				.get(BasicProjectExecution.MISSING_CONSTRUCTOR);
 		return hasConstructor && ( aMissingConstructor == null || !aMissingConstructor);
 
 	}
+	public boolean hasCorrectType() {
+		return hasCorrectType;
+	}
+
+	
 	protected boolean hasWriteMethod() {
 		Boolean aMissingWrite = (Boolean) outputPropertyValues
 				.get(BasicProjectExecution.MISSING_WRITE);
@@ -905,8 +934,11 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	}
 
 	protected String missingConstructorMessage() {
-		return hasConstructor() ? "" : "Constructor not found with args:"
+		return hasConstructor() ? "" : " Constructor not found with args:"
 				+ Arrays.toString(getConstructorArgTypes());
+	}
+	protected String wrongTypeMessage() {
+		return hasCorrectType ? "" : " Bean of wrong type";
 	}
 	protected String missingWriteMessage() {
 		return hasWriteMethod() ? "" :
@@ -925,7 +957,12 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		String result = getsEqualSets() ? "" : getsEqualsSetsErrorMessage();
 		result += expectedEqualActual() ? ""
 				: expectedEqualsActualErrorMessage();
+		if (!givenObject) {
 		result += hasConstructor() ? "" : missingConstructorMessage();
+		} else {
+			result += hasCorrectType?"":wrongTypeMessage();
+		}
+		result += hasCorrectType?"":wrongTypeMessage();
 		result += hasWriteMethod() ? "" : missingWriteMessage();
 		result += hasReadMethod() ? "" : missingReadMessage();
 

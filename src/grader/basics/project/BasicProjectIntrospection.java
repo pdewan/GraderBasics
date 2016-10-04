@@ -39,6 +39,7 @@ public class BasicProjectIntrospection {
 	static Hashcodetable<Object, Object> proxyToObject = new Hashcodetable<>();
 	static Hashcodetable<Object, Object> objectToProxy = new Hashcodetable<>();
 	static Hashcodetable<Class, Object> classToProxy = new Hashcodetable<>();
+	static Map<Class, Class> classToType = new HashMap();
 
 	static Set<String> predefinedPackages = new HashSet();
 	static Set<GradableJUnitSuite> topLevelSuites = null;
@@ -50,9 +51,10 @@ public class BasicProjectIntrospection {
 		userObjects.clear();
 		proxyToObject.clear();
 		objectToProxy.clear();
+		classToProxy.clear();
 		topLevelSuites = null;
+		classToType.clear();
 	}
-	static Map<Class, Class> classToType = new HashMap();
 
 
 	public static Class<?> getClassForInterface(Project project, Class<?> target) {
