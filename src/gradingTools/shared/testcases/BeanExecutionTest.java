@@ -163,9 +163,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
 				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL
 						+ "." + anOutputProperties[i], false);
-				System.out.println("Property:" + outputProperty
+				System.out.println("For property:" + outputProperty
 						+ " expected value:" + anExpectedOutput
-						+ " actual output:" + anActualOutput);
+						+ ", but actual output:" + anActualOutput + ".");
 				wrongOutputProperties.add(outputProperty);
 			}
 
@@ -679,7 +679,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	}
 	public Map<String, Object> executeBean(Object anObject) throws Throwable {
 		hasConstructor = true;
-		givenObject = false;
+		givenObject = true;
 		if (anObject != null) {
 			hasCorrectType = getTargetClass().equals(getActualClass(anObject));
 		} else {
@@ -890,7 +890,11 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		double aReturnValue = getsEqualSets() ? getsEqualsSetsCredit() : 0;
 		aReturnValue += expectedEqualActual() ? expectedEqualsActualCredit()
 				: 0;
+		if (!givenObject) {
 		aReturnValue += hasConstructor() ? correctConstructorCredit() : 0;
+		} else {
+			aReturnValue += this.hasCorrectType() ? correctTyeCredit() : 0;
+		}
 		aReturnValue += hasWriteMethod() ? correctWriteMethodCredit() : 0;
 		aReturnValue += hasReadMethod() ? correctReadMethodCredit() : 0;
 		return aReturnValue;
@@ -1185,7 +1189,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			Object aSetterValue = anInputs.get(anInputProperty);
 			if (!Common.equal(aGetterValue, aSetterValue)) {
 				System.out.println("For property:" + anInputProperty
-						+ " getter returned:" + aGetterValue + " instead of:"
+						+ " getter returned:" + aGetterValue + ", instead of:"
 						+ aSetterValue);
 				wrongInputProperties.add(anInputProperty);
 				return false;
@@ -1219,6 +1223,8 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
 				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL
 						+ "." + anOutputProperties[i], false);
+				System.out.println ("Actua value of proeprty:" + outputProperty + 
+						"is:" +anActualOutput+ ", instead of:" + anExpectedOutput + ".");
 			}
 
 		}
