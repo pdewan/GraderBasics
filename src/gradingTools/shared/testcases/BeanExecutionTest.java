@@ -543,6 +543,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			for (String aPropertyName : anInputs.keySet()) {
 				invokeGetter(anObject, aPropertyName );
 			}
+			
 			for (String anOutputPropertyName : anOutputProperties) {
 				invokeGetter(anObject, anOutputPropertyName );
 			}
@@ -1169,6 +1170,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			Map<String, Object> anActualOutputs) {
 		if (anInputs == null || anActualOutputs == null)
 			return false;
+//		if (!invokeSetters) {
+//			return true;
+//		}
 //		Set<String> anOutputProperties = anActualOutputs.keySet();
 		Set<String> anOutputPropertyNames = new HashSet (Arrays.asList(getOutputPropertyNames()));
 		for (String anInputProperty : anInputs.keySet()) {
