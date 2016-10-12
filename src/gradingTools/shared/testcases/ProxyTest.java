@@ -48,13 +48,21 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	}
 	protected Object createRootProxy(){
 		rootProxy = BasicProjectIntrospection.createInstance(proxyClass(), getArgs());
+		maybeAssertNoClass(proxyClass(), rootProxy);
+
 		
 		setLeafProxy();
 		return rootProxy;
 	}
+	protected void maybeAssertNoClass(Class aProxyClass, Object aProxy) {
+			assertTrue ("Could not instantiate class matching:" + 
+	Arrays.toString(BasicProjectIntrospection.getTags(aProxyClass)), aProxy != null);
+	
+	}
 	
 	protected Object createOrGetLastRootProxy(){
 		rootProxy = BasicProjectIntrospection.createOrGetLastInstance(proxyClass(), getArgs());
+		maybeAssertNoClass(proxyClass(), rootProxy);
 		setLeafProxy();
 		return rootProxy;
 	}
@@ -219,8 +227,12 @@ public abstract class ProxyTest extends MethodExecutionTest{
 //		rootProxy = getOrCreateObject(factoryClassTags(), factoryMethodTags(), proxyClass());
 //		return rootProxy;
 //	}	
+	protected void assertMissingClass(Class aProxyClass) {
+		
+	}
 	protected boolean doTest() throws Throwable {
 		create();
+		
 		setDependentObjects();
 		executeOperations(rootProxy);
 		setExpected(rootProxy);

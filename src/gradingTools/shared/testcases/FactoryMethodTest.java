@@ -86,6 +86,12 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return true;
 	}
 	
+	protected Object assertingCreateInstance(Class aProxyClass) {
+		Object retVal = BasicProjectIntrospection.createInstance(aProxyClass);
+		maybeAssertNoClass(aProxyClass, retVal);
+		return retVal;
+	}
+	
 	protected Object getOrCreateObject (String[] factoryClassTag, String[] factoryMethodTag, Class instantiatedTypeClass) {
 		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
 		foundFactoryClass = factoryClass != null;
@@ -94,7 +100,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		if (!foundFactoryClass) {
 			factoryMessage = 
 				factoryMessage = "Factory class:" + Arrays.toString(factoryClassTag) + " not found.";			
-			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+			return assertingCreateInstance(instantiatedTypeClass);
 		}
 		factoryCredit += factoryClassCredit();
 		Method factoryMethod =	BasicProjectIntrospection.findUniqueMethodByTag(
@@ -103,7 +109,9 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		if (!foundFactoryMethod) {
 			factoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";			
 
-			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+			return assertingCreateInstance(instantiatedTypeClass);
+			
+			
 		}
 		factoryCredit += factoryMethodCredit();
 
@@ -113,7 +121,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		if (nullInstantiation) {
 			factoryMessage = "Factory method returns null object";			
 
-			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+			return assertingCreateInstance(instantiatedTypeClass);
 			
 		}
 		factoryCredit += factoryObjectCredit();
@@ -126,7 +134,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		if (!correctInstantiatedClass) {
 			factoryMessage = "Factory method returns instance of" + aReturnedClass + " instead of " + anExpectedClass;			
 
-			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+			return assertingCreateInstance(instantiatedTypeClass);
 		}
 		factoryCredit += factoryObjectClassCredit();
 

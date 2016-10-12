@@ -233,10 +233,10 @@ public abstract class LocatableTest extends FactoryMethodTest{
 		return inputStudentY();
 	}
 	protected Integer expectedGraderX() {
-		return inputStudentX();
+		return expectedStudentX();
 	}
 	protected Integer expectedGraderY() {
-		return inputGraderY();
+		return expectedGraderY();
 	}
 	
 	// final test data

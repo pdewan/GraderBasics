@@ -227,8 +227,11 @@ public class BasicProjectIntrospection {
 	
 	public static boolean matchesParameterTypes(Class aCandidate, Class aProxy) {
 		
-			if (aCandidate == aProxy)
+			if (aCandidate.equals(aProxy))
 				return true;
+			if (aProxy.getName().startsWith("java"))
+				return false; // not a user defined class, should have a list of prefixes
+			
 			// types in two different systems
 			if (aCandidate.isInterface()) {
 				return matchCandidateInterface(aCandidate, aProxy);
@@ -761,6 +764,7 @@ public class BasicProjectIntrospection {
 
 
 	public static Class findClass(Project aProject, Class aProxyClass) {
+//		System.out.println(("finding class:" + aProxyClass.getName()));
 		Class aCachedClass = keyToClass.get(aProxyClass.getName());
 		if (aCachedClass == null) {
 		String[] aTags = getTags(aProxyClass);
