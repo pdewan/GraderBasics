@@ -118,7 +118,9 @@ public class ATestLogFileWriter extends RunListener {
 			if (numRuns == 0) {
 				totalTests = aSuite.getLeafClasses().size();				
 				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
-				maybeReadLastLineOfLogFile(logFileName);
+				if (!maybeReadLastLineOfLogFile(logFileName)) {
+					return;
+				};
 				maybeLoadSavedSets();
 				maybeCreateOrLoadAppendableFile(logFileName);
 
@@ -384,19 +386,20 @@ public class ATestLogFileWriter extends RunListener {
 		}
 	}
 	
-	protected void maybeReadLastLineOfLogFile(String aLogFileName) {
+	protected boolean maybeReadLastLineOfLogFile(String aLogFileName) {
 		File aFile = new File(aLogFileName);
 		if (!aFile.exists()) {
-			return;
+			return true;
 		}
 		lastLine = tail(aFile, 1).trim();
 		if (lastLine.startsWith("#")) {
-			System.err.println ("Corrupt kog filem has only header");
-			return;
+			System.err.println ("Corrupt kog file " + aLogFileName + " has only header");
+			return false;
 		}
 //		String lastLineNormalized = lastLine.replaceAll("+|-", ""); // normalize it
 		lastLineNormalized = lastLine.replaceAll("\\+|-", ""); // normalize it
 		normalizedLastLines = lastLineNormalized.split(",");
+		return true;
 	}
 	public static String tail( File file, int lines) {
 	    java.io.RandomAccessFile fileHandler = null;
