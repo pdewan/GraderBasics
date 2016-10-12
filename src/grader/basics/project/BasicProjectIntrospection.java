@@ -755,6 +755,9 @@ public class BasicProjectIntrospection {
 			return null;
 		return aCachedClass;	
 	}
+	public static Class findClass(Class aProxyClass) {
+		return findClass(CurrentProjectHolder.getOrCreateCurrentProject(),aProxyClass);
+	}
 
 
 	public static Class findClass(Project aProject, Class aProxyClass) {

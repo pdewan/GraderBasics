@@ -1,5 +1,6 @@
 package gradingTools.shared.testcases;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,6 +22,15 @@ import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 public abstract class ProxyTest extends MethodExecutionTest{
 	protected Object rootProxy;
 	protected Object leafProxy;
+//	protected String[] factoryClassTags = new String[] {"SingletonsCreator"};
+//	protected String[] factoryMethodTags = new String[] {};
+//	protected boolean foundFactoryMethod;
+//	protected boolean foundFactoryClass;
+//	protected boolean nullInstantiation;
+//	protected boolean correctInstantiatedClass;
+//	protected boolean singletonCheckPassed;
+//	protected Object[] emptyObjectArgs = new Object[] {};
+//	String aFactoryMessage = "";
 //	public static final double FRACTION_TOLERANCE = 0.1;
 //	public static final double INT_TOLERANCE = 2;
 //	
@@ -147,9 +157,68 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	protected void setDependentObjects() {
 		
 	}
-	protected void printFractionComplete() {
-		System.out.println ("Fraction complete:" + fractionComplete);
-	}
+//	protected void printFractionComplete() {
+//		System.out.println ("Fraction complete:" + fractionComplete);
+//	}
+//	protected String[] factoryClassTags() {
+//		return factoryClassTags;
+//	}
+//	
+//	protected String[] factoryMethodTags() {
+//		return factoryMethodTags;
+//	}
+//	protected boolean doSingletonCheck(Object aFirstInstantiation) {
+//		Object aSecondCreation = createUsingFactoryMethod();
+//		singletonCheckPassed = aSecondCreation == aFirstInstantiation;
+//		return singletonCheckPassed;
+//	}	
+	
+	
+//	protected Object getOrCreateObject (String[] factoryClassTag, String[] factoryMethodTag, Class instantiatedTypeClass) {
+//		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTags());
+//		foundFactoryClass = factoryClass != null;
+//
+//		if (!foundFactoryClass) {
+//			aFactoryMessage = 
+//				aFactoryMessage = "Factory class:" + Arrays.toString(factoryClassTag) + " not found.";			
+//			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+//		}
+//		Method factoryMethod =	BasicProjectIntrospection.findUniqueMethodByTag(
+//				factoryClass, factoryMethodTag);
+//		foundFactoryMethod = factoryMethod != null;
+//		if (!foundFactoryMethod) {
+//			aFactoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";			
+//
+//			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+//		}
+//		
+//		Object anInstance = BasicProjectExecution.timedInvoke(factoryClass, factoryMethod, emptyObjectArgs);
+//		nullInstantiation = anInstance == null;
+//		if (nullInstantiation) {
+//			aFactoryMessage = "Factory method returns null object";			
+//
+//			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+//			
+//		}
+//		Class aReturnedClass = anInstance.getClass();
+//		Class anExpectedClass = BasicProjectIntrospection.findClass(proxyClass());
+//		
+//		correctInstantiatedClass = aReturnedClass == null || aReturnedClass.equals(anExpectedClass);
+//		
+//		if (!correctInstantiatedClass) {
+//			aFactoryMessage = "Factory method returns instance of" + aReturnedClass + " instead of " + anExpectedClass;			
+//
+//			return BasicProjectIntrospection.createInstance(instantiatedTypeClass);
+//		}
+//		Object aProxy = BasicProjectIntrospection.createProxy(proxyClass(), anInstance);
+//	
+//		return aProxy;
+//		
+//	}
+//	protected Object createUsingFactoryMethod() {
+//		rootProxy = getOrCreateObject(factoryClassTags(), factoryMethodTags(), proxyClass());
+//		return rootProxy;
+//	}	
 	protected boolean doTest() throws Throwable {
 		create();
 		setDependentObjects();

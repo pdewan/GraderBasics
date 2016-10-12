@@ -18,7 +18,10 @@ public abstract class MovableTest extends LocatableTest{
 	}
     protected void move() {
     	setOriginalLocation();
-		movable().move(inputXDelta(), inputYDelta());
+		doMove();
+    }
+    protected void doMove() {
+    	movable().move(inputXDelta(), inputYDelta());
     }
 	@Override
 	protected void executeOperations(Object aLocatable) {

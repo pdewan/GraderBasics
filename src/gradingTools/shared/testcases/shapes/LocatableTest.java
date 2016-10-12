@@ -13,6 +13,7 @@ import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
 import grader.basics.junit.NotesAndScore;
 import grader.basics.project.BasicProjectIntrospection;
+import gradingTools.shared.testcases.FactoryMethodTest;
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.OutputAndErrorCheckingTestCase;
 import gradingTools.shared.testcases.ProxyTest;
@@ -21,7 +22,7 @@ import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
 import gradingTools.shared.testcases.shapes.interfaces.TestPolarLine;
 import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
-public abstract class LocatableTest extends ProxyTest{
+public abstract class LocatableTest extends FactoryMethodTest{
 //	protected Object rootProxy;
 //	protected TestLocatable leafProxy;
 	public static final double FRACTION_TOLERANCE = 0.1;
@@ -124,8 +125,8 @@ public abstract class LocatableTest extends ProxyTest{
 //		return null;
 ////		return tokenLines()[getLineIndex()];
 //	}
-	protected abstract void executeOperations(Object aLocatable) ;
-	protected abstract void setActual(Object aLocatable) ;
+//	protected abstract void executeOperations(Object aLocatable) ;
+//	protected abstract void setActual(Object aLocatable) ;
 
 	protected void setExpected(Object aLocatable) {
 		
@@ -137,7 +138,7 @@ public abstract class LocatableTest extends ProxyTest{
 //	protected Object create() {
 //		return createOrGetLastRootProxy();
 //	}
-	protected abstract boolean checkOutput(Object aLocatable);
+//	protected abstract boolean checkOutput(Object aLocatable);
 	protected void setDependentObjects() {
 		
 	}

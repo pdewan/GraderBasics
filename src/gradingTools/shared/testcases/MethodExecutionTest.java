@@ -214,7 +214,7 @@ public abstract class MethodExecutionTest  {
 
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
 	}
-	protected void assertNotExpectd(Object anActual, Object anExpected) {
+	protected void assertNotExpected(Object anActual, Object anExpected) {
 		assertTrue ("Actual value: " + anActual + " not expected value: " + anExpected, anExpected.equals(anActual));
 
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
@@ -645,5 +645,8 @@ public abstract class MethodExecutionTest  {
 	protected void assertMissingClass(String[] aTags) {
 		Assert.assertTrue("No class matching: "
 				+ Arrays.toString(aTags) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
+	}
+	protected void printFractionComplete() {
+		System.out.println ("Fraction complete:" + fractionComplete);
 	}
 }
