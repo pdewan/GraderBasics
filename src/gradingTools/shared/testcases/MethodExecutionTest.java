@@ -214,6 +214,11 @@ public abstract class MethodExecutionTest  {
 
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
 	}
+	protected void assertNotExpectd(Object anActual, Object anExpected) {
+		assertTrue ("Actual value: " + anActual + " not expected value: " + anExpected, anExpected.equals(anActual));
+
+//		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
+	}
 	protected void assertNoClass() {
 		Assert.assertTrue(noClassMessage()
 				+ NotesAndScore.PERCENTAGE_MARKER

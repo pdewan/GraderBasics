@@ -47,6 +47,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			failure = aFailure;
 			Throwable aThrowable = aFailure.getException();
 			String aMessage = aThrowable.getMessage();
+			System.err.println ("Test Failed:" + aMessage);
 			if (aMessage == null) { // some exception
 				checkResult = new TestCaseResult(false, 
 						aThrowable.toString(), name, true);

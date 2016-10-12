@@ -130,10 +130,10 @@ public abstract class ProxyTest extends MethodExecutionTest{
 ////		return null;
 //////		return tokenLines()[getLineIndex()];
 ////	}
-	protected abstract void executeOperations(Object aLocatable) ;
-	protected abstract void setActual(Object aLocatable) ;
+	protected abstract void executeOperations(Object aProxy) ;
+	protected abstract void setActual(Object aProxy) ;
 
-	protected void setExpected(Object aLocatable) {
+	protected void setExpected(Object aProxy) {
 		
 	}
 //
@@ -147,6 +147,9 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	protected void setDependentObjects() {
 		
 	}
+	protected void printFractionComplete() {
+		System.out.println ("Fraction complete:" + fractionComplete);
+	}
 	protected boolean doTest() throws Throwable {
 		create();
 		setDependentObjects();
@@ -156,19 +159,19 @@ public abstract class ProxyTest extends MethodExecutionTest{
 		return checkOutput(rootProxy);
 		
 	}
-	// Student test data
-	protected Double inputStudentAngle() {
-		return null;
-	}
-	protected Double inputStudentRadius() {
-		return null;
-	}
-	protected Double expectedStudentAngle() {
-		return null;
-	}
-	protected Double expectedStudentRadius() {
-		return null;
-	}
+//	// Student test data
+//	protected Double inputStudentAngle() {
+//		return null;
+//	}
+//	protected Double inputStudentRadius() {
+//		return null;
+//	}
+//	protected Double expectedStudentAngle() {
+//		return null;
+//	}
+//	protected Double expectedStudentRadius() {
+//		return null;
+//	}
 	
 	
 //	

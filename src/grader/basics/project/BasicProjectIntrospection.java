@@ -1004,6 +1004,10 @@ public class BasicProjectIntrospection {
 	public static Class findUniqueClassByTag(Project aProject, String aTag) {
 		return findClassByTags(aProject, new String[] {aTag});
 	}
+	public static Class findClassByTags(String... aTags) {
+		return findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
+	}
+
 	public static Class findClassByTags(Project aProject, String... aTags) {
 		if (aTags.length == 0) {
 			return null;
@@ -1300,7 +1304,18 @@ public class BasicProjectIntrospection {
 
 	static Class[] emptyClassArray = {};
 	
-
+	public static Method findUniqueMethodByTag(Class aClass,
+			String aSpecification, Class[] aParameterTypes) {
+		return findUniqueMethodByTag(aClass, new String[] {aSpecification}, aParameterTypes);
+	}
+	public static Method findUniqueMethodByTag(Class aClass,
+			String aSpecification) {
+		return findUniqueMethodByTag(aClass, aSpecification, emptyClassArray);
+	}
+	public static Method findUniqueMethodByTag(Class aClass,
+			String[] aSpecification) {
+		return findUniqueMethodByTag(aClass, aSpecification, emptyClassArray);
+	}
 	public static Method findUniqueMethodByTag(Class aClass,
 			String[] aSpecification, Class[] aParameterTypes) {
 		try {
