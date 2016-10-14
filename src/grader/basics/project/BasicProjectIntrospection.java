@@ -1776,6 +1776,14 @@ public class BasicProjectIntrospection {
 	
 	
 	public static Object createProxy (Class aProxyClass, Object anActualObject) {
+		// redundant
+		if (anActualObject instanceof Proxy) {
+			return anActualObject;
+		}
+		if (aProxyClass.isInstance(anActualObject)) { //not a proxy class
+			return null;
+		}
+		
 		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
 				anActualObject);
 		Class[] anInterfaces = null;
