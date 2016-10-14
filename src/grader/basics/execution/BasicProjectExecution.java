@@ -163,31 +163,31 @@ public class BasicProjectExecution {
 
 	}
 
-	public static ResultWithOutput timedInteractiveInvoke(Object anObject,
-			Method aMethod, Object... anArgs) {
-		if (isUseMethodAndConstructorTimeOut())
-			return timedInteractiveInvoke(anObject, aMethod, anArgs,
-					getMethodTimeOut());
-		else {
-			try {
-				redirectOutput();
-				Object aResult = aMethod.invoke(anObject, anArgs);
-
-				String anOutput = restoreOutputAndGetRedirectedOutput();
-				//
-				// aFileStream.flush();
-				// aFileStream.close();
-				// String anOutput = Common.toText(tmpFile);
-				// tmpFile.delete();
-
-				return new AResultWithOutput(aResult, anOutput);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-
-	}
+//	public static ResultWithOutput timedInteractiveInvoke(Object anObject,
+//			Method aMethod, Object... anArgs) {
+//		if (isUseMethodAndConstructorTimeOut())
+//			return timedInteractiveInvoke(anObject, aMethod, anArgs,
+//					getMethodTimeOut());
+//		else {
+//			try {
+//				redirectOutput();
+//				Object aResult = aMethod.invoke(anObject, anArgs);
+//
+//				String anOutput = restoreOutputAndGetRedirectedOutput();
+//				//
+//				// aFileStream.flush();
+//				// aFileStream.close();
+//				// String anOutput = Common.toText(tmpFile);
+//				// tmpFile.delete();
+//
+//				return new AResultWithOutput(aResult, anOutput);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return null;
+//			}
+//		}
+//
+//	}
 
 	public static boolean isUseMethodAndConstructorTimeOut() {
 		return useMethodAndConstructorTimeOut;
@@ -278,7 +278,7 @@ public class BasicProjectExecution {
 
 	}
 
-	public static ResultWithOutput timedInteractiveInvoke(Object anObject,
+	public static ResultWithOutput timedInteractiveInvokeDuplicatingCode(Object anObject,
 			Method aMethod, Object[] anArgs, long aMillSeconds) {
 		// ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -320,8 +320,37 @@ public class BasicProjectExecution {
 
 		}
 	}
+	public static ResultWithOutput timedInteractiveInvoke(Object anObject,
+			Method aMethod, Object[] anArgs, long aMillSeconds) {
+		
 
-	public static ResultWithOutput timedGeneralizedInteractiveInvoke(
+		try {
+
+			redirectOutput();
+
+//			Callable aCallable = new AMethodExecutionCallable(anObject,
+//					aMethod, anArgs);
+//			Future future = executor.submit(aCallable);
+//			Object aResult = future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+			Object aResult = timedInvoke(anObject, aMethod, anArgs, aMillSeconds);
+
+			String anOutput = restoreOutputAndGetRedirectedOutput();
+			
+			return new AResultWithOutput(aResult, anOutput);
+//		} catch (TimeoutException e) {
+//			executor = Executors.newSingleThreadExecutor();
+//			return new AResultWithOutput(null, null);
+
+		} catch (Exception e) {
+			
+			return new AResultWithOutput(null, null);
+		} finally {
+			System.setOut(previousOut);
+
+		}
+	}
+
+	public static ResultWithOutput timedGeneralizedInteractiveInvokeDuplicatingCode(
 			Object anObject, Method aMethod, Object[] anArgs, String anInput,
 			long aMillSeconds) {
 
@@ -342,6 +371,33 @@ public class BasicProjectExecution {
 			executor = Executors.newSingleThreadExecutor();
 			return new AResultWithOutput(null, null);
 		}
+		catch (Exception e) {
+			return new AResultWithOutput(null, null);
+		} finally {
+			System.setOut(previousOut);
+
+		}
+	}
+	public static ResultWithOutput timedGeneralizedInteractiveInvoke(
+			Object anObject, Method aMethod, Object[] anArgs, String anInput,
+			long aMillSeconds) {
+
+		try {
+
+			BasicProjectExecution
+					.redirectInputOutputError(BasicProjectExecution
+							.toInputString(anInput));
+
+			
+			Object aResult = timedInvoke(anObject, aMethod, anArgs, aMillSeconds );
+			ResultingOutErr anOutErr = restoreAndGetRedirectedIOStreams();
+
+			return new AResultWithOutput(aResult, anOutErr.out, anOutErr.err);
+		} 
+//		catch (TimeoutException e) {
+//			executor = Executors.newSingleThreadExecutor();
+//			return new AResultWithOutput(null, null);
+//		}
 		catch (Exception e) {
 			return new AResultWithOutput(null, null);
 		} finally {
@@ -386,8 +442,10 @@ public class BasicProjectExecution {
 			try (PrintWriter out = new PrintWriter(tmpInFileName)) {
 				out.println(anInput);
 			}
+			if (!anInput.isEmpty()) {
 			newIn = new FileInputStream(tmpInFileName);
 			System.setIn(newIn);
+			}
 			redirectOutput();
 			redirectError();
 		} catch (IOException e) {
@@ -569,10 +627,11 @@ public class BasicProjectExecution {
 			// // aMillSeconds);
 			redirectOutput();
 
-			Callable aCallable = new AConstructorExecutionCallable(
-					aConstructor, anArgs);
-			Future future = executor.submit(aCallable);
-			Object aResult = future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+//			Callable aCallable = new AConstructorExecutionCallable(
+//					aConstructor, anArgs);
+//			Future future = executor.submit(aCallable);
+//			Object aResult = future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+			Object aResult = timedInvoke(aConstructor, anArgs, aMillSeconds);
 			String anOutput = restoreOutputAndGetRedirectedOutput();
 
 			// // System.out.flush();
@@ -583,9 +642,9 @@ public class BasicProjectExecution {
 			// tmpFile.delete();
 
 			return new AResultWithOutput(aResult, anOutput);
-		} catch (TimeoutException e) {
-			executor = Executors.newSingleThreadExecutor();
-			return new AResultWithOutput(null, null);
+//		} catch (TimeoutException e) {
+//			executor = Executors.newSingleThreadExecutor();
+//			return new AResultWithOutput(null, null);
 		}
 		
 		catch (Exception e) {
