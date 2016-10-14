@@ -990,6 +990,8 @@ public class BasicProjectExecution {
 		}
 
 	}
+	
+	static String[] emptyEntryPoints = {};
 
 	public static ResultingOutErr invokeMain(String[] args, String... anInput)
 			throws NotRunnableException {
@@ -997,7 +999,7 @@ public class BasicProjectExecution {
 			Map<String, String> anEntryPoints = JavaMainClassFinderSelector
 					.getMainClassFinder().getEntryPoints(
 							CurrentProjectHolder.getOrCreateCurrentProject(),
-							null);
+							emptyEntryPoints);
 			String aMainEntryPoint = anEntryPoints
 					.get(BasicProcessRunner.MAIN_ENTRY_POINT);
 			if (aMainEntryPoint == null)

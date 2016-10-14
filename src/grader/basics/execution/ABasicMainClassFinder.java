@@ -92,6 +92,55 @@ public class ABasicMainClassFinder implements MainClassFinder {
      * Both need to be kept consistent
      */
     public Map<String, String> getEntryPoints(grader.basics.project.Project project, String aSpecifiedMainClass) throws NotRunnableException {
+    	return getEntryPoints(project, new String[] {aSpecifiedMainClass});
+ //        if (project.getClassesManager().isEmpty())
+//            throw new NotRunnableException();
+////        ProjectWrapper projectWrapper = (ProjectWrapper) project;
+//		Map<String, String> entryPoints = new HashMap();
+//
+////        framework.project.ClassesManager manager = project.getClassesManager().get();
+//        
+////        String aCandidate = StaticConfigurationUtils.getEntryPoint();
+//        String aCandidate = aSpecifiedMainClass;
+//        if (aCandidate != null) {
+////        	if (isEntryPoint(aCandidate, manager))  {
+//            if (isEntryPoint(aCandidate, project))  {
+//
+//        		entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+//        		return entryPoints;
+//        	}
+//        }
+////		if (isEntryPoint(aCandidate, manager)) {
+//		if (isEntryPoint(aCandidate, project)) {
+//
+//			entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+//			return entryPoints;
+//		}
+//        grader.basics.project.ClassesManager manager = project.getClassesManager().get();
+//
+//        for (grader.basics.project.ClassDescription description : manager.getClassDescriptions()) {
+//            try {
+//                description.getJavaClass().getMethod("main", String[].class);
+//                entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, description.getJavaClass().getCanonicalName());
+////                projectWrapper.getProject().setEntryPoints(entryPoints);
+//                setEntryPoints(project, entryPoints);
+//                return entryPoints;
+////                return description.getJavaClass().getCanonicalName();
+//            } catch (NoSuchMethodException e) {
+//            }
+//        }
+//        throw new NotRunnableException();
+    }
+    /**
+     * This figures out what class is the "entry point", or, what class has main(args)
+     * @param project The project to run
+     * @return The class canonical name. i.e. "foo.bar.SomeClass"
+     * @throws grader.basics.execution.NotRunnableException
+     * @see grader.basics.execution.ABasicMainClassFinder which repeats this code (sigh)
+     * Both need to be kept consistent
+     */
+    @Override
+    public Map<String, String> getEntryPoints(grader.basics.project.Project project, String[] aSpecifiedMainClasses) throws NotRunnableException {
         if (project.getClassesManager().isEmpty())
             throw new NotRunnableException();
 //        ProjectWrapper projectWrapper = (ProjectWrapper) project;
@@ -100,21 +149,20 @@ public class ABasicMainClassFinder implements MainClassFinder {
 //        framework.project.ClassesManager manager = project.getClassesManager().get();
         
 //        String aCandidate = StaticConfigurationUtils.getEntryPoint();
-        String aCandidate = aSpecifiedMainClass;
-        if (aCandidate != null) {
-//        	if (isEntryPoint(aCandidate, manager))  {
+        for (String aCandidate:aSpecifiedMainClasses) {
             if (isEntryPoint(aCandidate, project))  {
 
         		entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
         		return entryPoints;
         	}
         }
-//		if (isEntryPoint(aCandidate, manager)) {
-		if (isEntryPoint(aCandidate, project)) {
-
-			entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
-			return entryPoints;
-		}
+////		if (isEntryPoint(aCandidate, manager)) {
+//		if (isEntryPoint(aCandidate, project)) {
+//
+//			entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+//			return entryPoints;
+//		}
+        
         grader.basics.project.ClassesManager manager = project.getClassesManager().get();
 
         for (grader.basics.project.ClassDescription description : manager.getClassDescriptions()) {
