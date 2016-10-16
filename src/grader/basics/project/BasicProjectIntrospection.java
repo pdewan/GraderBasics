@@ -127,7 +127,9 @@ public class BasicProjectIntrospection {
 
 		aClasses = removeSuperTypes(aClasses);
 		 if (aClasses.size() != 1) {
-//			 System.out.println ("Found multiple matching classes:" + aClasses);
+			 if (aClasses.size() > 1) {
+			 	System.out.println ("Found multiple matching classes:" + aClasses);
+			 }
 		 return null;
 		 }
 		 return aClasses.iterator().next();
@@ -1816,6 +1818,7 @@ public class BasicProjectIntrospection {
 			Class anActualClass = BasicProjectIntrospection.findClass(
 					CurrentProjectHolder.getOrCreateCurrentProject(), aProxyClass);
 			if (anActualClass == null) {
+				System.out.println ("Could not find unique class with tags:" + getTags(aProxyClass));
 				return null;
 			}
 			Constructor aConstructor = anActualClass
@@ -1838,6 +1841,7 @@ public class BasicProjectIntrospection {
 //			objectToProxy.put(anActualObject, aProxy);
 //			return aProxy;
 		} catch (Exception e) {
+			System.out.println ("Class instantiation failed:" + e);
 			e.printStackTrace();
 			return null;
 		}
