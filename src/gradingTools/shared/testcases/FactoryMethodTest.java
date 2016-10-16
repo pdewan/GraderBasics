@@ -35,8 +35,13 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	protected static final double FACTORY_OBJECT_CREDIT = 0.2;
 	protected static final double FACTORY_OBJECT_CLASS_CREDIT = 0.2;
 	protected static final double FACTORY_OBJECT_SINGLETON_CREDIT = 0.2;
+	boolean tryConstructor = false;
 
 	protected double factoryCredit;
+	
+	protected boolean tryConstructor() {
+		return true;
+	}
 
 	protected double factoryClassCredit() {
 		return FACTORY_CLASS_CREDIT;
@@ -86,7 +91,19 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return true;
 	}
 	
+	protected Object maybeUseConstructor(Class aProxyClass){
+		if (tryConstructor()) {
+			System.out.println (factoryMessage);
+		return assertingCreateInstance(aProxyClass);
+		} else {
+			assertTrue(factoryMessage, false );
+			return null;
+		}
+	}
+	
 	protected Object assertingCreateInstance(Class aProxyClass) {
+		System.out.println("Trying parameterless constructor");
+
 		Object retVal = BasicProjectIntrospection.createInstance(aProxyClass);
 		maybeAssertNoClass(aProxyClass, retVal);
 		return retVal;
@@ -99,8 +116,8 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		factoryCredit = 0;
 		if (!foundFactoryClass) {
 			factoryMessage = 
-				factoryMessage = "Factory class:" + Arrays.toString(factoryClassTag) + " not found.";			
-			return assertingCreateInstance(instantiatedTypeClass);
+				factoryMessage = "Factory class:" + Arrays.toString(factoryClassTag) + " not found.";	
+			return maybeUseConstructor(instantiatedTypeClass);
 		}
 		factoryCredit += factoryClassCredit();
 		Method factoryMethod =	BasicProjectIntrospection.findUniqueMethodByTag(
@@ -108,8 +125,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		foundFactoryMethod = factoryMethod != null;
 		if (!foundFactoryMethod) {
 			factoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";			
-
-			return assertingCreateInstance(instantiatedTypeClass);
+			return maybeUseConstructor(instantiatedTypeClass);
 			
 			
 		}
@@ -120,8 +136,8 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		nullInstantiation = anInstance == null;
 		if (nullInstantiation) {
 			factoryMessage = "Factory method returns null object";			
-
-			return assertingCreateInstance(instantiatedTypeClass);
+			return maybeUseConstructor(instantiatedTypeClass);
+//			return assertingCreateInstance(instantiatedTypeClass);
 			
 		}
 		factoryCredit += factoryObjectCredit();
@@ -133,8 +149,9 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		
 		if (!correctInstantiatedClass) {
 			factoryMessage = "Factory method returns instance of" + aReturnedClass + " instead of " + anExpectedClass;			
+			return maybeUseConstructor(instantiatedTypeClass);
 
-			return assertingCreateInstance(instantiatedTypeClass);
+//			return assertingCreateInstance(instantiatedTypeClass);
 		}
 		factoryCredit += factoryObjectClassCredit();
 
