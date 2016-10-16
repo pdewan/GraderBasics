@@ -473,7 +473,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		// compareOutputWithExpected();
 		return outputPropertyValues;
 	}
-
+	protected void assertNoProperty(String aProperty) {
+		Assert.assertTrue("Missing property:" + aProperty +  " in " +lastTargetObject + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, false);
+	}
 	protected void invokeGetter(Object anObject, String anOutputPropertyName)
 			throws Throwable {
 		Map<String, Object> anActualOutputs = outputPropertyValues;
@@ -487,9 +489,13 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			PropertyDescriptor aProperty = BasicProjectIntrospection
 					.findProperty(aClass, anOutputPropertyName);
 			if (aProperty == null) {
-
+				missingGetters.add(anOutputPropertyName);
+				anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
+				anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
+						+ anOutputPropertyName, true);
 				// System.out.println("Property " + aPropertyName +
 				// "not found");
+				assertNoProperty(anOutputPropertyName);
 				return;
 			}
 			Method aReadMethod = aProperty.getReadMethod();
@@ -736,7 +742,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			// anActualOutputs.put(BasicProjectExecution.PRINTS, anOutput);
 
 		}
-		boolean getsReturnSets = getsReturnedSets(anInputs, anActualOutputs);
+		boolean getsReturnSets = getsReturnedSets(anInputs, anActualOutputs) && hasReadMethod();
 		anActualOutputs.put(BasicProjectExecution.GETS_EQUAL_SETS,
 				getsReturnSets);
 		compareOutputWithExpected();

@@ -25,11 +25,13 @@ public abstract class GetterExecutionTest extends BeanExecutionTest{
 		return "Object " + actualReturnValue + " not instance of " + 
 	  BasicProjectIntrospection.getTags(expectedClass());
 	}
+	
 	protected void assertWrongObject() {
 		Assert.assertTrue(incorrectClassMessage() + NotesAndScore.PERCENTAGE_MARKER + noExceptionCredit(), false);
 	}
 	@Override
 	protected boolean checkOutput(Object actualReturnValue) {
+		
 		if (actualReturnValue == null) {
 			assertWrongObject();
 		}		
