@@ -44,6 +44,7 @@ public abstract class MovableTest extends LocatableTest{
 	}
 	
 	protected boolean checkMove() {
+		assertChangedLeafProxy();
 		assertWrongX();
 		assertWrongY();
 		return true;

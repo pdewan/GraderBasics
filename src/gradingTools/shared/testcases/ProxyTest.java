@@ -69,13 +69,24 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	protected Object rootProxy() {
 		return rootProxy;
 	}
-
+	protected void assertChangedLeafProxy() {
+		Assert.assertTrue("Leaf object: " + leafProxy + " replaced with:" + computeLeafProxy(), 
+				leafProxy == computeLeafProxy());
+//		Assert.assertTrue("in object:" + locatable + " expected X:" + expectedX() + " != actual X: " + actualX +
+//				+  NotesAndScore.PERCENTAGE_MARKER + fractionComplete,
+//				false);
+	}
 	protected  Object leafProxy() {
 		return leafProxy;
 	}
 	protected void setLeafProxy() {
-		leafProxy = rootProxy();
+//		leafProxy = rootProxy();
+		leafProxy = computeLeafProxy();
+
 		
+	}
+	protected Object computeLeafProxy() {
+		return rootProxy();
 	}
 //	protected void assertAngle(double aComputed, double aCorrect) {
 //		Assert.assertTrue("In: " + leafProxy  + " computedAngle " + aComputed + " != correctAngle " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
