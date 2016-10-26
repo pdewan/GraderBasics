@@ -767,6 +767,8 @@ public class BasicProjectIntrospection {
 
 	public static Class findClass(Project aProject, Class aProxyClass) {
 //		System.out.println(("finding class:" + aProxyClass.getName()));
+		if (isPredefinedType(aProxyClass))
+			return aProxyClass;
 		Class aCachedClass = keyToClass.get(aProxyClass.getName());
 		if (aCachedClass == null) {
 		String[] aTags = getTags(aProxyClass);

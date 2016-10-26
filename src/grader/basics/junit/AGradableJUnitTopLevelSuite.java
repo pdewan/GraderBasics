@@ -114,6 +114,8 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	
 	protected void testRunFinished(GradableJUnitTest aTest) {
 		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(null);
+//		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(aTest);
+
 
 //		Description aDescription = Description.createTestDescription(GradableJUnitTest.TEST_RUN_STARTED, "a test", 0);
 //		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);

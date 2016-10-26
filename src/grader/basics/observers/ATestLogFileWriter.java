@@ -118,11 +118,14 @@ public class ATestLogFileWriter extends RunListener {
 			if (numRuns == 0) {
 				totalTests = aSuite.getLeafClasses().size();				
 				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
-				if (!maybeReadLastLineOfLogFile(logFileName)) {
-					return;
-				};
+				
+//				if (!maybeReadLastLineOfLogFile(logFileName)) {
+//					return;
+//				};
+				if (maybeReadLastLineOfLogFile(logFileName)) {
 				maybeLoadSavedSets();
 				maybeCreateOrLoadAppendableFile(logFileName);
+				}
 
 			}
 			currentTopSuite = aSuite;
@@ -132,7 +135,7 @@ public class ATestLogFileWriter extends RunListener {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 			
     }
 	protected void closeFile() {
@@ -323,6 +326,7 @@ public class ATestLogFileWriter extends RunListener {
     }
 	
 	void appendLine(String aLine) {
+		if (out == null) return;
 		Tracer.info(this, aLine);
 		out.println(aLine);
 		out.flush();

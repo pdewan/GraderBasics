@@ -143,9 +143,12 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		factoryCredit += factoryObjectCredit();
 
 		Class aReturnedClass = anInstance.getClass();
+		
 		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
 		
-		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null || aReturnedClass.equals(anExpectedClass);
+		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
+				anExpectedClass.isInstance(anInstance);
+//					aReturnedClass.equals(anExpectedClass);
 		
 		if (!correctInstantiatedClass) {
 			factoryMessage = "Factory method returns instance of" + aReturnedClass + " instead of " + anExpectedClass;			
