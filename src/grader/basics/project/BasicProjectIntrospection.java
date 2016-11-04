@@ -1866,6 +1866,10 @@ public class BasicProjectIntrospection {
 	public static Object createInstance(Class aProxyClass,
 			Class[] aConctructArgsTypes, Object[] anArgs) {
 		try {
+			if (!aProxyClass.isInterface()) {
+				System.out.println ("cannot create proxy for non interface class");
+				return null;
+			}
 			Class anActualClass = BasicProjectIntrospection.findClass(
 					CurrentProjectHolder.getOrCreateCurrentProject(), aProxyClass);
 			if (anActualClass == null) {

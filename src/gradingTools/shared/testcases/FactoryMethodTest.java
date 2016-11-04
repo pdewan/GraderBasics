@@ -124,8 +124,13 @@ public abstract class FactoryMethodTest extends ProxyTest{
 				factoryClass, factoryMethodTag);
 		foundFactoryMethod = factoryMethod != null;
 		if (!foundFactoryMethod) {
-			factoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";			
+			factoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";	
+			if (instantiatedTypeClass.isInterface()) {
 			return maybeUseConstructor(instantiatedTypeClass);
+			}
+			else {
+				assertTrue(factoryMessage, false);
+			}
 			
 			
 		}
