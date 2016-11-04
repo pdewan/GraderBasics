@@ -11,6 +11,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import util.annotations.IsRestriction;
 import util.annotations.Tags;
 import util.introspect.JavaIntrospectUtility;
 import util.models.Hashcodetable;
@@ -36,9 +38,15 @@ public class BasicProjectIntrospection {
 	static Map<String, Method> keyToMethod = new HashMap();
 	static Map<String, Integer[]> methodKeysToArgIndices = new HashMap(); // should be combined with revious hashmap
 	static Map<Object, Object> userObjects = new HashMap();
+	static Hashcodetable<Object, Object> reverseProxyToObject = new Hashcodetable<>();
+	static Hashcodetable<Object, Object> reverseObjectToProxy = new Hashcodetable<>();
+
 	static Hashcodetable<Object, Object> proxyToObject = new Hashcodetable<>();
 	static Hashcodetable<Object, Object> objectToProxy = new Hashcodetable<>();
 	static Hashcodetable<Class, Object> classToProxy = new Hashcodetable<>();
+	static Hashcodetable<Class, Object> reverseClassToProxy = new Hashcodetable<>();
+	static Map<Class, Class> reverseProxyClassToClass = new HashMap();
+
 	static Map<Class, Class> classToType = new HashMap();
 
 	static Set<String> predefinedPackages = new HashSet();
@@ -223,6 +231,8 @@ public class BasicProjectIntrospection {
 		
 	}
 	public static boolean matchCandidateInterface(Class aCandidate, Class aProxy) {
+		if (aCandidate.equals(reverseProxyClassToClass.get(aProxy)))
+			return true;
 		return findProjectInterface(aProxy) == aCandidate;
 		
 	}
@@ -763,7 +773,9 @@ public class BasicProjectIntrospection {
 	public static Class findClass(Class aProxyClass) {
 		return findClass(CurrentProjectHolder.getOrCreateCurrentProject(),aProxyClass);
 	}
-
+	public static Class findInterface(Class aProxyClass) {
+		return findInterface(CurrentProjectHolder.getOrCreateCurrentProject(),aProxyClass);
+	}
 
 	public static Class findClass(Project aProject, Class aProxyClass) {
 //		System.out.println(("finding class:" + aProxyClass.getName()));
@@ -1781,7 +1793,7 @@ public class BasicProjectIntrospection {
 	
 	public static Object createProxy (Class aProxyClass, Object anActualObject) {
 		// redundant
-		if (anActualObject instanceof Proxy) {
+		if (anActualObject instanceof Proxy && !isReverseProxy(anActualObject)) {
 			return anActualObject;
 		}
 		if (aProxyClass.isInstance(anActualObject)) { //not a proxy class
@@ -1803,6 +1815,43 @@ public class BasicProjectIntrospection {
 		objectToProxy.put(anActualObject, aProxy);
 		classToProxy.put(aProxyClass, aProxy);
 		return aProxy;
+	}
+	public static Object createReverseProxy (Class aReverseClass, Class aProxyClass, Object anActualObject) {
+		Object aRetVal = createReverseProxy(aProxyClass, anActualObject);
+		
+		reverseProxyClassToClass.put(aReverseClass, aProxyClass);
+		return aRetVal;
+		
+	}
+
+	public static Object createReverseProxy (Class aProxyClass, Object anActualObject) {
+		// redundant
+		if (anActualObject instanceof Proxy) {
+			return anActualObject;
+		}
+		if (aProxyClass.isInstance(anActualObject)) { //not a proxy class
+			return null;
+		}
+		
+		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
+				anActualObject);
+		Class[] anInterfaces = null;
+//		if (aProxyClass.isInterface())
+//			anInterfaces = new Class[] {aProxyClass};
+//		else
+//			anInterfaces = aProxyClass.getInterfaces();
+//		return Proxy.newProxyInstance(aProxyClass.getClassLoader(), 
+//				aProxyClass.getInterfaces(), aHandler);
+		Object aProxy = Proxy.newProxyInstance(aProxyClass.getClassLoader(), 
+				getInterfaces(aProxyClass), aHandler);
+		reverseProxyToObject.put(aProxy, anActualObject);
+		reverseObjectToProxy.put(anActualObject, aProxy);
+		reverseClassToProxy.put(aProxyClass, aProxy);
+		return aProxy;
+	}
+	public static boolean isReverseProxy(Object anObject) {
+		return reverseProxyToObject.get(anObject) != null;
+		
 	}
 	public static Set<GradableJUnitSuite> findTopLevelGradabableTrees() {
 		if (topLevelSuites == null) {
@@ -1853,6 +1902,10 @@ public class BasicProjectIntrospection {
 	public static Object  getRealObject (Object aProxy) {
 		return proxyToObject.get(aProxy);
 	}
+	public static Object  getReverseRealObject (Object aProxy) {
+		return reverseProxyToObject.get(aProxy);
+	}
+	
 	
 	public static Object getProxyObject (Object aRealObject) {
 		return  objectToProxy.get(aRealObject);
@@ -1957,4 +2010,28 @@ public class BasicProjectIntrospection {
 	// Set<String> a2Set = new HashSet( Arrays.asList(a2));
 	// System.out.println (a1Set.equals(a2Set));
 	// }
+	public static Field findFieldOfType(Class aTargetClass, Class aDesiredType) {
+		Field[] aFields = aTargetClass.getDeclaredFields();
+		for (Field aField: aFields) {
+			Class anActualFieldType = aField.getType();
+			if (aDesiredType.isAssignableFrom(anActualFieldType)) {
+				aField.setAccessible(true);
+				return aField;
+			}				
+		}
+		return null;
+	}
+	public static Object getFieldValueOfType(Object anObject, Class aDesiredType) {
+		Object anActualObject = BasicProjectExecution.maybeGetActual(anObject);
+		Class anActualType = BasicProjectIntrospection.findClass(aDesiredType);
+		
+		Field aField = findFieldOfType(anActualObject.getClass(), anActualType);
+		try {
+			return aField.get(anActualObject);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

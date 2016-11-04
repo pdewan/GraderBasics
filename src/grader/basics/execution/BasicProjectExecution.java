@@ -1137,6 +1137,15 @@ public class BasicProjectExecution {
 	}
 
 	public static Object maybeGetActual(Object anObject) {
+		if (BasicProjectIntrospection.isReverseProxy(anObject)) {
+			Object anActualObject = BasicProjectIntrospection
+					.getReverseRealObject(anObject);
+			if (anActualObject == null) {
+				Tracer.error("Could not get real object for proxy:" + anObject);
+			}
+			return anActualObject;
+			
+		}
 		if (anObject instanceof Proxy) {
 			Object anActualObject = BasicProjectIntrospection
 					.getRealObject(anObject);
@@ -1175,6 +1184,7 @@ public class BasicProjectExecution {
 			BasicProjectIntrospection.associate(aRealArray, aProxyArray);
 			return aRealArray;
 		}
+		
 		return anObject;
 
 	}

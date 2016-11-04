@@ -151,7 +151,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 //					aReturnedClass.equals(anExpectedClass);
 		
 		if (!correctInstantiatedClass) {
-			factoryMessage = "Factory method returns instance of" + aReturnedClass + " instead of " + anExpectedClass;			
+			factoryMessage = "Factory method returns instance of " + aReturnedClass + " instead of " + anExpectedClass;			
 			return maybeUseConstructor(instantiatedTypeClass);
 
 //			return assertingCreateInstance(instantiatedTypeClass);
