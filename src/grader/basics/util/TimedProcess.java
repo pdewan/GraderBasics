@@ -1,5 +1,8 @@
 package grader.basics.util;
 
+import grader.basics.execution.BasicProjectExecution;
+import grader.basics.project.BasicProjectIntrospection;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,7 +61,10 @@ public class TimedProcess {
 
     public int waitFor() throws InterruptedException, ExecutionException, TimeoutException {
         // Don't timeout if the timeout is -1
-        if (timeout == -1)
+    	if (!BasicProjectExecution.isUseProcessTimeOut()) {
+    		return 0; // do not wait in this case, for infinite or finite time
+    	}
+        if (timeout == -1 )
             return process.waitFor();
 
         return timedCall(new Callable<Integer>() {

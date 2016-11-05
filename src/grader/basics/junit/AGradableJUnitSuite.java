@@ -385,4 +385,32 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		previousPartialPassClasses = getPartialPassClasses();
 	}
 
+	@Override
+	public void test(Class aJUnitClass) {
+		GradableJUnitTest aTest = findTest(aJUnitClass);
+		if (aTest == null) {
+			System.err.println("Could not find junit class:" + aJUnitClass);
+		} else {
+			aTest.test();
+		}
+		
+	}
+
+	@Override
+	public GradableJUnitTest findTest(Class aJUnitClass) {
+		
+		for (GradableJUnitTest aChild:children) {
+			if (aChild.getJUnitClass().equals(aJUnitClass)) {
+				return aChild;
+			}
+			if (aChild instanceof GradableJUnitSuite) {
+				GradableJUnitTest aResult = ((GradableJUnitSuite) aChild).findTest(aJUnitClass);
+				if (aResult!= null) {
+					return aResult;
+				}
+			}
+		}
+		return null;
+	}
+
 }

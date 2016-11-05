@@ -93,12 +93,13 @@ public class BasicJUnitUtils {
 		ObjectEditor.treeEdit(aGradable);
 	}
 	
-	public static void interactiveTest(Class<?> aJUnitSuiteClass) {
+	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
 //		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		ObjectEditor.treeEdit(aGradable);
+		return aGradable;
 	}
 	public static void interactiveTestAll(String aSourceFilePattern, Class<?> aJUnitSuiteClass) {
 		CurrentProjectHolder.setProject(aSourceFilePattern);

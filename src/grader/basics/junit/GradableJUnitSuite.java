@@ -13,6 +13,8 @@ public interface GradableJUnitSuite extends GradableJUnitTest{
 	Set<Class> getPreviousFailClasses();
 	Set<Class> getPreviousPassClasses();
 	Set<Class> getPreviousPartialPassClasses();
-	double getPreviousScore();	
+	double getPreviousScore();
+	void test(Class aJUnitClass);
+	GradableJUnitTest findTest(Class aJUnitClass);
 
 }

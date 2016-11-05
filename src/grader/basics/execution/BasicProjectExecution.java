@@ -39,6 +39,7 @@ import util.trace.Tracer;
 
 public class BasicProjectExecution {
 	static boolean useMethodAndConstructorTimeOut = true;
+	static boolean useProcessTimeOut = true;
 
 	public static final String PRINTS = "System.out";
 	public static final String MISSING_CLASS = "Status.NoClass";
@@ -61,6 +62,7 @@ public class BasicProjectExecution {
 	protected static int constructorTimeOut = DEFAULT_CONSTRUCTOR_TIME_OUT;
 
 	protected static int methodTimeOut = DEFAULT_METHOD_TIME_OUT;
+	protected static int processTimeOut = PROCESS_TIME_OUT;
 
 	static Object[] emptyObjectArray = {};
 
@@ -78,6 +80,13 @@ public class BasicProjectExecution {
 
 	public static void setMethodTimeOut(int methodTimeOut) {
 		BasicProjectExecution.methodTimeOut = methodTimeOut;
+	}
+	public static int getProcessTimeOut() {
+		return processTimeOut;
+	}
+
+	public static void setProcessTimeOut(int newVal) {
+		processTimeOut = newVal;
 	}
 	public static final String DELIMITER = 
 	"_________________________________________________________________________";
@@ -196,6 +205,14 @@ public class BasicProjectExecution {
 	public static void setUseMethodAndConstructorTimeOut(
 			boolean useMethodAndConstructorTimeOut) {
 		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
+	}
+	public static boolean isUseProcessTimeOut() {
+		return useProcessTimeOut;
+	}
+
+	public static void setUseProcessTimeOut(
+			boolean newVal) {
+		useProcessTimeOut = newVal;
 	}
 
 	public static Object timedInvokeWithExceptions(Object anObject,
@@ -910,13 +927,12 @@ public class BasicProjectExecution {
 		// return aRunningProject.await();
 
 	}
-
+	
 	public static ResultingOutErr forkMain(String aMainClassName,
 			String[] args, String... input) throws NotRunnableException {
-		// if (!isReRunInfiniteProceses() &&
-		// CurrentProjectHolder.getOrCreateCurrentProject().isInfinite())
-		// return null;
-		return forkMain(aMainClassName, args, PROCESS_TIME_OUT, input);
+		return forkMain(aMainClassName, args, getProcessTimeOut(), input);
+
+//		return forkMain(aMainClassName, args, PROCESS_TIME_OUT, input);
 	}
 
 	public static ResultingOutErr forkMain(String[] args, String... input)
@@ -968,7 +984,16 @@ public class BasicProjectExecution {
 	public static boolean isReRunInfiniteProceses() {
 		return reRunInfiniteProcesses;
 	}
-
+	public static void callMainOnce(String aMainName, String[] args,
+			String... anInput) throws NotRunnableException {
+		if (BasicProjectIntrospection.inUniqueMainRun()) {
+			return;
+		}
+		callMain(aMainName, args, anInput);
+		BasicProjectIntrospection.setUniqueMainRun(true);
+		return;
+		
+	}
 	public static ResultingOutErr callMain(String aMainName, String[] args,
 			String... anInput) throws NotRunnableException {
 		if (!isReRunInfiniteProceses()

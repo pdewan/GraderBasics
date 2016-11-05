@@ -31,7 +31,7 @@ import util.models.Hashcodetable;
 
 public class BasicProjectIntrospection {
 
-
+	static boolean uniqueMainRun = false;
 	static Map<String, Class> keyToClass = new HashMap();
 	static Map<String, Class> keyToInterface = new HashMap();
 
@@ -52,6 +52,7 @@ public class BasicProjectIntrospection {
 	static Set<String> predefinedPackages = new HashSet();
 	static Set<GradableJUnitSuite> topLevelSuites = null;
 	public static void clearProjectCaches() {
+		uniqueMainRun = false;
 		keyToClass.clear();
 		keyToInterface.clear();
 		keyToMethod.clear();
@@ -62,6 +63,14 @@ public class BasicProjectIntrospection {
 		classToProxy.clear();
 		topLevelSuites = null;
 		classToType.clear();
+	}
+	
+	public static boolean inUniqueMainRun() {
+		return uniqueMainRun;
+	}
+	
+	public static void setUniqueMainRun(boolean newVal) {
+		uniqueMainRun = newVal;
 	}
 
 
