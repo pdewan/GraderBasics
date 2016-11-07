@@ -1806,7 +1806,7 @@ public class BasicProjectIntrospection {
 			return anActualObject;
 		}
 		if (aProxyClass.isInstance(anActualObject)) { //not a proxy class
-			return null;
+			return anActualObject;
 		}
 		
 		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
@@ -1913,7 +1913,9 @@ public class BasicProjectIntrospection {
 	}
 	
 	public static Object  getRealObject (Object aProxy) {
+		if (aProxy instanceof Proxy)
 		return proxyToObject.get(aProxy);
+		return aProxy;
 	}
 	public static Object  getReverseRealObject (Object aProxy) {
 		return reverseProxyToObject.get(aProxy);
