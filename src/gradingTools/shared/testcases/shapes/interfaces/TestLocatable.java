@@ -1,6 +1,8 @@
 package gradingTools.shared.testcases.shapes.interfaces;
 
-public interface TestLocatable {
+import util.models.PropertyListenerRegisterer;
+
+public interface TestLocatable extends PropertyListenerRegisterer{
 	public int getHeight();
 	public int getWidth();	
 	public int getX();
