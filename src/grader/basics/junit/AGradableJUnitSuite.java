@@ -397,6 +397,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	}
 
 	@Override
+	@Visible(false)
 	public GradableJUnitTest findTest(Class aJUnitClass) {
 		
 		for (GradableJUnitTest aChild:children) {
