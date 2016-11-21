@@ -1186,8 +1186,10 @@ public class BasicProcessRunner implements Runner {
 					// process.getProcess().destroy();
 				}
 				// }
-
-				processObj.destroy();
+				if (BasicProjectExecution.isWaitForMethodConstructorsAndProcesses())
+				terminateProcess();
+				
+//				processObj.destroy();
 				// if (wait) {
 				// Wait for the output to finish
 				outRunnable.getSemaphore().acquire();

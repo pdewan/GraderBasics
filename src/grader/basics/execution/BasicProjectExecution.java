@@ -40,7 +40,9 @@ import util.trace.Tracer;
 public class BasicProjectExecution {
 	static boolean useMethodAndConstructorTimeOut = true;
 	static boolean useProcessTimeOut = true;
+	static boolean waitForMethodAndConstructors = true;
 
+	
 	public static final String PRINTS = "System.out";
 	public static final String MISSING_CLASS = "Status.NoClass";
 	public static final String MISSING_PROPERTY = "Status.NoProperty";
@@ -103,7 +105,12 @@ public class BasicProjectExecution {
 				aMethod, anArgs));
 
 		try {
+			if (BasicProjectExecution.isWaitForMethodConstructorsAndProcesses())
 			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+			else {
+				executor = Executors.newSingleThreadExecutor();
+				return future;
+			}
 		} catch (CancellationException | InterruptedException
 				| TimeoutException e) {
 			e.printStackTrace();
@@ -952,7 +959,10 @@ public class BasicProjectExecution {
 				BasicProjectExecution.toInputString(input), args, timeout);
 		String anOutput = aRunningProject.await();
 		String anError = aRunningProject.getErrorOutput();
-		return new ResultingOutErr(anOutput, anError);
+		ResultingOutErr retVal =  new ResultingOutErr(anOutput, anError);
+		retVal.setProcessRunner(aProcessRunner);
+		retVal.setRunningProject(aRunningProject);
+		return retVal;
 		// return anOutput;
 
 	}
@@ -984,14 +994,37 @@ public class BasicProjectExecution {
 	public static boolean isReRunInfiniteProceses() {
 		return reRunInfiniteProcesses;
 	}
-	public static void callMainOnce(String aMainName, String[] args,
+	static ResultingOutErr lastMainCallResult;
+	public static ResultingOutErr callMainOnce(String aMainName, String[] args,
 			String... anInput) throws NotRunnableException {
 		if (BasicProjectIntrospection.inUniqueMainRun()) {
-			return;
+			return lastMainCallResult;
 		}
-		callMain(aMainName, args, anInput);
+		lastMainCallResult = callMain(aMainName, args, anInput);
 		BasicProjectIntrospection.setUniqueMainRun(true);
-		return;
+		return lastMainCallResult;
+		
+	}
+	public static ResultingOutErr invokeMainOnce(String aMainName, String[] args,
+			String... anInput) throws NotRunnableException {
+	
+		if (BasicProjectIntrospection.inUniqueMainRun()) {
+			return lastMainCallResult;
+		}
+		lastMainCallResult = invokeMain(aMainName, args, anInput);
+		BasicProjectIntrospection.setUniqueMainRun(true);
+		return lastMainCallResult;
+		
+	}
+	public static ResultingOutErr invokeMainOnceAsynchronously(String aMainName, String[] args,
+			String... anInput) throws NotRunnableException {
+		Boolean savedValue = BasicProjectExecution.isWaitForMethodConstructorsAndProcesses();
+		BasicProjectExecution.setWaitForMethodConstructorsAndProcesses(false);
+		ResultingOutErr result = invokeMainOnce(aMainName, args, anInput);
+		BasicProjectExecution.setWaitForMethodConstructorsAndProcesses(savedValue);
+		return result;
+
+		
 		
 	}
 	public static ResultingOutErr callMain(String aMainName, String[] args,
@@ -1120,6 +1153,9 @@ public class BasicProjectExecution {
 			// ProjectExecution.restoreOutputAndGetRedirectedOutput();
 			ResultingOutErr aResult = BasicProjectExecution
 					.restoreAndGetRedirectedIOStreams();
+			if (retVal instanceof Future) {
+				aResult.setFuture((Future) retVal);
+			}
 			return aResult;
 			// return anOutput;
 		} catch (Exception e) {
@@ -1349,6 +1385,14 @@ public class BasicProjectExecution {
 			allInputsStr += inputs[i];
 		}
 		return allInputsStr;
+	}
+	public static boolean isWaitForMethodConstructorsAndProcesses() {
+		return waitForMethodAndConstructors;
+	}
+
+	public static void setWaitForMethodConstructorsAndProcesses(
+			boolean waitForMethodAndConstructors) {
+		BasicProjectExecution.waitForMethodAndConstructors = waitForMethodAndConstructors;
 	}
 
 	public static final String DEFAULT_INPUT_SEPARATOR = "\n";

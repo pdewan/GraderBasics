@@ -61,10 +61,10 @@ public class TimedProcess {
 
     public int waitFor() throws InterruptedException, ExecutionException, TimeoutException {
         // Don't timeout if the timeout is -1
-    	if (!BasicProjectExecution.isUseProcessTimeOut()) {
+    	if (!BasicProjectExecution.isWaitForMethodConstructorsAndProcesses()) {
     		return 0; // do not wait in this case, for infinite or finite time
     	}
-        if (timeout == -1 )
+        if (timeout == -1 || !BasicProjectExecution.isUseMethodAndConstructorTimeOut())
             return process.waitFor();
 
         return timedCall(new Callable<Integer>() {
