@@ -31,6 +31,8 @@ public interface Runner {
 			String input,
 			String[] args, int timeout) throws NotRunnableException;
 
+	void terminateProcess();
+
 //	BasicRunningProject runMainClass(Class aClass, String input, String[] args,
 //			int timeout) throws NotRunnableException;
 

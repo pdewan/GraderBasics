@@ -291,6 +291,9 @@ public class BasicProjectClassesManager implements ClassesManager {
     }
     protected void loadCompiledClasses(Set<File> sourceFiles) throws ClassNotFoundException, IOException {
     	for (File file : sourceFiles) {
+//    		if (file.getName().contains("Observable")) {
+//    			System.out.println ("processing file:" + file.getName());
+//    		}
 			String className = getClassName(file);
 			// System.out.println(className);
 			try {
@@ -309,7 +312,9 @@ public class BasicProjectClassesManager implements ClassesManager {
 //					classDescriptions.add(new BasicClassDescription(c, file));
 					classDescriptions.add(createClassDescription(c, file));
 
-				} 
+				} else {
+					System.err.println ("Could not load:" + className);
+				}
 //				else if (AProject.isLoadClasses()) {
 //					c = classLoader.loadClass(className);
 //				}
@@ -584,8 +589,9 @@ public class BasicProjectClassesManager implements ClassesManager {
         List<String> lines = Arrays.asList(aLines);
         String packageName = "";
         for (String line : lines) {
-            if (line.startsWith("package ")) {
+            if (line.trim().startsWith("package ")) {
                 packageName = line.replace("package", "").replace(";", "").trim() + ".";
+                break;
             }
         }
 
@@ -803,10 +809,15 @@ public class BasicProjectClassesManager implements ClassesManager {
     	BasicProjectIntrospection.normalizeTags(aTags); // using array instead
     	List<String> aSpecificationList = Arrays.asList(aTags);
         Set<ClassDescription> classes = new HashSet<>();
+//        System.out.println ("Class descriptions:" +classDescriptions);
         for (ClassDescription description : classDescriptions) {
 //        	if (description.getJavaClass().isInterface())
 //        		continue;
         	String[] anActualTags = description.getTags();
+//        	System.out.println ("Testing description:" + description);
+//        	if (description.getJavaClass().getName().contains("ObservableBridge")) {
+//        		System.out.println ("found class");
+//        	}
         	if (BasicProjectIntrospection.matchesTags(aSpecificationList, anActualTags )) {
         		 classes.add(description);
         	}

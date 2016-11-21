@@ -60,6 +60,7 @@ public class BasicProcessRunner implements Runner {
 	protected String processTeam;
 	protected List<String> processes;
 	protected RunningProject runner;
+	protected Process processObj;
 	protected List<String> processesWithStartTags;
 	protected String specifiedMainClass;
 	public static final String MAIN_ENTRY_POINT = "main";
@@ -852,6 +853,10 @@ public class BasicProcessRunner implements Runner {
 		return null;
 
 	}
+	@Override
+	public void terminateProcess() {
+		processObj.destroy();
+	}
 	protected  RunnerErrorOrOutStreamProcessor createRunnerOutputStreamProcessor(InputStream aProcessErrorOut, RunningProject aRunner, /*Semaphore aSemaphore,*/ String aProcessName, Boolean anOnlyProcess) {
 	  return new ABasicRunnerOutputStreamProcessor(
 			 aProcessErrorOut, aRunner, /*outputSemaphore,*/
@@ -987,7 +992,7 @@ public class BasicProcessRunner implements Runner {
 //			result = process; // may set to null if error
 			runner.setCurrentTimeProcess(process);
 
-			Process processObj = process.start();
+			 processObj = process.start();
 			if (folder != null)
 				UserProcessExecutionStarted.newCase(
 						folder.getAbsolutePath(),
