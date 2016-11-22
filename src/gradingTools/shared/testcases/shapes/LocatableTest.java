@@ -396,6 +396,9 @@ public abstract class LocatableTest extends FactoryMethodTest{
 	protected void setOriginalLocation() {
 		originalX = leafProxy().getX();
 		originalY = leafProxy().getY();
+		System.out.println ("Original location of:" + leafProxy() + 
+				" is:(" + originalX + ", " + originalY + ")");
+
 	}
 	protected void setOriginalBounds() {
 		originalWidth = leafProxy().getWidth();
