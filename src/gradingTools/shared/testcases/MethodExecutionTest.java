@@ -640,7 +640,7 @@ public abstract class MethodExecutionTest  {
         }
     }
 	public static String toRegex(String aString) {
-		return MATCH_ANY + aString + MATCH_ANY;
+		return MATCH_ANY + "\\Q"+aString+"\\E" + MATCH_ANY;
 	}
 	protected void assertMissingClass(String[] aTags) {
 		Assert.assertTrue("No class matching: "
