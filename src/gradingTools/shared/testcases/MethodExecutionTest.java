@@ -640,7 +640,11 @@ public abstract class MethodExecutionTest  {
         }
     }
 	public static String toRegex(String aString) {
-		return MATCH_ANY + "\\Q"+aString+"\\E" + MATCH_ANY;
+		// This would be the ideal way this method would work, but currently it is called with
+		// other regex's as arguments, which nullifies them.
+//		return MATCH_ANY + "\\Q"+aString+"\\E" + MATCH_ANY;
+
+		return MATCH_ANY + aString + MATCH_ANY;
 	}
 	protected void assertMissingClass(String[] aTags) {
 		Assert.assertTrue("No class matching: "
