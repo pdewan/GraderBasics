@@ -643,8 +643,21 @@ public abstract class MethodExecutionTest  {
 		// This would be the ideal way this method would work, but currently it is called with
 		// other regex's as arguments, which nullifies them.
 //		return MATCH_ANY + "\\Q"+aString+"\\E" + MATCH_ANY;
-
-		return MATCH_ANY + aString + MATCH_ANY;
+		
+		// Escape any '*' not preceded by '.'
+		String result = "";
+		for (int i = 0; i < aString.length(); ++i){
+			if (aString.charAt(i) == '*' && 
+					!(i>0 && aString.charAt(i-1) == '.')){	//if not preceded by dot
+					result+="\\*";
+					continue;
+			
+			} else {
+				result+=aString.charAt(i);
+			}
+		}//end escaping *
+		
+		return MATCH_ANY + result + MATCH_ANY;
 	}
 	protected void assertMissingClass(String[] aTags) {
 		Assert.assertTrue("No class matching: "
