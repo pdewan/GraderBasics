@@ -38,6 +38,7 @@ public abstract class MethodExecutionTest  {
 	protected OutputErrorStatus outputErrorStatus;
 	protected ResultingOutErr resultingOutError;
 	protected String incorrectOutputDetails = "";
+	protected boolean testing = false;
 
 	
 	public Object[] getStudentArgs() {
@@ -212,8 +213,9 @@ public abstract class MethodExecutionTest  {
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
 	protected void assertTrue(String aMessage, boolean aCheck) {
+		testing = false;
 		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
-
+		testing = true;
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
 	}
 	protected void assertNotExpected(Object anActual, Object anExpected) {
@@ -635,10 +637,13 @@ public abstract class MethodExecutionTest  {
 	@Test
     public void test() {
         try {
-        	doTest();          
+        	testing = true;
+        	doTest();  
+        	testing = false;
             
         } catch (Throwable e) {
         	e.printStackTrace();
+        	testing = false;
         	BasicJUnitUtils.assertTrue(e, fractionComplete);
         }
     }
