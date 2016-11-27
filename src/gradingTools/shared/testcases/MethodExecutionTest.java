@@ -1,5 +1,7 @@
 package gradingTools.shared.testcases;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -636,6 +638,7 @@ public abstract class MethodExecutionTest  {
         	doTest();          
             
         } catch (Throwable e) {
+        	e.printStackTrace();
         	BasicJUnitUtils.assertTrue(e, fractionComplete);
         }
     }
@@ -665,5 +668,53 @@ public abstract class MethodExecutionTest  {
 	}
 	protected void printFractionComplete() {
 		System.out.println ("Fraction complete:" + fractionComplete);
+	}
+	protected Class instantiatedClass;
+	protected Constructor constructor;
+	protected String instantiatedTag;
+	protected Class[] constructorArgs = {};
+	protected String instantiatedTag() {
+		return instantiatedTag;
+	}	
+	protected Class[] constructorArgs() {
+		return constructorArgs;
+	}
+	protected void setConstructorArgs(Class[] anArgs) {
+		constructorArgs = anArgs;
+	}
+	protected void setInstantiatedTag(String aTag) {
+		instantiatedTag = aTag;
+	}
+	protected Class findInstantiatedClass() {
+		return BasicProjectIntrospection.findClassByTags(instantiatedTag());
+	}
+	public  Constructor findConstructor(Class aClass) throws Exception {
+		return aClass.getConstructor(
+				 constructorArgs());
+	}
+	
+//	public static long presleepTime() {
+//		long aPresleepTime = System.currentTimeMillis();
+//	    System.out.println ("Pre sleep time:" + aPresleepTime);
+//	    System.out.println ("Sleeping for (ms):" + SLEEP_TIME);
+//	    return aPresleepTime;
+//		
+//	}
+//	public static boolean checkSleep(long aPresleepTime, long aSleepTime ) {
+//		long aPostsleepTime = System.currentTimeMillis();
+//		 System.out.println ("Post sleep time:" + aPostsleepTime);
+//		 return
+//				 (aPostsleepTime - aPresleepTime) > SLEEP_TIME;
+//	}
+	
+	protected Object instantiateClass(Object... anArgs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
+		return  constructor.newInstance(anArgs);
+	}
+	
+	
+	protected void initConstructor() throws Exception {
+		instantiatedClass = findInstantiatedClass();
+		assertTrue("Could not find class  matching " + instantiatedTag(), instantiatedClass != null);
+		constructor = findConstructor(instantiatedClass);
 	}
 }

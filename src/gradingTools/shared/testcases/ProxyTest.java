@@ -159,7 +159,7 @@ public abstract class ProxyTest extends MethodExecutionTest{
 ////		return null;
 //////		return tokenLines()[getLineIndex()];
 ////	}
-	protected abstract void executeOperations(Object aProxy) ;
+	protected abstract void executeOperations(Object aProxy) throws Exception ;
 	protected abstract void setActual(Object aProxy) ;
 
 	protected void setExpected(Object aProxy) {
@@ -241,7 +241,7 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	protected void assertMissingClass(Class aProxyClass) {
 		
 	}
-	protected boolean doTest() throws Throwable {
+	protected boolean doProxyTest() throws Throwable {
 		create();
 		
 		setDependentObjects();
@@ -249,6 +249,16 @@ public abstract class ProxyTest extends MethodExecutionTest{
 		setExpected(rootProxy);
 		setActual(rootProxy);
 		return checkOutput(rootProxy);
+	}
+	protected boolean doTest() throws Throwable {
+		return doProxyTest();
+//		create();
+//		
+//		setDependentObjects();
+//		executeOperations(rootProxy);
+//		setExpected(rootProxy);
+//		setActual(rootProxy);
+//		return checkOutput(rootProxy);
 		
 	}
 //	// Student test data

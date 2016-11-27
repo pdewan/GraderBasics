@@ -53,6 +53,15 @@ public abstract class LocatableTest extends FactoryMethodTest{
 //		return rootProxy;
 //	}
 	
+	protected void assertMoved() {
+		assertTrue("Original x " + originalX + " == " + "actual x " + actualX, originalX != actualX);
+		assertTrue("Original y " + originalY + " == " + "actual Y " + actualY, originalY != actualY);
+	}
+	protected void assertBoundsChanged() {
+		System.out.println ("Checking if bounds have changed");
+		assertTrue("Original width " + originalWidth + " == " + "actual width " + actualWidth, originalWidth != actualWidth);
+		assertTrue("Original height " + originalHeight + " == " + "actual Height " + actualHeight, originalHeight != actualHeight);
+	}
 
 	protected void assertAngle(double aComputed, double aCorrect) {
 		Assert.assertTrue("In: " + leafProxy  + " computedAngle " + aComputed + " != correctAngle " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) <= FRACTION_TOLERANCE);
@@ -403,15 +412,21 @@ public abstract class LocatableTest extends FactoryMethodTest{
 	protected void setOriginalBounds() {
 		originalWidth = leafProxy().getWidth();
 		originalHeight = leafProxy().getHeight();
+		System.out.println ("Original bounds of:" + leafProxy() + 
+				" are:(" + originalWidth + ", " + originalWidth + ")");
 	}
 	protected void setActualLocation() {
 		actualX = leafProxy().getX();
 		actualY = leafProxy().getY();
+		System.out.println ("Actual location of:" + leafProxy() + 
+				" is:(" + actualX + ", " + actualY + ")");
 	}
 	
 	protected void setActualBounds() {
 		actualWidth = leafProxy().getWidth();
 		actualHeight = leafProxy().getHeight();
+		System.out.println ("Actual bounds of:" + leafProxy() + 
+				" are:(" + actualWidth + ", " + actualWidth + ")");
 	}
 	
 //	protected boolean returnValueIsExpected() {

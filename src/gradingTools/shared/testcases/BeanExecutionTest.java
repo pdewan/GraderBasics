@@ -1115,9 +1115,21 @@ public abstract class BeanExecutionTest extends LocatableTest {
 					Object aValue = anInputs.get(aPropertyName);
 					// timedInvoke(anObject, aWriteMethod, getMethodTimeOut(),
 					// new Object[] { aValue });
-					BasicProjectExecution.timedInvoke(anObject, aWriteMethod,
-							new Object[] { aValue },
-							BasicProjectExecution.getMethodTimeOut());
+					try {
+						BasicProjectExecution.timedInvoke(anObject, aWriteMethod,
+								new Object[] { aValue },
+								BasicProjectExecution.getMethodTimeOut());
+					} catch (Throwable e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						anActualOutputs.put(
+								BasicProjectExecution.MISSING_WRITE, true);
+						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
+								+ "." + aPropertyName, true);
+						System.out.println("Erroneous write method for property "
+								+ aPropertyName);
+						continue;
+					}
 				}
 				for (String anOutputPropertyName : anOutputProperties) {
 					if (anOutputPropertyName == null)
@@ -1154,7 +1166,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			anActualOutputs
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
-		} catch (SecurityException e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			anActualOutputs = null;
 

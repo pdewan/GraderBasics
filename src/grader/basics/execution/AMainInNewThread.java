@@ -16,8 +16,13 @@ public class AMainInNewThread  implements Runnable{
 		Boolean oldValue = BasicProjectExecution.isUseMethodAndConstructorTimeOut();
 		BasicProjectExecution.setUseMethodAndConstructorTimeOut(false);
 
-		BasicProjectExecution.callMain(mainName,
-				args, input);
+		try {
+			BasicProjectExecution.callMain(mainName,
+					args, input);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		BasicProjectExecution.setUseMethodAndConstructorTimeOut(oldValue);
 
 		

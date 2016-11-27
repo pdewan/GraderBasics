@@ -267,7 +267,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 //	}
 
 	protected OutputErrorStatus test(String aMainName, String anInput,
-			String[] anExpectedStrings) {
+			String[] anExpectedStrings) throws Throwable {
 		traceStartMainCall(aMainName, anInput, anExpectedStrings);
 		// Project project = CurrentProjectHolder.getOrCreateCurrentProject();
 		// RunningProject runner = project.launch(anInput, 1);

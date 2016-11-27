@@ -1037,7 +1037,12 @@ public class BasicProjectIntrospection {
 		return findClassByTags(aProject, new String[] {aTag});
 	}
 	public static Class findClassByTags(String... aTags) {
-		return findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
+		Class retVal = findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
+		if (retVal == null && aTags.length > 0) {
+			System.out.println("Could not find class tagged:" + Arrays.toString(aTags));
+		}
+//		return findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
+		return retVal;
 	}
 
 	public static Class findClassByTags(Project aProject, String... aTags) {

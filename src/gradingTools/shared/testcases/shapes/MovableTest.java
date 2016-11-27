@@ -16,15 +16,15 @@ public abstract class MovableTest extends LocatableTest{
 		
 		return (TestMovable) rootProxy;
 	}
-    protected void move() {
+    protected void move() throws Exception {
     	setOriginalLocation();
 		doMove();
     }
-    protected void doMove() {
+    protected void doMove() throws Exception {
     	movable().move(inputXDelta(), inputYDelta());
     }
 	@Override
-	protected void executeOperations(Object aLocatable) {
+	protected void executeOperations(Object aLocatable) throws Exception {
 		move();
 	}
 	

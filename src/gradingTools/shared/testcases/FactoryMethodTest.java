@@ -137,7 +137,14 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		factoryCredit += factoryMethodCredit();
 
 		
-		Object anInstance = BasicProjectExecution.timedInvoke(factoryClass, factoryMethod, emptyObjectArgs);
+		Object anInstance;
+		try {
+			anInstance = BasicProjectExecution.timedInvoke(factoryClass, factoryMethod, emptyObjectArgs);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			anInstance = null;
+		}
 		nullInstantiation = anInstance == null;
 		if (nullInstantiation) {
 			factoryMessage = "Factory method returns null object";			
@@ -173,7 +180,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return rootProxy;
 	}	
 	@Override
-	protected void executeOperations(Object aProxy) {
+	protected void executeOperations(Object aProxy) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

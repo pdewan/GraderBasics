@@ -94,7 +94,7 @@ public class BasicProjectExecution {
 	"_________________________________________________________________________";
 
 	public static Object timedInvoke(Object anObject, Method aMethod,
-			Object[] anArgs, long aMillSeconds) {
+			Object[] anArgs, long aMillSeconds) throws Throwable {
 		// ExecutorService executor = Executors.newSingleThreadExecutor();
 		if (anArgs == null) {
 			anArgs = emptyObjectArray;
@@ -118,14 +118,16 @@ public class BasicProjectExecution {
 			System.err.println("Terminated execution after milliseconds:"
 					+ aMillSeconds + " suspecting infinite loop");
 			executor = Executors.newSingleThreadExecutor();
-			return null;
+			throw e;
+//			return null;
 		} catch (ExecutionException e) {
 			System.err
 					.println("Execution exception caused by invocation exception caused by:");
 			e.getCause().getCause().printStackTrace();
+			throw e.getCause().getCause();
 //			executor = Executors.newSingleThreadExecutor();
 
-			return null;
+//			return null;
 
 		} finally {
 			// executor.shutdownNow();
@@ -135,7 +137,7 @@ public class BasicProjectExecution {
 
 	public static Object timedInvokeWithExceptions(Object anObject,
 			Method aMethod, long aMillSeconds, Object... anArgs)
-			throws Exception {
+			throws Throwable {
 		// ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		Future future = executor.submit(new AMethodExecutionCallable(anObject,
@@ -165,7 +167,7 @@ public class BasicProjectExecution {
 	
 
 	public static Object timedInvoke(Object anObject, Method aMethod,
-			Object[] anArgs) {
+			Object[] anArgs) throws Throwable {
 		if (isUseMethodAndConstructorTimeOut())
 			return timedInvoke(anObject, aMethod, anArgs, getMethodTimeOut());
 		else {
@@ -223,7 +225,7 @@ public class BasicProjectExecution {
 	}
 
 	public static Object timedInvokeWithExceptions(Object anObject,
-			Method aMethod, Object... anArgs) throws Exception {
+			Method aMethod, Object... anArgs) throws Throwable {
 		return timedInvokeWithExceptions(anObject, aMethod, getMethodTimeOut(),
 				anArgs);
 
@@ -345,7 +347,7 @@ public class BasicProjectExecution {
 		}
 	}
 	public static ResultWithOutput timedInteractiveInvoke(Object anObject,
-			Method aMethod, Object[] anArgs, long aMillSeconds) {
+			Method aMethod, Object[] anArgs, long aMillSeconds) throws Throwable {
 		
 
 		try {
@@ -404,7 +406,7 @@ public class BasicProjectExecution {
 	}
 	public static ResultWithOutput timedGeneralizedInteractiveInvoke(
 			Object anObject, Method aMethod, Object[] anArgs, String anInput,
-			long aMillSeconds) {
+			long aMillSeconds) throws Throwable {
 
 		try {
 
@@ -981,7 +983,7 @@ public class BasicProjectExecution {
 	static final String[] emptyStringArray = new String[] {};
 
 	public static ResultingOutErr callCorrespondingMain(Class aProxyClass,
-			String... anInput) throws NotRunnableException {
+			String... anInput) throws Throwable {
 		return callCorrespondingMain(aProxyClass, emptyStringArray, anInput);
 	}
 
@@ -996,7 +998,7 @@ public class BasicProjectExecution {
 	}
 	static ResultingOutErr lastMainCallResult;
 	public static ResultingOutErr callMainOnce(String aMainName, String[] args,
-			String... anInput) throws NotRunnableException {
+			String... anInput) throws Throwable {
 		if (BasicProjectIntrospection.inUniqueMainRun()) {
 			return lastMainCallResult;
 		}
@@ -1006,7 +1008,7 @@ public class BasicProjectExecution {
 		
 	}
 	public static ResultingOutErr invokeMainOnce(String aMainName, String[] args,
-			String... anInput) throws NotRunnableException {
+			String... anInput) throws Throwable {
 	
 		if (BasicProjectIntrospection.inUniqueMainRun()) {
 			return lastMainCallResult;
@@ -1017,7 +1019,7 @@ public class BasicProjectExecution {
 		
 	}
 	public static ResultingOutErr invokeMainOnceAsynchronously(String aMainName, String[] args,
-			String... anInput) throws NotRunnableException {
+			String... anInput) throws Throwable {
 		Boolean savedValue = BasicProjectExecution.isWaitForMethodConstructorsAndProcesses();
 		BasicProjectExecution.setWaitForMethodConstructorsAndProcesses(false);
 		ResultingOutErr result = invokeMainOnce(aMainName, args, anInput);
@@ -1028,7 +1030,7 @@ public class BasicProjectExecution {
 		
 	}
 	public static ResultingOutErr callMain(String aMainName, String[] args,
-			String... anInput) throws NotRunnableException {
+			String... anInput) throws Throwable {
 		if (!isReRunInfiniteProceses()
 				&& CurrentProjectHolder.getOrCreateCurrentProject()
 						.isInfinite())
@@ -1045,7 +1047,7 @@ public class BasicProjectExecution {
 	}
 
 	public static ResultingOutErr callMain(String... anInput)
-			throws NotRunnableException {
+			throws Throwable {
 		if (BasicGradingEnvironment.get().isForkMain()) {
 			return forkMain(emptyStringArray, anInput);
 		} else {
@@ -1054,7 +1056,7 @@ public class BasicProjectExecution {
 	}
 
 	public static ResultingOutErr callMain(String[] args, String... anInput)
-			throws NotRunnableException {
+			throws Throwable {
 		if (BasicGradingEnvironment.get().isForkMain()) {
 			return forkMain(anInput, args);
 		} else {
@@ -1063,7 +1065,7 @@ public class BasicProjectExecution {
 	}
 
 	public static ResultingOutErr callCorrespondingMain(Class aProxyClass,
-			String[] args, String... anInput) throws NotRunnableException {
+			String[] args, String... anInput) throws Throwable {
 		if (BasicGradingEnvironment.get().isForkMain()) {
 			return forkMain(aProxyClass, args, anInput);
 		} else {
@@ -1072,7 +1074,7 @@ public class BasicProjectExecution {
 	}
 
 	public static ResultingOutErr invokeCorrespondingMain(Class aProxyClass,
-			String[] args, String... anInput) throws NotRunnableException {
+			String[] args, String... anInput) throws Throwable {
 		try {
 			Class aMainClass = BasicProjectIntrospection.findClass(
 					CurrentProjectHolder.getOrCreateCurrentProject(),
@@ -1093,7 +1095,7 @@ public class BasicProjectExecution {
 	}
 
 	public static ResultingOutErr invokeMain(String aMainClassName,
-			String[] args, String... anInput) throws NotRunnableException {
+			String[] args, String... anInput) throws Throwable {
 		try {
 			Class aMainClass = BasicProjectIntrospection.findClass(
 					CurrentProjectHolder.getOrCreateCurrentProject(),
@@ -1111,7 +1113,7 @@ public class BasicProjectExecution {
 	static String[] emptyEntryPoints = {};
 
 	public static ResultingOutErr invokeMain(String[] args, String... anInput)
-			throws NotRunnableException {
+			throws Throwable {
 		try {
 			Map<String, String> anEntryPoints = JavaMainClassFinderSelector
 					.getMainClassFinder().getEntryPoints(
@@ -1131,7 +1133,7 @@ public class BasicProjectExecution {
 	}
 
 	public static ResultingOutErr invokeMain(Class aMainClass, String[] args,
-			String... anInput) throws NotRunnableException {
+			String... anInput) throws Throwable {
 		try {
 			BasicProjectExecution
 					.redirectInputOutputError(BasicProjectExecution
