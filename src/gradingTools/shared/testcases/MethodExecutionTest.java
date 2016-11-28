@@ -42,7 +42,7 @@ public abstract class MethodExecutionTest  {
 	protected String incorrectOutputDetails = "";
 	protected boolean testing = false;
 	// should move to MethodExecution
-	protected Set<Thread> previousThreads;
+	protected Set<Thread> previousThreads = new HashSet();
 	protected Set<Thread> currentThreads = new HashSet();
 	protected List<Thread> newThreads = new ArrayList();
 
