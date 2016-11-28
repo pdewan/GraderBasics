@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
@@ -39,6 +41,10 @@ public abstract class MethodExecutionTest  {
 	protected ResultingOutErr resultingOutError;
 	protected String incorrectOutputDetails = "";
 	protected boolean testing = false;
+	// should move to MethodExecution
+	protected Set<Thread> previousThreads;
+	protected Set<Thread> currentThreads = new HashSet();
+	protected List<Thread> newThreads = new ArrayList();
 
 	
 	public Object[] getStudentArgs() {
@@ -213,9 +219,9 @@ public abstract class MethodExecutionTest  {
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
 	protected void assertTrue(String aMessage, boolean aCheck) {
-		testing = false;
+//		testing = false;
 		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
-		testing = true;
+//		testing = true;
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
 	}
 	protected void assertNotExpected(Object anActual, Object anExpected) {
@@ -639,12 +645,14 @@ public abstract class MethodExecutionTest  {
         try {
         	testing = true;
         	doTest();  
-        	testing = false;
+//        	testing = false;
             
         } catch (Throwable e) {
         	e.printStackTrace();
-        	testing = false;
+//        	testing = false;
         	BasicJUnitUtils.assertTrue(e, fractionComplete);
+        } finally {
+        	testing = false;
         }
     }
 	public static String toRegex(String aString) {
@@ -721,5 +729,19 @@ public abstract class MethodExecutionTest  {
 		instantiatedClass = findInstantiatedClass();
 		assertTrue("Could not find class  matching " + instantiatedTag(), instantiatedClass != null);
 		constructor = findConstructor(instantiatedClass);
+	}
+	protected void recordPreviousThreads() {
+		previousThreads = new HashSet(Thread.getAllStackTraces().keySet());
+		
+	}
+	protected void recordCurrentThreads() {
+		currentThreads = new HashSet(Thread.getAllStackTraces().keySet());
+		newThreads = new ArrayList(currentThreads);
+		newThreads.removeAll(previousThreads);
+		
+	}
+	protected void assertNewThreadCreated() {
+		assertTrue("No thread created by previous operation:", newThreads.size() > 0);
+		System.out.println ("New threads:" + newThreads);
 	}
 }
