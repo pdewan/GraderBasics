@@ -732,12 +732,17 @@ public abstract class MethodExecutionTest  {
 	}
 	protected void recordPreviousThreads() {
 		previousThreads = new HashSet(Thread.getAllStackTraces().keySet());
+		System.out.println("Previous threads:" + previousThreads);
 		
 	}
 	protected void recordCurrentThreads() {
 		currentThreads = new HashSet(Thread.getAllStackTraces().keySet());
+		System.out.println("Current threads:" + currentThreads);
+
 		newThreads = new ArrayList(currentThreads);
 		newThreads.removeAll(previousThreads);
+//		System.out.println("New threads:" + newThreads);
+
 		
 	}
 	protected void assertNewThreadCreated() {
