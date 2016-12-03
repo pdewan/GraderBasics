@@ -54,13 +54,29 @@ public abstract class LocatableTest extends FactoryMethodTest{
 //	}
 	
 	protected void assertMoved() {
-		assertTrue("Original x " + originalX + " == " + "actual x " + actualX, originalX != actualX);
-		assertTrue("Original y " + originalY + " == " + "actual Y " + actualY, originalY != actualY);
+		assertTrue("Original x " + originalX + " == " + "actual x " + actualX +
+				" and " + 
+				"original y " + originalY + " == " + "actual Y " + actualY,								
+				originalX != actualX || originalY != actualY);
+//		assertTrue("Original y " + originalY + " == " + "actual Y " + actualY, originalY != actualY);
 	}
 	protected void assertBoundsChanged() {
-		System.out.println ("Checking if bounds have changed");
-		assertTrue("Original width " + originalWidth + " == " + "actual width " + actualWidth, originalWidth != actualWidth);
-		assertTrue("Original height " + originalHeight + " == " + "actual Height " + actualHeight, originalHeight != actualHeight);
+//		System.out.println ("Checking if bounds have changed in:" + this);
+//		if (originalHeight == actualHeight) {
+//			System.out.println ("Actual height:" + actualHeight + " original Heught" + originalHeight);
+//			System.out.println("Assertion fail on height");
+//		}
+		assertTrue("Original width " + originalWidth + " == " + "actual width " + actualWidth +
+				" and " +
+				"original height " + originalHeight + " == " + "actual Height " + actualHeight, 
+				originalHeight != actualHeight || originalWidth != actualWidth);
+				
+				
+//		assertTrue("Original height " + originalHeight + " == " + "actual Height " + actualHeight, originalHeight != actualHeight);
+//		assertTrue("Original width " + originalWidth + " == " + "actual width " + actualWidth, originalWidth != actualWidth);
+//		assertTrue("Original height " + originalHeight + " == " + "actual Height " + actualHeight, originalHeight != actualHeight);
+//		System.out.println ("Bounds have changed in:" + this);
+
 	}
 
 	protected void assertAngle(double aComputed, double aCorrect) {
@@ -413,7 +429,7 @@ public abstract class LocatableTest extends FactoryMethodTest{
 		originalWidth = leafProxy().getWidth();
 		originalHeight = leafProxy().getHeight();
 		System.out.println ("Original bounds of:" + leafProxy() + 
-				" are:(" + originalWidth + ", " + originalWidth + ")");
+				" are:(" + originalWidth + ", " + originalHeight + ")");
 	}
 	protected void setActualLocation() {
 		actualX = leafProxy().getX();
@@ -426,7 +442,7 @@ public abstract class LocatableTest extends FactoryMethodTest{
 		actualWidth = leafProxy().getWidth();
 		actualHeight = leafProxy().getHeight();
 		System.out.println ("Actual bounds of:" + leafProxy() + 
-				" are:(" + actualWidth + ", " + actualWidth + ")");
+				" are:(" + actualWidth + ", " + actualHeight + ")");
 	}
 	
 //	protected boolean returnValueIsExpected() {
