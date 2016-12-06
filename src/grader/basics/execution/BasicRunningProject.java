@@ -284,6 +284,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     }
 
     public static String extractFeatureTranscript(String aFeatureName, String allOutput) {
+    	if (aFeatureName.isEmpty()) {
+    		return "";
+    	}
         int startIndex = allOutput.indexOf(featureHeader(aFeatureName));
         if (startIndex == -1) {
             return "";
