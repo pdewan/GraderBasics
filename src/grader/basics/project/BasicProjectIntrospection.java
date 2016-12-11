@@ -1426,14 +1426,41 @@ public class BasicProjectIntrospection {
 			aTags[i] = aTags[i].replaceAll("\\s", "").toLowerCase();
 		}
 	}
-
+	 static boolean checkAllSpecifiedTags = false;
+    public static boolean isCheckAllSpecifiedTags() {
+    	return checkAllSpecifiedTags;
+    }
+    public static void setCheckAllSpecifiedTags (boolean newVal) {
+    	checkAllSpecifiedTags = newVal;
+    }
+    
+    public static boolean matchAllTags(Set<String> anActualSet, List<String> aSpecifications) {
+    	if (aSpecifications == null || aSpecifications.size() == 0) 
+			return true;
+    	return (anActualSet.containsAll(aSpecifications));
+    }
+    public static boolean matchSomeTag(Set<String> anActualSet, List<String> aSpecifications) {
+    	if (aSpecifications == null || aSpecifications.size() == 0) 
+			return true;
+    	for (String aSpecification:aSpecifications) {
+    		if (anActualSet.contains(aSpecification)) 
+    			return true;
+    	}
+    	return false;
+    }
+    
 	public static boolean matchesTags(List<String> aSpecification,
 			String[] anActual) {
-		if (aSpecification == null) return true;
+		if (aSpecification == null || aSpecification.size() == 0) 
+			return true;
 		String[] anActualsClone = anActual.clone();
 		normalizeTags(anActualsClone);
 		Set anActualSet = new HashSet(Arrays.asList(anActualsClone));
-		return (anActualSet.containsAll(aSpecification));
+		if (isCheckAllSpecifiedTags()) {
+			return matchAllTags(anActualSet, aSpecification);
+		} 
+		return matchSomeTag(anActualSet, aSpecification);
+//		return (anActualSet.containsAll(aSpecification));
 	}
 
 	/**
