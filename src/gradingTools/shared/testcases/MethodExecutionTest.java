@@ -454,10 +454,15 @@ public abstract class MethodExecutionTest  {
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ offByOneCredit(), false);
 	}
+//	protected void assertWrongReturnValue() {
+//		Assert.assertTrue(offByOneMessage()
+//				+ NotesAndScore.PERCENTAGE_MARKER
+//				+ offByOneCredit(), false);
+//	}
 	protected void assertWrongReturnValue() {
-		Assert.assertTrue(offByOneMessage()
+		Assert.assertTrue(wrongReturnValueMessage()
 				+ NotesAndScore.PERCENTAGE_MARKER
-				+ offByOneCredit(), false);
+				+ wrongReturnValueCredit(), false);
 	}
 	protected void traceProcessReturnValue() {
 		System.out.println(
@@ -537,8 +542,19 @@ public abstract class MethodExecutionTest  {
 				" is off by one from return value " + getReturnValue();
 	}
 	protected String wrongReturnValueMessage() {
-		return "Expected value" + getExpectedReturnValue() + 
-				" is not same as return value " + getReturnValue();
+		Object anExpectedValue = getExpectedReturnValue();
+		Object anActualValue = getReturnValue();
+		String anExpectedString = anExpectedValue.toString();
+		String anActualString = anExpectedValue.toString();
+		if (anExpectedValue.getClass().isArray() && anActualValue.getClass().isArray()) {
+			anExpectedString = Arrays.toString((Object[]) anExpectedValue);
+			anActualString = Arrays.toString((Object[]) anActualValue);
+
+		}
+//		return "Expected value" + getExpectedReturnValue() + 
+//				" is not same as return value " + getReturnValue();
+		return "Expected value" + anExpectedString + 
+				" is not same as return value " + anActualString;
 	}
 	protected double offByOneCredit() {
 		return 0.8;

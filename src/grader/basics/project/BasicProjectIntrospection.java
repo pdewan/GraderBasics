@@ -788,7 +788,7 @@ public class BasicProjectIntrospection {
 
 	public static Class findClass(Project aProject, Class aProxyClass) {
 //		System.out.println(("finding class:" + aProxyClass.getName()));
-		if (isPredefinedType(aProxyClass))
+		if (isPredefinedType(aProxyClass) && !aProxyClass.isInterface())
 			return aProxyClass;
 		Class aCachedClass = keyToClass.get(aProxyClass.getName());
 		if (aCachedClass == null) {
@@ -1834,7 +1834,8 @@ public class BasicProjectIntrospection {
 	
 	public static Object createProxy (Class aProxyClass, Object anActualObject) {
 		// redundant
-		if (anActualObject instanceof Proxy && !isReverseProxy(anActualObject)) {
+		if (anActualObject instanceof Proxy && 
+				!isReverseProxy(anActualObject)) {
 			return anActualObject;
 		}
 		if (aProxyClass.isInstance(anActualObject)) { //not a proxy class

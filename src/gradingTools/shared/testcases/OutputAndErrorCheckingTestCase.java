@@ -136,9 +136,15 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 	public static boolean matchesConsuming(List<String> anOutputs,
 			String anExpectedString) {
+//		System.out.println("Checking if " + anExpectedString + " appears in output");
 		int index = indexOf(anOutputs, anExpectedString);
-		if (index == -1)
+		if (index == -1) {
+			System.out.println(anExpectedString + " did not appear in output");
+
 			return false;
+		}
+		System.out.println(anExpectedString + "appeared in output");
+
 		anOutputs.remove(index);
 		return true;
 	}
