@@ -200,7 +200,14 @@ public abstract class MethodExecutionTest  {
 	protected boolean hasError() {
 		return !getError().isEmpty();
 	}
+	protected boolean noOutput = false;
+	protected boolean noOutput() {
+		return noOutput;
+	}
 	protected OutputErrorStatus computeOutputErrorStatus() {
+		if (noOutput()) {
+			return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
+		}
 		ResultingOutErr aResult = getResultingOutErr();
 		if (aResult == null) {
 			return OutputErrorStatus.NO_OUTPUT;

@@ -514,7 +514,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			// aReadMethod,
 			// BasicProjectExecution.emptyArgs,
 			// BasicProjectExecution.getMethodTimeOut());
+			noOutput = true; // by default getters have no output
 			invokeMethod(anObject, aReadMethod, BasicProjectExecution.emptyArgs);
+			noOutput = false;
 			anActualOutputs.put(anOutputPropertyName, returnValue);
 
 		} catch (NoSuchMethodException e) {
