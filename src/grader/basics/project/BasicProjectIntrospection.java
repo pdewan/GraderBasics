@@ -62,7 +62,7 @@ public class BasicProjectIntrospection {
 		objectToProxy.clear();
 		classToProxy.clear();
 		topLevelSuites = null;
-		classToType.clear();
+//		classToType.clear(); // why clear this?
 	}
 	
 	public static boolean inUniqueMainRun() {
@@ -1907,17 +1907,19 @@ public class BasicProjectIntrospection {
 	}
 	public static Object createInstance(Class aProxyClass,
 			Class[] aConctructArgsTypes, Object[] anArgs) {
+		Class anActualClass = null;
 		try {
 			if (!aProxyClass.isInterface()) {
 				System.out.println ("cannot create proxy for non interface class");
 				return null;
 			}
-			Class anActualClass = BasicProjectIntrospection.findClass(
+			 anActualClass = BasicProjectIntrospection.findClass(
 					CurrentProjectHolder.getOrCreateCurrentProject(), aProxyClass);
 			if (anActualClass == null) {
 				System.out.println ("Could not find unique class with tags:" + getTags(aProxyClass));
 				return null;
 			}
+			
 			Constructor aConstructor = anActualClass
 					.getConstructor(aConctructArgsTypes);
 //			Object anActualObject = aConstructor.newInstance(anArgs);
@@ -1937,6 +1939,11 @@ public class BasicProjectIntrospection {
 //			proxyToObject.put(aProxy, anActualObject);
 //			objectToProxy.put(anActualObject, aProxy);
 //			return aProxy;
+		} catch (NoSuchMethodException e) {
+			System.out.println ("Cound not find " + "in " + anActualClass + " a public constructor with args:" + Arrays.toString(aConctructArgsTypes));
+			System.out.println(e);
+			return null;
+
 		} catch (Exception e) {
 			System.out.println ("Class instantiation failed:" + e);
 			e.printStackTrace();

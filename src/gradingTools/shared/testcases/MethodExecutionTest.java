@@ -305,7 +305,11 @@ public abstract class MethodExecutionTest  {
 //			System.out.println ("Calling non interactive method:" + 
 //					aMethod.getName() + 
 //					" with args " +
-//					Arrays.toString(anArgs)); 
+//					Arrays.toString(anArgs));
+			System.out.println ("Calling on object " + aTargetObject + "  method:" + 
+					aMethod.getName() + 
+					" with args " +
+					Arrays.toString(anArgs) ); 
 			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
 					aTargetObject,
 					aMethod,
@@ -314,6 +318,7 @@ public abstract class MethodExecutionTest  {
 			if (returnValue == null) {
 				return false;
 			}
+			System.out.println ("Return value =" + returnValue);
 		}
 //		if (returnValueIsExpected()) {
 //			return true;
@@ -552,7 +557,7 @@ public abstract class MethodExecutionTest  {
 		Object anExpectedValue = getExpectedReturnValue();
 		Object anActualValue = getReturnValue();
 		String anExpectedString = anExpectedValue.toString();
-		String anActualString = anExpectedValue.toString();
+		String anActualString = anActualValue.toString();
 		if (anExpectedValue.getClass().isArray() && anActualValue.getClass().isArray()) {
 			anExpectedString = Arrays.toString((Object[]) anExpectedValue);
 			anActualString = Arrays.toString((Object[]) anActualValue);

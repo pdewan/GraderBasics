@@ -323,11 +323,19 @@ public abstract class BeanExecutionTest extends LocatableTest {
 //					+ Common.toString(aConstructorArgTypes));
 			aConstructor = aClass
 					.getConstructor(aConstructorArgTypes);
-		} catch (NoSuchMethodException | SecurityException e) {
-			System.out.println("Could not find constructor matching:"
-					+ Common.toString(aConstructorArgTypes));
+		} catch (NoSuchMethodException e) {
+			if (aConstructorArgTypes.length == 0) {
+				//no other constructor to try, fail
+				assertNoConstructor(e);
+			}
+			System.out.println("Could not find in " + aClass + " required public constructor matching arg types:"
+					+ Arrays.toString(aConstructorArgTypes));
 			return null;
-		}
+		} catch (SecurityException e) {
+		
+		e.printStackTrace();
+		return null;
+	}
 		return aConstructor;
 	}
 	@Override
@@ -361,14 +369,18 @@ public abstract class BeanExecutionTest extends LocatableTest {
 				hasConstructor = true;
 
 				Constructor aConstructor = getRequiredConstructor();
+				if (aConstructorArgs.length == 0) {
+					
+				}
 				if (aConstructor == null) {
 					outputPropertyValues.put(
 							BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 					System.out
-							.println("Trying to find parameterless constructor");
+							.println("Trying to find public parameterless constructor");
 					aConstructor = aClass.getConstructor();
 					aConstructorArgs = emptyObjectArray;
 					hasConstructor = false;
+					
 
 				}
 
@@ -381,11 +393,15 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			}
 
 		} catch (NoSuchMethodException e) {
-			System.out.println("Constructor not found:" + e.getMessage());
-			hasConstructor = false;
-
-			outputPropertyValues
-					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+			assertNoConstructor(e);
+//			String aMessage = "Public constructor not found:" + e.getMessage();
+//			System.out.println(aMessage);
+//			hasConstructor = false;
+//
+//			outputPropertyValues
+//					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+//			Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + 0.0,
+//					false);
 			// e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -397,6 +413,16 @@ public abstract class BeanExecutionTest extends LocatableTest {
 
 		}
 		return null;
+	}
+	protected void assertNoConstructor (NoSuchMethodException e) {
+		String aMessage = "Public constructor not found:" + e.getMessage();
+		System.out.println(aMessage);
+		hasConstructor = false;
+
+		outputPropertyValues
+				.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
+		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + 0.0,
+				false);
 	}
 	public Map<String, Object> executeBean() throws Throwable {
 		Object anObject = create();
@@ -441,7 +467,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 					outputPropertyValues.put(
 							BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 					System.out
-							.println("Trying to find parameterless constructor");
+							.println("Trying to find public parameterless constructor");
 					aConstructor = aClass.getConstructor();
 
 				}
@@ -870,7 +896,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		return anActualOutputs;
 	}
 	protected String getsEqualsSetsErrorMessage() {
-		return " Gets does not return sets for:" + wrongInputProperties;
+		return " Gets do not return sets for:" + wrongInputProperties;
 	}
 
 	protected String expectedEqualsActualErrorMessage() {
