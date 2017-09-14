@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.junit.Assert;
+
 import util.annotations.IsRestriction;
 import util.annotations.Tags;
 import util.introspect.JavaIntrospectUtility;
@@ -494,6 +496,9 @@ public class BasicProjectIntrospection {
 			Set<Class> result = new HashSet();
 			Set<ClassDescription> aClasses = aProject.getClassesManager().get()
 					.findClassAndInterfaces(aName, aTag, aNameMatch, aTagMatch);
+			if (aClasses == null || aClasses.size() == 0) {
+				Assert.assertTrue("No classes found, see console for compile errors", false);
+			}
 			Set<Class> aMatchedInterfaces = new HashSet();
 			for (ClassDescription aClass : aClasses) {
 				if (aClass.getJavaClass().isInterface()) {

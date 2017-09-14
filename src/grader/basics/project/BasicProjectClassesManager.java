@@ -880,6 +880,16 @@ public class BasicProjectClassesManager implements ClassesManager {
     public Set<ClassDescription> getClassDescriptions() {
         return classDescriptions;
     }
+//	@Override
+//	public boolean isHasCompileErrors() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//	@Override
+//	public void setHasCompileErrors(boolean hasCompileErrors) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 //    @Override
 //    public List<String> getClassNamesToCompile() {

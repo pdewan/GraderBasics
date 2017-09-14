@@ -723,6 +723,10 @@ public abstract class BeanExecutionTest extends LocatableTest {
 
 		return internalExecuteBean(anObject);
 	}
+	protected void invokePropertyMethods(Object anObject) throws Throwable {
+		invokeSetters(anObject);
+		invokeGetters(anObject);
+	}
 	public Map<String, Object> internalExecuteBean(Object anObject) throws Throwable {
 		// Cannot do reflection onproxies
 		if (anObject instanceof Proxy) {
@@ -751,8 +755,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		Map<String, Object> anInputs = getInputPropertyValues();
 		String[] anOutputProperties = getOutputPropertyNames();
 		try {
-			invokeSetters(anObject);
-			invokeGetters(anObject);
+//			invokeSetters(anObject);
+//			invokeGetters(anObject);
+			invokePropertyMethods(anObject);
 
 		
 		} catch (SecurityException e) {

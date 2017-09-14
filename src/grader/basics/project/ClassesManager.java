@@ -52,6 +52,10 @@ public interface ClassesManager {
 	Set<ClassDescription> findClassAndInterfaces(String aName, String[] aTag,
 			String aNameMatch, String aTagMatch);
 
+//	boolean isHasCompileErrors();
+//
+//	void setHasCompileErrors(boolean hasCompileErrors);
+
 //	List<Method> findMethodByName(Class aClass, String aSpecification);
 //
 //	List<Method> findMethodByNameMatch(Class aClass, String aSpecification);
