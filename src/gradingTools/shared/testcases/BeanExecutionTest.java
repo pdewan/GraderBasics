@@ -369,9 +369,9 @@ public abstract class BeanExecutionTest extends LocatableTest {
 				hasConstructor = true;
 
 				Constructor aConstructor = getRequiredConstructor();
-				if (aConstructorArgs.length == 0) {
-					
-				}
+//				if (aConstructorArgs.length == 0) {
+//					
+//				}
 				if (aConstructor == null) {
 					outputPropertyValues.put(
 							BasicProjectExecution.MISSING_CONSTRUCTOR, true);

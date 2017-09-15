@@ -490,15 +490,24 @@ public class BasicProjectIntrospection {
 
 	}
 	
+	
+	
 	// why are these not all sets?
 		public static Set<Class> findClasses(Project aProject, String aName,
 				String[] aTag, String aNameMatch, String aTagMatch) {
 			Set<Class> result = new HashSet();
-			Set<ClassDescription> aClasses = aProject.getClassesManager().get()
-					.findClassAndInterfaces(aName, aTag, aNameMatch, aTagMatch);
-			if (aClasses == null || aClasses.size() == 0) {
-				Assert.assertTrue("No classes found, see console for compile errors", false);
+			ClassesManager aClassManager = aProject.getClassesManager().get();
+			if (aClassManager.getClassDescriptions().size() == 0) {
+				Assert.assertTrue("No compiled classes found in bin, see transcript for compile errors", false);
 			}
+			
+//			Set<ClassDescription> aClasses = aProject.getClassesManager().get()
+//					.findClassAndInterfaces(aName, aTag, aNameMatch, aTagMatch);
+			Set<ClassDescription> aClasses = aClassManager
+					.findClassAndInterfaces(aName, aTag, aNameMatch, aTagMatch);
+//			if (aClasses == null || aClasses.size() == 0) {
+//				Assert.assertTrue("No classes found, see console for compile errors", false);
+//			}
 			Set<Class> aMatchedInterfaces = new HashSet();
 			for (ClassDescription aClass : aClasses) {
 				if (aClass.getJavaClass().isInterface()) {

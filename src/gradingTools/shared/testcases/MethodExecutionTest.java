@@ -513,7 +513,7 @@ public abstract class MethodExecutionTest  {
 					+ correctOutputButErrorsCredit(), false);
 			return;
 		}
-		Assert.assertTrue(incorrectOutputMessage()
+		Assert.assertTrue(incorrectOutputMessage() + 
 				+ NotesAndScore.PERCENTAGE_MARKER
 				+ incorrectOutputCredit(), false);
 	}
@@ -662,7 +662,7 @@ public abstract class MethodExecutionTest  {
 			false);
 		}
 
-		Assert.assertTrue(incorrectOutputMessage()
+		Assert.assertTrue(incorrectOutputMessage() + " See console/transcript."
 				+ NotesAndScore.PERCENTAGE_MARKER + incorrectOutputCredit(),
 
 		false);
