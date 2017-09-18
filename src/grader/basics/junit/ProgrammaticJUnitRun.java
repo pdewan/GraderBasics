@@ -4,12 +4,14 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+import util.trace.Tracer;
+
 public class ProgrammaticJUnitRun  extends RunListener {
 	@Override
 	public void testFailure(Failure failure) {
 	       try {
 			super.testFailure(failure);
-			System.out.println ("Failure:" + failure);
+			Tracer.info(this,"Failure:" + failure);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -18,7 +20,7 @@ public class ProgrammaticJUnitRun  extends RunListener {
 	public void testFinished(Description description) {
 		try {
 			super.testFinished(description);
-			System.out.println ("Test finished:"+ description);
+			Tracer.info(this,"Test finished:"+ description);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

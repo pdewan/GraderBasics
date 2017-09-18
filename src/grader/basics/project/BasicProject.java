@@ -22,6 +22,7 @@ import java.util.Set;
 import util.pipe.InputGenerator;
 import util.trace.TraceableLog;
 import util.trace.TraceableLogFactory;
+import util.trace.Tracer;
 //import scala.Option;
 
 /**
@@ -98,7 +99,7 @@ public class BasicProject implements Project {
         Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
 
         if (src.isEmpty()) {
-        	System.out.println(SourceFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage());
+        	SourceFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
 
         	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(aDirectory, sourceFilePattern);
         	if (!sourceFiles.isEmpty()) {
@@ -107,7 +108,7 @@ public class BasicProject implements Project {
                     this.directory = sourceFolder.getParentFile();
                     SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
         	} else {
-                    System.out.println(ProjectFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage());
+                    ProjectFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
                     throw new FileNotFoundException("No source files found");
         	}
         	noSrc = true;
@@ -362,11 +363,11 @@ public class BasicProject implements Project {
 			Project anAllCorrectProject = new BasicProject(null, new File("."), null, "allcorrect");
 
 			Class anAllCorrectClass = BasicProjectIntrospection.findClass(anAllCorrectProject, "ACartesianPoint");
-			System.out.println (anAllCorrectClass);
+			System.out.println ("An all correct" + anAllCorrectClass);
 			Project aWrongAngleProject = new BasicProject(null, new File("."), null, "wrongangle");
 
 			Class aWrongAngleClass = BasicProjectIntrospection.findClass(anAllCorrectProject, "ACartesianPoint");
-			System.out.println (aWrongAngleClass);
+			System.out.println ("A wrong" + aWrongAngleClass);
 			
 			
 		} catch (FileNotFoundException e) {

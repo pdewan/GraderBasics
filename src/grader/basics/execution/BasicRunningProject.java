@@ -462,7 +462,7 @@ public void appendCumulativeOutput() {
     
 	@Override
     public void newInputLine(String aProcessName, String anInput) {
-    	System.out.println("New input " + anInput + "for " + aProcessName );
+    	Tracer.info(this, "New input " + anInput + "for " + aProcessName );
     	if (aProcessName != null)
         processToIn.get(aProcessName).newInput(anInput + "\n");
     	maybeAppendToProjectInput(anInput);
@@ -559,7 +559,7 @@ public void appendCumulativeOutput() {
 
 	@Override
     public void inputTerminated(String aProcessName) {
-//		System.out.println("Terminating input");
+//		Tracer.info(this, "Terminating input");
         terminateProcess(aProcessName);
 //		processToIn.get(aProcessName).terminateInput();
 
@@ -567,7 +567,7 @@ public void appendCumulativeOutput() {
 
     @Override
 	public void terminateProcess(String aProcess) {
-        System.out.println("Terminating:" + aProcess);
+        Tracer.info(this, "Terminating:" + aProcess);
 //
         try {
             processToOut.get(aProcess).getSemaphore().acquire(); // this is deadlocking, need to debug

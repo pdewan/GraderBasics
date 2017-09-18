@@ -99,7 +99,7 @@ public class BasicProjectExecution {
 		if (anArgs == null) {
 			anArgs = emptyObjectArray;
 		}
-		System.out.println("Calling on object " + anObject + " " + anObject.hashCode() + " method:"
+		Tracer.info(BasicProjectExecution.class,"Calling on object " + anObject + " " + anObject.hashCode() + " method:"
 				+ aMethod + " args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
 		Future future = executor.submit(new AMethodExecutionCallable(anObject,
 				aMethod, anArgs));
@@ -252,7 +252,7 @@ public class BasicProjectExecution {
 	public static Object timedInvoke(Constructor aConstructor, Object[] anArgs,
 			long aMillSeconds) {
 		// ExecutorService executor = Executors.newSingleThreadExecutor();
-		System.out.println("Calling constructor " + aConstructor + "with args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
+		Tracer.info(BasicProjectExecution.class, "Calling constructor " + aConstructor + "with args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
 
 		Future future = executor.submit(new AConstructorExecutionCallable(
 				aConstructor, anArgs));
@@ -271,7 +271,7 @@ public class BasicProjectExecution {
 			executor = Executors.newSingleThreadExecutor();
 
 			future.cancel(true);
-			System.out.println("Terminated!");
+			Tracer.info(BasicProjectExecution.class, "Terminated!");
 			return null;
 		} finally {
 
@@ -295,7 +295,7 @@ public class BasicProjectExecution {
 		}
 		catch (Exception e) {
 			future.cancel(true);
-			System.out.println("Terminated!");
+			Tracer.info(BasicProjectExecution.class, "Terminated!");
 			throw e;
 		} finally {
 
@@ -431,9 +431,11 @@ public class BasicProjectExecution {
 
 		}
 	}
-
-	static String tmpOutFilePrefix = "tmpMethodOut";
-	static String tmpErrFilePrefix = "tmpMethodErr";
+    static String tmpOutErrPrefix = "tmpMethod";
+	static String tmpOutFilePrefix = tmpOutErrPrefix + "out";
+	static String tmpErrFilePrefix = tmpOutErrPrefix + "err";
+//	static String tmpOutFilePrefix = "tmpMethodOut";
+//	static String tmpErrFilePrefix = "tmpMethodErr";
 	static String tmpInFileName = "tmpIn";
 	// static PrintStream previousOut = System.out;
 	// static FileOutputStream aFileStream;
@@ -515,8 +517,11 @@ public class BasicProjectExecution {
 			String aNextTempFileName = computeNextTmpOutFileName();
 			FileOutputStream aFileStream = new FileOutputStream(
 					aNextTempFileName);
+
 			File aTmpFile = new File(aNextTempFileName);
-//			System.out.println("Creating:" + aNextTempFileName);
+			Tracer.info(BasicProjectExecution.class, "Created tmp file:" +aTmpFile);
+
+//			Tracer.info(BasicProjectExecution.class, "Creating:" + aNextTempFileName);
 
 			fileOutStack.push(aFileStream);
 			tmpOutFileStack.push(aTmpFile);
@@ -535,7 +540,7 @@ public class BasicProjectExecution {
 		try {
 			if (newIn != null) {
 				newIn.close();
-//				System.out.println("Creating:" + tmpInFileName);
+//				Tracer.info(BasicProjectExecution.class, "Creating:" + tmpInFileName);
 
 				File aTempInputFile = new File(tmpInFileName);
 				if (aTempInputFile.exists()) {
@@ -557,11 +562,11 @@ public class BasicProjectExecution {
 			File tmpOutFile = tmpOutFileStack.pop();
 			// ThreadSupport.sleep(2000);
 			String anOutput = Common.toText(tmpOutFile);
-//			System.out.println("Deleting:" + tmpOutFile.getName());
+//			Tracer.info(BasicProjectExecution.class, "Deleting:" + tmpOutFile.getName());
 			tmpOutFile.delete();
 			return anOutput;
 		} catch (IOException e) {
-			System.out.println("Could not delete file");
+			Tracer.info(BasicProjectExecution.class, "Could not delete file");
 			e.printStackTrace();
 		} finally {
 			previousOut = originalOutStack.pop();
@@ -612,6 +617,7 @@ public class BasicProjectExecution {
 			// ThreadSupport.sleep(2000);
 			String anOutput = Common.toText(tmpOutFile);
 			tmpOutFile.delete();
+			Tracer.info(BasicProjectExecution.class, "Deleted tmp file:" + tmpOutFile.getPath());
 			if (newIn != null) {
 				newIn.close();
 				File aTempInputFile = new File(tmpInFileName);
@@ -701,7 +707,7 @@ public class BasicProjectExecution {
 	// + aBeanDescriptions.length);
 	// }
 	// redirectOutput();
-	// System.out.println("Testcase:" + aCheckName);
+	// Tracer.info(BasicProjectExecution.class, "Testcase:" + aCheckName);
 	// System.out.println ("Finding class matching:" +
 	// Common.toString(aBeanDescriptions));
 	// Class aClass = BasicProjectIntrospection.findClass(aProject,
@@ -731,14 +737,14 @@ public class BasicProjectExecution {
 	// if (aProperty == null) {
 	// anActualOutputs.put(MISSING_PROPERTY, true);
 	// anActualOutputs.put(MISSING_PROPERTY+"." + aPropertyName, true);
-	// // System.out.println("Property " + aPropertyName + "not found");
+	// // Tracer.info(BasicProjectExecution.class, "Property " + aPropertyName + "not found");
 	// continue;
 	// }
 	// Method aWriteMethod = aProperty.getWriteMethod();
 	// if (aWriteMethod == null) {
 	// anActualOutputs.put(MISSING_WRITE, true);
 	// anActualOutputs.put(MISSING_WRITE +"." + aPropertyName, true);
-	// System.out.println("Missing write method for property " + aPropertyName);
+	// Tracer.info(BasicProjectExecution.class, "Missing write method for property " + aPropertyName);
 	// continue;
 	// }
 	// Object aValue = anInputs.get(aPropertyName);
@@ -752,12 +758,12 @@ public class BasicProjectExecution {
 	// BasicProjectIntrospection.findProperty(aClass, anOutputPropertyName);
 	// if (aProperty == null) {
 	//
-	// // System.out.println("Property " + aPropertyName + "not found");
+	// // Tracer.info(BasicProjectExecution.class, "Property " + aPropertyName + "not found");
 	// continue;
 	// }
 	// Method aReadMethod = aProperty.getReadMethod();
 	// if (aReadMethod == null) {
-	// System.out.println("Missing read method for property " +
+	// Tracer.info(BasicProjectExecution.class, "Missing read method for property " +
 	// anOutputPropertyName);
 	// anActualOutputs.put(MISSING_READ, true);
 	// anActualOutputs.put(MISSING_READ +"." + anOutputPropertyName, true);
@@ -770,7 +776,7 @@ public class BasicProjectExecution {
 	// }
 	//
 	// } catch (NoSuchMethodException e) {
-	// System.out.println("Constructor not found:" + e.getMessage());
+	// Tracer.info(BasicProjectExecution.class, "Constructor not found:" + e.getMessage());
 	// anActualOutputs.put(MISSING_CONSTRUCTOR, true);
 	// // e.printStackTrace();
 	// } catch (SecurityException e) {

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import util.misc.Common;
+import util.trace.Tracer;
 
 public abstract class OutputAndErrorCheckingTestCase extends
 		BeanExecutionTest {
@@ -136,14 +137,14 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 	public static boolean matchesConsuming(List<String> anOutputs,
 			String anExpectedString) {
-//		System.out.println("Checking if " + anExpectedString + " appears in output");
+//		Tracer.info (this, "Checking if " + anExpectedString + " appears in output");
 		int index = indexOf(anOutputs, anExpectedString);
 		if (index == -1) {
-			System.out.println(anExpectedString + " did not appear in output");
+			Tracer.error (anExpectedString + " did not appear in output");
 
 			return false;
 		}
-		System.out.println(anExpectedString + "appeared in output");
+		Tracer.info (OutputAndErrorCheckingTestCase.class, anExpectedString + "appeared in output");
 
 		anOutputs.remove(index);
 		return true;
@@ -160,22 +161,22 @@ public abstract class OutputAndErrorCheckingTestCase extends
 	protected String[] emptyStringArray = {};
 	protected void traceStartMainCall(String aMainName, String anInput,
 			String[] anExpectedStrings) {
-		System.out.println(BasicProjectExecution.DELIMITER);
-		System.out.println("Providing input:" + anInput);
-		System.out.println("Expected outputs:"
+		Tracer.info (this, BasicProjectExecution.DELIMITER);
+		Tracer.info (this, "Providing input:" + anInput);
+		Tracer.info (this, "Expected outputs:"
 				+ Arrays.toString(anExpectedStrings));
 
 	};
 	protected void traceEndMainCall(String aMainName, String anInput,
 			String[] anExpectedStrings) {
-		System.out.println("Provided input:" + anInput);
-		System.out.println("Expected output:"
+		Tracer.info (this, "Provided input:" + anInput);
+		Tracer.info (this, "Expected output:"
 				+ Arrays.toString(anExpectedStrings));
-		System.out.println(BasicProjectExecution.DELIMITER);
+		Tracer.info (this, BasicProjectExecution.DELIMITER);
 
 	};
 	protected void traceEndMainCall() {
-		System.out.println(BasicProjectExecution.DELIMITER);
+		Tracer.info (this, BasicProjectExecution.DELIMITER);
 
 	}
 	protected String toOutputString(String aToken) {
@@ -217,10 +218,10 @@ public abstract class OutputAndErrorCheckingTestCase extends
 				setOutputErrorStatus();
 				return true;
 			} else {
-				System.out.println("Could not execute main class");
+				Tracer.info (this, "Could not execute main class");
 			}
 		}
-		System.out.println("Could not find main class in:" + Arrays.toString(getClassNames())+ " or previous main run was infinite.");
+		Tracer.info (this, "Could not find main class in:" + Arrays.toString(getClassNames())+ " or previous main run was infinite.");
 
 		return false;
 
@@ -241,7 +242,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 //				setOutputErrorStatus();
 //				return true;
 //			} else {
-//				System.out.println("Could not execite main class");
+//				Tracer.info (this, "Could not execite main class");
 //			}
 //		}
 //		return false;
@@ -281,9 +282,9 @@ public abstract class OutputAndErrorCheckingTestCase extends
 
 		ResultingOutErr aResult = BasicProjectExecution.callMain(aMainName,
 				emptyStringArray, anInput);
-		// System.out.println ("Input:" + anInput);
-		// System.out.println ("Output:" + aResult.out);
-		// System.out.println ("Errors:" + aResult.err);
+		// Tracer.info (this, "Input:" + anInput);
+		// Tracer.info (this, "Output:" + aResult.out);
+		// Tracer.info (this, "Errors:" + aResult.err);
 		if (aResult == null) {
 			return OutputErrorStatus.NO_OUTPUT;
 		}
@@ -301,10 +302,10 @@ public abstract class OutputAndErrorCheckingTestCase extends
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
 
-	public static void main(String[] args) {
-		System.out.println("30".matches(".*30"));
-		System.out.println(" 30".matches(".*30"));
-		System.out.println("\nfoo is 30 \n".matches(".*30.*"));
-	}
+//	public static void main(String[] args) {
+//		Tracer.info (this, "30".matches(".*30"));
+//		Tracer.info (this, " 30".matches(".*30"));
+//		Tracer.info (this, "\nfoo is 30 \n".matches(".*30.*"));
+//	}
 
 }

@@ -163,7 +163,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						BasicProjectExecution.EXPECTED_EQUAL_ACTUAL, false);
 				anActualOutputs.put(BasicProjectExecution.EXPECTED_EQUAL_ACTUAL
 						+ "." + anOutputProperties[i], false);
-				System.out.println("For property:" + outputProperty
+				Tracer.info(this,"For property:" + outputProperty
 						+ " expected value:" + anExpectedOutput
 						+ ", but actual output:" + anActualOutput + ".");
 				wrongOutputProperties.add(outputProperty);
@@ -194,8 +194,8 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// // + aBeanDescriptions.length);
 	// // }
 	// // BasicProjectExecution.redirectOutput();
-	// // System.out.println("Testcase:" + aCheckName);
-	// // System.out.println("Finding classes matching:"
+	// // Tracer.info(this,"Testcase:" + aCheckName);
+	// // Tracer.info(this,"Finding classes matching:"
 	// // + Common.toString(aBeanDescriptions));
 	// // Class aClass = BasicProjectIntrospection.findClass(aProject,
 	// // aBeanDescriptions[0], aBeanDescriptions[1],
@@ -204,12 +204,12 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// Class aClass = getTargetClass();
 	//
 	// if (aClass == null) {
-	// System.out.println("No class matching: "
+	// Tracer.info(this,"No class matching: "
 	// +aClass.getSimpleName());
 	// anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
 	// // anActualOutputs = null;
 	// } else {
-	// System.out.println("Finding constructor matching:"
+	// Tracer.info(this,"Finding constructor matching:"
 	// + Common.toString(aConstructorArgTypes));
 	// // anActualOutputs.put(CLASS_MATCHED,
 	// // aClass.getCanonicalName());
@@ -235,7 +235,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
 	// anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
 	// + aPropertyName, true);
-	// System.out.println("Property " + aPropertyName + "not found in " +
+	// Tracer.info(this,"Property " + aPropertyName + "not found in " +
 	// aClass.getSimpleName());
 	// continue;
 	// }
@@ -244,7 +244,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// anActualOutputs.put(BasicProjectExecution.MISSING_WRITE, true);
 	// anActualOutputs.put(
 	// BasicProjectExecution.MISSING_WRITE + "." + aPropertyName, true);
-	// System.out.println("Missing write method for property "
+	// Tracer.info(this,"Missing write method for property "
 	// + aPropertyName);
 	// continue;
 	// }
@@ -264,13 +264,13 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// .findProperty(aClass, anOutputPropertyName);
 	// if (aProperty == null) {
 	//
-	// // System.out.println("Property " + aPropertyName +
+	// // Tracer.info(this,"Property " + aPropertyName +
 	// // "not found");
 	// continue;
 	// }
 	// Method aReadMethod = aProperty.getReadMethod();
 	// if (aReadMethod == null) {
-	// System.out.println("Missing read method for property "
+	// Tracer.info(this,"Missing read method for property "
 	// + anOutputPropertyName);
 	// anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
 	// anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
@@ -289,7 +289,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	// }
 	//
 	// } catch (NoSuchMethodException e) {
-	// System.out.println("Constructor not found:" + e.getMessage());
+	// Tracer.info(this,"Constructor not found:" + e.getMessage());
 	// anActualOutputs.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 	// // e.printStackTrace();
 	// } catch (SecurityException e) {
@@ -319,7 +319,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		Class aClass = getTargetClass();
 		Constructor aConstructor;
 		try {
-//			System.out.println("Finding constructor matching:"
+//			Tracer.info(this,"Finding constructor matching:"
 //					+ Common.toString(aConstructorArgTypes));
 			aConstructor = aClass
 					.getConstructor(aConstructorArgTypes);
@@ -328,7 +328,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 				//no other constructor to try, fail
 				assertNoConstructor(e);
 			}
-			System.out.println("Could not find in " + aClass + " required public constructor matching arg types:"
+			Tracer.info(this,"Could not find in " + aClass + " required public constructor matching arg types:"
 					+ Arrays.toString(aConstructorArgTypes));
 			return null;
 		} catch (SecurityException e) {
@@ -349,7 +349,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			Class aClass = getTargetClass();
 
 			if (aClass == null) {
-				System.out.println("No class matching: "
+				Tracer.info(this,"No class matching: "
 						+ Arrays.toString(getClassNames()));
 				outputPropertyValues.put(BasicProjectExecution.MISSING_CLASS, true);
 				assertMissingClass(getClassNames());
@@ -357,7 +357,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 //						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 				// anActualOutputs = null;
 			} else {
-//				System.out.println("Finding constructor matching:"
+//				Tracer.info(this,"Finding constructor matching:"
 //						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
@@ -395,7 +395,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		} catch (NoSuchMethodException e) {
 			assertNoConstructor(e);
 //			String aMessage = "Public constructor not found:" + e.getMessage();
-//			System.out.println(aMessage);
+//			Tracer.info(this,aMessage);
 //			hasConstructor = false;
 //
 //			outputPropertyValues
@@ -416,7 +416,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	}
 	protected void assertNoConstructor (NoSuchMethodException e) {
 		String aMessage = "Public constructor not found:" + e.getMessage();
-		System.out.println(aMessage);
+		Tracer.info(this,aMessage);
 		hasConstructor = false;
 
 		outputPropertyValues
@@ -446,7 +446,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			Class aClass = getTargetClass();
 
 			if (aClass == null) {
-				System.out.println("No class matching: "
+				Tracer.info(this,"No class matching: "
 						+ Arrays.toString(getClassNames()));
 				outputPropertyValues.put(BasicProjectExecution.MISSING_CLASS, true);
 				assertMissingClass(getClassNames());
@@ -454,7 +454,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 //						+ Arrays.toString(getClassNames()) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 				// anActualOutputs = null;
 			} else {
-				System.out.println("Finding constructor matching:"
+				Tracer.info(this,"Finding constructor matching:"
 						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
@@ -480,7 +480,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			}
 
 		} catch (NoSuchMethodException e) {
-			System.out.println("Constructor not found:" + e.getMessage());
+			Tracer.info(this,"Constructor not found:" + e.getMessage());
 			outputPropertyValues
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
@@ -519,14 +519,14 @@ public abstract class BeanExecutionTest extends LocatableTest {
 				anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
 				anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
 						+ anOutputPropertyName, true);
-				// System.out.println("Property " + aPropertyName +
+				// Tracer.info(this,"Property " + aPropertyName +
 				// "not found");
 				assertNoProperty(anOutputPropertyName);
 				return;
 			}
 			Method aReadMethod = aProperty.getReadMethod();
 			if (aReadMethod == null) {
-				System.out.println("Missing read method for property "
+				Tracer.info(this,"Missing read method for property "
 						+ anOutputPropertyName);
 				missingGetters.add(anOutputPropertyName);
 				anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
@@ -546,7 +546,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			anActualOutputs.put(anOutputPropertyName, returnValue);
 
 		} catch (NoSuchMethodException e) {
-			System.out.println("Constructor not found:" + e.getMessage());
+			Tracer.info(this,"Constructor not found:" + e.getMessage());
 			anActualOutputs
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
@@ -650,7 +650,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						anActualOutputs.put(
 								BasicProjectExecution.MISSING_PROPERTY + "."
 										+ aPropertyName, true);
-						System.out.println("Property " + aPropertyName
+						Tracer.info(this,"Property " + aPropertyName
 								+ " not found in " + aClass.getSimpleName() + 
 								"\nDefine a getter for the property (named: get"+ aPropertyName + ")");
 						return;
@@ -661,7 +661,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 								BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
 								+ "." + aPropertyName, true);
-						System.out.println("Missing write method for property "
+						Tracer.info(this,"Missing write method for property "
 								+ aPropertyName);
 						return;
 					}
@@ -814,7 +814,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						anActualOutputs.put(
 								BasicProjectExecution.MISSING_PROPERTY + "."
 										+ aPropertyName, true);
-						System.out.println("Property " + aPropertyName
+						Tracer.info(this,"Property " + aPropertyName
 								+ " not found in " + aClass.getSimpleName() + 
 								"\nDefine a getter for the property (named: get"+ aPropertyName + ")");
 						continue;
@@ -825,7 +825,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 								BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
 								+ "." + aPropertyName, true);
-						System.out.println("Missing write method for property "
+						Tracer.info(this,"Missing write method for property "
 								+ aPropertyName);
 						continue;
 					}
@@ -848,13 +848,13 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						.findProperty(aClass, anOutputPropertyName);
 				if (aProperty == null) {
 
-					// System.out.println("Property " + aPropertyName +
+					// Tracer.info(this,"Property " + aPropertyName +
 					// "not found");
 					continue;
 				}
 				Method aReadMethod = aProperty.getReadMethod();
 				if (aReadMethod == null) {
-					System.out.println("Missing read method for property "
+					Tracer.info(this,"Missing read method for property "
 							+ anOutputPropertyName);
 					anActualOutputs.put(BasicProjectExecution.MISSING_READ,
 							true);
@@ -874,7 +874,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			}
 
 		} catch (NoSuchMethodException e) {
-			System.out.println("Constructor not found:" + e.getMessage());
+			Tracer.info(this,"Constructor not found:" + e.getMessage());
 			anActualOutputs
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			anActualOutputs.put(BasicProjectExecution.NULL_OBJECT, true);
@@ -1096,20 +1096,20 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						+ aBeanDescriptions.length);
 			}
 			BasicProjectExecution.redirectOutput();
-			System.out.println("Testcase:" + aCheckName);
-			System.out.println("Finding class matching:"
+			Tracer.info(BeanExecutionTest.class,"Testcase:" + aCheckName);
+			Tracer.info(BeanExecutionTest.class,"Finding class matching:"
 					+ Common.toString(aBeanDescriptions));
 			Class aClass = BasicProjectIntrospection.findClass(aProject,
 					aBeanDescriptions[0], aBeanDescriptions[1],
 					aBeanDescriptions[2], aBeanDescriptions[3]);
 
 			if (aClass == null) {
-				System.out.println("No class matching: "
+				Tracer.error("No class matching: "
 						+ Common.toString(aBeanDescriptions));
 				anActualOutputs.put(BasicProjectExecution.MISSING_CLASS, true);
 				// anActualOutputs = null;
 			} else {
-				System.out.println("Finding constructor matching:"
+				Tracer.info(BeanExecutionTest.class,"Finding constructor matching:"
 						+ Common.toString(aConstructorArgTypes));
 				// anActualOutputs.put(CLASS_MATCHED,
 				// aClass.getCanonicalName());
@@ -1131,7 +1131,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						anActualOutputs.put(
 								BasicProjectExecution.MISSING_PROPERTY + "."
 										+ aPropertyName, true);
-						// System.out.println("Property " + aPropertyName +
+						// Tracer.info(this,"Property " + aPropertyName +
 						// "not found");
 						continue;
 					}
@@ -1141,7 +1141,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 								BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
 								+ "." + aPropertyName, true);
-						System.out.println("Missing write method for property "
+						Tracer.error("Missing write method for property "
 								+ aPropertyName);
 						continue;
 					}
@@ -1159,7 +1159,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 								BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
 								+ "." + aPropertyName, true);
-						System.out.println("Erroneous write method for property "
+						Tracer.error("Erroneous write method for property "
 								+ aPropertyName);
 						continue;
 					}
@@ -1171,13 +1171,13 @@ public abstract class BeanExecutionTest extends LocatableTest {
 							.findProperty(aClass, anOutputPropertyName);
 					if (aProperty == null) {
 
-						// System.out.println("Property " + aPropertyName +
+						// Tracer.info(this,"Property " + aPropertyName +
 						// "not found");
 						continue;
 					}
 					Method aReadMethod = aProperty.getReadMethod();
 					if (aReadMethod == null) {
-						System.out.println("Missing read method for property "
+						Tracer.error ("Missing read method for property "
 								+ anOutputPropertyName);
 						anActualOutputs.put(BasicProjectExecution.MISSING_READ,
 								true);
@@ -1195,7 +1195,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			}
 
 		} catch (NoSuchMethodException e) {
-			System.out.println("Constructor not found:" + e.getMessage());
+			Tracer.error("Constructor not found:" + e.getMessage());
 			anActualOutputs
 					.put(BasicProjectExecution.MISSING_CONSTRUCTOR, true);
 			// e.printStackTrace();
@@ -1239,7 +1239,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			Object aGetterValue = anActualOutputs.get(anInputProperty);
 			Object aSetterValue = anInputs.get(anInputProperty);
 			if (!Common.equal(aGetterValue, aSetterValue)) {
-				System.out.println("For property:" + anInputProperty
+				Tracer.info(this,"For property:" + anInputProperty
 						+ " getter returned:" + aGetterValue + ", instead of:"
 						+ aSetterValue);
 				wrongInputProperties.add(anInputProperty);

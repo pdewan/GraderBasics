@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import util.awt.AnOutputQueue;
+import util.trace.Tracer;
 import grader.basics.execution.GradingMode;
 
 
@@ -271,7 +272,7 @@ public abstract class MethodExecutionTest  {
 //							getArgs(),
 //							getInput(),
 //							getTimeOut());
-			System.out.println ("Calling  interactive method:" + 
+			Tracer.info (this, "Calling  interactive method:" + 
 					aMethod.getName() + 
 					" with args " +
 					Arrays.toString(anArgs) +
@@ -302,11 +303,11 @@ public abstract class MethodExecutionTest  {
 			setOutputErrorStatus();
 			processOutputErrorStatus();
 		} else {
-//			System.out.println ("Calling non interactive method:" + 
+//			Tracer.info (this, "Calling non interactive method:" + 
 //					aMethod.getName() + 
 //					" with args " +
 //					Arrays.toString(anArgs));
-			System.out.println ("Calling on object " + aTargetObject + "  method:" + 
+			Tracer.info (this, "Calling on object " + aTargetObject + "  method:" + 
 					aMethod.getName() + 
 					" with args " +
 					Arrays.toString(anArgs) ); 
@@ -318,7 +319,7 @@ public abstract class MethodExecutionTest  {
 			if (returnValue == null) {
 				return false;
 			}
-			System.out.println ("Return value =" + returnValue);
+			Tracer.info (this, "Return value =" + returnValue);
 		}
 //		if (returnValueIsExpected()) {
 //			return true;
@@ -422,7 +423,7 @@ public abstract class MethodExecutionTest  {
 //		}
 //		if (isInteractive()) {
 //
-//			System.out.println ("Calling  interactive method:" + 
+//			Tracer.info (this, "Calling  interactive method:" + 
 //					aMethod.getName() + 
 //					" with args " +
 //					getArgs() +
@@ -446,7 +447,7 @@ public abstract class MethodExecutionTest  {
 //					resultWithOutput.getError());
 //			setOutputErrorStatus();
 //		} else {
-//			System.out.println ("Calling non interactive method:" + 
+//			Tracer.info (this, "Calling non interactive method:" + 
 //					aMethod.getName() + 
 //					" with args " +
 //					getArgs()); 
@@ -477,7 +478,7 @@ public abstract class MethodExecutionTest  {
 				+ wrongReturnValueCredit(), false);
 	}
 	protected void traceProcessReturnValue() {
-		System.out.println(
+		Tracer.info (this, 
 				"Comparing actial return value: " + getReturnValue() +
 				" with expected return value: " + getExpectedReturnValue());
 	}
@@ -708,7 +709,7 @@ public abstract class MethodExecutionTest  {
 				+ Arrays.toString(aTags) + NotesAndScore.PERCENTAGE_MARKER + 0.0, false);
 	}
 	protected void printFractionComplete() {
-		System.out.println ("Fraction complete:" + fractionComplete);
+		Tracer.info (this, "Fraction complete:" + fractionComplete);
 	}
 	protected Class instantiatedClass;
 	protected Constructor constructor;
@@ -736,14 +737,14 @@ public abstract class MethodExecutionTest  {
 	
 //	public static long presleepTime() {
 //		long aPresleepTime = System.currentTimeMillis();
-//	    System.out.println ("Pre sleep time:" + aPresleepTime);
-//	    System.out.println ("Sleeping for (ms):" + SLEEP_TIME);
+//	    Tracer.info (this, "Pre sleep time:" + aPresleepTime);
+//	    Tracer.info (this, "Sleeping for (ms):" + SLEEP_TIME);
 //	    return aPresleepTime;
 //		
 //	}
 //	public static boolean checkSleep(long aPresleepTime, long aSleepTime ) {
 //		long aPostsleepTime = System.currentTimeMillis();
-//		 System.out.println ("Post sleep time:" + aPostsleepTime);
+//		 Tracer.info (this, "Post sleep time:" + aPostsleepTime);
 //		 return
 //				 (aPostsleepTime - aPresleepTime) > SLEEP_TIME;
 //	}
@@ -760,21 +761,21 @@ public abstract class MethodExecutionTest  {
 	}
 	protected void recordPreviousThreads() {
 		previousThreads = new HashSet(Thread.getAllStackTraces().keySet());
-		System.out.println("Previous threads:" + previousThreads);
+		Tracer.info (this, "Previous threads:" + previousThreads);
 		
 	}
 	protected void recordCurrentThreads() {
 		currentThreads = new HashSet(Thread.getAllStackTraces().keySet());
-		System.out.println("Current threads:" + currentThreads);
+		Tracer.info (this, "Current threads:" + currentThreads);
 
 		newThreads = new ArrayList(currentThreads);
 		newThreads.removeAll(previousThreads);
-//		System.out.println("New threads:" + newThreads);
+//		Tracer.info (this, "New threads:" + newThreads);
 
 		
 	}
 	protected void assertNewThreadCreated() {
 		assertTrue("No thread created by previous operation:", newThreads.size() > 0);
-		System.out.println ("New threads:" + newThreads);
+		Tracer.info (this, "New threads:" + newThreads);
 	}
 }

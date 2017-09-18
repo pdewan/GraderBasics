@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import util.trace.Tracer;
 // code stolen from here: http://stackoverflow.com/questions/2920315/permutation-of-array
 public class Permutations<E> implements  Iterator<E[]>{
 
@@ -98,8 +100,8 @@ public class Permutations<E> implements  Iterator<E[]>{
     			};
     	Permutations permutations = new Permutations(aTypes);
     	while (permutations.hasNext()) {
-    		System.out.println("Indices:" + Arrays.toString(permutations.getIndices()));
-    		System.out.println ("permutation" + Arrays.toString(permutations.next()));
+    		Tracer.info(Permutations.class, "Indices:" + Arrays.toString(permutations.getIndices()));
+    		Tracer.info(Permutations.class, "permutation" + Arrays.toString(permutations.next()));
     	}
     }
 }

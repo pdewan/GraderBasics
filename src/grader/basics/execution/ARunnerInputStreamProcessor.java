@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.Semaphore;
 
+import util.trace.Tracer;
+
 public class ARunnerInputStreamProcessor implements RunnerInputStreamProcessor{
 	protected OutputStream input;
 	protected RunningProject runner;
@@ -33,7 +35,7 @@ public class ARunnerInputStreamProcessor implements RunnerInputStreamProcessor{
 	public void newInput(String anInput) {
 		if (anInput == null) return;
 		try {
-			System.out.println(inPrefix + anInput); // echo input for display
+			Tracer.info(this,inPrefix + anInput); // echo input for display
 			String[] inputLines = anInput.split("\n");
 //			for (String anInputLine:inputLines) {
 //				inputWriter.write(anInput + "\n");

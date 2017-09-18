@@ -2,6 +2,8 @@ package grader.basics.execution;
 
 import java.io.InputStream;
 
+import util.trace.Tracer;
+
 public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamProcessor implements Runnable {
 //	protected Scanner scanner ;
 //	protected InputStream out;
@@ -25,11 +27,11 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 
 @Override
 public void processLine(String s) {
-	System.out.println("Process line:" + s);
+	Tracer.info(this,"Process line:" + s);
 	runner.appendCumulativeOutput(s + "\n"); // append cumulative output
 //	if (processName != null) {
 	
-		System.out.println(outPrefix + s);
+		Tracer.info(this,outPrefix + s);
 	
 
 //		runner.appendErrorOutput(processName, s + "\n");

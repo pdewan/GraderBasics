@@ -9,6 +9,7 @@ import org.junit.Assert;
 
 import util.annotations.IsExtra;
 import util.annotations.MaxValue;
+import util.trace.Tracer;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
 import grader.basics.junit.NotesAndScore;
@@ -61,9 +62,9 @@ public abstract class LocatableTest extends FactoryMethodTest{
 //		assertTrue("Original y " + originalY + " == " + "actual Y " + actualY, originalY != actualY);
 	}
 	protected void assertBoundsChanged() {
-//		System.out.println ("Checking if bounds have changed in:" + this);
+//		Tracer.info(this,"Checking if bounds have changed in:" + this);
 //		if (originalHeight == actualHeight) {
-//			System.out.println ("Actual height:" + actualHeight + " original Heught" + originalHeight);
+//			Tracer.info(this,"Actual height:" + actualHeight + " original Heught" + originalHeight);
 //			System.out.println("Assertion fail on height");
 //		}
 		assertTrue("Original width " + originalWidth + " == " + "actual width " + actualWidth +
@@ -75,7 +76,7 @@ public abstract class LocatableTest extends FactoryMethodTest{
 //		assertTrue("Original height " + originalHeight + " == " + "actual Height " + actualHeight, originalHeight != actualHeight);
 //		assertTrue("Original width " + originalWidth + " == " + "actual width " + actualWidth, originalWidth != actualWidth);
 //		assertTrue("Original height " + originalHeight + " == " + "actual Height " + actualHeight, originalHeight != actualHeight);
-//		System.out.println ("Bounds have changed in:" + this);
+//		Tracer.info(this,"Bounds have changed in:" + this);
 
 	}
 
@@ -421,27 +422,27 @@ public abstract class LocatableTest extends FactoryMethodTest{
 	protected void setOriginalLocation() {
 		originalX = leafProxy().getX();
 		originalY = leafProxy().getY();
-		System.out.println ("Original location of:" + leafProxy() + 
+		Tracer.info(this,"Original location of:" + leafProxy() + 
 				" is:(" + originalX + ", " + originalY + ")");
 
 	}
 	protected void setOriginalBounds() {
 		originalWidth = leafProxy().getWidth();
 		originalHeight = leafProxy().getHeight();
-		System.out.println ("Original bounds of:" + leafProxy() + 
+		Tracer.info(this,"Original bounds of:" + leafProxy() + 
 				" are:(" + originalWidth + ", " + originalHeight + ")");
 	}
 	protected void setActualLocation() {
 		actualX = leafProxy().getX();
 		actualY = leafProxy().getY();
-		System.out.println ("Actual location of:" + leafProxy() + 
+		Tracer.info(this,"Actual location of:" + leafProxy() + 
 				" is:(" + actualX + ", " + actualY + ")");
 	}
 	
 	protected void setActualBounds() {
 		actualWidth = leafProxy().getWidth();
 		actualHeight = leafProxy().getHeight();
-		System.out.println ("Actual bounds of:" + leafProxy() + 
+		Tracer.info(this,"Actual bounds of:" + leafProxy() + 
 				" are:(" + actualWidth + ", " + actualHeight + ")");
 	}
 	

@@ -1,6 +1,8 @@
 //<<<<<<< HEAD
 package grader.basics.junit;
 
+import util.trace.Tracer;
+
 /**
  * A container which transports information about the result of running a test case.
  */
@@ -44,7 +46,7 @@ public class TestCaseResult {
      * @param autograded Whether the test was autonomously graded
      */
     public TestCaseResult(double percentage, String notes, String name, boolean autograded) {
-        System.out.println("### " + name + ": " + percentage);
+        Tracer.info(this, "### " + name + ": " + percentage);
         this.percentage = Math.min(Math.max(percentage, 0), 1);
         this.notes = notes;
         this.name = name;

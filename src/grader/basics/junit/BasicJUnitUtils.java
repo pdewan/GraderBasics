@@ -26,6 +26,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runners.Suite;
 
+import util.trace.Tracer;
 import bus.uigen.ObjectEditor;
 
 
@@ -112,12 +113,12 @@ public class BasicJUnitUtils {
 	public static void jUnitCoreTestAll(Class<?> aJUnitSuiteClass) {
 		Result aResult = JUnitCore.runClasses(aJUnitSuiteClass);
 		for (Failure failure : aResult.getFailures()) {
-	         System.out.println("To string" + failure.toString());
-	         System.out.println("Header" + failure.getTestHeader());
-	         System.out.println ("Trace:" + failure.getTrace());
-	         System.out.println ("Description:" + failure.getDescription());
+	         Tracer.info(BasicJUnitUtils.class, "To string" + failure.toString());
+	         Tracer.info(BasicJUnitUtils.class, "Header" + failure.getTestHeader());
+	         Tracer.info(BasicJUnitUtils.class, "Trace:" + failure.getTrace());
+	         Tracer.info(BasicJUnitUtils.class, "Description:" + failure.getDescription());
 	      }
-	    System.out.println(aResult.wasSuccessful());
+	    Tracer.info(BasicJUnitUtils.class, "" + aResult.wasSuccessful());
 
 	}
 	public static GradableJUnitSuite toGradableTree (Class<?> aJUnitSuiteClass) {

@@ -10,6 +10,7 @@ import org.junit.Assert;
 
 import util.annotations.IsExtra;
 import util.annotations.MaxValue;
+import util.trace.Tracer;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
 import grader.basics.junit.NotesAndScore;
@@ -93,7 +94,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	
 	protected Object maybeUseConstructor(Class aProxyClass){
 		if (tryConstructor()) {
-			System.out.println (factoryMessage);
+			Tracer.info (this, factoryMessage);
 		return assertingCreateInstance(aProxyClass);
 		} else {
 			assertTrue(factoryMessage, false );
@@ -102,7 +103,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	}
 	
 	protected Object assertingCreateInstance(Class aProxyClass) {
-		System.out.println("Trying parameterless constructor");
+		Tracer.info (this, "Trying parameterless constructor");
 
 		Object retVal = BasicProjectIntrospection.createInstance(aProxyClass);
 		maybeAssertNoClass(aProxyClass, retVal);

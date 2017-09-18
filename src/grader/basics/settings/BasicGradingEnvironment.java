@@ -3,6 +3,8 @@ package grader.basics.settings;
 import java.io.File;
 import java.io.IOException;
 
+import util.trace.Tracer;
+
 /**
  * A singleton that investigates the machine for certain things. It looks for:
  * <ul>
@@ -283,7 +285,7 @@ public class BasicGradingEnvironment {
         try {
             new ProcessBuilder(browser, file.getAbsolutePath()).start();
         } catch (IOException e) {
-            System.out.println("Can't open file");
+            Tracer.info(this,"Can't open file");
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
@@ -313,7 +315,7 @@ public class BasicGradingEnvironment {
         try {
             new ProcessBuilder(editor, file.getAbsolutePath()).start();
         } catch (IOException e) {
-            System.out.println("Can't edit file/folder");
+            Tracer.info(this,"Can't edit file/folder");
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }

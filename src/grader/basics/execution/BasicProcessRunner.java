@@ -958,7 +958,7 @@ public class BasicProcessRunner implements Runner {
 				}
 				
 				
-				System.out.println("Running process: java -cp \"" + classPath
+				Tracer.info(this,"Running process: java -cp \"" + classPath
 						+ "\" "
 						+ entryPoints.get(
 //								MainClassFinder.MAIN_ENTRY_POINT
@@ -969,7 +969,7 @@ public class BasicProcessRunner implements Runner {
 				aCommand = maybeToExecutorCommand(aCommand);
 				if (aCommand != null) {
 				builder = new ProcessBuilder(aCommand);
-				System.out.println("Running command:"
+				Tracer.info(this,"Running command:"
 						+ Common.toString(aCommand, " "));
 				} else {
 					return null; // this should not happen
@@ -983,7 +983,7 @@ public class BasicProcessRunner implements Runner {
 			// System.out.println("Running process: java -cp \""
 			// + classPath + "\" " + entryPoint);
 			if (folder != null)
-				System.out.println("Running in folder: "
+				Tracer.info(this,"Running in folder: "
 						+ folder.getAbsolutePath());
 
 			// Start the process

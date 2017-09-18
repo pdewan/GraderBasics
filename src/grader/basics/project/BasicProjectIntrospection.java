@@ -30,6 +30,7 @@ import util.annotations.IsRestriction;
 import util.annotations.Tags;
 import util.introspect.JavaIntrospectUtility;
 import util.models.Hashcodetable;
+import util.trace.Tracer;
 
 public class BasicProjectIntrospection {
 
@@ -147,7 +148,7 @@ public class BasicProjectIntrospection {
 		aClasses = removeSuperTypes(aClasses);
 		 if (aClasses.size() != 1) {
 			 if (aClasses.size() > 1) {
-			 	System.out.println ("Found multiple matching classes:" + aClasses);
+			 	Tracer.info(BasicProjectIntrospection.class,"Found multiple matching classes:" + aClasses);
 			 }
 		 return null;
 		 }
@@ -1053,7 +1054,7 @@ public class BasicProjectIntrospection {
 	public static Class findClassByTags(String... aTags) {
 		Class retVal = findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
 		if (retVal == null && aTags.length > 0) {
-			System.out.println("Could not find class tagged:" + Arrays.toString(aTags));
+			Tracer.info(BasicProjectIntrospection.class,"Could not find class tagged:" + Arrays.toString(aTags));
 		}
 //		return findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
 		return retVal;
@@ -1318,11 +1319,11 @@ public class BasicProjectIntrospection {
 				}
 			}
 		} catch (IntrospectionException e) {
-			System.out.println("Property " + aPropertyName + " not found");
+			Tracer.info(BasicProjectIntrospection.class,"Property " + aPropertyName + " not found");
 
 			return null;
 		}
-		System.out.println("Property " + aPropertyName + " not found");
+		Tracer.info(BasicProjectIntrospection.class,"Property " + aPropertyName + " not found");
 
 		return null;
 	}
@@ -1954,12 +1955,12 @@ public class BasicProjectIntrospection {
 //			objectToProxy.put(anActualObject, aProxy);
 //			return aProxy;
 		} catch (NoSuchMethodException e) {
-			System.out.println ("Cound not find " + "in " + anActualClass + " a public constructor with args:" + Arrays.toString(aConctructArgsTypes));
+			Tracer.info(BasicProjectIntrospection.class,"Cound not find " + "in " + anActualClass + " a public constructor with args:" + Arrays.toString(aConctructArgsTypes));
 			System.out.println(e);
 			return null;
 
 		} catch (Exception e) {
-			System.out.println ("Class instantiation failed:" + e);
+			Tracer.info(BasicProjectIntrospection.class,"Class instantiation failed:" + e);
 			e.printStackTrace();
 			return null;
 		}
