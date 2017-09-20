@@ -26,6 +26,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runners.Suite;
 
+import trace.grader.basics.GraderBasicsTraceUtility;
 import util.trace.Tracer;
 import bus.uigen.ObjectEditor;
 
@@ -95,6 +96,7 @@ public class BasicJUnitUtils {
 	}
 	
 	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
+		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
 //		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());

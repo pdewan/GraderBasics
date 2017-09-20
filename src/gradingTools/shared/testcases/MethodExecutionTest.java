@@ -46,6 +46,10 @@ public abstract class MethodExecutionTest  {
 	protected Set<Thread> previousThreads = new HashSet();
 	protected Set<Thread> currentThreads = new HashSet();
 	protected List<Thread> newThreads = new ArrayList();
+	
+	public MethodExecutionTest() {
+		Tracer.setKeywordPrintStatus(this.getClass(), true);
+	}
 
 	
 	public Object[] getStudentArgs() {
@@ -319,7 +323,14 @@ public abstract class MethodExecutionTest  {
 			if (returnValue == null) {
 				return false;
 			}
-			Tracer.info (this, "Return value =" + returnValue);
+			String aReturnString = 
+					(returnValue != null && returnValue.getClass().isArray())?
+							Arrays.toString((Object[]) returnValue):
+							returnValue.toString();
+						
+//			Tracer.info (this, "Return value =" + returnValue);
+			Tracer.info (this, "Return value:" + aReturnString);
+
 		}
 //		if (returnValueIsExpected()) {
 //			return true;
