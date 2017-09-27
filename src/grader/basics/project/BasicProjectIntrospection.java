@@ -148,7 +148,7 @@ public class BasicProjectIntrospection {
 		aClasses = removeSuperTypes(aClasses);
 		 if (aClasses.size() != 1) {
 			 if (aClasses.size() > 1) {
-			 	Tracer.info(BasicProjectIntrospection.class,"Found multiple matching classes:" + aClasses);
+			 	Tracer.info(BasicProjectIntrospection.class,"Found multiple matching classes with same tag:" + aClasses);
 			 }
 		 return null;
 		 }
@@ -161,7 +161,8 @@ public class BasicProjectIntrospection {
 		
 
 		aClasses = removeSuperTypes(aClasses);
-		 if (aClasses.size() != 1) {
+		 if (aClasses.size() != 1 && aTag != null) {
+			 Tracer.error("Tag:" + Arrays.toString(aTag)+ "matched by multiple interfaces:" + aClasses );
 		 return null;
 		 }
 		 return aClasses.iterator().next();

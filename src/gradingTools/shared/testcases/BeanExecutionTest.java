@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 
+import bus.uigen.visitors.HasUncreatedChildrenVisitor;
+
 import com.sun.org.apache.xpath.internal.FoundIndex;
 
 import util.misc.Common;
@@ -34,6 +36,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 	protected boolean hasConstructor = false;
 	protected boolean hasCorrectType = false;
 	protected boolean givenObject = false;	
+	protected boolean foundUniqueClass = false;
 
 
 	protected boolean invokeSetters = true;
@@ -500,7 +503,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 		return outputPropertyValues;
 	}
 	protected void assertNoProperty(String aProperty) {
-		Assert.assertTrue("Missing property:" + aProperty +  " in " +lastTargetObject + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, false);
+		Assert.assertTrue("Missing property:" + aProperty +  " in " +lastTargetObject.getClass() + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, false);
 	}
 	protected void invokeGetter(Object anObject, String anOutputPropertyName)
 			throws Throwable {
@@ -519,15 +522,15 @@ public abstract class BeanExecutionTest extends LocatableTest {
 				anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY, true);
 				anActualOutputs.put(BasicProjectExecution.MISSING_PROPERTY + "."
 						+ anOutputPropertyName, true);
-				// Tracer.info(this,"Property " + aPropertyName +
-				// "not found");
+				Tracer.warning("Property " + anOutputPropertyName +
+				 " not found in " + aClass + "\nDefine a getter for the property (named: get"+ anOutputPropertyName );
 				assertNoProperty(anOutputPropertyName);
 				return;
 			}
 			Method aReadMethod = aProperty.getReadMethod();
 			if (aReadMethod == null) {
-				Tracer.info(this,"Missing read method for property "
-						+ anOutputPropertyName);
+				Tracer.warning("Missing read method for property "
+						+ anOutputPropertyName + " in " + aClass);
 				missingGetters.add(anOutputPropertyName);
 				anActualOutputs.put(BasicProjectExecution.MISSING_READ, true);
 				anActualOutputs.put(BasicProjectExecution.MISSING_READ + "."
@@ -650,8 +653,8 @@ public abstract class BeanExecutionTest extends LocatableTest {
 						anActualOutputs.put(
 								BasicProjectExecution.MISSING_PROPERTY + "."
 										+ aPropertyName, true);
-						Tracer.info(this,"Property " + aPropertyName
-								+ " not found in " + aClass.getSimpleName() + 
+						Tracer.warning("Property " + aPropertyName
+								+ " not found in " + aClass + 
 								"\nDefine a getter for the property (named: get"+ aPropertyName + ")");
 						return;
 					}
@@ -661,7 +664,7 @@ public abstract class BeanExecutionTest extends LocatableTest {
 								BasicProjectExecution.MISSING_WRITE, true);
 						anActualOutputs.put(BasicProjectExecution.MISSING_WRITE
 								+ "." + aPropertyName, true);
-						Tracer.info(this,"Missing write method for property "
+						Tracer.warning("Missing write method for property "
 								+ aPropertyName);
 						return;
 					}
@@ -711,11 +714,14 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			return anObjectOrProxy.getClass();
 		}
 	}
+	
 	public Map<String, Object> executeBean(Object anObject) throws Throwable {
+		Class aTargetClass = getTargetClass();
+		foundUniqueClass = aTargetClass != null;
 		hasConstructor = true;
 		givenObject = true;
-		if (anObject != null) {
-			hasCorrectType = getTargetClass().equals(getActualClass(anObject));
+		if (anObject != null && aTargetClass != null) {
+			hasCorrectType = aTargetClass.equals(getActualClass(anObject));
 		} else {
 		hasCorrectType = false;
 		}
@@ -994,11 +1000,17 @@ public abstract class BeanExecutionTest extends LocatableTest {
 			"Geters not found for:" + missingGetters
 			;
 	}
+	
+	protected String missingUniqueClassMessage() {
+		return "Unique class not found for: " + Arrays.toString(getBeanDescriptions()) + ". See console.";
+	}
 
 	public String completeMessage() {
 		if (isNullObject())
 			return nullObjectMessage();
-		String result = getsEqualSets() ? "" : getsEqualsSetsErrorMessage();
+		String result = "";
+		result += foundUniqueClass ? "" : missingUniqueClassMessage();
+		result +=		getsEqualSets() ? "" : getsEqualsSetsErrorMessage();
 		result += expectedEqualActual() ? ""
 				: expectedEqualsActualErrorMessage();
 		if (!givenObject) {

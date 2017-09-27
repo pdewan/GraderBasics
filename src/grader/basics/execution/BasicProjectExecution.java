@@ -489,9 +489,10 @@ public class BasicProjectExecution {
 			String aNextTempErrFileName = computeNextTmpErrFileName();
 			FileOutputStream anErrFileStream = new FileOutputStream(
 					aNextTempErrFileName);
-			File aTmpOutFile = new File(aNextTempErrFileName);
+			File aTmpErrFile = new File(aNextTempErrFileName);
+			aTmpErrFile.deleteOnExit();
 			fileErrStack.push(anErrFileStream);
-			tmpErrFileStack.push(aTmpOutFile);
+			tmpErrFileStack.push(aTmpErrFile);
 			originalErrStack.push(previousOut); // this should be System.out;
 			PrintStream teeErrStream = new TeePrintStream(anErrFileStream,
 					previousErr);
@@ -519,6 +520,7 @@ public class BasicProjectExecution {
 					aNextTempFileName);
 
 			File aTmpFile = new File(aNextTempFileName);
+			aTmpFile.deleteOnExit();
 			Tracer.info(BasicProjectExecution.class, "Created tmp file:" +aTmpFile);
 
 //			Tracer.info(BasicProjectExecution.class, "Creating:" + aNextTempFileName);

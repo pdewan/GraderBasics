@@ -1,5 +1,7 @@
 package grader.basics.execution;
 
+import util.trace.Tracer;
+
 public class GradingMode {
 	protected static boolean graderRun = false;
 	
@@ -8,6 +10,9 @@ public class GradingMode {
 	}
 	public static void setGraderRun(boolean newVal) {
 		graderRun = newVal;
+		if (newVal) {
+			Tracer.showInfo(true);
+		}
 	}
 
 }

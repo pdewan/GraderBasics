@@ -35,6 +35,7 @@ public class TimedProcess {
     }
 
     public Process start() throws IOException {
+//    	processBuilder.redirectError(processBuilder.redirectOutput());
         process = processBuilder.start();
         return process;
     }

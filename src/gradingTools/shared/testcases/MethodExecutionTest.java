@@ -106,13 +106,17 @@ public abstract class MethodExecutionTest  {
 	 */
 	public Class getTargetClass() {
 		Class[] aTargetClasses = getTargetClasses();
-		if (aTargetClasses.length == 0) return null;
+		if (aTargetClasses.length != 1) { 
+			Tracer.warning("Did not find unique class. See console output above.");
+			return null;
+		}
 //		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
 		return getTargetClasses() [0];
 
 	}
 	protected Class[] getTargetClasses() {
 		String[] aClassNames = getClassNames();
+		Tracer.info(this, "Searching for classes matching:" + Arrays.toString(aClassNames));
 		List<Class> aClassList = new ArrayList();
 //		Class[] aTargetClasses = new Class[aClassNames.length];
 		for (int i = 0; i < aClassNames.length; i++) {
@@ -123,7 +127,7 @@ public abstract class MethodExecutionTest  {
 //			aTargetClasses[i] = BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), aClassNames[i]);
 		}
 		Class[] aTargetClasses = new Class[aClassList.size()];
-		aTargetClasses = aClassList.toArray(aTargetClasses);
+		aTargetClasses = aClassList.toArray(aTargetClasses);		
 
 //		return BasicProjectIntrospection.findClass(CurrentProjectHolder.getOrCreateCurrentProject(), getClassName());
 		return aTargetClasses;
