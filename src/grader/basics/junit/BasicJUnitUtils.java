@@ -88,6 +88,7 @@ public class BasicJUnitUtils {
 	}
 	
 	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
+		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
@@ -113,6 +114,7 @@ public class BasicJUnitUtils {
 		interactiveTest(aJUnitSuiteClass);
 	}
 	public static void jUnitCoreTestAll(Class<?> aJUnitSuiteClass) {
+		GraderBasicsTraceUtility.setTracing();
 		Result aResult = JUnitCore.runClasses(aJUnitSuiteClass);
 		for (Failure failure : aResult.getFailures()) {
 	         Tracer.info(BasicJUnitUtils.class, "To string" + failure.toString());
