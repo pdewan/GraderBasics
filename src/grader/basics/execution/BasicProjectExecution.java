@@ -123,8 +123,17 @@ public class BasicProjectExecution {
 		} catch (ExecutionException e) {
 			System.err
 					.println("Execution exception caused by invocation exception caused by:");
-			e.getCause().getCause().printStackTrace();
-			throw e.getCause().getCause();
+			Throwable aCause1 = e.getCause();
+			
+			Throwable aCause2 = aCause1.getCause();
+			if (aCause2 != null) {
+				aCause2.printStackTrace();
+				throw aCause2;
+			} else {
+				aCause1.printStackTrace();
+				throw aCause1;
+			}
+			
 //			executor = Executors.newSingleThreadExecutor();
 
 //			return null;

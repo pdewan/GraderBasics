@@ -21,7 +21,7 @@ import org.junit.Assert;
 
 import bus.uigen.visitors.HasUncreatedChildrenVisitor;
 
-import com.sun.org.apache.xpath.internal.FoundIndex;
+//import com.sun.org.apache.xpath.internal.FoundIndex;
 
 import util.misc.Common;
 import util.trace.Tracer;

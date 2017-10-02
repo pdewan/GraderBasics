@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.junit.runner.Description;
 
-import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
+//import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 
 import util.annotations.Position;
 import util.annotations.StructurePattern;

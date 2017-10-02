@@ -1561,6 +1561,7 @@ public class BasicProjectIntrospection {
 
 				if (aMethod.getName().equalsIgnoreCase(aSpecification)) {
 					result.add(aMethod);
+					Tracer.warning("Found and using non pubic method:" + aMethod);
 					aMethod.setAccessible(true);
 				}
 
