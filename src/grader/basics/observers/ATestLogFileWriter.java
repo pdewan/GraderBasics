@@ -397,7 +397,9 @@ public class ATestLogFileWriter extends RunListener {
 		}
 		lastLine = tail(aFile, 1).trim();
 		if (lastLine.startsWith("#")) {
-			System.err.println ("Corrupt og file " + aLogFileName + " has only header");
+			System.err.println ("Corrupt log file " + aLogFileName + " has only header");
+			System.out.println("Deleting file:" + aLogFileName);
+			aFile.delete();
 			return false;
 		}
 //		String lastLineNormalized = lastLine.replaceAll("+|-", ""); // normalize it
