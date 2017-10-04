@@ -1235,8 +1235,7 @@ public class BasicProjectExecution {
 			return anActualObject;
 
 		} else if (anObject.getClass().isArray()) {
-			Object anActualObject = BasicProjectIntrospection
-					.getRealObject(anObject);
+			Object anActualObject = BasicProjectIntrospection.getRealObject(anObject);
 			if (anActualObject != null) {
 				return anActualObject;
 

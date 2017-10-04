@@ -26,6 +26,8 @@ import java.util.Vector;
 
 import org.junit.Assert;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import util.annotations.IsRestriction;
 import util.annotations.Tags;
 import util.introspect.JavaIntrospectUtility;
@@ -518,7 +520,7 @@ public class BasicProjectIntrospection {
 				}
 				result.add(aClass.getJavaClass());
 			}
-			if (!result.isEmpty())
+			if (!result.isEmpty() && result.size()==1)
 				return result;
 			if (aMatchedInterfaces.isEmpty())
 				return result;
@@ -1969,8 +1971,18 @@ public class BasicProjectIntrospection {
 
 	}
 	
+	public static boolean hasProxyElement(Object aProxy){ //expecting aProxy to be an array of proxies.
+		if(!aProxy.getClass().isArray())return false;
+		Object[] aProxyArray = (Object[]) aProxy;
+		return aProxyArray.length > 0 && isProxy(aProxyArray[0]);
+	}
+	
+	public static boolean isProxy(Object aProxy){
+		return aProxy instanceof Proxy || hasProxyElement(aProxy);
+	}
+	
 	public static Object  getRealObject (Object aProxy) {
-		if (aProxy instanceof Proxy)
+		if (isProxy(aProxy))
 		return proxyToObject.get(aProxy);
 		return aProxy;
 	}
