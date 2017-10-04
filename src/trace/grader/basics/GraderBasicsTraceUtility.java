@@ -1,6 +1,7 @@
 package trace.grader.basics;
 
 import grader.basics.execution.BasicProjectExecution;
+import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
 import gradingTools.shared.testcases.MethodExecutionTest;
@@ -14,8 +15,16 @@ import util.trace.ImplicitKeywordKind;
 import util.trace.Tracer;
 
 public class GraderBasicsTraceUtility {
+	static boolean turnOn = true;
+	public static boolean isTurnOn() {
+		return turnOn;
+	}
+	public static void setTurnOn(boolean turnOn) {
+		GraderBasicsTraceUtility.turnOn = turnOn;
+	}
 	public static void setTracing() {
-		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);		
+		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
+		if (isTurnOn()) {
 		Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
 		Tracer.setKeywordPrintStatus(LocatableTest.class, true);
 		Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);
@@ -26,6 +35,8 @@ public class GraderBasicsTraceUtility {
 		Tracer.setKeywordPrintStatus(BasicProjectIntrospection.class, true);
 		Tracer.setKeywordPrintStatus(BasicProjectExecution.class, true);
 		Tracer.setKeywordPrintStatus(DirectoryUtils.class, true);
+		Tracer.setKeywordPrintStatus(TestCaseResult.class, true);
+		}
 
 	}
 
