@@ -144,13 +144,16 @@ public class BasicProjectIntrospection {
 //	}
 	public static Class findClass(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
+		String aTags = aTag == null?"":Arrays.toString(aTag);
+		Tracer.info(BasicProjectIntrospection.class, "Looking for unique class matching " + "name " + aName + " tags " + aTag + " name regex " + aNameMatch + " tag reges " + aTagMatch);
 		Set<Class> aClasses = findClasses(aProject, aName, aTag, aNameMatch, aTagMatch);
 		
 
 		aClasses = removeSuperTypes(aClasses);
 		 if (aClasses.size() != 1) {
 			 if (aClasses.size() > 1) {
-			 	Tracer.info(BasicProjectIntrospection.class,"Found multiple matching classes with same tag:" + aClasses);
+				
+			 	Tracer.info(BasicProjectIntrospection.class,"Found multiple matching classes mathcing descriptor" + aClasses);
 			 }
 		 return null;
 		 }
@@ -159,6 +162,8 @@ public class BasicProjectIntrospection {
 	}
 	public static Class findInterface(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
+		Tracer.info(BasicProjectIntrospection.class, "Looking for unique interface matching " + "name " + aName + " tags " + aTag + " name regex " + aNameMatch + " tag reges " + aTagMatch);
+
 		Set<Class> aClasses = findInterfaces(aProject, aName, aTag, aNameMatch, aTagMatch);
 		
 
@@ -171,6 +176,8 @@ public class BasicProjectIntrospection {
 
 	}
 	public static Class findClassByMethods(Project aProject, Method[] aMethods, boolean findClass) {
+		Tracer.info(BasicProjectIntrospection.class, "Looking for unique class matching methods " + Arrays.toString(aMethods)) ;
+
 		Set<Class> aClasses = findClassesByMethods(aProject, aMethods, findClass);
 		
 		
@@ -191,6 +198,8 @@ public class BasicProjectIntrospection {
 
 	}
 	public static Class findBestClassByMethods(Project aProject, Method[] aMethods, boolean findClass) {
+		Tracer.info(BasicProjectIntrospection.class, "Looking for best class matching methods " + Arrays.toString(aMethods)) ;
+
 		Set<Class> aClasses = findBestClassesByMethods(aProject, aMethods, findClass);
 		
 		
@@ -384,7 +393,8 @@ public class BasicProjectIntrospection {
 		
 	}
 	public static Set<Class> findBestClassesByMethods(Project aProject,  Method[] aMethods, boolean findClass) {
-		 Set<ClassDescription> aClassDescriptions = aProject.getClassesManager().get().getClassDescriptions();
+		 
+		Set<ClassDescription> aClassDescriptions = aProject.getClassesManager().get().getClassDescriptions();
 		 Set<Class> aResult = new HashSet();
 		 if (aMethods.length == 0) { //e.g. an array
 			 return aResult;
