@@ -144,8 +144,8 @@ public class BasicProjectIntrospection {
 //	}
 	public static Class findClass(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
-		String aTags = aTag == null?"":Arrays.toString(aTag);
-		Tracer.info(BasicProjectIntrospection.class, "Looking for unique class matching " + "name " + aName + " tags " + aTag + " name regex " + aNameMatch + " tag reges " + aTagMatch);
+		String aTagsString = aTag == null?"":Arrays.toString(aTag);
+		Tracer.info(BasicProjectIntrospection.class, "Looking for unique class matching " + "name " + aName + " tags " + aTagsString + " name regex " + aNameMatch + " tag reges " + aTagMatch);
 		Set<Class> aClasses = findClasses(aProject, aName, aTag, aNameMatch, aTagMatch);
 		
 
@@ -162,7 +162,9 @@ public class BasicProjectIntrospection {
 	}
 	public static Class findInterface(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
-		Tracer.info(BasicProjectIntrospection.class, "Looking for unique interface matching " + "name " + aName + " tags " + aTag + " name regex " + aNameMatch + " tag reges " + aTagMatch);
+		String aTagsDisplay = aTag == null?"":Arrays.toString(aTag);
+
+		Tracer.info(BasicProjectIntrospection.class, "Looking for unique interface matching " + "name " + aName + " tags " + aTagsDisplay + " name regex " + aNameMatch + " tag reges " + aTagMatch);
 
 		Set<Class> aClasses = findInterfaces(aProject, aName, aTag, aNameMatch, aTagMatch);
 		
