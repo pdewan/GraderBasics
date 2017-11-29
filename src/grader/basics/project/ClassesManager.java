@@ -45,7 +45,7 @@ public interface ClassesManager {
 	Set<ClassDescription> findClassesAndInterfaces(String aName, String aTag,
 			String aNameMatch, String aTagMatch);
 
-	Set<ClassDescription> finByPattern(String tag);
+	Set<ClassDescription> findByPattern(String tag);
 
 	Set<ClassDescription> findByTag(String[] aTags);
 

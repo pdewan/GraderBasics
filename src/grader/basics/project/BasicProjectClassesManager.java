@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import util.misc.Common;
+import util.trace.Tracer;
 
 
 
@@ -698,6 +699,8 @@ public class BasicProjectClassesManager implements ClassesManager {
      */
     @Override
     public Set<ClassDescription> findByClassOrInterfaceName(String className) {
+    	Tracer.info(this, "finding type by name:" + className);
+
         Set<ClassDescription> classes = new HashSet<>();
 
         // First search the simple names
@@ -731,6 +734,8 @@ public class BasicProjectClassesManager implements ClassesManager {
     
     @Override
     public Set<ClassDescription> findByClassOrInterfaceNameMatch(String className) {
+    	Tracer.info(this, "finding type by name match:" + className);
+
         Set<ClassDescription> classes = new HashSet<>();
         if (className == null) return classes;
 
@@ -758,14 +763,18 @@ public class BasicProjectClassesManager implements ClassesManager {
     }
     @Override
     public Set<ClassDescription> findClassAndInterfaces (String aName, String[] aTag, String aNameMatch, String aTagMatch) {
+
     	if (aName == null && (aTag == null || aTag.length == 0) && aNameMatch == null && aTagMatch == null) {
     		return findByClassOrInterfaceName(null); // return all classes
     	}
     	Set<ClassDescription> result = new HashSet();
     	if (aTag != null && !(aTag.length == 0))
     		result = findByTag(aTag); 
+    	// added this recently
+    	if (!result.isEmpty())
+    		return result;
     	if (aTag != null && aTag.length > 0 && result.isEmpty())
-    		result = finByPattern(aTag[0]); 
+    		result = findByPattern(aTag[0]); 
     	if (!result.isEmpty())
     		return result;
     	if (aName != null)
@@ -835,7 +844,8 @@ public class BasicProjectClassesManager implements ClassesManager {
     }
     
     @Override
-    public Set<ClassDescription> finByPattern(String tag) {
+    public Set<ClassDescription> findByPattern(String tag) {
+    	Tracer.info(this, "Finding type by pattern:" + tag);
         Set<ClassDescription> classes = new HashSet<>();
         for (ClassDescription description : classDescriptions) {
 //        	if (description.getJavaClass().isInterface())
@@ -859,7 +869,8 @@ public class BasicProjectClassesManager implements ClassesManager {
     @Override
     public Set<ClassDescription> findByTagMatch(String regex) {
     
-    	
+    	Tracer.info(this, "finding type by tag match:" + regex);
+
         Set<ClassDescription> classes = new HashSet<>();
         if (regex.contains("["))
     		return classes;

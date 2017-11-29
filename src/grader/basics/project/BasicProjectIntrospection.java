@@ -164,17 +164,17 @@ public class BasicProjectIntrospection {
 			if (aClasses.size() > 1) {
 
 				Tracer.info(BasicProjectIntrospection.class,
-						"Found multiple matching classes mathcing descriptor"
+						"Found multiple matching classes matching descriptor:"
 								+ aClasses);
 			} else {
 				Tracer.info(BasicProjectIntrospection.class,
-						"Found no class mathcing descriptor"
+						"Found no class mathcing descriptor."
 								);
 			}
 			return null;
 		}
 		Class aClass = aClasses.iterator().next();
-		Tracer.info(BasicProjectIntrospection.class,"Returning class:" + aClass);
+		Tracer.info(BasicProjectIntrospection.class,"Found type:" + aClass);
 		return aClass;
 //		return aClasses.iterator().next();
 
@@ -209,7 +209,7 @@ public class BasicProjectIntrospection {
 			return null;
 		}
 		Class aClass = aClasses.iterator().next();
-		Tracer.info(BasicProjectIntrospection.class,"Returning interface:" + aClass);
+		Tracer.info(BasicProjectIntrospection.class,"Found type:" + aClass);
 		return aClass;
 //		return aClasses.iterator().next();
 
@@ -238,7 +238,10 @@ public class BasicProjectIntrospection {
 		if (aClasses.size() != 1) {
 			return null;
 		}
-		return aClasses.iterator().next();
+		Class aClass = aClasses.iterator().next();
+		Tracer.info(BasicProjectIntrospection.class, "Found type:" + aClass);
+		return aClass;
+//		return aClasses.iterator().next();
 
 	}
 
@@ -265,7 +268,12 @@ public class BasicProjectIntrospection {
 		if (aClasses.size() != 1) {
 			return null;
 		}
-		return aClasses.iterator().next();
+		Class aClass = aClasses.iterator().next();
+		Tracer.info(BasicProjectIntrospection.class,"Found type:" + aClass);
+
+		return aClass;
+
+//		return aClasses.iterator().next();
 
 	}
 
@@ -1339,7 +1347,10 @@ public class BasicProjectIntrospection {
 		aClasses = removeSuperTypes(aClasses);
 		if (aClasses.size() != 1)
 			return null;
-		return aClasses.iterator().next();
+		Class aClass = aClasses.iterator().next();
+		Tracer.info(BasicProjectIntrospection.class,"Found type:" + aClass);
+		return aClass;
+//		return aClasses.iterator().next();
 
 		// if (aClasses.size() != 1) {
 		// return null;
@@ -1353,7 +1364,10 @@ public class BasicProjectIntrospection {
 		aClasses = removeSuperTypes(aClasses);
 		if (aClasses.size() != 1)
 			return null;
-		return aClasses.iterator().next();
+		Class aClass = aClasses.iterator().next();
+		Tracer.info(BasicProjectIntrospection.class,"Found type:" + aClass);
+		return aClass;
+//		return aClasses.iterator().next();
 
 		// if (aClasses.size() != 1) {
 		// return null;
