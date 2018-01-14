@@ -4,6 +4,8 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+import util.trace.Tracer;
+
 public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 	TestCaseResult checkResult;
 	Failure failure;
@@ -29,6 +31,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 					"", name, true);
 			failure = null;
 			RunNotifierFactory.getOrCreateRunNotifier().fireTestStarted(description);
+			Tracer.clearTracedMessages();
 			
     }
 	@Override
@@ -48,6 +51,8 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			Throwable aThrowable = aFailure.getException();
 			String aMessage = aThrowable.getMessage();
 			System.err.println ("Test Failed:" + aMessage);
+			System.out.println("Steps traced since last test:");
+			System.out.println(Tracer.getBufferedTracedMessages());
 			if (aMessage == null) { // some exception
 				checkResult = new TestCaseResult(false, 
 						aThrowable.toString(), name, true);
@@ -103,6 +108,10 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 	public Failure getFailure() {
 		// TODO Auto-generated method stub
 		return failure;
+	}
+	
+	static {
+		Tracer.setBufferTracedMessages(true);
 	}
 
 }
