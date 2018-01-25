@@ -46,6 +46,7 @@ public abstract class MethodExecutionTest  {
 	protected Set<Thread> previousThreads = new HashSet();
 	protected Set<Thread> currentThreads = new HashSet();
 	protected List<Thread> newThreads = new ArrayList();
+	public static Object[] emptyArgs = {};
 	
 	public MethodExecutionTest() {
 		Tracer.setKeywordPrintStatus(this.getClass(), true);
@@ -264,6 +265,17 @@ public abstract class MethodExecutionTest  {
 
 		
 	}
+	public boolean invokeRunMethod(Runnable aRunnable) throws Throwable {
+//		Tracer.info(this, "Calling run method on:" + aRunnable);
+			Method aRunMethod = Runnable.class.getMethod("run");
+			return invokeMethod(
+					aRunnable, 
+					aRunMethod,
+					emptyArgs);		
+			
+		
+	}
+	
 	
 	public  boolean invokeMethod(
 			Object aTargetObject,  
