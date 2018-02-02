@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
@@ -28,39 +29,33 @@ import util.trace.Tracer;
 public class BasicRunningProject implements ProcessInputListener, RunningProject {
 
     private Semaphore runningState = new Semaphore(1);
-//	protected Map<String, String> processToInput = new HashMap();
-    protected Map<String, String> processToErrors = new HashMap();
-    protected Map<String, StringBuffer> processToOutput = new HashMap();
-//    protected Map<String, LocalGlobalTranscriptManager> processToTranscriptManager = new HashMap();
+    protected Map<String, String> processToErrors = new HashMap<>();
+    protected Map<String, StringBuffer> processToOutput = new HashMap<>();
     // duplicates the mapping in Process Runner
-    protected Map<String, RunnerInputStreamProcessor> processToIn = new HashMap();
-    protected Map<String, TimedProcess> nameToProcess = new HashMap();
+    protected Map<String, RunnerInputStreamProcessor> processToIn = new HashMap<>();
+    protected Map<String, TimedProcess> nameToProcess = new HashMap<>();
     protected TimedProcess currentProcess;
     protected boolean destroyed;
 
    
 
 	
-	protected Map<String, String> processToOutputAndErrors = new HashMap();
+	protected Map<String, String> processToOutputAndErrors = new HashMap<>();
 
     protected String output = ""; // why is this a string and not a string buffer?
     protected String errorOutput = "";
     protected String outputAndErrors = "";
     protected NotRunnableException exception;
-//	Project project;
-//    ProjectWrapper projectWrapper;
     protected String outputFileName;
     protected StringBuffer projectOutput;
-//    SakaiProject project;
-    protected Set<Thread> dependentThreads = new HashSet();
-    protected Set<Closeable> dependentCloseables = new HashSet();
+    protected Set<Thread> dependentThreads = new HashSet<>();
+    protected Set<Closeable> dependentCloseables = new HashSet<>();
 
     protected InputGenerator outputBasedInputGenerator; // actuall all we need is an output consumer
-//	RunnerInputStreamProcessor processIn;
     protected StringBuffer input = new StringBuffer();
-    protected Map<String, StringBuffer> processToInput = new HashMap();
-    protected Map<String, RunnerErrorOrOutStreamProcessor> processToOut = new HashMap();
-    protected Map<String, RunnerErrorOrOutStreamProcessor> processToErr = new HashMap();
+    protected Map<String, StringBuffer> processToInput = new HashMap<>();
+    protected Map<String, RunnerErrorOrOutStreamProcessor> processToOut = new HashMap<>();
+    protected Map<String, RunnerErrorOrOutStreamProcessor> processToErr = new HashMap<>();
     protected List<String> processes;
     
     protected void maybeProcessProjectWrappper(Project aProject) {
@@ -182,7 +177,17 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     @Override
 	public void appendProcessOutput(String aProcess, String newVal) {
-//		if (aProcess == null) { // it will never be null
+    	// delete me
+    	System.out.println("+++++ " + Thread.currentThread().getId() + " " + java.lang.management.ManagementFactory.getRuntimeMXBean().getName() + " - " + aProcess + " - " + newVal);
+    	
+//    	System.out.println("=== BEGIN STACK DUMP ===");
+//    	for(Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
+//    		System.out.println("*** " + entry.getKey() + " ***");
+//    		for(StackTraceElement element : entry.getValue()) {
+//    			System.out.println("  " + element);
+//    		}
+//    	}
+    	//		if (aProcess == null) { // it will never be null
 //			return;
 //		}
 //    	System.out.println ("New output " + newVal + " aprocess " + aProcess);
@@ -312,54 +317,6 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     protected StringBuffer transcript = new StringBuffer(); // reusing the buffer
     
-//    public String createFeatureTranscript() {
-//        transcript.setLength(0);
-//        if (project == null || project.getCurrentGradingFeature() == null) {
-//            return "";
-//        }
-//        String featureName = project.getCurrentGradingFeature().getName();
-//
-//        transcript.append(featureHeader(featureName) + "\n");
-////		transcript.append("*****************************(");
-////		String featureName = project.getCurrentGradingFeature().getName();
-////		transcript.append(featureName);
-////		transcript.append(")*****************************\n");
-////		String anInput = project.getCurrentInput(); // this changes with process team, there can be multiple inputs and they can be given incrementally
-//        String anInput = input.toString();
-//        if (!anInput.isEmpty()) {
-//            transcript.append("INPUT(" + featureName + ")\n");
-//            transcript.append(anInput + "\n");
-//        }
-//        String[] args = project.getCurrentArgs();
-//
-//        if (args != null && args.length > 0) {
-//            transcript.append("MAIN ARGS(" + featureName + ")\n");
-//            transcript.append("[");
-//            for (int i = 0; i < args.length; i++) {
-//                if (i != 0) {
-//                    transcript.append(",");
-//                }
-//                transcript.append(args[i]);
-//            }
-//            transcript.append("[");
-//
-//        }
-//        if (output == null) {
-//            Tracer.error("Null output!");
-//            output = ""; //new
-//            return "";
-//        }
-//        if (!output.isEmpty()) {
-//            transcript.append("OUTPUT(" + featureName + ")\n");
-//            transcript.append(output + "\n");
-//        }
-//        if (!errorOutput.isEmpty()) {
-//            transcript.append("ERRORS(" + featureName + ")\n");
-//            transcript.append(errorOutput + "\n");
-//        }
-//        return transcript.toString();
-
-//    }
 
    @Override
 public void appendCumulativeOutput() {
@@ -385,33 +342,6 @@ public void appendCumulativeOutput() {
 ////		}
 //
     }
-//
-//   public static void appendToTranscriptFile(SakaiProject aProject, String aText) {
-//        try {
-//            String anOutputFileName = aProject.getOutputFileName();
-//            FileWriter fileWriter = new FileWriter(anOutputFileName, true);
-//            fileWriter.append(aText);
-//            OverallTranscriptSaved.newCase(null, null, aProject, anOutputFileName, aText, BasicRunningProject.class);
-////			if (project.getCurrentGradingFeature() != null)
-////			FeatureTranscriptSaved.newCase(null, null, project,  project.getCurrentGradingFeature()., outputFileName, transcript, this);;
-//            fileWriter.close();
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//    }
-//   
-//    public static void appendToTranscriptFile(SakaiProject aProject, String aFeatureName, String aText) {
-//    	appendToTranscriptFile(aProject, featureHeader(aFeatureName) + "\n" + aText);
-//    }
-//    public static void appendToTranscriptFile(Project aProject, String aFeatureName, String aText) {
-//    	appendToTranscriptFile(((ProjectWrapper) aProject).getProject(), featureHeader(aFeatureName) + "\n" + aText);
-//    }
-//
-//    public void appendOutputAndErrorsToTranscriptFile(SakaiProject aProject) {
-//        appendToTranscriptFile(aProject, getOutputAndErrors());
-//    }
     
     protected void maybeSetCurrentProjectIO() {
 //    	 if (project != null) {
@@ -594,7 +524,6 @@ public void appendCumulativeOutput() {
 
     @Override
 	public void setProcessIn(String aProcess, RunnerInputStreamProcessor processIn) {
-//		this.processIn = processIn;
         processToIn.put(aProcess, processIn);
     }
 
@@ -607,7 +536,6 @@ public void appendCumulativeOutput() {
 
     @Override
 	public void setProcessOut(String aProcess, RunnerErrorOrOutStreamProcessor newVal) {
-//		this.processIn = processIn;
         processToOut.put(aProcess, newVal);
     }
 
@@ -620,7 +548,6 @@ public void appendCumulativeOutput() {
 
     @Override
 	public void setProcessErr(String aProcess, RunnerErrorOrOutStreamProcessor newVal) {
-//		this.processIn = processIn;
         processToErr.put(aProcess, newVal);
     }
 
@@ -631,13 +558,9 @@ public void appendCumulativeOutput() {
 
     @Override
 	public void setProcess(String aProcessName, TimedProcess aTimedProcess) {
-//		this.processIn = processIn;
         nameToProcess.put(aProcessName, aTimedProcess);
     }
 
-//    public SakaiProject getProject() {
-//        return project;
-//    }
     @Override
 	public boolean isDestroyed() {
 		return destroyed;

@@ -617,43 +617,6 @@ public class BasicProcessRunner implements Runner {
 	}
 
 	protected void runTeamProcess(String aProcess, InputGenerator anOutputBasedInputGenerator) {
-//		List<String> basicCommand = StaticConfigurationUtils
-//				.getBasicCommand(aProcess);
-//		String anEntryPoint = null;
-//		if (StaticConfigurationUtils.hasEntryPoint(basicCommand))
-//			
-//		{
-//			anEntryPoint = executionSpecification.getEntryPoint(aProcess);
-//			if (anEntryPoint == null)
-//				throw EntryPointNotFound.newCase(this);
-//		}
-//		if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
-//			getFolder(anEntryPoint);
-//		}
-//		String anEntryTag = null;
-//		List<String> anEntryTags = null;
-//		if (StaticConfigurationUtils.hasEntryTags(basicCommand))
-//			anEntryTags = executionSpecification.getEntryTags(aProcess);
-//		else if (StaticConfigurationUtils.hasEntryTag(basicCommand))
-//			anEntryTag = executionSpecification.getEntryTag(aProcess); // this will match entryTag also, fix at some pt
-//		
-//		// if (anEntryTag != null ) {
-//		// getFolder(anEntryTag);
-//		// }
-//		String aClassWithEntryTag = null;
-//		if (anEntryTag != null) {
-//			aClassWithEntryTag = classWithEntryTagTarget(anEntryTag);
-//			if (aClassWithEntryTag == null)
-//				throw TagNotFound.newCase(anEntryTag, this);
-//		} else if (anEntryTags != null) {
-//			aClassWithEntryTag = classWithEntryTagsTarget(anEntryTags);
-//			if (aClassWithEntryTag == null)
-//				throw TagNotFound.newCase(anEntryTags, this);
-//		}
-//		if (aClassWithEntryTag != null && folder == null) {
-//
-//			getFolder(aClassWithEntryTag);
-//		}
 		String anEntryPoint = searchForEntryPoint(aProcess);
 		String aClassWithEntryTag = searchForEntryTag(aProcess);
 //		String[] anArgs = executionSpecification.getArgs(aProcess).toArray(
@@ -743,33 +706,8 @@ public class BasicProcessRunner implements Runner {
 		Set<String> aProcesses = nameToProcess.keySet();
 		for (String aProcess : aProcesses) {
 			terminateProcess(aProcess);
-//			try {
-//				processToOut.get(aProcess).getSemaphore().acquire();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			try {
-//				processToErr.get(aProcess).getSemaphore().acquire();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			TimedProcess timedProcess = nameToProcess.get(aProcess);
-//			timedProcess.getProcess().destroy();
 		}
 		terminateRunner();
-		// try {
-		// // Wait for the output to finish
-		// outputSemaphore.acquire();
-		// errorSemaphore.acquire();
-		// runner.end();
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// Tracer.error(e.getMessage());
-		// runner.error();
-		// runner.end();
-		// }
 	}
 
 	void terminateRunner() {

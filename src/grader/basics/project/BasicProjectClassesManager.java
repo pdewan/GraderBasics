@@ -295,6 +295,9 @@ public class BasicProjectClassesManager implements ClassesManager {
 //    		if (file.getName().contains("Observable")) {
 //    			System.out.println ("processing file:" + file.getName());
 //    		}
+    		if (file.getName().equals("package-info.java")) {
+    			continue;
+    		}
 			String className = getClassName(file);
 			// System.out.println(className);
 			try {

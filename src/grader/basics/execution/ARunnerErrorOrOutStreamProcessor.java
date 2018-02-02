@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrOutStreamProcessor {
-	protected Scanner scanner ;
+	protected Scanner scanner;
 	protected InputStream errorOrOut;
 	protected RunningProject runner;
 	protected Semaphore semaphore;
@@ -13,7 +13,8 @@ public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrO
 	protected Boolean onlyProcess;
 	protected String outPrefix = "";
 
-	public ARunnerErrorOrOutStreamProcessor(InputStream aProcessErrorOrOut, RunningProject aRunner, /*Semaphore aSemaphore,*/ String aProcessName, Boolean anOnlyProcess) {
+	public ARunnerErrorOrOutStreamProcessor(InputStream aProcessErrorOrOut, RunningProject aRunner,
+			/* Semaphore aSemaphore, */ String aProcessName, Boolean anOnlyProcess) {
 		// Print error output to the console
 		errorOrOut = aProcessErrorOrOut;
 		scanner = new Scanner(errorOrOut);
@@ -24,55 +25,48 @@ public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrO
 		if (!onlyProcess)
 			outPrefix = "(" + aProcessName + ")";
 	}
-		
 
-			@Override
-			public void run() {
-				try {
-					if (onlyProcess)
+	@Override
+	public void run() {
+		try {
+			if (onlyProcess)
 				semaphore.acquire();
-				while (scanner.hasNextLine()) {
-					String line = scanner.nextLine();
-//					System.err.println(line);
-//					runner.appendErrorOutput(line + "\n");
-					processLine(line);
-				}
-				scanner.close();
-				semaphore.release();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				// System.err.println(line);
+				// runner.appendErrorOutput(line + "\n");
+				processLine(line);
 			}
-//		abstract void processLine(String s);
-
-
-		public Scanner getScanner() {
-			return scanner;
+			scanner.close();
+			semaphore.release();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-
-		public InputStream getErrorOrOut() {
-			return errorOrOut;
-		}
-
-
-		public RunningProject getRunner() {
-			return runner;
-		}
-
-
-		public Semaphore getSemaphore() {
-			return semaphore;
-		}
-
-
-		public String getProcessName() {
-			return processName;
-		}
-
-
-		public Boolean getOnlyProcess() {
-			return onlyProcess;
-		}
-		
 	}
+	// abstract void processLine(String s);
+
+	public Scanner getScanner() {
+		return scanner;
+	}
+
+	public InputStream getErrorOrOut() {
+		return errorOrOut;
+	}
+
+	public RunningProject getRunner() {
+		return runner;
+	}
+
+	public Semaphore getSemaphore() {
+		return semaphore;
+	}
+
+	public String getProcessName() {
+		return processName;
+	}
+
+	public Boolean getOnlyProcess() {
+		return onlyProcess;
+	}
+
+}
