@@ -5,8 +5,11 @@ import grader.basics.util.TimedProcess;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +21,6 @@ import util.pipe.ProcessInputListener;
 //import grader.sakai.project.SakaiProject;
 //import grader.trace.overall_transcript.OverallTranscriptSaved;
 import util.pipe.InputGenerator;
-
 import util.trace.Tracer;
 
 /**
@@ -26,8 +28,12 @@ import util.trace.Tracer;
  * execution. This provides support for synchronization via semaphores and
  * output manipulation.
  */
-public class BasicRunningProject implements ProcessInputListener, RunningProject {
-
+public class BasicRunningProject implements ProcessInputListener, RunningProject, Runnable {
+	public static long RESORT_TIME = 100;
+	public static long MAX_OUTPUT_DELAY = 100;
+	
+	protected LinkedList<AProcessOutput> pendingOutput = new LinkedList<>();
+	
     private Semaphore runningState = new Semaphore(1);
     protected Map<String, String> processToErrors = new HashMap<>();
     protected Map<String, StringBuffer> processToOutput = new HashMap<>();
@@ -75,6 +81,35 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //             aTranscriptManager.setIndexAndLogDirectory(i, project.getStudentAssignment().getFeedbackFolder().getAbsoluteName());
 //             aTranscriptManager.setProcessName(aProcess);
 //         }
+    }
+    @Override
+    public synchronized void run() {
+    	while (true) {
+    		try {
+    			if (pendingOutput.isEmpty()) {
+    				wait();
+    			} else {
+    				wait(RESORT_TIME);
+    			}
+				long aCurrentTime = System.nanoTime();
+				Collections.sort(pendingOutput);
+
+				while (!pendingOutput.isEmpty()) {
+					AProcessOutput aProcessOutput = pendingOutput.peek();
+					long aTime = aProcessOutput.time;
+					if (aCurrentTime - RESORT_TIME - aTime > 0) {
+						pendingOutput.removeFirst();
+						doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output);
+						
+					}
+					
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	
     }
 
     public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, List<String> aProcesses, Map<String, String> aProcessToInput) {
@@ -175,8 +210,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         return processToOutput;
     }
 
-    @Override
-	public void appendProcessOutput(String aProcess, String newVal) {
+	protected void doAppendProcessOutput(String aProcess, String newVal) {
     	// delete me
 //    	System.out.println("+++++ " + Thread.currentThread().getId() + " " + java.lang.management.ManagementFactory.getRuntimeMXBean().getName() + " - " + aProcess + " - " + newVal);
     	
@@ -221,6 +255,20 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         appendErrorAndOutput(aProcess, newVal);
 
     }
+	public static final String PROCESS_SEPARARTOR = "#@!";
+    @Override
+	public synchronized void appendProcessOutput(String aProcess, String newVal) {
+		int anAtIndex = newVal.indexOf('@');
+		long aTime = System.nanoTime();
+		if (anAtIndex != -1) {
+			int aSpaceIndex = newVal.indexOf(' ', anAtIndex);
+			String aTimeString = newVal.substring(anAtIndex + 1, aSpaceIndex);
+			aTime = Long.parseLong(aTimeString);
+		}
+		pendingOutput.addLast(new AProcessOutput(aTime, aProcess, newVal));
+		notify();
+
+	}
 
     @Override
 	public void appendErrorOutput(String aProcess, String newVal) {
