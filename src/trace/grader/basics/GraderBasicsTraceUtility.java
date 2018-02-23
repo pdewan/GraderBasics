@@ -25,17 +25,17 @@ public class GraderBasicsTraceUtility {
 	public static void setTracing() {
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
 		if (isTurnOn()) {
-		Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
-		Tracer.setKeywordPrintStatus(LocatableTest.class, true);
-		Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);
-		Tracer.setKeywordPrintStatus(DetachedRotatingLineFortyFiveDegreeTest.class, true);
-		Tracer.setKeywordPrintStatus(RotatingFixedLineRotateTest.class, true);
-		Tracer.setKeywordPrintStatus(MovingRotatingLineFortyFiveDegreeTest.class, true);
-		Tracer.setKeywordPrintStatus(MethodPropertyChecker.class, true);
-		Tracer.setKeywordPrintStatus(BasicProjectIntrospection.class, true);
-		Tracer.setKeywordPrintStatus(BasicProjectExecution.class, true);
-		Tracer.setKeywordPrintStatus(DirectoryUtils.class, true);
-		Tracer.setKeywordPrintStatus(TestCaseResult.class, true);
+			Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
+			Tracer.setKeywordPrintStatus(LocatableTest.class, true);
+			Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);
+			Tracer.setKeywordPrintStatus(DetachedRotatingLineFortyFiveDegreeTest.class, true);
+			Tracer.setKeywordPrintStatus(RotatingFixedLineRotateTest.class, true);
+			Tracer.setKeywordPrintStatus(MovingRotatingLineFortyFiveDegreeTest.class, true);
+			Tracer.setKeywordPrintStatus(MethodPropertyChecker.class, true);
+			Tracer.setKeywordPrintStatus(BasicProjectIntrospection.class, true);
+			Tracer.setKeywordPrintStatus(BasicProjectExecution.class, true);
+			Tracer.setKeywordPrintStatus(DirectoryUtils.class, true);
+			Tracer.setKeywordPrintStatus(TestCaseResult.class, true);
 		}
 
 	}

@@ -115,7 +115,8 @@ public class DirectoryUtils {
 			
 			try {
 				return ((aSourceFilePattern == null) || pathname.getCanonicalPath().contains(aSourceFilePattern)) &&					
-						!pathname.getName().startsWith(".") && pathname.getName().endsWith(BasicLanguageDependencyManager.getSourceFileSuffix());
+						!pathname.getName().startsWith(".") && !pathname.getName().equals("package-info.java") &&
+						pathname.getName().endsWith(BasicLanguageDependencyManager.getSourceFileSuffix());
 			} catch (IOException e) {				
 				e.printStackTrace();
 				return false; // should never happen

@@ -178,7 +178,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     @Override
 	public void appendProcessOutput(String aProcess, String newVal) {
     	// delete me
-    	System.out.println("+++++ " + Thread.currentThread().getId() + " " + java.lang.management.ManagementFactory.getRuntimeMXBean().getName() + " - " + aProcess + " - " + newVal);
+//    	System.out.println("+++++ " + Thread.currentThread().getId() + " " + java.lang.management.ManagementFactory.getRuntimeMXBean().getName() + " - " + aProcess + " - " + newVal);
     	
 //    	System.out.println("=== BEGIN STACK DUMP ===");
 //    	for(Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
