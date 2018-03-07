@@ -15,5 +15,9 @@ public class AProcessOutput implements Comparable<AProcessOutput>{
 		return Long.compare(time, o.time);
 	}
 	
+	@Override
+	public String toString() {
+		return time + " - " + process + " - " + output;
+	}
 
 }
