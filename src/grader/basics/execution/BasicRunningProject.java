@@ -122,7 +122,8 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 							hasOutput = true;
 							maxNotificationTime = Math.max(maxNotificationTime, aTime);
 							pendingOutput.removeFirst();
-							doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output);
+							Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+							doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output + "\n");
 						} else {
 //							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
 //							System.out.println("***** Pending: \n" + pendingOutput);
@@ -289,6 +290,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	
     @Override
 	public void appendProcessOutput(String aProcess, String newVal) {
+    	Tracer.info(this, "Received output from " + aProcess + ": " + newVal);
 //    	doAppendProcessOutput(aProcess, newVal);
     	Matcher timeMatcher = timePattern.matcher(newVal);
 //    	System.out.println("+++** " + newVal);
