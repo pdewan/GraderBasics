@@ -10,9 +10,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import util.misc.Common;
 import util.trace.Tracer;
@@ -124,6 +129,7 @@ public class BasicProjectClassesManager implements ClassesManager {
 //        }
         initializeClassLoaders();
         classDescriptions = new HashSet<ClassDescription>();
+        tagsToClasses.clear();
 
         loadClasses(sourceFolder);
 //        checkStyle(project, sourceFolder);
@@ -645,7 +651,7 @@ public class BasicProjectClassesManager implements ClassesManager {
     public Set<ClassDescription> findByTag(String aTag) {
     	return findByTag (new String[] {aTag});
     }
-
+    protected Map<String, Set<ClassDescription>> tagsToClasses = new HashMap();
     /**
      * Looks for all class descriptions with a particular tag
      *
@@ -660,7 +666,18 @@ public class BasicProjectClassesManager implements ClassesManager {
 //    	String normalizedTag = tag.replaceAll("\\s","");
     	BasicProjectIntrospection.normalizeTags(aTags); // using array instead
     	List<String> aSpecificationList = Arrays.asList(aTags);
-        Set<ClassDescription> classes = new HashSet<>();
+    	if (aTags.length > 1) {
+    		aSpecificationList = new ArrayList(aSpecificationList);
+    		java.util.Collections.sort(aSpecificationList);    		
+    	}
+    	String aTagKey = aSpecificationList.toString();
+    	Set<ClassDescription> classes = null;
+    	classes = tagsToClasses.get(aTagKey);
+    	if (classes != null) {
+    		return classes;
+    	}
+    	
+    	classes = new HashSet<>();
 //        System.out.println ("Class descriptions:" +classDescriptions);
         for (ClassDescription description : classDescriptions) {
 //        	if (description.getJavaClass().isInterface())
@@ -683,6 +700,7 @@ public class BasicProjectClassesManager implements ClassesManager {
 //                }
 //            }
         }
+        tagsToClasses.put(aTagKey, classes);
         return classes;
     }
     
