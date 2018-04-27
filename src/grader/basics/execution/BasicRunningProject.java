@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import util.pipe.ProcessInputListener;
 //import grader.config.StaticConfigurationUtils;
@@ -30,7 +32,11 @@ import util.trace.Tracer;
  */
 public class BasicRunningProject implements ProcessInputListener, RunningProject, Runnable {
 	public static long RESORT_TIME = 100;
-	public static long MAX_OUTPUT_DELAY = 100;
+//	public static long MAX_OUTPUT_DELAY = 100;
+    private long maxNotificationTime;
+    private static long timeToWaitForConcurrentOutput = (long)1e10;
+
+	private boolean hasOutput = false;
 	
 	protected LinkedList<AProcessOutput> pendingOutput = new LinkedList<>();
 	
@@ -82,34 +88,53 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //             aTranscriptManager.setProcessName(aProcess);
 //         }
     }
+    
     @Override
-    public synchronized void run() {
+    public void run() {
     	while (true) {
-    		try {
-    			if (pendingOutput.isEmpty()) {
-    				wait();
-    			} else {
-    				wait(RESORT_TIME);
-    			}
-				long aCurrentTime = System.nanoTime();
-				Collections.sort(pendingOutput);
-
-				while (!pendingOutput.isEmpty()) {
-					AProcessOutput aProcessOutput = pendingOutput.peek();
-					long aTime = aProcessOutput.time;
-					if (aCurrentTime - RESORT_TIME - aTime > 0) {
-						pendingOutput.removeFirst();
-						doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output);
-						
-					}
+    		synchronized(this) {
+	    		try {
+	    			if (pendingOutput.isEmpty()) {
+	    				wait();
+//	    				System.out.println("end wait 1");
+	    			} else {
+	    				wait(RESORT_TIME);
+//	    				wait((long)Math.ceil(maxDiff/1e6));
+//	    				System.out.println("end wait 2");
+	    			}
+					long aCurrentTime = System.nanoTime();
+					List<AProcessOutput> copy = new LinkedList<>(pendingOutput);
+					Collections.sort(pendingOutput);
 					
+					if (!pendingOutput.equals(copy)) {
+						System.out.println("***** Input reordered");
+					}
+	
+					while (!pendingOutput.isEmpty()) {
+						AProcessOutput aProcessOutput = pendingOutput.peek();
+						long aTime = aProcessOutput.time;
+						if (aCurrentTime - aTime > timeToWaitForConcurrentOutput) {
+							if (hasOutput && aTime < maxNotificationTime) {
+								long diff = (maxNotificationTime - aTime);
+								timeToWaitForConcurrentOutput = Math.max(diff, timeToWaitForConcurrentOutput);
+								System.err.println("+++" + diff + " " + timeToWaitForConcurrentOutput);
+							}
+							hasOutput = true;
+							maxNotificationTime = Math.max(maxNotificationTime, aTime);
+							pendingOutput.removeFirst();
+							Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+							doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output + "\n");
+						} else {
+//							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
+//							System.out.println("***** Pending: \n" + pendingOutput);
+							break;
+						}
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    		}
     	}
-    	
     }
 
     public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, List<String> aProcesses, Map<String, String> aProcessToInput) {
@@ -158,7 +183,10 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
             }
 
         }
-
+        maxNotificationTime = System.nanoTime();
+        Thread aThread = new Thread(this);
+        aThread.setName("Output Sorter");
+        aThread.start();
     }
 
     public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, String anInput) {
@@ -240,6 +268,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         aProcessOutput.append(newVal);
 //		processToOutput.put(aProcess, aProcessOutput);
         if (outputBasedInputGenerator != null) {
+        	
             outputBasedInputGenerator.newOutputLine(aProcess, newVal);
 //			if (newProcess) {
 //				outputBasedInputGenerator.addProcessName(aProcess);
@@ -255,18 +284,33 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         appendErrorAndOutput(aProcess, newVal);
 
     }
+	
 	public static final String PROCESS_SEPARARTOR = "#@!";
+	public static final Pattern timePattern = Pattern.compile("@([0-9]+) ");
+	
     @Override
-	public synchronized void appendProcessOutput(String aProcess, String newVal) {
-		int anAtIndex = newVal.indexOf('@');
+	public void appendProcessOutput(String aProcess, String newVal) {
+    	Tracer.info(this, "Received output from " + aProcess + ": " + newVal);
+//    	doAppendProcessOutput(aProcess, newVal);
+    	Matcher timeMatcher = timePattern.matcher(newVal);
+//    	System.out.println("+++** " + newVal);
+//		int anAtIndex = newVal.indexOf('@');
 		long aTime = System.nanoTime();
-		if (anAtIndex != -1) {
-			int aSpaceIndex = newVal.indexOf(' ', anAtIndex);
-			String aTimeString = newVal.substring(anAtIndex + 1, aSpaceIndex);
-			aTime = Long.parseLong(aTimeString);
-		}
-		pendingOutput.addLast(new AProcessOutput(aTime, aProcess, newVal));
-		notify();
+    	if (timeMatcher.find()) {
+    		aTime = Long.parseLong(timeMatcher.group(1));
+//    		System.out.println("+++** " + aTime);
+    	}
+//		if (anAtIndex != -1) {
+//			int aSpaceIndex = newVal.indexOf(' ', anAtIndex);
+//			if (aSpaceIndex > 0) {
+//				String aTimeString = newVal.substring(anAtIndex + 1, aSpaceIndex);
+//				aTime = Long.parseLong(aTimeString);
+//			}
+//		}
+    	synchronized(this) {
+			pendingOutput.addLast(new AProcessOutput(aTime, aProcess, newVal));
+			notify();
+	    }
 
 	}
 
@@ -656,4 +700,20 @@ public void appendCumulativeOutput() {
 		this.currentProcess = currentProcess;
 	}
 
+
+	/**
+	 * 
+	 * @return time in nanoseconds
+	 */
+    public static long getTimeToWaitForConcurrentOutput() {
+		return timeToWaitForConcurrentOutput;
+	}
+
+    /**
+     * 
+     * @param timeToWaitForConcurrentOutput time in nanoseconds
+     */
+	public static void setTimeToWaitForConcurrentOutput(long timeToWaitForConcurrentOutput) {
+		BasicRunningProject.timeToWaitForConcurrentOutput = timeToWaitForConcurrentOutput;
+	}
 }
