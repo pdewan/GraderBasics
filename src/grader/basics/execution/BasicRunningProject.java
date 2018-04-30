@@ -31,6 +31,9 @@ import util.trace.Tracer;
  * output manipulation.
  */
 public class BasicRunningProject implements ProcessInputListener, RunningProject, Runnable {
+	public static boolean echoOutput = true;
+	
+
 	public static long RESORT_TIME = 100;
 //	public static long MAX_OUTPUT_DELAY = 100;
     private long maxNotificationTime;
@@ -89,6 +92,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //         }
     }
     
+    
     @Override
     public void run() {
     	while (true) {
@@ -122,7 +126,8 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 							hasOutput = true;
 							maxNotificationTime = Math.max(maxNotificationTime, aTime);
 							pendingOutput.removeFirst();
-							Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+							if (isEchoOutput())
+								Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
 							doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output + "\n");
 						} else {
 //							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
@@ -290,7 +295,8 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	
     @Override
 	public void appendProcessOutput(String aProcess, String newVal) {
-    	Tracer.info(this, "Received output from " + aProcess + ": " + newVal);
+    	if (BasicRunningProject.isEchoOutput())
+    		Tracer.info(this, "Received output from " + aProcess + ": " + newVal);
 //    	doAppendProcessOutput(aProcess, newVal);
     	Matcher timeMatcher = timePattern.matcher(newVal);
 //    	System.out.println("+++** " + newVal);
@@ -715,5 +721,12 @@ public void appendCumulativeOutput() {
      */
 	public static void setTimeToWaitForConcurrentOutput(long timeToWaitForConcurrentOutput) {
 		BasicRunningProject.timeToWaitForConcurrentOutput = timeToWaitForConcurrentOutput;
+	}
+	public static boolean isEchoOutput() {
+		return echoOutput;
+	}
+
+	public static void setEchoOutput(boolean echoOutput) {
+		BasicRunningProject.echoOutput = echoOutput;
 	}
 }
