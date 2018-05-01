@@ -1533,6 +1533,7 @@ public class BasicProjectIntrospection {
 	}
 
 	static Class[] emptyClassArray = {};
+	static Class[] emptyObjectArray = {};
 
 	public static Method findUniqueMethodByTag(Class aClass,
 			String aSpecification, Class[] aParameterTypes) {
@@ -2044,6 +2045,9 @@ public class BasicProjectIntrospection {
 				aClasses[i] = aMaybePrimitive;
 			}
 		}
+	}
+	public static Object createInstance(Class aProxyClass, String[] aTags) {
+		return createInstance(aProxyClass, emptyClassArray, emptyObjectArray, aTags);
 	}
 
 	public static Object createInstance(Class aProxyClass) {
