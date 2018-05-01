@@ -34,6 +34,9 @@ public abstract class ProxyTest extends MethodExecutionTest{
 //	public static final double FRACTION_TOLERANCE = 0.1;
 //	public static final double INT_TOLERANCE = 2;
 //	
+	abstract protected String[] proxyClassTags() ;
+
+	
 	protected abstract Class proxyClass();
 //	protected int originalX, originalY, originalWidth, originalHeight;
 //	protected int expectedX, expectedY, expectedWidth, expectedHeight;

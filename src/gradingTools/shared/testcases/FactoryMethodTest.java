@@ -109,7 +109,18 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		maybeAssertNoClass(aProxyClass, retVal);
 		return retVal;
 	}
-	
+	public static String[] emptyStringArray = {};
+	protected String[] proxyClassTags() {
+		System.err.println ("proxsClassTags should be overridden");
+		return new String[] {proxyClass().getSimpleName()};
+	}
+	protected Object createInstance() {
+		return BasicProjectIntrospection.createInstance(proxyClass(),  proxyClassTags());
+		
+	}
+	/*
+	 * This seems to be create, not get! Should not store anyway, as projects change
+	 */
 	protected Object getOrCreateObject (String[] factoryClassTag, String[] factoryMethodTag, Class instantiatedTypeClass) {
 		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
 		foundFactoryClass = factoryClass != null;

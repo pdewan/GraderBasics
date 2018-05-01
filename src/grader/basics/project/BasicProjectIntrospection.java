@@ -1240,7 +1240,11 @@ public class BasicProjectIntrospection {
 		String aKey = Arrays.toString(aTags);
 		Class aCachedClass = keyToClass.get(aKey);
 		if (aCachedClass == null) {
-			Class aClass = findClass(aProject, null, aTags, null, null);
+			
+			
+//			Class aClass = findClass(aProject, null, aTags, null, null);
+			Class aClass = findClass(aProject, aTags[0].replaceAll("\\s",""), aTags, null, null);
+
 
 			if (aClass == null) {
 				aCachedClass = Object.class;
@@ -2158,6 +2162,12 @@ public class BasicProjectIntrospection {
 				CurrentProjectHolder.getOrCreateCurrentProject(),
 				aClassTags);
 		Constructor aConstructor;
+		if (anActualClass == null) {
+			Assert.fail("Did not find class matching:" + Arrays.toString(aClassTags));
+		}
+//		if (aProxyClass.isAssignableFrom(anActualClass)) {
+//			Assert.fail("Class " + anActualClass + " not subytpe of " + aProxyClass);
+//		}
 		try {
 			aConstructor = anActualClass
 					.getConstructor(aConctructArgsTypes);
