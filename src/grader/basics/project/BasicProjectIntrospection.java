@@ -2147,6 +2147,27 @@ public class BasicProjectIntrospection {
 		return topLevelSuites;
 
 	}
+	
+	public static Object createInstance(Class aProxyClass,
+			Class[] aConctructArgsTypes, Object[] anArgs, String[] aClassTags) {
+		Class anActualClass = BasicProjectIntrospection.findClassByTagsCaching(
+				CurrentProjectHolder.getOrCreateCurrentProject(),
+				aClassTags);
+		Constructor aConstructor;
+		try {
+			aConstructor = anActualClass
+					.getConstructor(aConctructArgsTypes);
+			Object anActualObject = BasicProjectExecution.timedInvoke(
+					aConstructor, anArgs);
+			return createProxy(aProxyClass, anActualObject);
+		} catch (NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// Object anActualObject = aConstructor.newInstance(anArgs);
+		
+		return null;
+	}
 
 	public static Object createInstance(Class aProxyClass,
 			Class[] aConctructArgsTypes, Object[] anArgs) {
