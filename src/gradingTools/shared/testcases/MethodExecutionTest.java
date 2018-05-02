@@ -631,7 +631,7 @@ public abstract class MethodExecutionTest  {
 		return 0.0;
 	}
 	
-	public boolean doTest() throws Throwable {
+	protected boolean doTest() throws Throwable {
 		invokeMethod();
     	return processInteractiveMethodExecutionResults();
 	}
@@ -711,13 +711,14 @@ public abstract class MethodExecutionTest  {
 		
         try {
         	testing = true;
-        	if (doTestMethod != null ) {
-
-//        	if (doTestMethod != null && !CurrentProjectHolder.isLocalProject()) {
-        	   BasicProjectExecution.timedInvoke(this, doTestMethod, emptyArgs);
-        	} else {
-        		doTest();  
-        	}
+        	doTest();
+//        	if (doTestMethod != null ) {
+//
+////        	if (doTestMethod != null && !CurrentProjectHolder.isLocalProject()) {
+//        	   BasicProjectExecution.timedInvoke(this, doTestMethod, emptyArgs);
+//        	} else {
+//        		doTest();  
+//        	}
 //        	testing = false;
             
         } catch (Throwable e) {

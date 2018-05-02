@@ -228,7 +228,7 @@ public abstract class OutputAndErrorCheckingTestCase extends
 	}
 
 	@Override
-	public boolean doTest() throws Throwable {
+	protected boolean doTest() throws Throwable {
 		return callInteractiveMain();
 //		String[] aMainClasses = getClassNames();
 //		for (String aMainClass : aMainClasses) {

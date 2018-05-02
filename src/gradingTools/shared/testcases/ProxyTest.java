@@ -253,7 +253,7 @@ public abstract class ProxyTest extends MethodExecutionTest{
 		setActual(rootProxy);
 		return checkOutput(rootProxy);
 	}
-	public boolean doTest() throws Throwable {
+	protected boolean doTest() throws Throwable {
 		return doProxyTest();
 //		create();
 //		

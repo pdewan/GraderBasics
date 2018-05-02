@@ -40,7 +40,7 @@ public abstract class GetterExecutionTest extends BeanExecutionTest{
 		
 		return true;
 	}
-	public boolean doTest() throws Throwable {
+	protected boolean doTest() throws Throwable {
 		executeBean();
 		actualReturnValue = outputPropertyValues.get(propertyName());
 		return checkOutput(actualReturnValue);
