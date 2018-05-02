@@ -5,9 +5,17 @@ import java.io.FileNotFoundException;
 
 public class CurrentProjectHolder {
 	static Project currentProject;
+	static boolean localProject;
+	public static boolean isLocalProject() {
+		return localProject;
+	}
+	public static void setLocalProject(boolean localProject) {
+		CurrentProjectHolder.localProject = localProject;
+	}
 	public static Project getOrCreateCurrentProject() {
 		if (currentProject == null) {
 			currentProject = createCurrentProject(); 
+			setLocalProject(true);
 		}
 		return getCurrentProject();
 	}

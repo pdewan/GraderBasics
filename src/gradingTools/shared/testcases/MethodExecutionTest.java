@@ -47,9 +47,19 @@ public abstract class MethodExecutionTest  {
 	protected Set<Thread> currentThreads = new HashSet();
 	protected List<Thread> newThreads = new ArrayList();
 	public static Object[] emptyArgs = {};
+	protected Method doTestMethod;
 	
 	public MethodExecutionTest() {
 		Tracer.setKeywordPrintStatus(this.getClass(), true);
+		if (!CurrentProjectHolder.isLocalProject()) {
+		try {
+		doTestMethod = getClass().getDeclaredMethod("doTest");
+		doTestMethod.setAccessible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+	
+		}
+		}
 	}
 
 	
@@ -698,9 +708,14 @@ public abstract class MethodExecutionTest  {
 	}
 	@Test
     public void test() {
+		
         try {
         	testing = true;
-        	doTest();  
+        	if (doTestMethod != null && !CurrentProjectHolder.isLocalProject()) {
+        	   BasicProjectExecution.timedInvoke(this, doTestMethod, emptyArgs);
+        	} else {
+        		doTest();  
+        	}
 //        	testing = false;
             
         } catch (Throwable e) {
