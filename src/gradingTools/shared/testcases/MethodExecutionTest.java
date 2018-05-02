@@ -53,8 +53,8 @@ public abstract class MethodExecutionTest  {
 		Tracer.setKeywordPrintStatus(this.getClass(), true);
 //		if (!CurrentProjectHolder.isLocalProject()) {
 		try {
-		doTestMethod = getClass().getDeclaredMethod("doTest");
-		doTestMethod.setAccessible(true);
+		doTestMethod = getClass().getMethod("doTest");
+//		doTestMethod.setAccessible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 	
@@ -631,7 +631,7 @@ public abstract class MethodExecutionTest  {
 		return 0.0;
 	}
 	
-	protected boolean doTest() throws Throwable {
+	public boolean doTest() throws Throwable {
 		invokeMethod();
     	return processInteractiveMethodExecutionResults();
 	}
