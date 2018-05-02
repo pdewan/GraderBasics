@@ -51,7 +51,7 @@ public abstract class MethodExecutionTest  {
 	
 	public MethodExecutionTest() {
 		Tracer.setKeywordPrintStatus(this.getClass(), true);
-		if (!CurrentProjectHolder.isLocalProject()) {
+//		if (!CurrentProjectHolder.isLocalProject()) {
 		try {
 		doTestMethod = getClass().getDeclaredMethod("doTest");
 		doTestMethod.setAccessible(true);
@@ -59,7 +59,7 @@ public abstract class MethodExecutionTest  {
 			e.printStackTrace();
 	
 		}
-		}
+//		}
 	}
 
 	
@@ -711,7 +711,9 @@ public abstract class MethodExecutionTest  {
 		
         try {
         	testing = true;
-        	if (doTestMethod != null && !CurrentProjectHolder.isLocalProject()) {
+        	if (doTestMethod != null ) {
+
+//        	if (doTestMethod != null && !CurrentProjectHolder.isLocalProject()) {
         	   BasicProjectExecution.timedInvoke(this, doTestMethod, emptyArgs);
         	} else {
         		doTest();  
