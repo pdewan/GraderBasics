@@ -2078,16 +2078,13 @@ public class BasicProjectIntrospection {
 			anInterfaces = aClassOrInterface.getInterfaces();
 		return anInterfaces;
 	}
-
-	public static Object createProxy(Class aProxyClass, Object anActualObject) {
-		// redundant
-		if (anActualObject instanceof Proxy && !isReverseProxy(anActualObject)) {
-			return anActualObject;
-		}
-		if (aProxyClass.isInstance(anActualObject)) { // not a proxy class
-			return anActualObject;
-		}
-
+	
+	public static Object forceCreateProxy(Class aProxyClass, Object anActualObject) {
+//		// redundant
+//		if (anActualObject instanceof Proxy && !isReverseProxy(anActualObject)) {
+//			return anActualObject;
+//		}
+//		
 		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
 				anActualObject);
 		Class[] anInterfaces = null;
@@ -2103,6 +2100,29 @@ public class BasicProjectIntrospection {
 		objectToProxy.put(anActualObject, aProxy);
 		classToProxy.put(aProxyClass, aProxy);
 		return aProxy;
+	}
+
+	public static Object createProxy(Class aProxyClass, Object anActualObject) {
+		// redundant
+		if (anActualObject instanceof Proxy && !isReverseProxy(anActualObject)) {
+			return anActualObject;
+		}
+		if (aProxyClass.isInstance(anActualObject)) { // not a proxy class
+			return anActualObject;
+		}
+		
+		return forceCreateProxy(aProxyClass, anActualObject);
+
+//		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
+//				anActualObject);
+//		Class[] anInterfaces = null;
+//		
+//		Object aProxy = Proxy.newProxyInstance(aProxyClass.getClassLoader(),
+//				getInterfaces(aProxyClass), aHandler);
+//		proxyToObject.put(aProxy, anActualObject);
+//		objectToProxy.put(anActualObject, aProxy);
+//		classToProxy.put(aProxyClass, aProxy);
+//		return aProxy;
 	}
 
 	public static Object createReverseProxy(Class aReverseClass,

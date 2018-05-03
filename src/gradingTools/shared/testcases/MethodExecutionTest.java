@@ -52,14 +52,14 @@ public abstract class MethodExecutionTest  {
 	public MethodExecutionTest() {
 		Tracer.setKeywordPrintStatus(this.getClass(), true);
 //		if (!CurrentProjectHolder.isLocalProject()) {
-		try {
-		doTestMethod = getClass().getMethod("doTest");
-//		doTestMethod.setAccessible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-	
-		}
+//		try {
+//		doTestMethod = getClass().getMethod("doTest");
+////		doTestMethod.setAccessible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//	
 //		}
+////		}
 	}
 
 	
