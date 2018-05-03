@@ -5,6 +5,7 @@ import grader.basics.util.TimedProcess;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,8 +45,11 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	protected LinkedList<AProcessOutput> pendingOutput = new LinkedList<>();
 	
     private Semaphore runningState = new Semaphore(1);
-    protected Map<String, String> processToErrors = new HashMap<>();
+    protected Map<String, StringBuffer> processToErrors = new HashMap<>();
+    protected Map<String, List<String>> processToErrorLines = new HashMap<>();;
+
     protected Map<String, StringBuffer> processToOutput = new HashMap<>();
+    protected Map<String, List<String>> processToOutputLines = new HashMap<>();;
     // duplicates the mapping in Process Runner
     protected Map<String, RunnerInputStreamProcessor> processToIn = new HashMap<>();
     protected Map<String, TimedProcess> nameToProcess = new HashMap<>();
@@ -242,6 +246,23 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public Map<String, StringBuffer> getProcessOutput() {
         return processToOutput;
     }
+    
+    @Override
+	public Map<String, List<String>> getProcessOutputLines() {
+		
+        return processToOutputLines;
+    }
+    @Override
+   	public Map<String, List<String>> getProcessErrorLines() {
+   		
+           return processToErrorLines;
+       }
+    
+    @Override
+   	public Map<String, StringBuffer> getProcessError() {
+   		
+           return processToErrors;
+       }
 
 	protected void doAppendProcessOutput(String aProcess, String newVal) {
     	// delete me
@@ -262,15 +283,19 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         if (newVal == null) {
             return;
         }
+        List<String> aProcessOutputLines = processToOutputLines.get(aProcess);
         StringBuffer aProcessOutput = processToOutput.get(aProcess);
 //		boolean newProcess = processToTranscriptManager.get(aProcess) == null;
 //		if (processOutput == null && newVal != null) {
         if (aProcessOutput == null && newVal != null) {
             aProcessOutput = new StringBuffer();
+            aProcessOutputLines = new ArrayList();
             processToOutput.put(aProcess, aProcessOutput);
         }
 
         aProcessOutput.append(newVal);
+        aProcessOutputLines.add(newVal);
+        
 //		processToOutput.put(aProcess, aProcessOutput);
         if (outputBasedInputGenerator != null) {
         	
@@ -322,11 +347,14 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     @Override
 	public void appendErrorOutput(String aProcess, String newVal) {
-        String processErrors = processToErrors.get(aProcess);
+        StringBuffer processErrors = processToErrors.get(aProcess);
+        List<String> processErrorLines = processToErrorLines.get(aProcess);
         if (processErrors == null && newVal != null) {
-            processErrors = "";
+            processErrors = new StringBuffer();
+            processErrorLines = new ArrayList();
         }
-        processErrors += newVal;
+        processErrors.append(newVal);
+        processErrorLines.add(newVal);
 
         processToErrors.put(aProcess, processErrors);
         appendErrorAndOutput(aProcess, newVal);
@@ -629,6 +657,8 @@ public void appendCumulativeOutput() {
 	public RunnerErrorOrOutStreamProcessor getProcessOut(String aProcessName) {
         return processToOut.get(aProcessName);
     }
+    
+    
 
     // the mapping could be passed to this object rather than the individual processIn's
 

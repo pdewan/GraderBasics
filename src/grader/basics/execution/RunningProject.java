@@ -3,6 +3,7 @@ package grader.basics.execution;
 import grader.basics.util.TimedProcess;
 
 import java.io.Closeable;
+import java.util.List;
 import java.util.Map;
 
 public interface RunningProject {
@@ -116,5 +117,11 @@ public interface RunningProject {
 	public abstract TimedProcess getCurrentTimedProcess();
 
 	public abstract void setCurrentTimeProcess(TimedProcess currentProcess);
+
+	Map<String, List<String>> getProcessOutputLines();
+
+	Map<String, List<String>> getProcessErrorLines();
+
+	Map<String, StringBuffer> getProcessError();
 
 }
