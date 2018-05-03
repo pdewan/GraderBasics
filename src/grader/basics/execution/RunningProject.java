@@ -1,6 +1,7 @@
 package grader.basics.execution;
 
 import grader.basics.util.TimedProcess;
+import gradingTools.shared.testcases.utils.LinesMatcher;
 
 import java.io.Closeable;
 import java.util.List;
@@ -123,5 +124,7 @@ public interface RunningProject {
 	Map<String, List<String>> getProcessErrorLines();
 
 	Map<String, StringBuffer> getProcessError();
+
+	Map<String, LinesMatcher> getProcessLineMatcher();
 
 }

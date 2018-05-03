@@ -19,6 +19,8 @@ import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import gradingTools.shared.testcases.utils.ALinesMatcher;
+import gradingTools.shared.testcases.utils.LinesMatcher;
 import util.pipe.ProcessInputListener;
 //import grader.config.StaticConfigurationUtils;
 //import grader.sakai.project.SakaiProject;
@@ -49,7 +51,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     protected Map<String, List<String>> processToErrorLines = new HashMap<>();;
 
     protected Map<String, StringBuffer> processToOutput = new HashMap<>();
-    protected Map<String, List<String>> processToOutputLines = new HashMap<>();;
+    protected Map<String, List<String>> processToOutputLines = new HashMap<>();
+    protected Map<String, LinesMatcher> processToLineMatcher;
+
     // duplicates the mapping in Process Runner
     protected Map<String, RunnerInputStreamProcessor> processToIn = new HashMap<>();
     protected Map<String, TimedProcess> nameToProcess = new HashMap<>();
@@ -253,6 +257,21 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         return processToOutputLines;
     }
     @Override
+	public Map<String, LinesMatcher> getProcessLineMatcher() {
+    	if (processToLineMatcher == null) {
+    		processToLineMatcher = new HashMap<>();
+    		Set<String> aKeys = processToOutputLines.keySet();
+    		for (String aKey:aKeys) {
+    			List<String> aList = processToOutputLines.get(aKey);
+    			String[] anArray = new String[aList.size()];
+    			anArray = aList.toArray(anArray);
+    			LinesMatcher aLineMatcher = new ALinesMatcher(anArray);
+    			processToLineMatcher.put(aKey, aLineMatcher);
+    		}
+    	}		
+        return processToLineMatcher;
+    }
+    @Override
    	public Map<String, List<String>> getProcessErrorLines() {
    		
            return processToErrorLines;
@@ -287,10 +306,11 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         StringBuffer aProcessOutput = processToOutput.get(aProcess);
 //		boolean newProcess = processToTranscriptManager.get(aProcess) == null;
 //		if (processOutput == null && newVal != null) {
-        if (aProcessOutput == null && newVal != null) {
+        if (aProcessOutput == null) {
             aProcessOutput = new StringBuffer();
             aProcessOutputLines = new ArrayList();
             processToOutput.put(aProcess, aProcessOutput);
+            processToOutputLines.put(aProcess, aProcessOutputLines);
         }
 
         aProcessOutput.append(newVal);
@@ -349,9 +369,12 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public void appendErrorOutput(String aProcess, String newVal) {
         StringBuffer processErrors = processToErrors.get(aProcess);
         List<String> processErrorLines = processToErrorLines.get(aProcess);
-        if (processErrors == null && newVal != null) {
+        if (processErrors == null ) {
+//        if (processErrors == null && newVal != null) {
             processErrors = new StringBuffer();
             processErrorLines = new ArrayList();
+            processToErrors.put(aProcess, processErrors);
+            processToErrorLines.put(aProcess, processErrorLines);
         }
         processErrors.append(newVal);
         processErrorLines.add(newVal);
