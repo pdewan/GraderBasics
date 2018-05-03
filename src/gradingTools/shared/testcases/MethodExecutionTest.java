@@ -37,6 +37,7 @@ public abstract class MethodExecutionTest  {
 //		studentExpectedReturnValue, graderExpectedReturnValue;
 	protected ResultWithOutput resultWithOutput;
 	protected String output = "";
+	protected String[] outputLines = {};
 	protected String error = "";
 	protected OutputErrorStatus outputErrorStatus;
 	protected ResultingOutErr resultingOutError;
