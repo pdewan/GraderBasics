@@ -25,11 +25,14 @@ public class ABufferingTestInputGenerator extends AnAbstractInputGenerator {
 		allProcessOutputLines.clear();
 		allProcessOutput.setLength(0);
 	}
-	@Override
-	public void newOutputLine(String aProcessName, String anOutputLine) {
+	protected void recordLine(String aProcessName, String anOutputLine) {
 		String aProcessLine = aProcessName + PROCESS_SEPARATOR + anOutputLine;
 		allProcessOutput.append(aProcessName);
 		allProcessOutputLines.add(aProcessLine);
+	}
+	@Override
+	public void newOutputLine(String aProcessName, String anOutputLine) {
+		recordLine(aProcessName,anOutputLine);
 		
 		
 		
