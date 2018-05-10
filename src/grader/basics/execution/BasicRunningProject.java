@@ -261,6 +261,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     	if (processToLineMatcher == null) {
     		processToLineMatcher = new HashMap<>();
     		Set<String> aKeys = processToOutputLines.keySet();
+    		if (aKeys.size() == 0) {
+    			System.err.println("Empty key set for processes");
+    		}
     		for (String aKey:aKeys) {
     			List<String> aList = processToOutputLines.get(aKey);
     			String[] anArray = new String[aList.size()];
