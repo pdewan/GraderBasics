@@ -1,5 +1,6 @@
 package gradingTools.shared.testcases.utils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -64,11 +65,61 @@ public class ALinesMatcher implements LinesMatcher {
     		return true;
     	}
     	for (Integer aMatchedLine:aMatchedLines) {
-    		linesUsageStatus[aLineNumber] = true; 
+    		System.out.println("Matched Line " + lines[aMatchedLine] + " for pattern " + Arrays.toString(aRegexes));
+//    		linesUsageStatus[aLineNumber] = true;
+    		linesUsageStatus[aMatchedLine] = true; 
+
     	}
     	return true;
     	
     }
+    @Override
+   	public boolean match(Pattern[] aPatterns, LinesMatchKind aMatchKind, int aFlags ) {
+//       	Pattern[] aPatterns = new Pattern[aRegexes.length];
+       	int aLineNumber = startLineNumber;
+       	Set<Integer> aMatchedLines = new HashSet<>();
+       	for (int aRegexIndex = 0; aRegexIndex < aPatterns.length; aRegexIndex++) {
+       		Pattern aPattern = aPatterns[aRegexIndex];  
+       		boolean aMatch = false;
+//       		int aMatchedLineNumber = 0;
+       		for (; aLineNumber < lines.length; aLineNumber++) {
+       			if (linesUsageStatus[aLineNumber]) 
+       				continue; 
+       			String aLine =  lines[aLineNumber];
+       			aMatch = aPattern.matcher(aLine).matches();
+       			if (aMatch) {
+       				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {
+//       					if (aLineNumber == 35) {
+//       						String aTrueLine = aLine;
+//       					}
+       	    			aMatchedLines.add(aLineNumber);
+       	    		}
+       				break;
+       			}
+       		};
+       		if (!aMatch) {
+       			lastUnmatchedRegex = aPatterns[aRegexIndex].toString();
+       			return false;
+       		}
+       		
+       		
+   		}
+       	if (aMatchKind == LinesMatchKind.MULTIPLE) {
+   			return true;
+   		}
+       	if (aMatchKind == LinesMatchKind.ONE_TIME_SUBSEQUENCE) {
+       		startLineNumber = aLineNumber + 1;
+       		return true;
+       	}
+       	for (Integer aMatchedLine:aMatchedLines) {
+       		System.out.println("Matched Line " + lines[aMatchedLine] + " for pattern " + Arrays.toString(aPatterns));
+//       		linesUsageStatus[aLineNumber] = true;
+       		linesUsageStatus[aMatchedLine] = true; 
+
+       	}
+       	return true;
+       	
+       }
     @Override
 	public String getLastUnmatchedRegex() {
 		return lastUnmatchedRegex;

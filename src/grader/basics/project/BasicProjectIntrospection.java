@@ -1662,6 +1662,9 @@ public class BasicProjectIntrospection {
 			String[] anActual) {
 		if (aSpecification == null || aSpecification.size() == 0)
 			return true;
+		if (anActual.length == 0) {
+			return false;
+		}
 		String[] anActualsClone = anActual.clone();
 		normalizeTags(anActualsClone);
 		Set anActualSet = new HashSet(Arrays.asList(anActualsClone));

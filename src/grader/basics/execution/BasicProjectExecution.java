@@ -55,7 +55,9 @@ public class BasicProjectExecution {
 	public static final String MISSING_CONSTRUCTOR = "Status.MissingConstructor";
 	public static final String CLASS_MATCHED = "Status.ClassMatched";
 
-	static ExecutorService executor = Executors.newSingleThreadExecutor();
+//	static ExecutorService executor = Executors.newSingleThreadExecutor();
+	static ExecutorService executor = createExecutor();
+
 	
 	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
 																// milliseconds
@@ -85,6 +87,10 @@ public class BasicProjectExecution {
 	}
 	public static int getProcessTimeOut() {
 		return processTimeOut;
+	}
+	
+	public static ExecutorService createExecutor() {
+		return  Executors.newCachedThreadPool();
 	}
 
 	public static void setProcessTimeOut(int newVal) {
@@ -117,7 +123,9 @@ public class BasicProjectExecution {
 			future.cancel(true); // not needed really
 			System.err.println("Terminated execution after milliseconds:"
 					+ aMillSeconds + " suspecting infinite loop");
-			executor = Executors.newSingleThreadExecutor();
+//			executor = Executors.newSingleThreadExecutor();
+			executor = createExecutor();
+
 			throw e;
 //			return null;
 		} catch (ExecutionException e) {
