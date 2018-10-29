@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+//import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import util.misc.Common;
 import util.trace.Tracer;

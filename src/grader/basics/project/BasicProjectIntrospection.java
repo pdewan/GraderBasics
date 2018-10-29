@@ -26,7 +26,7 @@ import java.util.Vector;
 
 import org.junit.Assert;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+//import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import util.annotations.IsRestriction;
 import util.annotations.Tags;
