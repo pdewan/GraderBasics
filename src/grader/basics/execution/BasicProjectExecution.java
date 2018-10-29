@@ -129,18 +129,27 @@ public class BasicProjectExecution {
 			throw e;
 //			return null;
 		} catch (ExecutionException e) {
+
 			System.err
 					.println("Execution exception caused by invocation exception caused by:");
-			Throwable aCause1 = e.getCause();
-			
-			Throwable aCause2 = aCause1.getCause();
-			if (aCause2 != null) {
-				aCause2.printStackTrace();
-				throw aCause2;
-			} else {
-				aCause1.printStackTrace();
-				throw aCause1;
+			Throwable t = e;
+			while (t.getCause() != null) {
+				t=t.getCause();
 			}
+			t.printStackTrace();
+			Tracer.info(BasicProjectExecution.class, "Exception:" + t + " at" + Arrays.toString(t.getStackTrace()));
+
+			throw t;
+//			Throwable aCause1 = e.getCause();
+//			
+//			Throwable aCause2 = aCause1.getCause();
+//			if (aCause2 != null) {
+//				aCause2.printStackTrace();
+//				throw aCause2;
+//			} else {
+//				aCause1.printStackTrace();
+//				throw aCause1;
+//			}
 			
 //			executor = Executors.newSingleThreadExecutor();
 
@@ -284,7 +293,14 @@ public class BasicProjectExecution {
 			return null;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Throwable t = e;
+			while (t.getCause() != null) {
+				t=t.getCause();
+			}
+			t.printStackTrace();
+			Tracer.info(BasicProjectExecution.class, "Exception:" + t + " at" + Arrays.toString(t.getStackTrace()));
+
+//			e.getCause().printStackTrace();
 			executor = Executors.newSingleThreadExecutor();
 
 			future.cancel(true);

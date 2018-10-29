@@ -16,7 +16,9 @@ public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 	Object actualObject;
 	public AGradedClassProxyInvocationHandler (Object anActualObject) {
 		actualObject = anActualObject;
+		if (actualObject != null) {
 		actualClass = anActualObject.getClass();
+		}
 	}
 
 	@Override
