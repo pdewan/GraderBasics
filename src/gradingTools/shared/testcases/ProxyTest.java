@@ -58,7 +58,7 @@ public abstract class ProxyTest extends MethodExecutionTest{
 		return rootProxy;
 	}
 	protected void maybeAssertNoClass(Class aProxyClass, Object aProxy) {
-			assertTrue ("Could not instantiate/find class matching:" + 
+			assertTrue ("Could not find, or successfully call constructor, of class matching:" + 
 	Arrays.toString(BasicProjectIntrospection.getComputedInterfaceTags(aProxyClass)), aProxy != null);
 	
 	}
