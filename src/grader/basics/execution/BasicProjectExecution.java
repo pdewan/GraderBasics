@@ -119,6 +119,7 @@ public class BasicProjectExecution {
 			}
 		} catch (CancellationException | InterruptedException
 				| TimeoutException e) {
+			
 			e.printStackTrace();
 			future.cancel(true); // not needed really
 			System.err.println("Terminated execution after milliseconds:"
@@ -200,7 +201,16 @@ public class BasicProjectExecution {
 			try {
 				return aMethod.invoke(anObject, anArgs);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Throwable t = e;
+				while (t.getCause() != null) {
+					t=t.getCause();
+				}
+				t.printStackTrace();
+				Tracer.info(BasicProjectExecution.class, "Exception:" + t + " at" + Arrays.toString(t.getStackTrace()));
+
+				Tracer.info(BasicProjectExecution.class, "Terminated!");
+			
+//				e.printStackTrace();
 				return null;
 			}
 		}
