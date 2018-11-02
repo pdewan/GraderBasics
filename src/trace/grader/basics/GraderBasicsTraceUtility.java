@@ -16,15 +16,17 @@ import util.trace.Tracer;
 
 public class GraderBasicsTraceUtility {
 	static boolean turnOn = true;
+	@Deprecated
 	public static boolean isTurnOn() {
 		return turnOn;
 	}
+	@Deprecated
 	public static void setTurnOn(boolean turnOn) {
 		GraderBasicsTraceUtility.turnOn = turnOn;
 	}
 	public static void setTracing() {
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
-		if (isTurnOn()) {
+//		if (isTurnOn()) {
 			Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
 			Tracer.setKeywordPrintStatus(LocatableTest.class, true);
 			Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);
@@ -36,7 +38,7 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(BasicProjectExecution.class, true);
 			Tracer.setKeywordPrintStatus(DirectoryUtils.class, true);
 			Tracer.setKeywordPrintStatus(TestCaseResult.class, true);
-		}
+//		}
 
 	}
 
