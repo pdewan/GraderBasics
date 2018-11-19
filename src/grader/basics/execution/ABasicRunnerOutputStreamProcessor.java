@@ -25,9 +25,29 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 		// runner.appendProcessOutput(processName, infoString);
 		// }
 	}
+	
+	public static  int maxOutputLines = Tracer.getMaxTraces();
+	 public static int getMaxOutputLines() {
+		return maxOutputLines;
+	}
+
+	public static void setMaxOutputLines(int maxOutputLines) {
+		ABasicRunnerOutputStreamProcessor.maxOutputLines = maxOutputLines;
+	}
+
+	int numLinesOutput = 0;
+	boolean linesErrorGiven = false;
 
 	@Override
 	public void processLine(String s) {
+		if (numLinesOutput > getMaxOutputLines()) {
+			if (!linesErrorGiven) {
+				linesErrorGiven = true;
+				Tracer.error("Num output lines exceeded " + getMaxOutputLines());
+							}
+			return;
+		}
+		numLinesOutput++;
 		// Printing moved to BasicRunningProject when signaled instead of when received
 		// Tracer.info(this,"Process line:" + s);
 		runner.appendCumulativeOutput(s + "\n"); // append cumulative output
