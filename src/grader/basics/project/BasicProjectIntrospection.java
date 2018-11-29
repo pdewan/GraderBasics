@@ -329,8 +329,13 @@ public class BasicProjectIntrospection {
 		if (aProxy.getName().startsWith("java"))
 			return false; // not a user defined class, should have a list of
 							// prefixes
+		if (aCandidate.getName().startsWith("java"))
+			return false; // would not need proxy for predefine class
 		if (aProxy.isPrimitive()) {
 			return false; // they should have been equal
+		}
+		if (aCandidate.isPrimitive() || aCandidate.equals(String.class)) {
+			return false;  // they should have been equal
 		}
 		// types in two different systems
 		if (aCandidate.isInterface()) {
@@ -921,11 +926,24 @@ public class BasicProjectIntrospection {
 		return findInterface(CurrentProjectHolder.getOrCreateCurrentProject(),
 				aProxyClass);
 	}
+	
+	protected static Map<String, Class> classToMethodMatch = new HashMap();
+	
+	protected static void addDummyMethodMatchClass(Class aClass) {
+		classToMethodMatch.put(aClass.getName(), Object.class);
+	}
+	
+	protected static boolean isDummyMethodClass(Class aClass) {
+		return Object.class.equals(classToMethodMatch.get(aClass.getName()));
+	}
 
 	public static Class findClass(Project aProject, Class aProxyClass) {
 		// System.out.println(("finding class:" + aProxyClass.getName()));
 		if (isPredefinedType(aProxyClass) && !aProxyClass.isInterface())
 			return aProxyClass;
+		if (isDummyMethodClass(aProxyClass)) { // we have already visited this class in method match, the last alternative
+			return null;
+		}
 		Class aCachedClass = keyToClass.get(aProxyClass.getName());
 		if (aCachedClass == null) {
 			String[] aTags = getTags(aProxyClass);
@@ -963,6 +981,7 @@ public class BasicProjectIntrospection {
 
 			if (retVal == null) {
 				retVal = Object.class;
+				
 				// System.err.println("Could not find class matching:" +
 				// Arrays.toString(aTags));
 			} else {
@@ -977,8 +996,10 @@ public class BasicProjectIntrospection {
 				keyToClass.put(aProxyClass.getName(), aCachedClass);
 			}
 		}
-		if (aCachedClass == Object.class)
+		if (aCachedClass == Object.class) {
+			addDummyMethodMatchClass(aProxyClass);
 			return null;
+		}
 		return aCachedClass;
 
 		// if (retVal == null)
@@ -2220,7 +2241,7 @@ public class BasicProjectIntrospection {
 					aProxyClass);
 			if (anActualClass == null) {
 				System.out.println("Could not find unique class with tags:"
-						+ getTags(aProxyClass));
+						+ Arrays.toString(getTags(aProxyClass)));
 				return null;
 			}
 
