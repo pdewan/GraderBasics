@@ -80,10 +80,15 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return singletonCheckPassed;
 	}
 	
+	protected void addFactoryMethodCredit() {
+		fractionComplete = factoryCredit;
+	}
+	
 	protected boolean doFactoryMethodTest() {
 		createUsingFactoryMethod();
 		doSingletonCheck(rootProxy());
-		fractionComplete = factoryCredit;
+//		fractionComplete = factoryCredit;
+		addFactoryMethodCredit();
 		if (factoryCredit != 1.0) {
 			assertTrue(factoryMessage, false);
 			

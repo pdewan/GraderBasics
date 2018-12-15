@@ -1235,7 +1235,7 @@ public class BasicProjectIntrospection {
 				CurrentProjectHolder.getOrCreateCurrentProject(), aTags);
 		if (retVal == null && aTags.length > 0) {
 			Tracer.info(BasicProjectIntrospection.class,
-					"Could not find class tagged:" + Arrays.toString(aTags));
+					"Could not find unique class tagged:" + Arrays.toString(aTags));
 		}
 		// return
 		// findClassByTags(CurrentProjectHolder.getOrCreateCurrentProject(),

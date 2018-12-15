@@ -424,9 +424,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public String getText() {
 		return getName() + "," + getUnroundedScore() +  "," + getMessage();
 	}
-	public String toString() {
-		return getName();
-	}
+//	public String toString() {
+//		return getName();
+//	}
 	@Visible(false)
 	@Override
 	public double getComputedMaxScore() {
@@ -518,7 +518,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			return getLeafClasses();
 		return emptySet;
 	}
-	
+	public String toString() {
+		return getName() + "(" + super.toString() + ")";
+	}
 	
 //	@Override
 //	public void setTopLevelSuite(GradableJUnitSuite newVal) {
