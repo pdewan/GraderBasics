@@ -110,6 +110,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	    				wait();
 //	    				System.out.println("end wait 1");
 	    			} else {
+//	    				System.out.println(Thread.currentThread() + " Waiting for resort time");
 	    				wait(RESORT_TIME);
 //	    				wait((long)Math.ceil(maxDiff/1e6));
 //	    				System.out.println("end wait 2");
@@ -234,6 +235,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     @Override
 	public void appendCumulativeOutput(String newVal) {
+//    	System.out.println(Thread.currentThread() + " appending output" + newVal);
         if (this.output == null && newVal != null) {
             this.output = "";
         }
@@ -286,7 +288,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
            return processToErrors;
        }
 
-	protected void doAppendProcessOutput(String aProcess, String newVal) {
+	protected synchronized void doAppendProcessOutput(String aProcess, String newVal) {
     	// delete me
 //    	System.out.println("+++++ " + Thread.currentThread().getId() + " " + java.lang.management.ManagementFactory.getRuntimeMXBean().getName() + " - " + aProcess + " - " + newVal);
     	
@@ -305,19 +307,30 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         if (newVal == null) {
             return;
         }
+//        System.out.println(("Current thread:" + Thread.currentThread()));
         List<String> aProcessOutputLines = processToOutputLines.get(aProcess);
         StringBuffer aProcessOutput = processToOutput.get(aProcess);
+//        System.out.println(" process output of " + aProcess + " aProcessOutput " + aProcessOutput);
 //		boolean newProcess = processToTranscriptManager.get(aProcess) == null;
 //		if (processOutput == null && newVal != null) {
         if (aProcessOutput == null) {
             aProcessOutput = new StringBuffer();
             aProcessOutputLines = new ArrayList();
+//            System.out.println(" process output of " + aProcess + " aProcessOutput " + aProcessOutput);
+
             processToOutput.put(aProcess, aProcessOutput);
             processToOutputLines.put(aProcess, aProcessOutputLines);
+//            System.out.println(" process output lines of " + aProcess + " aProcessOutputLines " + aProcessOutputLines);
+
+
         }
 
         aProcessOutput.append(newVal);
+//        System.out.println(" new process output  " + aProcessOutput);
+
         aProcessOutputLines.add(newVal);
+//        System.out.println(" new process output lines " + aProcessOutputLines);
+
         
 //		processToOutput.put(aProcess, aProcessOutput);
         if (outputBasedInputGenerator != null) {
@@ -501,6 +514,8 @@ public void appendCumulativeOutput() {
 //             project.setCurrentInput(input.toString());
 //         }
     }
+    
+    public static final int OUTPUT_SLEEP_TIME = 5000;
 
     @Override
 	public String await() throws NotRunnableException {
@@ -514,6 +529,14 @@ public void appendCumulativeOutput() {
         }
         appendCumulativeOutput();
         maybeSetCurrentProjectIO();
+        try {
+            System.out.println(("Current thread:" + Thread.currentThread() + " sleeping for  " + OUTPUT_SLEEP_TIME ));
+
+			Thread.sleep(OUTPUT_SLEEP_TIME); // wait for output to be received
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //        if (project != null) {
 //            project.setCurrentOutput(new StringBuffer(output));
 //            project.setCurrentInput(input.toString());

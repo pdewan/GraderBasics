@@ -330,7 +330,9 @@ public class BasicGradingEnvironment {
     protected boolean loadClasses = true;
 
     protected boolean compileMissingObjectCode = false;
-    protected boolean unzipFiles = false;
+//    protected boolean unzipFiles = false;
+    protected boolean unzipFiles = true;
+
  
     protected boolean forceCompile = false; //compile whether that is needed or not
     protected boolean checkStyle = false; 
@@ -374,6 +376,7 @@ public class BasicGradingEnvironment {
 	public  void setUnzipFiles(boolean unzipFiles) {
 		this.unzipFiles = unzipFiles;
 	}
+	
 	 public  boolean isCheckStyle() {
 			return checkStyle;
 		}

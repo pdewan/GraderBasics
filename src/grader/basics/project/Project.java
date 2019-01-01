@@ -22,6 +22,9 @@ public interface Project {
 	public static final String BINARY = "bin";
     public static final String BINARY_2 = "out";
     public static final String BINARY_3 = "build"; // net beans
+    public static final String BINARY_4 = "target"; // net beans
+    public static final String[] BINARIES  = {BINARY, BINARY_2, BINARY_3, BINARY_4};
+
 //    
 
 //

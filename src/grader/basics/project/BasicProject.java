@@ -166,27 +166,29 @@ public class BasicProject implements Project {
     }
     
     protected File searchBuildFolder(String preferredClass) throws FileNotFoundException {
-  	  
-//      Option<File> out = DirectoryUtils.locateFolder(directory, "out");
-        if (out == null)
-  	  out = DirectoryUtils.locateFolder(directory, Project.BINARY_2);
-//      if (out.isEmpty())
-//      	out = DirectoryUtils.locateFolder(directory, Project.BINARY_0);
-
-      
-
-//      Option<File> bin = DirectoryUtils.locateFolder(directory, "bin");
-        if (bin == null)
-      bin = DirectoryUtils.locateFolder(directory,  Project.BINARY_0); // just to handle grader itself, as it has execuot.c
-      if (bin.isEmpty())
-//      Option<File> bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
-      	bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
+  	   for (String aBinary:Project.BINARIES) {
+  		   bin = DirectoryUtils.locateFolder(directory, aBinary);
+  		   if (bin != null)
+  			   break;
+  	   }
+//        if (out == null)
+//  	  out = DirectoryUtils.locateFolder(directory, Project.BINARY_2);
+//
+//
+//      
+//
+//        if (bin == null)
+//      bin = DirectoryUtils.locateFolder(directory,  Project.BINARY_0); // just to handle grader itself, as it has execuot.c
+//      if (bin.isEmpty())
+//      	bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
 
 
 
 
       // If there is no 'out' or 'bin' folder then give up
-      if (out.isEmpty() && bin.isEmpty()) {
+//      if (out.isEmpty() && bin.isEmpty()) {
+      if (bin == null || bin.isEmpty()) {
+
       	if (noSrc) {
                   return sourceFolder;
               } 
@@ -202,9 +204,9 @@ public class BasicProject implements Project {
           // There can be more folders under it, so look around some more
           // But first check the class name to see what we are looking for
           File dir = null;
-          if (out.isDefined()) {
-              dir = out.get();
-          }
+//          if (out.isDefined()) {
+//              dir = out.get();
+//          }
           if (bin.isDefined()) {
               dir = bin.get();
           }

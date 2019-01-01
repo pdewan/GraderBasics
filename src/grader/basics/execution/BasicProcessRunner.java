@@ -1,5 +1,8 @@
 package grader.basics.execution;
 
+import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.BasicProjectIntrospection;
 //import framework.execution.ARunningProject;
 import grader.basics.project.Project;
 import grader.basics.trace.UserProcessExecutionFinished;
@@ -18,6 +21,7 @@ import grader.basics.util.TimedProcess;
 //import grader.language.LanguageDependencyManager;
 //import grader.permissions.java.JavaProjectToPermissionFile;
 //import grader.sakai.project.SakaiProject;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,10 +68,12 @@ public class BasicProcessRunner implements Runner {
 	protected List<String> processesWithStartTags;
 	protected String specifiedMainClass;
 	public static final String MAIN_ENTRY_POINT = "main";
-	protected void initializeExecutionState() {
-//		executionSpecification = ExecutionSpecificationSelector
-//				.getExecutionSpecification();
-	}
+	protected BasicExecutionSpecification executionSpecification;
+	
+//	protected void initializeExecutionState() {
+////		executionSpecification = ExecutionSpecificationSelector
+////				.getExecutionSpecification();
+//	}
 	// At some point we need a constructor with a map of entry points, called by this constructor
 	public BasicProcessRunner(Project aProject, String aSpecifiedProxyMainClass) throws NotRunnableException {
 		try {
@@ -114,23 +120,23 @@ public class BasicProcessRunner implements Runner {
 	public BasicProcessRunner() throws NotRunnableException {
 
 	}
-	public Map<String, String> getEntryPoints() {
-		
-//		if (entryPoints == null) {
-//			entryPoints = LanguageDependencyManager.getMainClassFinder()
-//					.getEntryPoints(project);
+//	public Map<String, String> getEntryPoints() {
+//		
+////		if (entryPoints == null) {
+////			entryPoints = LanguageDependencyManager.getMainClassFinder()
+////					.getEntryPoints(project);
+////
+////		}
+////		return entryPoints;
+//		
+//		return null;
+//	}
+
+//	public File getFolder() {
+////		return getFolder(getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT));
 //
-//		}
-//		return entryPoints;
-		
-		return null;
-	}
-
-	public File getFolder() {
-//		return getFolder(getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT));
-
-		return getFolder(getEntryPoints().get(getMainEntryPoint()));
-	}
+//		return getFolder(getEntryPoints().get(getMainEntryPoint()));
+//	}
 
 	public File getFolder(String aMainClass) {
 		if (folder == null) {
@@ -220,14 +226,14 @@ public class BasicProcessRunner implements Runner {
 			throws NotRunnableException {
 		return run(null, processToInput, timeout);
 	}
-	protected String getMainEntryPoint() {
-		return "main";
-	}
-	static final List<String> emptyStringList = new ArrayList();
-	protected List<String> getProcessTeams() {
-//		return executionSpecification.getProcessTeams();
-		return emptyStringList;
-	}
+//	protected String getMainEntryPoint() {
+//		return "main";
+//	}
+//	static final List<String> emptyStringList = new ArrayList();
+//	protected List<String> getProcessTeams() {
+////		return executionSpecification.getProcessTeams();
+//		return emptyStringList;
+//	}
 
 	/**
 	 * This runs the project providing input and arguments
@@ -295,14 +301,14 @@ public class BasicProcessRunner implements Runner {
 			throws NotRunnableException {
 		return run(null, input, args, timeout);
 	}
-	protected List<String> getProcesses(String firstTeam) {
-//		return executionSpecification.getProcesses(firstTeam);
-		return null;
-	}
-	protected List<String> getTerminatingProcesses(String firstTeam) {
-//		return executionSpecification.getTerminatingProcesses(firstTeam);
-		return null;
-	}
+//	protected List<String> getProcesses(String firstTeam) {
+////		return executionSpecification.getProcesses(firstTeam);
+//		return null;
+//	}
+//	protected List<String> getTerminatingProcesses(String firstTeam) {
+////		return executionSpecification.getTerminatingProcesses(firstTeam);
+//		return null;
+//	}
 	public RunningProject runDefaultProcessTeam(List<String> aProcessTeams, String input, String[] args, int timeout, InputGenerator anOutputBasedInputGenerator)
 			throws NotRunnableException {
 	
@@ -425,11 +431,11 @@ public class BasicProcessRunner implements Runner {
 //		}
 	}
 	
-	protected List<String> getStartTags(String aProcess) {
-//		return executionSpecification
-//				.getStartTags(aProcess);
-		return null;
-	}
+//	protected List<String> getStartTags(String aProcess) {
+////		return executionSpecification
+////				.getStartTags(aProcess);
+//		return null;
+//	}
 
 	public RunningProject run(String aProcessTeam,
 			int aTimeout, InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput)
@@ -546,24 +552,24 @@ public class BasicProcessRunner implements Runner {
 		ThreadSupport.sleep(PORT_RELEASE_TIME);
 	}
 	
-	protected String searchForEntryPoint (String aProcess) {
-		return null; // should have a seter for this
-//		List<String> basicCommand = StaticConfigurationUtils
-//				.getBasicCommand(aProcess);
-//		String anEntryPoint = null;
-//		if (StaticConfigurationUtils.hasEntryPoint(basicCommand))
-//			
-//		{
-//			anEntryPoint = executionSpecification.getEntryPoint(aProcess);
-//			if (anEntryPoint == null)
-//				throw EntryPointNotFound.newCase(this);
-//		}
-//		if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
-//			getFolder(anEntryPoint);
-//		}
-//
-//		return anEntryPoint;
-	}
+//	protected String searchForEntryPoint (String aProcess) {
+//		return null; // should have a seter for this
+////		List<String> basicCommand = StaticConfigurationUtils
+////				.getBasicCommand(aProcess);
+////		String anEntryPoint = null;
+////		if (StaticConfigurationUtils.hasEntryPoint(basicCommand))
+////			
+////		{
+////			anEntryPoint = executionSpecification.getEntryPoint(aProcess);
+////			if (anEntryPoint == null)
+////				throw EntryPointNotFound.newCase(this);
+////		}
+////		if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
+////			getFolder(anEntryPoint);
+////		}
+////
+////		return anEntryPoint;
+//	}
 	protected String searchForEntryTag (String aProcess) {
 //		List<String> basicCommand = StaticConfigurationUtils
 //				.getBasicCommand(aProcess);
@@ -1147,4 +1153,102 @@ public class BasicProcessRunner implements Runner {
 		// return runner;
 		return process;
 	}
+	
+	protected void initializeExecutionState() {
+		executionSpecification = BasicExecutionSpecificationSelector.getBasicExecutionSpecification();
+	}
+
+	public Map<String, String> getEntryPoints() {
+		if (entryPoints == null) {
+			entryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(project, specifiedMainClass);
+
+		}
+		return entryPoints;
+	}
+
+	public File getFolder() {
+		return getFolder(getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT));
+	}
+	/**
+	 * This figures out what class is the "entry point", or, what class has
+	 * main(args)
+	 *
+	 * @param project
+	 *            The project to run
+	 * @return The class canonical name. i.e. "foo.bar.SomeClass"
+	 * @throws NotRunnableException
+	 */
+	protected String getMainEntryPoint() {
+		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
+		if (aRetVal == null) {
+			return "main";
+		}
+		return aRetVal;
+	}
+
+	protected List<String> getProcessTeams() {
+		return executionSpecification.getProcessTeams();
+	}
+
+	protected List<String> getProcesses(String firstTeam) {
+		return executionSpecification.getProcesses(firstTeam);
+	}
+
+	protected List<String> getTerminatingProcesses(String firstTeam) {
+		return executionSpecification.getTerminatingProcesses(firstTeam);
+	}
+	public String classWithEntryTagTarget(String anEntryTag) {
+		if (anEntryTag == null)
+			return "";
+		Class aClass = BasicProjectIntrospection.findUniqueClassByTag(project, anEntryTag);
+		if (aClass != null) {
+			String aRetVal = aClass.getName();
+			return aRetVal;
+		}
+//		if (project instanceof ProjectWrapper) {
+//			grader.project.flexible.FlexibleProject graderProject = ((ProjectWrapper) project).getProject();
+//			grader.project.flexible.FlexibleClassDescription aClassDescription = graderProject.getClassesManager()
+//					.tagToUniqueClassDescription(anEntryTag); // looks like we should use IntrpspectUtil
+//			return aClassDescription.getClassName();
+//		}
+		return null; // this should never be executed
+	}
+	public String classWithEntryTagsTarget(List<String> anEntryTags) {
+		if (anEntryTags == null)
+			return "";
+		Class aClass = BasicProjectIntrospection.findClassByTags(project, anEntryTags.toArray(emptyStringArray));
+		if (aClass != null) {
+			String aRetVal = aClass.getName();
+			return aRetVal; // added this
+		}
+		// we should not have to do what is below
+//		if (project instanceof ProjectWrapper) {
+//			grader.project.flexible.FlexibleProject graderProject = ((ProjectWrapper) project).getProject();
+//			grader.project.flexible.FlexibleClassDescription aClassDescription = graderProject.getClassesManager()
+//					.tagsToUniqueClassDescription(anEntryTags);
+//			return aClassDescription.getClassName();
+//		}
+		return null; // this should never be executed
+	}
+	protected List<String> getStartTags(String aProcess) {
+		return executionSpecification.getStartTags(aProcess);
+	}
+
+	// need an equivalent of this for basicprocessrunner
+	protected String searchForEntryPoint(String aProcess) {
+		List<String> basicCommand = BasicStaticConfigurationUtils.getBasicCommand(aProcess);
+		String anEntryPoint = null;
+		if (BasicStaticConfigurationUtils.hasEntryPoint(basicCommand))
+
+		{
+			anEntryPoint = executionSpecification.getEntryPoint(aProcess);
+			if (anEntryPoint == null)
+				throw EntryPointNotFound.newCase(this);
+		}
+		if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
+			getFolder(anEntryPoint);
+		}
+		return anEntryPoint;
+	}
+	
 }

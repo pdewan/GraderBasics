@@ -3,5 +3,7 @@ package grader.basics.execution;
 import grader.basics.project.Project;
 
 public interface RunnerFactory {
-    public Runner createProcessRunner(Project aProject, String aSpecifiedProxyMainClass);
+	public void setProcessRunner(Runner newVal);
+
+    public Runner getOrCreateProcessRunner(Project aProject, String aSpecifiedProxyMainClass);
 }

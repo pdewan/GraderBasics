@@ -39,7 +39,7 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 	boolean linesErrorGiven = false;
 
 	@Override
-	public void processLine(String s) {
+	public synchronized void processLine(String s) {
 		if (numLinesOutput > getMaxOutputLines()) {
 			if (!linesErrorGiven) {
 				linesErrorGiven = true;
