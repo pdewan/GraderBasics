@@ -171,18 +171,20 @@ public class BasicGradingEnvironment {
     	return findLibInMyClassPath(separator, "oeall");
     }
     protected String findLocalGraderClassPath(String separator) {
-    	String result = findLibInMyClassPath(separator, "graderbasics");
-    	if (result == null || result.isEmpty()) {
-    	 result = findLibInMyClassPath(separator, "local");
-    	}
-    	if (result == null || result.isEmpty()) {
-    		result = findLibInMyClassPath(separator, "basic");
-    	}
-    	if (result == null || result.isEmpty()) {
-    		// just use the entire clsas path of this grader
-    		result = System.getProperty("java.class.path");
-
-    	}
+    	String result = System.getProperty("java.class.path");
+//    	System.out.println("Classpath:" + result);
+//    	String result = findLibInMyClassPath(separator, "graderbasics");
+//    	if (result == null || result.isEmpty()) {
+//    	 result = findLibInMyClassPath(separator, "local");
+//    	}
+//    	if (result == null || result.isEmpty()) {
+//    		result = findLibInMyClassPath(separator, "basic");
+//    	}
+//    	if (result == null || result.isEmpty()) {
+//    		// just use the entire clsas path of this grader
+//    		result = System.getProperty("java.class.path");
+//
+//    	}
     	return result;
     }
     protected String findJUnitClassPath(String separator) {

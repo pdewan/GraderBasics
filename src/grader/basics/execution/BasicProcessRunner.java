@@ -1,28 +1,5 @@
 package grader.basics.execution;
 
-import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.project.BasicProjectIntrospection;
-//import framework.execution.ARunningProject;
-import grader.basics.project.Project;
-import grader.basics.trace.UserProcessExecutionFinished;
-import grader.basics.trace.UserProcessExecutionStarted;
-import grader.basics.trace.UserProcessExecutionTimedOut;
-import grader.basics.util.TimedProcess;
-//import grader.config.StaticConfigurationUtils;
-//import grader.execution.ExecutionSpecification;
-//import grader.config.StaticConfigurationUtils;
-//import grader.execution.EntryPointNotFound;
-//import grader.execution.ExecutionSpecification;
-//import grader.execution.ExecutionSpecificationSelector;
-//import grader.execution.MainClassFinder;
-//import grader.execution.TagNotFound;
-//import grader.executor.ExecutorSelector;
-//import grader.language.LanguageDependencyManager;
-//import grader.permissions.java.JavaProjectToPermissionFile;
-//import grader.sakai.project.SakaiProject;
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -35,6 +12,15 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.BasicProjectIntrospection;
+//import framework.execution.ARunningProject;
+import grader.basics.project.Project;
+import grader.basics.trace.UserProcessExecutionFinished;
+import grader.basics.trace.UserProcessExecutionStarted;
+import grader.basics.trace.UserProcessExecutionTimedOut;
+import grader.basics.util.TimedProcess;
 import util.misc.Common;
 import util.misc.ThreadSupport;
 import util.pipe.InputGenerator;
@@ -570,46 +556,23 @@ public class BasicProcessRunner implements Runner {
 ////
 ////		return anEntryPoint;
 //	}
-	protected String searchForEntryTag (String aProcess) {
-//		List<String> basicCommand = StaticConfigurationUtils
-//				.getBasicCommand(aProcess);
-//		
-////		if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
-////			getFolder(anEntryPoint);
-////		}
-//		String anEntryTag = null;
-//		List<String> anEntryTags = null;
-//		if (StaticConfigurationUtils.hasEntryTags(basicCommand))
-//			anEntryTags = executionSpecification.getEntryTags(aProcess);
-//		else if (StaticConfigurationUtils.hasEntryTag(basicCommand))
-//			anEntryTag = executionSpecification.getEntryTag(aProcess); // this will match entryTag also, fix at some pt
-//		
-//		// if (anEntryTag != null ) {
-//		// getFolder(anEntryTag);
-//		// }
-//		String aClassWithEntryTag = null;
-//		if (anEntryTag != null) {
-//			aClassWithEntryTag = classWithEntryTagTarget(anEntryTag);
-//			if (aClassWithEntryTag == null)
-//				throw TagNotFound.newCase(anEntryTag, this);
-//		} else if (anEntryTags != null) {
-//			aClassWithEntryTag = classWithEntryTagsTarget(anEntryTags);
-//			if (aClassWithEntryTag == null)
-//				throw TagNotFound.newCase(anEntryTags, this);
-//		}
-//		if (aClassWithEntryTag != null && folder == null) {
-//
-//			getFolder(aClassWithEntryTag);
-//		}
-//		return aClassWithEntryTag;
-		return null;
-	}
 	
+	public static final String[] EMPTY_STRING_ARGS = {};
 	protected String[] getArgs(String aProcess) {
-//		return executionSpecification.getArgs(aProcess).toArray(
-//				new String[0]);
-		return null;
+		List<String> aListArgs = executionSpecification.getArgs(aProcess);
+		if (aListArgs == null) {
+			return EMPTY_STRING_ARGS;
+		}
+		else {
+			return aListArgs.toArray(EMPTY_STRING_ARGS);
+		}
+//		return executionSpecification.getArgs(aProcess).toArray(new String[0]);
 	}
+//	protected String[] getArgs(String aProcess) {
+////		return executionSpecification.getArgs(aProcess).toArray(
+////				new String[0]);
+//		return null;
+//	}
 	
 	protected int getSleepTime(String aProcess) {
 //		return executionSpecification.getSleepTime(aProcess);
@@ -619,7 +582,10 @@ public class BasicProcessRunner implements Runner {
 	protected String[] getCommand(String aProcess, String anEntryPoint, String anEntryTag, String[] anArgs ) {
 //		return StaticConfigurationUtils.getExecutionCommand(project,
 //				aProcess, folder, anEntryPoint, anEntryTag, anArgs);
-		return null;
+			return BasicStaticConfigurationUtils.getExecutionCommand(project, aProcess, folder, anEntryPoint, anEntryTag,
+					anArgs);
+		
+//		return null;
 	}
 
 	protected void runTeamProcess(String aProcess, InputGenerator anOutputBasedInputGenerator) {
@@ -794,7 +760,7 @@ public class BasicProcessRunner implements Runner {
 	}
 	protected String[] maybeToExecutorCommand(String[] aCommand) {
 //		return ExecutorSelector.getExecutor().maybeToExecutorCommand(aCommand);
-		return null;
+		return aCommand;
 
 	}
 	@Override
@@ -1212,6 +1178,44 @@ public class BasicProcessRunner implements Runner {
 //			return aClassDescription.getClassName();
 //		}
 		return null; // this should never be executed
+	}
+	protected String searchForEntryTag(String aProcess) {
+		return searchForEntryTag(aProcess, BasicStaticConfigurationUtils.getBasicCommand());
+		
+	}
+	
+	protected String searchForEntryTag(String aProcess, List<String> basicCommand) {
+//		List<String> basicCommand = StaticConfigurationUtils.getBasicCommand(aProcess);
+
+		// if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
+		// getFolder(anEntryPoint);
+		// }
+		String anEntryTag = null;
+		List<String> anEntryTags = null;
+		if (BasicStaticConfigurationUtils.hasEntryTags(basicCommand))
+			anEntryTags = executionSpecification.getEntryTags(aProcess);
+		else if (BasicStaticConfigurationUtils.hasEntryTag(basicCommand))
+			anEntryTag = executionSpecification.getEntryTag(aProcess); // this will match entryTag also, fix at some pt
+
+		// if (anEntryTag != null ) {
+		// getFolder(anEntryTag);
+		// }
+		String aClassWithEntryTag = null;
+
+		if (anEntryTag != null ) {
+			aClassWithEntryTag = classWithEntryTagTarget(anEntryTag);
+			if (aClassWithEntryTag == null)
+				throw TagNotFound.newCase(anEntryTag, this);
+		} else if (anEntryTags != null ) {
+			aClassWithEntryTag = classWithEntryTagsTarget(anEntryTags);
+			if (aClassWithEntryTag == null)
+				throw TagNotFound.newCase(anEntryTags, this);
+		}
+		if (aClassWithEntryTag != null && folder == null) {
+
+			getFolder(aClassWithEntryTag);
+		}
+		return aClassWithEntryTag;
 	}
 	public String classWithEntryTagsTarget(List<String> anEntryTags) {
 		if (anEntryTags == null)

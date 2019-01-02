@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +23,7 @@ import java.util.regex.Pattern;
 import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.LinesMatcher;
 import util.pipe.ProcessInputListener;
+import util.remote.ProcessExecer;
 //import grader.config.StaticConfigurationUtils;
 //import grader.sakai.project.SakaiProject;
 //import grader.trace.overall_transcript.OverallTranscriptSaved;
@@ -515,9 +517,38 @@ public void appendCumulativeOutput() {
 //         }
     }
     
-    public static final int OUTPUT_SLEEP_TIME = 5000;
+    public static final int PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME = 5000;
+    public static final int PROCESS_OUTPUT_SLEEP_TIME = 1000;
 
-    @Override
+    protected static Integer processOutputSleepTime = PROCESS_OUTPUT_SLEEP_TIME;
+    public static Integer getProcessOutputSleepTime() {
+		return processOutputSleepTime;
+	}
+
+	public static void setProcessOutputSleepTime(Integer processOutputSleepTime) {
+		BasicRunningProject.processOutputSleepTime = processOutputSleepTime;
+	}
+
+	protected static Integer processTeamOutputSleepTime = PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME;
+
+    
+	public static Integer getProcessTeamOutputSleepTime() {
+		return processTeamOutputSleepTime;
+	}
+
+	public static void setProcessTeamOutputSleepTime(Integer processTeamOutputSleepTime) {
+		BasicRunningProject.processTeamOutputSleepTime = processTeamOutputSleepTime;
+	}
+	
+	public static int getOutputSleepTime() {
+		List<String> aProcessTeams = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getProcessTeams();
+		if (aProcessTeams != null && !aProcessTeams.isEmpty()) {
+			return getProcessTeamOutputSleepTime() ;
+		};
+		return getProcessOutputSleepTime();
+	}
+
+	@Override
 	public String await() throws NotRunnableException {
         if (exception != null) {
             throw exception;
@@ -530,9 +561,10 @@ public void appendCumulativeOutput() {
         appendCumulativeOutput();
         maybeSetCurrentProjectIO();
         try {
-            System.out.println(("Current thread:" + Thread.currentThread() + " sleeping for  " + OUTPUT_SLEEP_TIME ));
+        	int anOutputSleepTime = getOutputSleepTime();
+            System.out.println(("Current thread:" + Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime ));
 
-			Thread.sleep(OUTPUT_SLEEP_TIME); // wait for output to be received
+			Thread.sleep(getOutputSleepTime()); // wait for output to be received
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

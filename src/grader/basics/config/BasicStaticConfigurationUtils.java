@@ -64,11 +64,14 @@ public class BasicStaticConfigurationUtils {
 
 //	Comp533s18.execution = java, -cp, .{:}..{:}{classPath}{:}{oePath}{:}{junitPath}, {entryTags}, {args}
 
+//	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = {
+//			"java", "-cp", ".{:}..{:}{classPath}{:}{:}{junitPath}{:}{localGraderPath}", "{entryTags}", "{args}"
+//	};
 	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = {
-			"java", "-cp", ".{:}..{:}{classPath}{:}{:}{junitPath}", "{entryTags}", "{args}"
+			"java", "-cp", ".{:}..{:}{classPath}{:}{:}{junitPath}{:}{localGraderPath}", "{entryPoint}", "{args}"
 	};
 	public static final String[] DEFAULT_OE_BASIC_COMMAND_ARRAY = {
-			"java", "-cp", ".{:}..{:}{classPath}{:}{oePath}{:}{junitPath}", "{entryTags}", "{args}"
+			"java", "-cp", ".{:}..{:}{classPath}{:}{oePath}{:}{junitPath}{:}{localGraderPath}", "{entryTags}", "{args}"
 	};
 
 	public static final List<String> DEFAULT_JAVA_BASIC_COMMAND =
