@@ -110,8 +110,8 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 		return failure;
 	}
 	
-	static {
-		Tracer.setBufferTracedMessages(true);
-	}
+//	static {
+//		Tracer.setBufferTracedMessages(true);
+//	}
 
 }

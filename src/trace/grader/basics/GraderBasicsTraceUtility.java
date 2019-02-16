@@ -16,15 +16,26 @@ import util.trace.Tracer;
 
 public class GraderBasicsTraceUtility {
 	static boolean turnOn = true;
+	static boolean bufferTracedMessages = true;
 	@Deprecated
 	public static boolean isTurnOn() {
 		return turnOn;
 	}
+	public static void setBufferTracedMessages(boolean newVal) {
+		bufferTracedMessages  = newVal;
+	}
+	
+	public static boolean getBufferTracedMessages() {
+		return bufferTracedMessages;
+	}
+
 	@Deprecated
 	public static void setTurnOn(boolean turnOn) {
 		GraderBasicsTraceUtility.turnOn = turnOn;
 	}
 	public static void setTracing() {
+		Tracer.setBufferTracedMessages(bufferTracedMessages);
+
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
 //		if (isTurnOn()) {
 			Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
