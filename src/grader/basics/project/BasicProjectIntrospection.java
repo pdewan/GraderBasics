@@ -149,6 +149,29 @@ public class BasicProjectIntrospection {
 	// // return aClasses.get(0).getJavaClass();
 	//
 	// }
+	public static Set<Class> findClassesWithFewestTags(Set<Class> aClasses) {
+		if (aClasses.size() <= 1) return aClasses;
+		
+		Integer minTags = null;
+		for (Class aClass:aClasses) {
+			int aNumTags = getTags(aClass).length;
+			if (minTags == null) {
+				minTags = aNumTags;
+			} else if (aNumTags < minTags) {
+				minTags = aNumTags;
+			}
+		}
+		
+		Set<Class> aRetVal = new HashSet();
+		for (Class aClass:aClasses) {
+			int aNumTags = getTags(aClass).length;
+			if (aNumTags == minTags) {
+				aRetVal.add(aClass);
+			}
+		}
+		return aRetVal;
+		
+	}
 	public static Class findClass(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
 		String aTagsString = aTag == null ? "" : Arrays.toString(aTag);
@@ -160,6 +183,7 @@ public class BasicProjectIntrospection {
 				aTagMatch);
 
 		aClasses = removeSuperTypes(aClasses);
+		aClasses = findClassesWithFewestTags(aClasses);
 		if (aClasses.size() != 1) {
 			if (aClasses.size() > 1) {
 
@@ -168,7 +192,7 @@ public class BasicProjectIntrospection {
 								+ aClasses);
 			} else {
 				Tracer.info(BasicProjectIntrospection.class,
-						"Found no class mathcing descriptor."
+						"Found no class matching descriptor."
 								);
 			}
 			return null;
@@ -605,6 +629,11 @@ public class BasicProjectIntrospection {
 		// return aClasses.get(0).getJavaClass();
 
 	}
+//	public static Set<Class> findClasses(Project aProject, String[] aTag) {
+//		return findClassesWithFewestTags(findClasses(aProject,  null,
+//				aTag, null, null));
+//	}
+
 
 	// why are these not all sets?
 	public static Set<Class> findClasses(Project aProject, String aName,
@@ -1208,6 +1237,20 @@ public class BasicProjectIntrospection {
 		// return aClasses.get(0).getJavaClass();
 
 	}
+	public static Set<ClassDescription> findClassesByTags(Project aProject,
+			String[] aTags) {
+		return 
+				aProject
+				.getClassesManager()
+				.get()
+				.findClassAndInterfaces(null, aTags, null, null);
+
+		// if (aClasses.size() != 1) {
+		// return null;
+		// }
+		// return aClasses.get(0).getJavaClass();
+
+	}
 
 	public static void putUserObject(Object aKey, Object aValue) {
 		userObjects.put(aKey, aValue);
@@ -1424,7 +1467,8 @@ public class BasicProjectIntrospection {
 		for (ClassDescription aDescription : aClassDescriptions) {
 			aResult.add(aDescription.getJavaClass());
 		}
-		return aResult;
+		
+		return findClassesWithFewestTags(aResult);
 
 		// if (aClasses.size() != 1) {
 		// return null;
