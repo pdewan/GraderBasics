@@ -181,9 +181,11 @@ public class BasicProjectIntrospection {
 						+ " tag regex " + aTagMatch);
 		Set<Class> aClasses = findClasses(aProject, aName, aTag, aNameMatch,
 				aTagMatch);
-
-		aClasses = removeSuperTypes(aClasses);
+		/*
+		 * Switched order so we can find super class if it has fewer tags
+		 */
 		aClasses = findClassesWithFewestTags(aClasses);
+		aClasses = removeSuperTypes(aClasses);
 		if (aClasses.size() != 1) {
 			if (aClasses.size() > 1) {
 
