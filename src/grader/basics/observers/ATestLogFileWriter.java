@@ -408,6 +408,10 @@ public class ATestLogFileWriter extends RunListener {
 		return true;
 	}
 	public static String tail( File file, int lines) {
+		if (file == null) {
+			System.err.println("Null log file returning empty string");
+			return "";
+		}
 	    java.io.RandomAccessFile fileHandler = null;
 	    try {
 	        fileHandler = 
@@ -438,10 +442,12 @@ public class ATestLogFileWriter extends RunListener {
 	        String lastLine = sb.reverse().toString();
 	        return lastLine;
 	    } catch( java.io.FileNotFoundException e ) {
-	        e.printStackTrace();
+	    	System.err.println(e);
+//	        e.printStackTrace();
 	        return null;
 	    } catch( java.io.IOException e ) {
-	        e.printStackTrace();
+	    	System.err.println(e);
+//	        e.printStackTrace();
 	        return null;
 	    }
 	    finally {
