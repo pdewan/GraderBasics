@@ -16,7 +16,7 @@ public class TagNotFound extends TraceableError{
 	}
 	
 	public static TagNotFound newCase (Object aTag, Object aFinder) {
-		String aMessage = "Tag not found";
+		String aMessage = "Tags:" + aTag + "not found";
 		TagNotFound retVal = new TagNotFound(aMessage, aTag, aFinder);
 		retVal.announce();
 		return retVal;
