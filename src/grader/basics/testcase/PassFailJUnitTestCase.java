@@ -3,6 +3,7 @@ package grader.basics.testcase;
 import grader.basics.execution.RunningProject;
 //import grader.basics.execution.RunningProject;
 import grader.basics.junit.BasicJUnitUtils;
+import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.CurrentProjectHolder;
@@ -29,6 +30,7 @@ import org.junit.Test;
 public abstract class PassFailJUnitTestCase {
 	protected String name = "anonymous";
     public PassFailJUnitTestCase() {
+    	JUnitTestsEnvironment.addPassFailJUnitTestCase(this.getClass(), this);
     }
    
    

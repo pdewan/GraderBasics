@@ -242,6 +242,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		try {
 			numTests++;
 			Class aJUnitClass = getJUnitClass();
+			JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
+
 			runListener.setJUnitName(aJUnitClass.getName());
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
 			aRunner.run(runNotifier);
