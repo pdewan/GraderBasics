@@ -27,8 +27,13 @@ import org.junit.Test;
  * }
  * </pre>
  */
-public abstract class PassFailJUnitTestCase {
+public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected String name = "anonymous";
+	protected TestCaseResult lastResult; // last run, for depndent tests
+	
+	protected ABufferingTestInputGenerator outputBasedInputGenerator ;
+	protected RunningProject interactiveInputProject;
+
     public PassFailJUnitTestCase() {
     	JUnitTestsEnvironment.addPassFailJUnitTestCase(this.getClass(), this);
     }
@@ -88,6 +93,22 @@ public abstract class PassFailJUnitTestCase {
         		BasicJUnitUtils.assertTrue(e, 0);
         	}
         }
+	}
+	@Override
+	public void setLastResult(TestCaseResult lastResult) {
+		this.lastResult = lastResult;
+	}
+	@Override
+	public TestCaseResult getLastResult() {
+		return lastResult;
+	}
+	@Override
+	public ABufferingTestInputGenerator getOutputBasedInputGenerator() {
+		return outputBasedInputGenerator;
+	}
+	@Override
+	public RunningProject getInteractiveInputProject() {
+		return interactiveInputProject;
 	}
 }
 	
