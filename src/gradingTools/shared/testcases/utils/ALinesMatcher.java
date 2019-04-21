@@ -26,6 +26,11 @@ public class ALinesMatcher implements LinesMatcher {
     	linesUsageStatus = new boolean[aLines.length];
     	
     }
+    protected void resetLineStatus() {
+    	for (int i = 0; i < linesUsageStatus.length; i++) {
+    		linesUsageStatus[i] = false;
+    	}
+    }
     @Override
 	public boolean match(String[] aRegexes, LinesMatchKind aMatchKind, int aFlags ) {
 //    	Pattern[] aPatterns = new Pattern[aRegexes.length];
@@ -76,6 +81,7 @@ public class ALinesMatcher implements LinesMatcher {
     @Override
    	public boolean match(Pattern[] aPatterns, LinesMatchKind aMatchKind, int aFlags ) {
 //       	Pattern[] aPatterns = new Pattern[aRegexes.length];
+    	resetLineStatus();
        	int aLineNumber = startLineNumber;
        	Set<Integer> aMatchedLines = new HashSet<>();
        	for (int aRegexIndex = 0; aRegexIndex < aPatterns.length; aRegexIndex++) {
