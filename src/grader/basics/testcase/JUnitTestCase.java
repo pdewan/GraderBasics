@@ -12,5 +12,11 @@ public interface JUnitTestCase {
 	ABufferingTestInputGenerator getOutputBasedInputGenerator();
 
 	RunningProject getInteractiveInputProject();
+    /**
+   * @return A name or short description about the test case.
+   */
+	String getName();
+
+	void setName(String aName);
 
 }

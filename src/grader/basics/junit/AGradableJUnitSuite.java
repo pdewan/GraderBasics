@@ -175,6 +175,9 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public TestCaseResult test() throws NotAutomatableException,
 			NotGradableException {
 		for (GradableJUnitTest aTest : children) {
+			if (aTest.getJUnitTestCase() != null) {
+				System.out.println("Not automatically rerunning:" + jUnitClass + ".  Please run it individually");
+			}
 			TestCaseResult aChildResult = aTest.test();
 		}
 		int aNumSuccesses = numTestsSuceeded();

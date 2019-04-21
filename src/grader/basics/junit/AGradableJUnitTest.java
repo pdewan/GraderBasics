@@ -1,6 +1,7 @@
 package grader.basics.junit;
 
 import grader.basics.project.NotGradableException;
+import grader.basics.testcase.JUnitTestCase;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
@@ -54,6 +55,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //	RunNotifier runNotifier = RunNotifierFactory.getRunNotifier();
 
 	AJUnitTestResult runListener = new AJUnitTestResult();
+	JUnitTestCase jUnitTest;
 	int numTests = 0;
 	double fractionComplete = 0;
 	String status = "Not Tested";
@@ -144,6 +146,11 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		return group;
 	}
 	@Visible(false)
+	@Override
+	public JUnitTestCase getJUnitTestCase() {
+		return JUnitTestsEnvironment.getPassFailJUnitTest(jUnitClass);
+	}
+	@Visible(false)
 	public void setJUnitClass(Class aJUnitClass) {
 		jUnitClass = aJUnitClass;
 		setExplanation(aJUnitClass);
@@ -151,6 +158,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		setIsRestriction(aJUnitClass);
 		setIsExtra(aJUnitClass);
 		setGroup(aJUnitClass);
+		JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
+
 //		this.jUnitClass = aJUnitClass;
 //		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {
 //			MaxValue aMaxValue =  (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
@@ -242,12 +251,16 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		try {
 			numTests++;
 			Class aJUnitClass = getJUnitClass();
-			JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
+//			JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
 
 			runListener.setJUnitName(aJUnitClass.getName());
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
 			aRunner.run(runNotifier);
 			testCaseResult = runListener.getTestCaseResult();
+			jUnitTest = getJUnitTestCase();
+			if (jUnitTest != null) {
+				jUnitTest.setLastResult(testCaseResult);
+			}
 			failure = runListener.getFailure();
 			fractionComplete = testCaseResult.getPercentage();
 			showResult(testCaseResult);

@@ -23,6 +23,10 @@ public class JUnitTestsEnvironment {
 		JUnitTestContext aContext = history.get(aClass);
 		return aContext.getGradableJUnitTest();
 	}
+	public static PassFailJUnitTestCase getAndPossiblyRunGradableJUnitTest(Class aClass) {
+		JUnitTestContext aContext = history.get(aClass);
+		return aContext.getAndPossiblyRunJUnitPassFailTest();
+	}
 	public static PassFailJUnitTestCase getPassFailJUnitTest(Class aClass) {
 		JUnitTestContext aContext = history.get(aClass);
 		return aContext.getJUnitPassFailTest();

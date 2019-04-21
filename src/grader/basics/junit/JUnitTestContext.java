@@ -9,6 +9,8 @@ public interface JUnitTestContext {
 	void setGradableJUnitTest(GradableJUnitTest gradableJUnitTest);
 
 	PassFailJUnitTestCase getJUnitPassFailTest();
+	PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTest();
+
 
 	void setJUnitPassFailTest(PassFailJUnitTestCase junitTestCase);
 

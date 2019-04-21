@@ -95,6 +95,16 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
         }
 	}
 	@Override
+    public String getName() {
+        return name;
+    }
+    
+    @Override
+    public void setName (String aName) {
+    	name = aName;
+    }
+
+	@Override
 	public void setLastResult(TestCaseResult lastResult) {
 		this.lastResult = lastResult;
 	}

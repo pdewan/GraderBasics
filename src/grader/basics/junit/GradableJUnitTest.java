@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import grader.basics.testcase.JUnitTestCase;
 import util.models.PropertyListenerRegisterer;
 
 
@@ -68,5 +69,6 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializa
 		return (double) Math.round(aDouble * 10)/10.0;
 	}
 	double getDisplayedScore();
+	JUnitTestCase getJUnitTestCase();
 
 }

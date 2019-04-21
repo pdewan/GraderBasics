@@ -18,14 +18,21 @@ public class AJUnitTestContext implements JUnitTestContext {
 	}
 	@Override
 	public PassFailJUnitTestCase getJUnitPassFailTest() {
-		if (junitTestCase == null) {
-			gradableJUnitTest.test();
-		}
+//		if (junitTestCase == null) {
+//			gradableJUnitTest.test();
+//		}
 		return junitTestCase;
 	}
 	@Override
 	public void setJUnitPassFailTest(PassFailJUnitTestCase junitTestCase) {
 		this.junitTestCase = junitTestCase;
+	}
+	@Override
+	public PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTest() {
+		if (junitTestCase == null) {
+			gradableJUnitTest.test();
+		}
+		return junitTestCase;
 	}
 
 }
