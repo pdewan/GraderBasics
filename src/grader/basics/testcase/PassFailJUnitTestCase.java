@@ -76,8 +76,14 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
     }
     public abstract TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
 	NotGradableException;
-	@Test
+    @Test
 	public void defaultTest() {
+    	passfailDefaultTest();
+    }
+
+    
+	
+	public void passfailDefaultTest() {
 //		TestCaseResult result = null;
 		TestCaseResult lastResult = null;
 		
@@ -115,6 +121,10 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	@Override
 	public ABufferingTestInputGenerator getOutputBasedInputGenerator() {
 		return outputBasedInputGenerator;
+	}
+	@Override
+	public void setOutputBasedInputGenerator(ABufferingTestInputGenerator newVal) {
+		 outputBasedInputGenerator = newVal;
 	}
 	@Override
 	public RunningProject getInteractiveInputProject() {

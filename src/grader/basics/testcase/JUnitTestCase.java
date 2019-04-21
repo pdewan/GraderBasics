@@ -19,4 +19,6 @@ public interface JUnitTestCase {
 
 	void setName(String aName);
 
+	void setOutputBasedInputGenerator(ABufferingTestInputGenerator newVal);
+
 }

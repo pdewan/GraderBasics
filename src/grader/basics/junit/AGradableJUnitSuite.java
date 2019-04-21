@@ -177,8 +177,9 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		for (GradableJUnitTest aTest : children) {
 			if (aTest.getJUnitTestCase() != null) {
 				System.out.println("Not automatically rerunning:" + jUnitClass + ".  Please run it individually");
-			}
+			} else {
 			TestCaseResult aChildResult = aTest.test();
+			}
 		}
 		int aNumSuccesses = numTestsSuceeded();
 		if (aNumSuccesses == children.size()) {
