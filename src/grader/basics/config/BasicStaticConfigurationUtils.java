@@ -81,6 +81,9 @@ public class BasicStaticConfigurationUtils {
 	public static String toVariable(String aVariableName) {
 		return "{" + aVariableName + "}";
 	}
+	public static void setBasicCommandToDefaultEntryPointCommand() {
+		basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
+	}
 	public static List<String> getBasicCommand() {
 		if (basicCommand == null) {
 			basicCommand = DEFAULT_OE_BASIC_COMMAND;
