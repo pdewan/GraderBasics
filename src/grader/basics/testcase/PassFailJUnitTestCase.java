@@ -130,5 +130,9 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	public RunningProject getInteractiveInputProject() {
 		return interactiveInputProject;
 	}
+	@Override
+	public void setInteractiveInputProject(RunningProject aProject) {
+		 interactiveInputProject = aProject;
+	}
 }
 	

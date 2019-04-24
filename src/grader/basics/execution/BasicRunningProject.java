@@ -358,8 +358,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	
     @Override
 	public void appendProcessOutput(String aProcess, String newVal) {
+    	String aProcessName = aProcess == null?"main":aProcess;
     	if (BasicRunningProject.isEchoOutput())
-    		Tracer.info(this, "Received output from " + aProcess + ": " + newVal);
+    		Tracer.info(this, "Received output from " + aProcessName + ": " + newVal);
 //    	doAppendProcessOutput(aProcess, newVal);
     	Matcher timeMatcher = timePattern.matcher(newVal);
 //    	System.out.println("+++** " + newVal);
@@ -377,7 +378,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //			}
 //		}
     	synchronized(this) {
-			pendingOutput.addLast(new AProcessOutput(aTime, aProcess, newVal));
+//			pendingOutput.addLast(new AProcessOutput(aTime, aProcess, newVal));
+			pendingOutput.addLast(new AProcessOutput(aTime, aProcessName, newVal));
+
 			notify();
 	    }
 

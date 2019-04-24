@@ -21,4 +21,6 @@ public interface JUnitTestCase {
 
 	void setOutputBasedInputGenerator(ABufferingTestInputGenerator newVal);
 
+	void setInteractiveInputProject(RunningProject aProject);
+
 }
