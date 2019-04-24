@@ -1082,7 +1082,7 @@ public class BasicProjectExecution {
 	}
 	public static ResultingOutErr callMain(String aMainName, String[] args,
 			String... anInput) throws Throwable {
-		return callMain(BasicGradingEnvironment.get().isForkMain(), aMainName, args, anInput);
+		return callOrForkMain(BasicGradingEnvironment.get().isForkMain(), aMainName, args, anInput);
 //		if (!isReRunInfiniteProceses()
 //				&& CurrentProjectHolder.getOrCreateCurrentProject()
 //						.isInfinite())
@@ -1097,7 +1097,7 @@ public class BasicProjectExecution {
 //			return invokeMain(aMainName, args, anInput);
 //		}
 	}
-	public static ResultingOutErr callMain(boolean isFork, String aMainName, String[] args,
+	public static ResultingOutErr callOrForkMain(boolean isFork, String aMainName, String[] args,
 			String... anInput) throws Throwable {
 		if (!isReRunInfiniteProceses()
 				&& CurrentProjectHolder.getOrCreateCurrentProject()

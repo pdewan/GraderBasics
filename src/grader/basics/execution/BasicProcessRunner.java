@@ -698,7 +698,9 @@ public class BasicProcessRunner implements Runner {
 	protected  String[] getExecutionCommand(Project aProject,
 			File aBuildFolder, String anEntryPoint, String[] anArgs) {
 //		return StaticConfigurationUtils.getExecutionCommand(aProject, aBuildFolder, anEntryPoint);
-		return null;
+		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
+		
+//		return null;
 	}
 	@Override
 	public RunningProject run(InputGenerator aDynamicInputProvider, String anEntryPoint, String input,
@@ -706,7 +708,9 @@ public class BasicProcessRunner implements Runner {
 //		String[] command = StaticConfigurationUtils.getExecutionCommand(folder,
 //		String[] command = StaticConfigurationUtils.getExecutionCommand(project, getFolder(),
 //				anEntryPoint, args); // added args
-		String[] command = getExecutionCommand(project, getFolder(),
+//		String[] command = getExecutionCommand(project, getFolder(),
+//				anEntryPoint, args); // added args
+		String[] command = getExecutionCommand(project, getFolder(anEntryPoint),
 				anEntryPoint, args); // added args
 		return run(aDynamicInputProvider, command, input, args, timeout);
 
@@ -1135,6 +1139,7 @@ public class BasicProcessRunner implements Runner {
 	public File getFolder() {
 		return getFolder(getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT));
 	}
+	
 	/**
 	 * This figures out what class is the "entry point", or, what class has
 	 * main(args)
@@ -1145,6 +1150,8 @@ public class BasicProcessRunner implements Runner {
 	 * @throws NotRunnableException
 	 */
 	protected String getMainEntryPoint() {
+		if (specifiedMainClass != null)
+			return specifiedMainClass;
 		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
 		if (aRetVal == null) {
 			return "main";

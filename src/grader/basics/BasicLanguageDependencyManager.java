@@ -27,11 +27,12 @@ public class BasicLanguageDependencyManager {
 //	 static Map<String, Permissible> languageToDefaultPermissible = new HashMap<>();
 //	 static Map<String, PermissionsGenerator> languageToPermissionGenerator = new HashMap<>();;
 
-	 static String language;
 		
 		public static String JAVA_LANGUAGE = "Java";
 		public static String C_LANGUAGE = "C";
 		public static String PYTHON_LANGUAGE = "Python";
+		 static String language =JAVA_LANGUAGE ;
+
 
 	
 	public static  String binaryFileSuffix = ".class";

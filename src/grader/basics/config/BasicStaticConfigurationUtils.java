@@ -444,8 +444,10 @@ public class BasicStaticConfigurationUtils {
 		int argsIndex = basicCommand.indexOf(toVariable(ARGS));
 		if (argsIndex >= 0) {
 			basicCommand.remove(argsIndex);
+			if (anArgs != null) {
 			for (int i = 0; i < anArgs.length; i++) {
 				basicCommand.add(argsIndex + i, anArgs[i]);
+			}
 			}
 
 		}
@@ -456,8 +458,13 @@ public class BasicStaticConfigurationUtils {
 
 		List<String> basicCommand = null;
 		if (aProcessName == null || aProcessName.isEmpty()) {
-		
+		    if (anEntryPoint != null) {
+		    	basicCommand = getBasicCommand();
+//		    	basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
+
+		    } else {
 			basicCommand = getBasicCommand();
+		    }
 		} else {
 		
 			basicCommand = getBasicCommand(aProcessName);
