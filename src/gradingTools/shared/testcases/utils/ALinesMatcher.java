@@ -100,6 +100,7 @@ public class ALinesMatcher implements LinesMatcher {
 //       					}
        	    			aMatchedLines.add(aLineNumber);
        	    		}
+       				aLineNumber++;
        				break;
        			}
        		};

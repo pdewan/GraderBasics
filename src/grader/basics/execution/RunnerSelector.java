@@ -13,7 +13,9 @@ public class RunnerSelector {
 		RunnerSelector.factory = factory;
 	}
 	public static Runner getOrCreateProcessRunner(Project aProject, String aSpecifiedProxyMainClass) {
-		return factory.getOrCreateProcessRunner(aProject, aSpecifiedProxyMainClass);
+		Runner aNewValue = factory.getOrCreateProcessRunner(aProject, aSpecifiedProxyMainClass);
+		aNewValue.setSpecifiedMainClass(aSpecifiedProxyMainClass); // may use same project with different main classes
+		return aNewValue;
 	}
 
 }

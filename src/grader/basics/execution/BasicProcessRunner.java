@@ -1158,6 +1158,14 @@ public class BasicProcessRunner implements Runner {
 		}
 		return aRetVal;
 	}
+    @Override
+	public String getSpecifiedMainClass() {
+		return specifiedMainClass;
+	}
+    @Override
+	public void setSpecifiedMainClass(String specifiedMainClass) {
+		this.specifiedMainClass = specifiedMainClass;
+	}
 
 	protected List<String> getProcessTeams() {
 		return executionSpecification.getProcessTeams();

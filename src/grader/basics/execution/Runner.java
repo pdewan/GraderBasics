@@ -33,6 +33,10 @@ public interface Runner {
 
 	void terminateProcess();
 
+	String getSpecifiedMainClass();
+
+	void setSpecifiedMainClass(String specifiedMainClass);
+
 //	BasicRunningProject runMainClass(Class aClass, String input, String[] args,
 //			int timeout) throws NotRunnableException;
 
