@@ -908,7 +908,7 @@ public class BasicProcessRunner implements Runner {
 
 			 processObj = process.start();
 			if (folder != null)
-				UserProcessExecutionStarted.newCase(
+				UserProcessExecutionStarted.newCase(aCommand,
 						folder.getAbsolutePath(),
 						(entryPoints != null) ? entryPoints
 								.get(
