@@ -23,7 +23,10 @@ import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 public abstract class FactoryMethodTest extends ProxyTest{
 	
 	protected String[] factoryClassTags = new String[] {"SingletonsCreator"};
+	protected Class factoryClass;
 	protected String[] factoryMethodTags = new String[] {};
+	protected String factoryMethodName = "";
+
 	protected boolean foundFactoryMethod;
 	protected boolean foundFactoryClass;
 	protected boolean nullInstantiation;
@@ -64,11 +67,29 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return factoryClassTags;
 	}
 	
+	protected Class factoryClass() {
+		return factoryClass;
+	}	
 	protected String[] factoryMethodTags() {
 		return factoryMethodTags;
 	}
+	protected String factoryMethodName() {
+		return factoryMethodName;
+	}
+	protected Method factoryMethod() {
+		if (factoryClass == null) {
+			return null;
+		}
+		try {
+			return factoryClass.getMethod(factoryMethodName());
+		} catch (NoSuchMethodException | SecurityException e) {
+			return null;
+		}
+	}
 	protected boolean doSingletonCheck(Object aFirstInstantiation) {
-		Object aSecondCreation = createUsingFactoryMethod();
+//		Object aSecondCreation = createUsingFactoryClassAndMethodTags();
+		Object aSecondCreation = createUsingFactory();
+
 		singletonCheckPassed = aSecondCreation == aFirstInstantiation;
 		if (!singletonCheckPassed) {
 			factoryMessage = "First factory method return value " + 
@@ -84,8 +105,11 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		fractionComplete = factoryCredit;
 	}
 	
+	 
+	
 	protected boolean doFactoryMethodTest() {
-		createUsingFactoryMethod();
+//		createUsingFactoryClassAndMethodTags();
+		createUsingFactory();
 		doSingletonCheck(rootProxy());
 //		fractionComplete = factoryCredit;
 		addFactoryMethodCredit();
@@ -391,11 +415,19 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return aProxy;
 		
 	}
+	protected Object createUsingFactory() {
+		rootProxy = createUsingFactoryClassAndMethodTags();
+		return rootProxy;
+	}
 	
-	protected Object createUsingFactoryMethod() {
+	protected Object createUsingFactoryClassAndMethodTags() {
 		rootProxy = getObjectFromFactory(factoryClassTags(), factoryMethodTags(), proxyClass());
 		return rootProxy;
 	}	
+	protected Object createUsingFactoryClassAndMethodNames() {
+		rootProxy = getObjectFromFactory(getMethodName(), factoryClass(), factoryMethod(), proxyClass());
+		return rootProxy;
+	}
 	@Override
 	protected void executeOperations(Object aProxy) throws Exception {
 		// TODO Auto-generated method stub
