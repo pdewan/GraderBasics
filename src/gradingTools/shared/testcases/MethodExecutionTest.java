@@ -544,10 +544,20 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		}
 		return true;
 	}
+	protected void processCorrectOutputNoErrors() {
+		return;
+	}
+	protected void processCorrectOutputErrors() {
+		Assert.assertTrue(correctOutputButErrorsMessage()
+				+ NotesAndScore.PERCENTAGE_MARKER
+				+ correctOutputButErrorsCredit(), false);
+	}
 	protected void processSingleTryOutputErrorStatus() {
 		OutputErrorStatus retVal = getOutputErrorStatus();
-		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS)
+		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS) {
+			processCorrectOutputNoErrors();
 			return;
+		}
 		if (retVal == OutputErrorStatus.CORRECT_OUTPUT_ERRORS) {
 			// String aMessage = correctOutputButErrorsMessage() +
 			// NotesAndScore.PERECTAGE_CHARACTER +
@@ -556,9 +566,10 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 			// aMessage, false);
 			// This results in character becoming an int if marker is a
 			// character!
-			Assert.assertTrue(correctOutputButErrorsMessage()
-					+ NotesAndScore.PERCENTAGE_MARKER
-					+ correctOutputButErrorsCredit(), false);
+//			Assert.assertTrue(correctOutputButErrorsMessage()
+//					+ NotesAndScore.PERCENTAGE_MARKER
+//					+ correctOutputButErrorsCredit(), false);
+			processCorrectOutputErrors();
 			return;
 		}
 		Assert.assertTrue(incorrectOutputMessage() + 
