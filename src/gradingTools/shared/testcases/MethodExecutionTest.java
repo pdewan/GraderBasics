@@ -14,21 +14,26 @@ import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.ResultWithOutput;
 import grader.basics.execution.ResultingOutErr;
 import grader.basics.junit.BasicJUnitUtils;
+import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.NotesAndScore;
+import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
+import grader.basics.project.Project;
+import grader.basics.testcase.PassFailJUnitTestCase;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import util.awt.AnOutputQueue;
 import util.trace.Tracer;
 import grader.basics.execution.GradingMode;
 
 
-public abstract class MethodExecutionTest  {
+public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	public static String MATCH_ANY = "(.*)";
 	protected Object lastTargetObject;
 	protected double fractionComplete;
@@ -99,7 +104,11 @@ public abstract class MethodExecutionTest  {
 //		    BasicProjectIntrospection.toPrimitiveTypes(anArgTypes);
 //		    return anArgTypes;
 	}
-	
+    public  TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
+   	NotGradableException {
+    	
+    	throw new NotImplementedException();
+    }
 
 	protected  String getClassName() {
 		return null;

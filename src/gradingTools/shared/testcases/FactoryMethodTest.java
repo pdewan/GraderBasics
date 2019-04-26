@@ -370,6 +370,9 @@ public abstract class FactoryMethodTest extends ProxyTest{
 //		return aProxy;
 		
 	}
+	protected boolean matchProxyActualClass() {
+		return true;
+	}
 	protected Object getObjectFromFactory (String factoryMethodDescription, Class<?> factoryClass, Method factoryMethod, Class instantiatedTypeClass) {
 //		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
 //		foundFactoryClass = factoryClass != null;
@@ -413,6 +416,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 			
 		}
 		factoryCredit += factoryObjectCredit();
+		if (matchProxyActualClass()) {
 
 		Class aReturnedClass = anInstance.getClass();
 		
@@ -421,12 +425,14 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
 				anExpectedClass.isInstance(anInstance);
 //					aReturnedClass.equals(anExpectedClass);
+	
 		
 		if (!correctInstantiatedClass) {
 			factoryMessage = "Factory method returns instance of " + aReturnedClass + " instead of " + anExpectedClass;			
 			return maybeUseConstructor(instantiatedTypeClass);
 
 //			return assertingCreateInstance(instantiatedTypeClass);
+		}
 		}
 		factoryCredit += factoryObjectClassCredit();
 

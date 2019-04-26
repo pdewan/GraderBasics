@@ -1271,6 +1271,9 @@ public class BasicProjectExecution {
 	}
 
 	public static Object maybeGetActual(Object anObject) {
+		if (anObject == null) {
+			return null;
+		}
 		if (BasicProjectIntrospection.isReverseProxy(anObject)) {
 			Object anActualObject = BasicProjectIntrospection
 					.getReverseRealObject(anObject);
