@@ -126,7 +126,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	/*
 	 * This seems to be create, not get! Should not store anyway, as projects change
 	 */
-	protected Object getOrCreateObject (String[] factoryClassTag, String[] factoryMethodTag, Class instantiatedTypeClass) {
+	protected Object oldGetObjectFromFactory (String[] factoryClassTag, String[] factoryMethodTag, Class instantiatedTypeClass) {
 		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
 		foundFactoryClass = factoryClass != null;
 		factoryMessage = "";
@@ -192,8 +192,208 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return aProxy;
 		
 	}
+	protected Object getObjectFromFactory (String[] factoryClassTag, String[] factoryMethodTag, Class instantiatedTypeClass) {
+		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
+//		foundFactoryClass = factoryClass != null;
+//		factoryMessage = "";
+//		factoryCredit = 0;
+//		if (!foundFactoryClass) {
+//			factoryMessage = 
+//				factoryMessage = "Factory class:" + Arrays.toString(factoryClassTag) + " not found.";	
+//			return maybeUseConstructor(instantiatedTypeClass);
+//		}
+//		factoryCredit += factoryClassCredit();
+		return getObjectFromFactory(Arrays.toString(factoryClassTag), factoryClass,  factoryMethodTag, instantiatedTypeClass);
+//		Method factoryMethod =	BasicProjectIntrospection.findUniqueMethodByTag(
+//				factoryClass, factoryMethodTag);
+//		foundFactoryMethod = factoryMethod != null;
+//		if (!foundFactoryMethod) {
+//			factoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";	
+//			if (instantiatedTypeClass.isInterface()) {
+//			return maybeUseConstructor(instantiatedTypeClass);
+//			}
+//			else {
+//				assertTrue(factoryMessage, false);
+//			}
+//			
+//			
+//		}
+//		factoryCredit += factoryMethodCredit();
+//
+//		
+//		Object anInstance;
+//		try {
+//			anInstance = BasicProjectExecution.timedInvoke(factoryClass, factoryMethod, emptyObjectArgs);
+//		} catch (Throwable e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			anInstance = null;
+//		}
+//		nullInstantiation = anInstance == null;
+//		if (nullInstantiation) {
+//			factoryMessage = "Factory method returns null object";			
+//			return maybeUseConstructor(instantiatedTypeClass);
+////			return assertingCreateInstance(instantiatedTypeClass);
+//			
+//		}
+//		factoryCredit += factoryObjectCredit();
+//
+//		Class aReturnedClass = anInstance.getClass();
+//		
+//		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
+//		
+//		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
+//				anExpectedClass.isInstance(anInstance);
+////					aReturnedClass.equals(anExpectedClass);
+//		
+//		if (!correctInstantiatedClass) {
+//			factoryMessage = "Factory method returns instance of " + aReturnedClass + " instead of " + anExpectedClass;			
+//			return maybeUseConstructor(instantiatedTypeClass);
+//
+////			return assertingCreateInstance(instantiatedTypeClass);
+//		}
+//		factoryCredit += factoryObjectClassCredit();
+//
+//		Object aProxy = BasicProjectExecution.maybeReturnProxy(anInstance, instantiatedTypeClass);
+//	
+//		return aProxy;
+		
+	}
+	protected Object getObjectFromFactory (String factoryClassDescription, Class<?> factoryClass, String[] factoryMethodTag, Class instantiatedTypeClass) {
+//		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
+		foundFactoryClass = factoryClass != null;
+		factoryMessage = "";
+		factoryCredit = 0;
+		if (!foundFactoryClass) {
+			factoryMessage = 
+				factoryMessage = "Factory class:" + factoryClassDescription + " not found.";	
+			return maybeUseConstructor(instantiatedTypeClass);
+		}
+		factoryCredit += factoryClassCredit();
+		Method factoryMethod =	BasicProjectIntrospection.findUniqueMethodByTag(
+				factoryClass, factoryMethodTag);
+		return getObjectFromFactory(Arrays.toString(factoryMethodTag), factoryClass, factoryMethod, instantiatedTypeClass);
+//		foundFactoryMethod = factoryMethod != null;
+//		if (!foundFactoryMethod) {
+//			factoryMessage = "Factory method:" + Arrays.toString(factoryMethodTag) + " not found.";	
+//			if (instantiatedTypeClass.isInterface()) {
+//			return maybeUseConstructor(instantiatedTypeClass);
+//			}
+//			else {
+//				assertTrue(factoryMessage, false);
+//			}
+//			
+//			
+//		}
+//		factoryCredit += factoryMethodCredit();
+//
+//		
+//		Object anInstance;
+//		try {
+//			anInstance = BasicProjectExecution.timedInvoke(factoryClass, factoryMethod, emptyObjectArgs);
+//		} catch (Throwable e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			anInstance = null;
+//		}
+//		nullInstantiation = anInstance == null;
+//		if (nullInstantiation) {
+//			factoryMessage = "Factory method returns null object";			
+//			return maybeUseConstructor(instantiatedTypeClass);
+////			return assertingCreateInstance(instantiatedTypeClass);
+//			
+//		}
+//		factoryCredit += factoryObjectCredit();
+//
+//		Class aReturnedClass = anInstance.getClass();
+//		
+//		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
+//		
+//		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
+//				anExpectedClass.isInstance(anInstance);
+////					aReturnedClass.equals(anExpectedClass);
+//		
+//		if (!correctInstantiatedClass) {
+//			factoryMessage = "Factory method returns instance of " + aReturnedClass + " instead of " + anExpectedClass;			
+//			return maybeUseConstructor(instantiatedTypeClass);
+//
+////			return assertingCreateInstance(instantiatedTypeClass);
+//		}
+//		factoryCredit += factoryObjectClassCredit();
+//
+//		Object aProxy = BasicProjectExecution.maybeReturnProxy(anInstance, instantiatedTypeClass);
+//	
+//		return aProxy;
+		
+	}
+	protected Object getObjectFromFactory (String factoryMethodDescription, Class<?> factoryClass, Method factoryMethod, Class instantiatedTypeClass) {
+//		Class<?> factoryClass = BasicProjectIntrospection.findClassByTags(factoryClassTag);
+//		foundFactoryClass = factoryClass != null;
+//		factoryMessage = "";
+//		factoryCredit = 0;
+//		if (!foundFactoryClass) {
+//			factoryMessage = 
+//				factoryMessage = "Factory class:" + Arrays.toString(factoryClassTag) + " not found.";	
+//			return maybeUseConstructor(instantiatedTypeClass);
+//		}
+		foundFactoryMethod = factoryMethod != null;
+		if (!foundFactoryMethod) {
+			factoryMessage = "Factory method:" + factoryMethodDescription + " not found.";	
+			if (instantiatedTypeClass.isInterface()) {
+			return maybeUseConstructor(instantiatedTypeClass);
+			}
+			else {
+				assertTrue(factoryMessage, false);
+			}
+			
+			
+		}
+		factoryCredit += factoryMethodCredit();
+		
+//		factoryCredit += factoryMethodCredit();
+
+		
+		Object anInstance;
+		try {
+			anInstance = BasicProjectExecution.timedInvoke(factoryClass, factoryMethod, emptyObjectArgs);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			anInstance = null;
+		}
+		nullInstantiation = anInstance == null;
+		if (nullInstantiation) {
+			factoryMessage = "Factory method returns null object";			
+			return maybeUseConstructor(instantiatedTypeClass);
+//			return assertingCreateInstance(instantiatedTypeClass);
+			
+		}
+		factoryCredit += factoryObjectCredit();
+
+		Class aReturnedClass = anInstance.getClass();
+		
+		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
+		
+		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
+				anExpectedClass.isInstance(anInstance);
+//					aReturnedClass.equals(anExpectedClass);
+		
+		if (!correctInstantiatedClass) {
+			factoryMessage = "Factory method returns instance of " + aReturnedClass + " instead of " + anExpectedClass;			
+			return maybeUseConstructor(instantiatedTypeClass);
+
+//			return assertingCreateInstance(instantiatedTypeClass);
+		}
+		factoryCredit += factoryObjectClassCredit();
+
+		Object aProxy = BasicProjectExecution.maybeReturnProxy(anInstance, instantiatedTypeClass);
+	
+		return aProxy;
+		
+	}
+	
 	protected Object createUsingFactoryMethod() {
-		rootProxy = getOrCreateObject(factoryClassTags(), factoryMethodTags(), proxyClass());
+		rootProxy = getObjectFromFactory(factoryClassTags(), factoryMethodTags(), proxyClass());
 		return rootProxy;
 	}	
 	@Override
