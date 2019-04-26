@@ -716,7 +716,12 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		false);
 		return true;
 	}
-	@Test
+	// our parent class tags defaultTest
+	@Override
+	public void defaultTest() {
+    	test();
+    }
+//	@Test
     public void test() {
 		
         try {
