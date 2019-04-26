@@ -26,7 +26,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	protected Class factoryClass;
 	protected String[] factoryMethodTags = new String[] {};
 	protected String factoryMethodName = "";
-
+	protected Method factoryMethod;
 	protected boolean foundFactoryMethod;
 	protected boolean foundFactoryClass;
 	protected boolean nullInstantiation;
@@ -67,6 +67,13 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return factoryClassTags;
 	}
 	
+	protected Class getFactoryClass() {
+		if (factoryClass == null) {
+			factoryClass = factoryClass();
+		}
+		return factoryClass;
+	}
+	
 	protected Class factoryClass() {
 		return factoryClass;
 	}	
@@ -75,6 +82,12 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	}
 	protected String factoryMethodName() {
 		return factoryMethodName;
+	}
+	protected Method getFactoryMethod() {
+		if (factoryMethod == null) {
+			factoryMethod = factoryMethod();
+		}
+		return factoryMethod;
 	}
 	protected Method factoryMethod() {
 		if (factoryClass == null) {
@@ -106,17 +119,24 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	}
 	
 	 
-	
+	protected void doCheck() {
+		addFactoryMethodCredit();
+		if (factoryCredit != 1.0 && !factoryMessage.isEmpty()) {
+			assertTrue(factoryMessage, false);
+			
+		}
+	}
 	protected boolean doFactoryMethodTest() {
 //		createUsingFactoryClassAndMethodTags();
 		createUsingFactory();
 		doSingletonCheck(rootProxy());
 //		fractionComplete = factoryCredit;
-		addFactoryMethodCredit();
-		if (factoryCredit != 1.0) {
-			assertTrue(factoryMessage, false);
-			
-		}
+		doCheck();
+//		addFactoryMethodCredit();
+//		if (factoryCredit != 1.0) {
+//			assertTrue(factoryMessage, false);
+//			
+//		}
 		
 		return true;
 	}
@@ -424,8 +444,8 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		rootProxy = getObjectFromFactory(factoryClassTags(), factoryMethodTags(), proxyClass());
 		return rootProxy;
 	}	
-	protected Object createUsingFactoryClassAndMethodNames() {
-		rootProxy = getObjectFromFactory(getMethodName(), factoryClass(), factoryMethod(), proxyClass());
+	protected Object createUsingFactoryClassAndMethodName() {
+		rootProxy = getObjectFromFactory(factoryMethodName(), getFactoryClass(), getFactoryMethod(), proxyClass());
 		return rootProxy;
 	}
 	@Override

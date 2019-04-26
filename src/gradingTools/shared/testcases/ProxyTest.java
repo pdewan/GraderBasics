@@ -49,6 +49,9 @@ public abstract class ProxyTest extends MethodExecutionTest{
 			assertMissingClass(BasicProjectIntrospection.getTags(proxyClass()));
 		}
 	}
+	public Object getRootProxy() {
+		return rootProxy;
+	}
 	protected Object createRootProxy(){
 		rootProxy = BasicProjectIntrospection.createInstance(proxyClass(), getArgs());
 		maybeAssertNoClass(proxyClass(), rootProxy);
