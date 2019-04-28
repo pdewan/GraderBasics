@@ -1207,9 +1207,16 @@ public class BasicProcessRunner implements Runner {
 		// }
 		String anEntryTag = null;
 		List<String> anEntryTags = null;
-		if (BasicStaticConfigurationUtils.hasEntryTags(basicCommand))
+		if (BasicStaticConfigurationUtils.hasEntryTags(basicCommand)) {
 			anEntryTags = executionSpecification.getEntryTags(aProcess);
-		else if (BasicStaticConfigurationUtils.hasEntryTag(basicCommand))
+//			if (anEntryTags == null || anEntryTags.isEmpty()) {
+//				String anEntryPoint = executionSpecification.getEntryPoint(aProcess);
+//				if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
+//					anEntryTags = new ArrayList();
+//					anEntryTags.add(anEntryPoint);
+//				}
+//			}
+		} else if (BasicStaticConfigurationUtils.hasEntryTag(basicCommand))
 			anEntryTag = executionSpecification.getEntryTag(aProcess); // this will match entryTag also, fix at some pt
 
 		// if (anEntryTag != null ) {

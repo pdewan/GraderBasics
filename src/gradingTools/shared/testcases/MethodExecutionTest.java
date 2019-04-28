@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
@@ -21,7 +22,10 @@ import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
+import grader.basics.testcase.JUnitTestCase;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import gradingTools.shared.testcases.utils.LinesMatchKind;
+import gradingTools.shared.testcases.utils.LinesMatcher;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,6 +35,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import util.awt.AnOutputQueue;
 import util.trace.Tracer;
 import grader.basics.execution.GradingMode;
+
 
 
 public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
@@ -54,9 +59,19 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	protected List<Thread> newThreads = new ArrayList();
 	public static Object[] emptyArgs = {};
 	protected Method doTestMethod;
+	protected SubstringSequenceChecker checker;	
+	protected LinesMatcher linesMatcher;
+	protected String processName;
+	protected boolean checkTrue = true;
+	protected StringBuffer programmingRunOutput;
+
+
+
 	
 	public MethodExecutionTest() {
 		Tracer.setKeywordPrintStatus(this.getClass(), true);
+		init(processName(), checker(), checkTrue());
+
 //		if (!CurrentProjectHolder.isLocalProject()) {
 //		try {
 //		doTestMethod = getClass().getMethod("doTest");
@@ -214,12 +229,17 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	protected String getInput() {
 		return "";
 	}
+	String[] emptyStringLines = {};
+	protected String[] getInputLines() {
+		return emptyStringLines;
+	}
 	protected long getTimeOut() {
 		return BasicProjectExecution.DEFAULT_METHOD_TIME_OUT;
 	}
 	protected boolean isValidOutput() {
 		return true;
 	}
+	
 	protected void setOutputErrorStatus() {
 		outputErrorStatus = computeOutputErrorStatus();
 	}
@@ -849,4 +869,63 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		assertTrue("No thread created by previous operation:", newThreads.size() > 0);
 		Tracer.info (this, "New threads:" + newThreads);
 	}
+	protected boolean checkTrue() {
+		return true;
+	}
+	
+	protected SubstringSequenceChecker checker() {
+		return null;
+	}
+	public void init (String aProcessName,
+			SubstringSequenceChecker aChecker,
+			boolean aCheckTrue) {
+		processName = aProcessName;
+//		outputGeneratingTestCase = anOutputGeneratingTestcase;
+		checker = aChecker;
+		checkTrue = aCheckTrue;		
+	}
+	protected String processName() {
+		return "main";
+	}
+	protected void independentSetLinesMatcher() {
+		linesMatcher = interactiveInputProject.getProcessLineMatcher().get(processName);
+		if (linesMatcher == null) {
+			assertTrue("Internal error: Could not find line matcher for process:" + processName, false);
+		}
+	}
+	protected boolean checkWithChecker() {
+		if (checker == null) {
+			return true;
+		}
+//		independentSetLinesMatcher();
+//		ARegularCounterServerChecker aServerChecker = new ARegularCounterServerChecker(1.0);
+
+//		boolean aCheckVal = checker.check(programmingRunOutput);
+		boolean aCheckVal = checker.check(linesMatcher, LinesMatchKind.ONE_TIME_LINE, Pattern.DOTALL);
+
+		boolean aRetVal = checkTrue && aCheckVal || !checkTrue && !aCheckVal;
+		if (!aRetVal && checkTrue) {
+//			return fail(processName + " Output Did not match:" + Arrays.toString(checker.getSubstrings()));
+//			return fail(processName + " Output Did not match:" + checker.getRegex());
+			assertTrue(processName + " Output Did not match:" + linesMatcher.getLastUnmatchedRegex(), false);
+
+		}
+		if (!aRetVal && !checkTrue) {
+//			return fail("Did not match:" + Arrays.toString(checker.getSubstrings()));
+			assertTrue(processName + " Output matched:" + checker.getRegex(), false);
+
+		}
+//		if (interactiveInputProject != null) {
+//			interactiveInputProject.getProcessOutput().forEach((name, output) -> Tracer.info(this, "*** " + name + " ***\n" + output));
+//		}
+//		
+//		if (!anOutputBasedInputGenerator.isNonsenseSetupComplete()) {
+//		
+//			return partialPass(0.80, "No nonsense");
+//		}
+//		
+//		return pass();
+		return true;
+	}
+	
 }

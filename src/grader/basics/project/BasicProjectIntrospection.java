@@ -640,6 +640,9 @@ public class BasicProjectIntrospection {
 	// why are these not all sets?
 	public static Set<Class> findClasses(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
+//		if (aName == null && aTag != null && aTag.length > 0) {
+//			aName = aTag[0];
+//		}
 		Set<Class> result = new HashSet();
 		ClassesManager aClassManager = aProject.getClassesManager().get();
 		if (aClassManager.getClassDescriptions().size() == 0) {
