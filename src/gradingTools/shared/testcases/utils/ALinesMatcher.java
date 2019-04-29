@@ -36,10 +36,13 @@ public class ALinesMatcher implements LinesMatcher {
     @Override
 	public boolean match(String[] aRegexes, LinesMatchKind aMatchKind, int aFlags ) {
 //    	Pattern[] aPatterns = new Pattern[aRegexes.length];
+    	resetLineStatus();
     	int aLineNumber = startLineNumber;
     	Set<Integer> aMatchedLines = new HashSet<>();
+//    	init(lines);
     	for (int aRegexIndex = 0; aRegexIndex < aRegexes.length; aRegexIndex++) {
     		Pattern aPattern = Pattern.compile(aRegexes[aRegexIndex], Pattern.DOTALL);  
+    		Tracer.info(this, "Matching pattern starting at line:" + startLineNumber);
     		boolean aMatch = false;
 //    		int aMatchedLineNumber = 0;
     		for (; aLineNumber < lines.length; aLineNumber++) {
@@ -87,12 +90,16 @@ public class ALinesMatcher implements LinesMatcher {
        	int aLineNumber = startLineNumber;
        	Set<Integer> aMatchedLines = new HashSet<>();
        	for (int aRegexIndex = 0; aRegexIndex < aPatterns.length; aRegexIndex++) {
-       		Pattern aPattern = aPatterns[aRegexIndex];  
+       		Pattern aPattern = aPatterns[aRegexIndex]; 
+           	Tracer.info(this, "Matching pattern:" + aPattern + "starting at:" + aLineNumber);
+
        		boolean aMatch = false;
 //       		int aMatchedLineNumber = 0;
        		for (; aLineNumber < lines.length; aLineNumber++) {
-       			if (linesUsageStatus[aLineNumber]) 
+       			if (linesUsageStatus[aLineNumber]) {
+       				Tracer.info(this, "Skipping line:" + aLineNumber);
        				continue; 
+       			}
        			String aLine =  lines[aLineNumber];
        			Tracer.info(this, "Checking: " + aLine);
        			aMatch = aPattern.matcher(aLine).matches();
