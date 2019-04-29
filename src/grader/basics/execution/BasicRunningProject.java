@@ -260,9 +260,11 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 		
         return processToOutputLines;
     }
+    public static final String ALL_PROCESSES = "All";
     @Override
 	public Map<String, LinesMatcher> getProcessLineMatcher() {
     	if (processToLineMatcher == null) {
+    		List<String> anAllLines = new ArrayList();
     		processToLineMatcher = new HashMap<>();
     		Set<String> aKeys = processToOutputLines.keySet();
     		if (aKeys.size() == 0) {
@@ -270,11 +272,18 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     		}
     		for (String aKey:aKeys) {
     			List<String> aList = processToOutputLines.get(aKey);
+    			anAllLines.addAll(aList);
     			String[] anArray = new String[aList.size()];
     			anArray = aList.toArray(anArray);
     			LinesMatcher aLineMatcher = new ALinesMatcher(anArray);
     			processToLineMatcher.put(aKey, aLineMatcher);
     		}
+    		String[] anAllArray = new String[anAllLines.size()];
+    		anAllArray = anAllLines.toArray(anAllArray);
+
+			LinesMatcher anAllLineMatcher = new ALinesMatcher(anAllArray);
+
+    		processToLineMatcher.put(ALL_PROCESSES, anAllLineMatcher);
     	}		
         return processToLineMatcher;
     }

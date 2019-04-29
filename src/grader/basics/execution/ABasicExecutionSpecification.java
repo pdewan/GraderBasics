@@ -29,6 +29,12 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	public List<String> getProcessTeams() {
 		return processTeams;
 	}
+	@Override
+	public void resetProcessTeams() {
+		Tracer.info(this, "reSetting process team: " );
+		processTeams = new ArrayList<>();
+		BasicStaticConfigurationUtils.setProcessTeams(processTeams);
+	}
 	
 	/* (non-Javadoc)
 	 * @see grader.execution.ExecutionSpecification#setProcessTeams(java.util.List)

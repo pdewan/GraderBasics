@@ -28,6 +28,7 @@ public interface BasicExecutionSpecification {
 	public abstract String getEntryPoint(String aProcess);
 
 	public abstract void setEntryPoint(String aProcess, String anEntryPoint);
+	void resetProcessTeams();
 	
 
 }

@@ -888,6 +888,12 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		return "main";
 	}
 	protected void independentSetLinesMatcher() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		linesMatcher = interactiveInputProject.getProcessLineMatcher().get(processName);
 		if (linesMatcher == null) {
 			assertTrue("Internal error: Could not find line matcher for process:" + processName, false);

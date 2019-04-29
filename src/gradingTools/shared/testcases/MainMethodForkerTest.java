@@ -2,6 +2,7 @@ package gradingTools.shared.testcases;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
+import grader.basics.execution.ResultingOutErr;
 import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -57,14 +58,28 @@ public class MainMethodForkerTest extends MethodExecutionTest {
 	protected boolean forkMain() {
 		return true;
 	}
-	
 	protected void callOrForkMain(boolean aFork) throws Throwable {
-		
+//		setupProcesses();
 		resultingOutError = BasicProjectExecution.callOrForkMain(
-			true, getMainClassName(), getMainArgs(),getInputLines());
-		error = resultingOutError.getErr();
-		output = resultingOutError.getOut();
-		interactiveInputProject = resultingOutError.getRunningProject();
+				true, getMainClassName(), getMainArgs(),getInputLines());
+			interactiveInputProject = resultingOutError.getRunningProject();
+	}
+	protected void setupProcesses() {
+		
+	}
+	
+	protected void callOrForkInteractiveMain(boolean aFork) throws Throwable {
+		callOrForkMain(aFork);
+		
+//		resultingOutError = BasicProjectExecution.callOrForkMain(
+//			true, getMainClassName(), getMainArgs(),getInputLines());
+//		interactiveInputProject = resultingOutError.getRunningProject();
+
+//		error = resultingOutError.getErr();
+//		output = resultingOutError.getOut();
+		error = interactiveInputProject.getErrorOutput();
+		output = interactiveInputProject.getOutput();
+		resultingOutError = new ResultingOutErr(output, error);
 		
 
 	}
@@ -83,7 +98,7 @@ public class MainMethodForkerTest extends MethodExecutionTest {
 			project = aProject;
 			setMainClass();
 		
-			callOrForkMain(forkMain());
+			callOrForkInteractiveMain(forkMain());
 			independentSetLinesMatcher();
 			setOutputErrorStatus();
 			processOutputErrorStatus();
