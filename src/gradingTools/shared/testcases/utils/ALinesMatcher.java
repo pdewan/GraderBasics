@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import util.trace.Tracer;
+
 public class ALinesMatcher implements LinesMatcher {
 	protected String[] lines;
 	protected boolean[] linesUsageStatus;
@@ -92,7 +94,7 @@ public class ALinesMatcher implements LinesMatcher {
        			if (linesUsageStatus[aLineNumber]) 
        				continue; 
        			String aLine =  lines[aLineNumber];
-       			System.out.println("Checking " + aLine + " against pattern:" + aPattern);
+       			Tracer.info(this, "Checking: " + aLine);
        			aMatch = aPattern.matcher(aLine).matches();
        			if (aMatch) {
        				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {
