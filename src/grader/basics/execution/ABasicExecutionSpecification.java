@@ -31,7 +31,7 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	}
 	@Override
 	public void resetProcessTeams() {
-		Tracer.info(this, "reSetting process team: " );
+		Tracer.info(this, "resetting process team: " );
 		processTeams = new ArrayList<>();
 		BasicStaticConfigurationUtils.setProcessTeams(processTeams);
 	}
@@ -159,5 +159,27 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 		processToEntryTags.put(aProcess, anEntryTags);
 		
 	}
+	
+	public static long RESORT_TIME = 100;
 
+	protected  long resortTime = RESORT_TIME;
+    protected  boolean waitForResort = true;
+    @Override
+    public   void setResortTime(long aResortTime) {
+    	resortTime = aResortTime;
+    	
+    }
+    @Override
+    public  long getResortTime() {
+    	return resortTime;
+    }
+    @Override
+    public  void setWaitForResort(boolean newVal) {
+    	waitForResort = newVal;
+    }
+    
+    @Override
+    public  boolean getWaitForResort() {
+    	return BasicStaticConfigurationUtils.isTeamProcess() && waitForResort;
+    }
 }

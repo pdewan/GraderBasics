@@ -92,6 +92,7 @@ public class ALinesMatcher implements LinesMatcher {
        			if (linesUsageStatus[aLineNumber]) 
        				continue; 
        			String aLine =  lines[aLineNumber];
+       			System.out.println("Checking " + aLine + " against pattern:" + aPattern);
        			aMatch = aPattern.matcher(aLine).matches();
        			if (aMatch) {
        				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {

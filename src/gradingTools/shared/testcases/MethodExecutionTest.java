@@ -24,6 +24,7 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.JUnitTestCase;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.LinesMatchKind;
 import gradingTools.shared.testcases.utils.LinesMatcher;
 
@@ -888,15 +889,19 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		return "main";
 	}
 	protected void independentSetLinesMatcher() {
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		linesMatcher = interactiveInputProject.getProcessLineMatcher().get(processName);
 		if (linesMatcher == null) {
-			assertTrue("Internal error: Could not find line matcher for process:" + processName, false);
+			if (outputLines == null || outputLines.length == 0) {
+			this.outputLines = output.split("\n");
+			}
+			linesMatcher = new ALinesMatcher(outputLines);
+//			assertTrue("Internal error: Could not find line matcher for process:" + processName, false);
 		}
 	}
 	protected boolean checkWithChecker() {

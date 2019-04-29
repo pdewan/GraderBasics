@@ -15,7 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +42,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public static boolean echoOutput = true;
 	
 
-	public static long RESORT_TIME = 100;
+//	public static long RESORT_TIME = 100;
 //	public static long MAX_OUTPUT_DELAY = 100;
     private long maxNotificationTime;
     private static long timeToWaitForConcurrentOutput = (long)1e10;
@@ -47,14 +50,20 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	private boolean hasOutput = false;
 	
 	protected LinkedList<AProcessOutput> pendingOutput = new LinkedList<>();
+//	protected BlockingQueue<AProcessOutput> pendingOutput = new LinkedBlockingQueue<>()
+
 	
     private Semaphore runningState = new Semaphore(1);
     protected Map<String, StringBuffer> processToErrors = new HashMap<>();
     protected Map<String, List<String>> processToErrorLines = new HashMap<>();;
 
-    protected Map<String, StringBuffer> processToOutput = new HashMap<>();
-    protected Map<String, List<String>> processToOutputLines = new HashMap<>();
-    protected Map<String, LinesMatcher> processToLineMatcher;
+    protected Map<String, StringBuffer> processToProcessedOutput = new HashMap<>();
+    protected Map<String, List<String>> processToProcessedOutputLines = new HashMap<>();
+    protected Map<String, LinesMatcher> processToProcessedLineMatcher;
+    
+    protected Map<String, StringBuffer> processToReceivedOutput = new HashMap<>();
+    protected Map<String, List<String>> processToReceivedOutputLines = new HashMap<>();
+    protected Map<String, LinesMatcher> processToReceivedLineMatcher;
 
     // duplicates the mapping in Process Runner
     protected Map<String, RunnerInputStreamProcessor> processToIn = new HashMap<>();
@@ -103,17 +112,26 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     }
     
     
+    protected void maybeWaitForResort() throws InterruptedException {
+    	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getWaitForResort()) {
+    		wait(BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getResortTime());
+    		
+    	}
+    }
+    
     @Override
     public void run() {
     	while (true) {
     		synchronized(this) {
 	    		try {
 	    			if (pendingOutput.isEmpty()) {
+//	    				System.out.println("waitimng for received output" );
 	    				wait();
 //	    				System.out.println("end wait 1");
 	    			} else {
 //	    				System.out.println(Thread.currentThread() + " Waiting for resort time");
-	    				wait(RESORT_TIME);
+//	    				wait(RESORT_TIME);
+	    				maybeWaitForResort();
 //	    				wait((long)Math.ceil(maxDiff/1e6));
 //	    				System.out.println("end wait 2");
 	    			}
@@ -139,7 +157,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 							pendingOutput.removeFirst();
 							if (isEchoOutput())
 								Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
-							doAppendProcessOutput(aProcessOutput.process, aProcessOutput.output + "\n");
+							doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
 						} else {
 //							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
 //							System.out.println("***** Pending: \n" + pendingOutput);
@@ -252,40 +270,45 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     @Override
 	public Map<String, StringBuffer> getProcessOutput() {
-        return processToOutput;
+        return processToProcessedOutput;
     }
     
     @Override
 	public Map<String, List<String>> getProcessOutputLines() {
 		
-        return processToOutputLines;
+        return processToProcessedOutputLines;
     }
     public static final String ALL_PROCESSES = "All";
     @Override
 	public Map<String, LinesMatcher> getProcessLineMatcher() {
-    	if (processToLineMatcher == null) {
+    	if (processToProcessedLineMatcher == null) {
     		List<String> anAllLines = new ArrayList();
-    		processToLineMatcher = new HashMap<>();
-    		Set<String> aKeys = processToOutputLines.keySet();
+    		processToProcessedLineMatcher = new HashMap<>();
+    		Set<String> aKeys = processToProcessedOutputLines.keySet();
     		if (aKeys.size() == 0) {
-    			System.err.println("Empty key set for processes");
+//    			System.err.println("Empty key set for processes:" + output);
+    			String[] anOutputLines = output.split("\n");
+    			LinesMatcher aLineMatcher =  new ALinesMatcher(anOutputLines);
+    			processToProcessedLineMatcher.put("main", aLineMatcher);
+    			return processToProcessedLineMatcher;
     		}
     		for (String aKey:aKeys) {
-    			List<String> aList = processToOutputLines.get(aKey);
+    			System.out.println("line matcher for key:" + aKey);
+    			List<String> aList = processToProcessedOutputLines.get(aKey);
     			anAllLines.addAll(aList);
     			String[] anArray = new String[aList.size()];
     			anArray = aList.toArray(anArray);
     			LinesMatcher aLineMatcher = new ALinesMatcher(anArray);
-    			processToLineMatcher.put(aKey, aLineMatcher);
+    			processToProcessedLineMatcher.put(aKey, aLineMatcher);
     		}
     		String[] anAllArray = new String[anAllLines.size()];
     		anAllArray = anAllLines.toArray(anAllArray);
 
 			LinesMatcher anAllLineMatcher = new ALinesMatcher(anAllArray);
 
-    		processToLineMatcher.put(ALL_PROCESSES, anAllLineMatcher);
+    		processToProcessedLineMatcher.put(ALL_PROCESSES, anAllLineMatcher);
     	}		
-        return processToLineMatcher;
+        return processToProcessedLineMatcher;
     }
     @Override
    	public Map<String, List<String>> getProcessErrorLines() {
@@ -299,7 +322,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
            return processToErrors;
        }
 
-	protected synchronized void doAppendProcessOutput(String aProcess, String newVal) {
+	protected synchronized void doAppendProcessProcessedOutput(String aProcess, String newVal) {
     	// delete me
 //    	System.out.println("+++++ " + Thread.currentThread().getId() + " " + java.lang.management.ManagementFactory.getRuntimeMXBean().getName() + " - " + aProcess + " - " + newVal);
     	
@@ -319,8 +342,8 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
             return;
         }
 //        System.out.println(("Current thread:" + Thread.currentThread()));
-        List<String> aProcessOutputLines = processToOutputLines.get(aProcess);
-        StringBuffer aProcessOutput = processToOutput.get(aProcess);
+        List<String> aProcessOutputLines = processToProcessedOutputLines.get(aProcess);
+        StringBuffer aProcessOutput = processToProcessedOutput.get(aProcess);
 //        System.out.println(" process output of " + aProcess + " aProcessOutput " + aProcessOutput);
 //		boolean newProcess = processToTranscriptManager.get(aProcess) == null;
 //		if (processOutput == null && newVal != null) {
@@ -329,8 +352,8 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
             aProcessOutputLines = new ArrayList();
 //            System.out.println(" process output of " + aProcess + " aProcessOutput " + aProcessOutput);
 
-            processToOutput.put(aProcess, aProcessOutput);
-            processToOutputLines.put(aProcess, aProcessOutputLines);
+            processToProcessedOutput.put(aProcess, aProcessOutput);
+            processToProcessedOutputLines.put(aProcess, aProcessOutputLines);
 //            System.out.println(" process output lines of " + aProcess + " aProcessOutputLines " + aProcessOutputLines);
 
 
@@ -387,6 +410,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //			}
 //		}
     	synchronized(this) {
+//    		System.out.println("Notifying processor");
 //			pendingOutput.addLast(new AProcessOutput(aTime, aProcess, newVal));
 			pendingOutput.addLast(new AProcessOutput(aTime, aProcessName, newVal));
 

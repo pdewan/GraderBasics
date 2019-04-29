@@ -1010,12 +1010,12 @@ public class BasicProjectExecution {
 
 		RunningProject aRunningProject = aProcessRunner.run(
 				BasicProjectExecution.toInputString(input), args, timeout);
-		try {
-			Thread.sleep(6000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		String anOutput = aRunningProject.await();
 		String anError = aRunningProject.getErrorOutput();
 		ResultingOutErr retVal =  new ResultingOutErr(anOutput, anError);

@@ -29,6 +29,11 @@ public interface BasicExecutionSpecification {
 
 	public abstract void setEntryPoint(String aProcess, String anEntryPoint);
 	void resetProcessTeams();
+	void setResortTime(long aResortTime);
+	long getResortTime();
+	void setWaitForResort(boolean newVal);
+	boolean getWaitForResort();
+	
 	
 
 }

@@ -659,5 +659,8 @@ public class BasicStaticConfigurationUtils {
 	public static void setProcessTeams(List<String> newVal) {
 		 processTeams = newVal;;
 	}
+	public static boolean isTeamProcess() {
+		return processTeams != null && processTeams.isEmpty();
+	}
 	
 }
