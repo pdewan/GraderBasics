@@ -60,6 +60,8 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     protected Map<String, StringBuffer> processToProcessedOutput = new HashMap<>();
     protected Map<String, List<String>> processToProcessedOutputLines = new HashMap<>();
     protected Map<String, LinesMatcher> processToProcessedLineMatcher;
+    protected StringBuffer allProcessedOutput = new StringBuffer(5000);
+    protected List<String> allProcessedOutputLines = new ArrayList(400);
     
     protected Map<String, StringBuffer> processToReceivedOutput = new HashMap<>();
     protected Map<String, List<String>> processToReceivedOutputLines = new HashMap<>();
@@ -282,7 +284,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     @Override
 	public Map<String, LinesMatcher> getProcessLineMatcher() {
     	if (processToProcessedLineMatcher == null) {
-    		List<String> anAllLines = new ArrayList();
+//    		List<String> anAllLines = new ArrayList();
     		processToProcessedLineMatcher = new HashMap<>();
     		Set<String> aKeys = processToProcessedOutputLines.keySet();
     		if (aKeys.size() == 0) {
@@ -295,14 +297,14 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     		for (String aKey:aKeys) {
     			System.out.println("line matcher for key:" + aKey);
     			List<String> aList = processToProcessedOutputLines.get(aKey);
-    			anAllLines.addAll(aList);
+//    			anAllLines.addAll(aList);
     			String[] anArray = new String[aList.size()];
     			anArray = aList.toArray(anArray);
     			LinesMatcher aLineMatcher = new ALinesMatcher(anArray);
     			processToProcessedLineMatcher.put(aKey, aLineMatcher);
     		}
-    		String[] anAllArray = new String[anAllLines.size()];
-    		anAllArray = anAllLines.toArray(anAllArray);
+    		String[] anAllArray = new String[allProcessedOutputLines.size()];
+    		anAllArray = allProcessedOutputLines.toArray(anAllArray);
 
 			LinesMatcher anAllLineMatcher = new ALinesMatcher(anAllArray);
 
@@ -358,11 +360,13 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
 
         }
-
+        String anAnnotatedLine = aProcess + ":" + newVal;
+        allProcessedOutput.append(anAnnotatedLine);
         aProcessOutput.append(newVal);
 //        System.out.println(" new process output  " + aProcessOutput);
 
         aProcessOutputLines.add(newVal);
+        allProcessedOutputLines.add(anAnnotatedLine);
 //        System.out.println(" new process output lines " + aProcessOutputLines);
 
         

@@ -57,6 +57,8 @@ public class ALinesMatcher implements LinesMatcher {
 //    					}
     	    			aMatchedLines.add(aLineNumber);
     	    		}
+    	    		System.out.println(aLineNumber+ ":Matched  pattern " + Arrays.toString(aRegexes));
+
     				break;
     			}
     		};
@@ -75,7 +77,7 @@ public class ALinesMatcher implements LinesMatcher {
     		return true;
     	}
     	for (Integer aMatchedLine:aMatchedLines) {
-    		System.out.println("Matched Line " + lines[aMatchedLine] + " for pattern " + Arrays.toString(aRegexes));
+//    		System.out.println("Matched Line " + lines[aMatchedLine] + " for pattern " + Arrays.toString(aRegexes));
 //    		linesUsageStatus[aLineNumber] = true;
     		linesUsageStatus[aMatchedLine] = true; 
 
@@ -101,7 +103,7 @@ public class ALinesMatcher implements LinesMatcher {
        				continue; 
        			}
        			String aLine =  lines[aLineNumber];
-       			Tracer.info(this, "Checking: " + aLine);
+       			Tracer.info(this, aLineNumber + ": Checking: " + aLine);
        			aMatch = aPattern.matcher(aLine).matches();
        			if (aMatch) {
        				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {
@@ -110,6 +112,8 @@ public class ALinesMatcher implements LinesMatcher {
 //       					}
        	    			aMatchedLines.add(aLineNumber);
        	    		}
+    	    		System.out.println(aLineNumber+ ": Matched  pattern " + aPattern);
+
        				aLineNumber++;
        				break;
        			}
