@@ -1,5 +1,6 @@
 package grader.basics.project;
 
+import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
@@ -94,6 +95,7 @@ public class BasicProject implements Project {
     	
     	// will do this in standardproject
 //    	project = aProject;
+    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
     	directory = aDirectory;
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
         Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
