@@ -95,7 +95,9 @@ public class BasicProject implements Project {
     	
     	// will do this in standardproject
 //    	project = aProject;
-    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
+//    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
+//    	BasicConfigurationManagerSelector.getConfigurationManager().setProjectDirectory(aDirectory);
+
     	directory = aDirectory;
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
         Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
@@ -386,5 +388,9 @@ public class BasicProject implements Project {
     @Override
     public void setInfinite(boolean newVal) {
     	isInfinite = newVal;
+    }
+    @Override
+    public File getProjectFolder() {
+    	return directory;
     }
 }

@@ -85,5 +85,7 @@ public interface Project {
 
 	void setInfinite(boolean newVal);
 
+	File getProjectFolder();
+
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }
