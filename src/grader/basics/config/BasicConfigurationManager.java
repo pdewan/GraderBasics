@@ -11,4 +11,5 @@ public interface BasicConfigurationManager {
 //	void setProjectDirectory(File aProjectDirectory);
 //	File getProjectDirectory();
 	PropertiesConfiguration getProjectConfiguration();
+	void clear();
 }

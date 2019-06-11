@@ -3,9 +3,14 @@ package grader.basics.project;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import grader.basics.execution.BasicExecutionSpecification;
+import grader.basics.execution.BasicExecutionSpecificationSelector;
+
 public class CurrentProjectHolder {
 	static Project currentProject;
 	static boolean localProject;
+	static File projectLocation;
+	
 	public static boolean isLocalProject() {
 		return localProject;
 	}
@@ -36,13 +41,25 @@ public class CurrentProjectHolder {
 		}
 	}
 	public static Project createCurrentProject() {
+//		String aProjectLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
+//		setProjectLocation(new File(aProjectLocation));
 		try {
-			return new BasicProject(null, new File("."), null, null);
+			return new BasicProject(null, getProjectLocation(), null, null);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
+	}
+	public static File getProjectLocation() {
+		if (projectLocation == null) {
+			String aProjectLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
+			projectLocation = new File(aProjectLocation);
+		}
+		return projectLocation;
+	}
+	public static void setProjectLocation(File projectLocation) {
+		CurrentProjectHolder.projectLocation = projectLocation;
 	}
 
 }

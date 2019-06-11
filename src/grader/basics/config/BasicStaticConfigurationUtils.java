@@ -8,10 +8,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+
+import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.project.Project;
 import grader.basics.settings.BasicGradingEnvironment;
 import util.trace.Tracer;
-
+/**
+ * 
+ *This serves two purposes.
+ *It defines defaults for configurable properties.
+ *It also reads project-based properties to be used in localchecks on student
+ *computer.
+ *Ultimate authority over properties in localchecks mode is ABasicExecution
+ *
+ */
 public class BasicStaticConfigurationUtils {
 	public static final String PRIVACY = "privacy";
 	public static final String EXECUTION_COMMAND = "execution";
@@ -39,7 +51,7 @@ public class BasicStaticConfigurationUtils {
 	public static final String TERMINATING = "terminating";
 	public static final String GENERATE_TRACE_FILES = "trace";
 
-	public static final String JAVA = "Java";
+//	public static final String JAVA = "Java";
 
 	public static final String CLASS_PATH_VAR = toVariable(CLASS_PATH);
 	public static final String CLASS_PATH_SEPARATOR_VAR = toVariable(CLASS_PATH_SEPARATOR);
@@ -56,15 +68,25 @@ public class BasicStaticConfigurationUtils {
 	public static final String EXECUTOR = "executor";
 	public static final String C_OBJ = "language.C.obj";	
 	public static final String FORK_MAIN = "forkMain";
+	public static final String GRADABLE_PROJECT_LOCATION = "gradableProjectLocation";
+	public static final String SOURCE_LOCATION = "sourceLocation";
+	public static final String BINARY_LOCATION = "binaryLocation";
+
 	private static  List<String> basicCommand;
 	private static Map<String, List<String>> processToBasicCommand = new HashMap();
 	private static String duplicatedClassPathSeparator;
 	private static List<String> processTeams;
+	private static boolean useProjectConfiguration;
+	private static String module;
+	
+	private static String problem;
+	protected static List<String> emptyList = new ArrayList();
 
 
 //	Comp533s18.execution = java, -cp, .{:}..{:}{classPath}{:}{oePath}{:}{junitPath}, {entryTags}, {args}
 
-//	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = {
+
+	//	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = {
 //			"java", "-cp", ".{:}..{:}{classPath}{:}{:}{junitPath}{:}{localGraderPath}", "{entryTags}", "{args}"
 //	};
 	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = {
@@ -183,8 +205,11 @@ public class BasicStaticConfigurationUtils {
 	}
 	public static List<String> getBasicCommand(String aProcessName) {	
 		List<String> retVal = processToBasicCommand.get(aProcessName);
-		if (retVal == null)
-			retVal = getBasicCommand();
+		if (retVal == null) {
+//			retVal = getBasicCommand();
+			retVal = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBasicCommand();
+		}
+		
 		return retVal;
 		
 	}
@@ -455,19 +480,122 @@ public class BasicStaticConfigurationUtils {
 
 		}
 	}
+//	public static String[] getExecutionCommand(Project aProject,
+//			String aProcessName, File aBuildFolder, String anEntryPoint,
+//			String anEntryTagTarget, String[] anArgs) {
+//
+//		List<String> basicCommand = null;
+//		if (aProcessName == null || aProcessName.isEmpty()) {
+//		    if (anEntryPoint != null) {
+//		    	basicCommand = getBasicCommand();
+////		    	basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
+//
+//		    } else {
+//			basicCommand = getBasicCommand();
+//		    }
+//		} else {
+//		
+//			basicCommand = getBasicCommand(aProcessName);
+//
+//		}
+//		return getExecutionCommand(basicCommand, aProject, aProcessName, aBuildFolder, anEntryPoint, anEntryTagTarget, anArgs);
+//////		List<String> retVal = new ArrayList(basicCommand.size());
+////		List<String> retVal = new ArrayList(basicCommand.size() + 5); // to accommodate args
+////		retVal.addAll(basicCommand);
+////		replaceClassPathVars(retVal);
+//////		replacePermissionVariables(retVal, aProject);
+////		replaceEntryPoint(retVal, anEntryPoint, anEntryTagTarget);
+////		replaceBuildFolder(retVal, aBuildFolder);
+////		replaceArgs(retVal, anArgs);
+////		return retVal.toArray(new String[0]);
+//
+//
+////		
+////		
+////		for (int aCommandIndex = 0; aCommandIndex < basicCommand.size(); aCommandIndex++) {
+////
+////			String command = basicCommand.get(aCommandIndex);
+////			if (command.contains(CLASS_PATH_VAR)) {
+////
+////				command = command.replace(CLASS_PATH_VAR,
+////						BasicGradingEnvironment.get().getClassPath());
+////
+////			} else if (command.contains(CLASS_PATH_SEPARATOR_VAR)) {
+////				command = command.replace(CLASS_PATH_SEPARATOR_VAR,
+////						BasicGradingEnvironment.get().getClassPathSeparator());
+////			} else if (command.contains(OE_PATH_VAR)) {
+////
+////				command = command.replace(OE_PATH_VAR,
+////				// BasicGradingEnvironment.get().getClasspath());
+////						BasicGradingEnvironment.get().getOEClassPath());
+////
+////			} else if (command.contains(JUNIT_PATH_VAR)) {
+////				command = command.replace(JUNIT_PATH_VAR,
+////						BasicGradingEnvironment.get().getJUnitClassPath());
+////				// } else if (command.contains(OE_AND_CLASS_PATH_VAR)) {
+////				// command = command.replace(OE_AND_CLASS_PATH_VAR,
+////				// BasicGradingEnvironment.get().getClassPath());
+////			} else if (doPermissions && command.contains(PERMISSIONS_VAR)) {
+////
+////				String aPolicyFilePath = JavaProjectToPermissionFile
+////						.getPermissionFile(aProject).getAbsolutePath();
+////				try {
+////					aPolicyFilePath = JavaProjectToPermissionFile
+////							.getPermissionFile(aProject).getCanonicalPath();
+////				} catch (IOException e1) {
+////					e1.printStackTrace();
+////				}
+////				aPolicyFilePath = aPolicyFilePath.replace("\\", "/");
+////
+////				aPolicyFilePath = quotePath(aPolicyFilePath);
+////
+////				command = command.replace(PERMISSIONS_VAR, aPolicyFilePath
+////
+////				);
+////			}
+////
+////			if (anEntryPoint != null) {
+////				command = command
+////						.replace(toVariable(ENTRY_POINT), anEntryPoint);
+////			}
+////			if (anEntryTagTarget != null) {
+////				command = command.replace(toVariable(ENTRY_TAGS),
+////						anEntryTagTarget);
+////				command = command.replace(toVariable(ENTRY_TAG),
+////						anEntryTagTarget); // will match tags also
+////
+////			}
+////
+////			command = command.replace(toVariable(BUILD_FOLDER),
+////					aBuildFolder.getAbsolutePath());
+////
+////			retVal.add(command);
+////		}
+////		int argsIndex = retVal.indexOf(toVariable(ARGS));
+////		if (argsIndex >= 0) {
+////			retVal.remove(argsIndex);
+////			for (int i = 0; i < anArgs.length; i++) {
+////				retVal.add(argsIndex + i, anArgs[i]);
+////			}
+////
+////		}
+////		return retVal.toArray(new String[0]);
+//
+//	}
 	public static String[] getExecutionCommand(Project aProject,
 			String aProcessName, File aBuildFolder, String anEntryPoint,
 			String anEntryTagTarget, String[] anArgs) {
 
 		List<String> basicCommand = null;
 		if (aProcessName == null || aProcessName.isEmpty()) {
-		    if (anEntryPoint != null) {
-		    	basicCommand = getBasicCommand();
-//		    	basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
-
-		    } else {
-			basicCommand = getBasicCommand();
-		    }
+			basicCommand = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBasicCommand();
+//		    if (anEntryPoint != null) {
+//		    	basicCommand = getBasicCommand();
+////		    	basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
+//
+//		    } else {
+//			basicCommand = getBasicCommand();
+//		    }
 		} else {
 		
 			basicCommand = getBasicCommand(aProcessName);
@@ -661,6 +789,151 @@ public class BasicStaticConfigurationUtils {
 	}
 	public static boolean isTeamProcess() {
 		return processTeams != null && processTeams.isEmpty();
+	}
+	public static boolean isUseProjectConfiguration() {
+		return useProjectConfiguration;
+	}
+	public static void setUseProjectConfiguration(boolean useProjectConfiguration) {
+		BasicStaticConfigurationUtils.useProjectConfiguration = useProjectConfiguration;
+	}
+	public static Boolean getInheritedBooleanModuleProblemProperty(
+			PropertiesConfiguration configuration, String module,
+			String problem, String property, Boolean defaultValue) {
+	
+		Boolean retVal = configuration.getBoolean(module + "." + problem + "."
+				+ property, null);
+	
+		if (retVal == null) {
+			retVal = configuration.getBoolean(module + "." + property, null);
+		}
+		if (retVal == null) {
+			retVal = configuration.getBoolean(DEFAULT + "." + property,
+					defaultValue);
+		}
+	
+		return retVal;
+	
+	}
+	public static final String DEFAULT = "default";
+	
+	public static Integer getInheritedIntegerModuleProblemProperty(
+			PropertiesConfiguration configuration, String module,
+			String problem, String property, Integer defaultValue) {
+	
+		Integer retVal = configuration.getInteger(module + "." + problem + "."
+				+ property, null);
+	
+		if (retVal == null) {
+			retVal = configuration.getInteger(module + "." + property, null);
+		}
+		if (retVal == null) {
+			retVal = configuration.getInteger(DEFAULT + "." + property,
+					defaultValue);
+		}
+	
+		return retVal;
+	
+	}
+	public static String getBasicInheritedStringModuleProblemProperty(
+			String property, String defaultValue) {
+		if (!isUseProjectConfiguration() ||
+			 // cannot use project configuration before location is known to create project
+			 property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION) { // can do == as we are using named constants
+			return defaultValue;
+		}
+
+	 return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	}
+	public static List<String> getBasicInheritedListModuleProblemProperty(
+			String property, List<String> defaultValue) {
+		if (!isUseProjectConfiguration() ) { // can do == as we are using named constants
+			return defaultValue;
+		}
+
+	 return getInheritedListModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	}
+	public static String getInheritedStringModuleProblemProperty(
+			PropertiesConfiguration configuration, String module,
+			String problem, String property, String defaultValue) {
+		if (configuration == null) {
+			System.err.println("Null configuration, returning " + defaultValue + " for " + property);
+			return defaultValue;
+		}
+	
+		String retVal = configuration.getString(module + "." + problem + "."
+				+ property, null);
+		if (retVal != null) {
+			return retVal;
+		}
+			retVal = configuration.getString(module + "." + property, null);
+		if (retVal != null) {
+			return retVal;
+		}
+//		if (retVal == null) {
+			retVal = configuration.getString(DEFAULT + "." + property,
+					defaultValue);
+//		}
+	
+		return retVal;
+	
+	}
+	public static List<String> getInheritedListModuleProblemProperty(
+			PropertiesConfiguration configuration, String module,
+			String problem, String property, List<String> aDefaultValue) {
+	
+		List retVal = configuration.getList(module + "." + problem + "."
+				+ property);
+	
+		if (retVal.isEmpty()) {
+			retVal = configuration.getList(module + "." + property);
+		}
+		if (retVal.isEmpty()) {
+			retVal = configuration.getList(DEFAULT + "." + property);
+		}
+		if (retVal.isEmpty()) {
+			retVal = aDefaultValue;
+		}
+	
+		return retVal;
+	
+	}
+	public static String getModule() {
+		return module;
+	}
+	public static void setModuleAndProblem(Class aTestClass) {
+		Package aPackage = aTestClass.getPackage();
+		String aPackageName = aPackage.getName();
+		String[] aPackageComponents = aPackageName.split("\\.");
+		if (aPackageComponents.length < 3) {
+			System.err.println(aPackageName + " has < 3 components, cannot set module and problem ");
+		}
+		String aRawModuleName = aPackageComponents[1];
+		String aRawProblemName = aPackageComponents[2];
+		module = firstCharacterUpperCase(aRawModuleName);
+		problem = firstCharacterUpperCase(aRawProblemName);
+		
+	}
+	public static String firstCharacterUpperCase(String aLowerCaseString) {
+		return Character.toUpperCase (aLowerCaseString.charAt(0)) + aLowerCaseString.substring(1);
+	}
+	public static void setModule(String module) {
+		BasicStaticConfigurationUtils.module = module;
+	}
+	public static String getProblem() {
+		return problem;
+	}
+	public static void setProblem(String problem) {
+		BasicStaticConfigurationUtils.problem = problem;
+	}
+	
+	
+	public static String getLanguage() {
+		if (!isUseProjectConfiguration())
+//			return JAVA;
+			return BasicLanguageDependencyManager.JAVA_LANGUAGE;
+
+		return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
+
 	}
 	
 }

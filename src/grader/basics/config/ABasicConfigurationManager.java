@@ -14,11 +14,17 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
 //    File projectDirectory;
 
 	protected PropertiesConfiguration projectConfiguration;
+	@Override
+	public void clear() {
+		projectConfiguration = null;
+	}
 
 	@Override
 	public PropertiesConfiguration getOrCreateProjectConfiguration() {
 		if (projectConfiguration == null) {
-			createProjectConfiguration(CurrentProjectHolder.getOrCreateCurrentProject().getProjectFolder());
+//			createProjectConfiguration(CurrentProjectHolder.getOrCreateCurrentProject().getProjectFolder());
+			createProjectConfiguration(CurrentProjectHolder.getProjectLocation());
+
 		}
 		return projectConfiguration;
 	}
@@ -44,6 +50,7 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
 		for (File aFile: aFiles) {
 			if (aFile.getName().toLowerCase().equals(PROJECT_CONFIG_FILE)) {
 				aConfigFile = aFile;
+				break;
 			}
 		}
 		if (aConfigFile != null) {
@@ -52,6 +59,8 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
 			} catch (ConfigurationException e) {
 				e.printStackTrace();
 			}
+		} else {
+			System.err.println("Did not find file " + PROJECT_CONFIG_FILE + " in " + aProjectDirectory.getAbsolutePath());
 		}
 //		String aConfigFileFullName = aProjectDirectory.getAbsolutePath() + "/" +
 	}

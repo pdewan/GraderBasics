@@ -952,8 +952,10 @@ public class BasicProjectExecution {
 
 		File aBuildFolder = null;
 		try {
+//			aBuildFolder = CurrentProjectHolder.getOrCreateCurrentProject()
+//					.getBuildFolder(aMainClassName);
 			aBuildFolder = CurrentProjectHolder.getOrCreateCurrentProject()
-					.getBuildFolder(aMainClassName);
+					.getBuildFolder();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

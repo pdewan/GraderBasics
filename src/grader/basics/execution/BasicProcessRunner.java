@@ -127,7 +127,10 @@ public class BasicProcessRunner implements Runner {
 	public File getFolder(String aMainClass) {
 		if (folder == null) {
 			try {
-				folder = project.getBuildFolder(aMainClass);
+//				folder = project.getBuildFolder(aMainClass); // why do we need to searc for it?
+				folder = project.getBuildFolder(); 
+
+
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -698,8 +701,9 @@ public class BasicProcessRunner implements Runner {
 	protected  String[] getExecutionCommand(Project aProject,
 			File aBuildFolder, String anEntryPoint, String[] anArgs) {
 //		return StaticConfigurationUtils.getExecutionCommand(aProject, aBuildFolder, anEntryPoint);
+//		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
 		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
-		
+//		return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
 //		return null;
 	}
 	@Override

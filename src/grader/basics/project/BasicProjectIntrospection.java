@@ -1,5 +1,9 @@
 package grader.basics.project;
 
+import grader.basics.config.BasicConfigurationManagerSelector;
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.execution.BasicExecutionSpecification;
+import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.junit.BasicJUnitUtils;
 //import framework.grading.testing.TestCase;
@@ -73,6 +77,9 @@ public class BasicProjectIntrospection {
 		objectToProxy.clear();
 		classToProxy.clear();
 		topLevelSuites = null;
+		if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+				BasicConfigurationManagerSelector.getConfigurationManager().clear();
+		}
 		// classToType.clear(); // why clear this?
 	}
 

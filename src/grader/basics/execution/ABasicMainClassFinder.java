@@ -1,10 +1,12 @@
 package grader.basics.execution;
 
 
+import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.BasicProjectIntrospection;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 //import grader.project.Project;
 //import framework.project.ClassDescription;
@@ -178,6 +180,20 @@ public class ABasicMainClassFinder implements MainClassFinder {
         }
         throw new NotRunnableException();
     }
+    protected List<String> defaultCommand;
+	@Override
+	public List<String> getDefaultCommand() {
+		if (defaultCommand == null) {
+			return BasicStaticConfigurationUtils.getBasicCommand();
+		} else {
+			return defaultCommand;
+		}
+	}
+
+	@Override
+	public void setDefaultCommand(List<String> aCommand) {
+		defaultCommand = aCommand;
+	}
     
 //    public Class nonPackagedMainClass ( ProxyClassLoader aProxyClassLoader, Project aProject) {
 //    	try {

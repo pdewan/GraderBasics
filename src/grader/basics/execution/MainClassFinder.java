@@ -2,6 +2,7 @@ package grader.basics.execution;
 
 import grader.basics.project.Project;
 
+import java.util.List;
 import java.util.Map;
 
 public interface MainClassFinder {
@@ -10,6 +11,8 @@ public interface MainClassFinder {
 
 	Map<String, String> getEntryPoints(Project project,
 			String[] aSpecifiedMainClasses) throws NotRunnableException;
+	public List<String> getDefaultCommand();
+	public void setDefaultCommand(List<String> aCommand);
 
 
 }

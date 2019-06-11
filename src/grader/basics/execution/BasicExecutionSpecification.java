@@ -33,6 +33,15 @@ public interface BasicExecutionSpecification {
 	long getResortTime();
 	void setWaitForResort(boolean newVal);
 	boolean getWaitForResort();
+	void setStudentStringProperty(String aProperty, String aValue);
+	void setGraderStringProperty(String aProperty, String aValue);
+	String getStringProperty(String aProperty, String aDefault);
+	void setStudentGradableProjectLocation(String aValue);
+	String getGradableProjectLocation();
+	String getLanguage();
+	String getSourceFolderLocation();
+	String getBinaryFolderLocation();
+	List<String> getBasicCommand();
 	
 	
 

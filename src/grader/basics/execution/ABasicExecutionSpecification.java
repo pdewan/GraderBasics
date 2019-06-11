@@ -5,12 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.Project;
 import util.trace.Tracer;
 /*
  * We are duplicating code in BasicStaticConfigiration and keepin the same kind of state.
  * So we do not really need BasicStaticConfigiration
  * Let us keep them consistent
+ * 
+ * Actually we need all of this.
  */
 public class ABasicExecutionSpecification implements BasicExecutionSpecification {
 	protected List<String> processTeams = new ArrayList<>();
@@ -22,6 +27,8 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	protected Map<String, String> processToEntryPoint = new HashMap<>();
 	protected Map<String, List<String>> processToArgs = new HashMap<>();
 	protected Map<String, List<String>> processToStartTags = new HashMap<>();
+	protected Map<String, String> runtimeGraderStringProperties = new HashMap<>();
+	protected Map<String, String> runtimeStudentStringProperties = new HashMap<>();
 	/* (non-Javadoc)
 	 * @see grader.execution.ExecutionSpecification#getProcessTeams()
 	 */
@@ -182,4 +189,111 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     public  boolean getWaitForResort() {
     	return BasicStaticConfigurationUtils.isTeamProcess() && waitForResort;
     }
+    protected String gradableProjectLocation = null;
+    @Override
+    public String getGradableProjectLocation() {
+    	if (gradableProjectLocation == null) {
+    		gradableProjectLocation = getStringProperty(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, ".");
+    	}
+    	return gradableProjectLocation;
+//    	return getStringProperty(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, ".");
+    }
+    protected String sourceFolderLocation = null;
+
+    
+    @Override
+    // the default value is null, so this caching will not really help
+    public String getSourceFolderLocation() {
+    	if (sourceFolderLocation == null) {
+    		sourceFolderLocation = getStringProperty(BasicStaticConfigurationUtils.SOURCE_LOCATION, null);
+    	}
+    	return sourceFolderLocation;
+//    	return getStringProperty(BasicStaticConfigurationUtils.SOURCE_LOCATION, null);
+    }
+    protected String binaryFolderLocation = null;
+
+    @Override
+    public String getBinaryFolderLocation() {
+    	if (binaryFolderLocation == null) {
+    		binaryFolderLocation = getStringProperty(BasicStaticConfigurationUtils.BINARY_LOCATION, null);
+    	}
+    	return binaryFolderLocation;
+//    	return getStringProperty(BasicStaticConfigurationUtils.BINARY_LOCATION, null);
+    }
+    // should we cache these values?
+    protected String language;
+    @Override
+    public String getLanguage() {
+    	if (language == null) {
+    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
+    	}
+    	return language;
+//    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
+    }
+    // no caching as 
+    @Override
+    public List<String> getBasicCommand() {
+    	List<String> aCommand = getInheritedListModuleProblemProperty(BasicStaticConfigurationUtils.EXECUTION_COMMAND, null);
+    	if (aCommand != null && !aCommand.isEmpty()) {
+    		return aCommand;
+    	}
+//    	String aLangugage = getLanguage();
+    	return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
+    	
+    }
+    
+    @Override
+    public String getStringProperty(String aProperty, String aDefault) {
+    	String retVal = getInheritedStringModuleProblemProperty(aProperty, null);
+//		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
+		if (retVal != null) {
+			return retVal;
+		}
+    	 retVal = runtimeStudentStringProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+//    	if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+    		    
+//    	}
+    	retVal = runtimeGraderStringProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+    	return aDefault;
+    }
+    @Override
+    public void setStudentStringProperty(String aProperty, String aValue) {
+    	runtimeStudentStringProperties.put(aProperty, aValue);
+    }
+    @Override
+    public void setStudentGradableProjectLocation(String aValue) {
+    	runtimeStudentStringProperties.put(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, aValue);
+    }
+    @Override
+    public void setGraderStringProperty(String aProperty, String aValue) {
+    	runtimeGraderStringProperties.put(aProperty, aValue);
+    }
+    public  List<String> getInheritedListModuleProblemProperty(
+			
+			String aProperty, List<String> defaultValue) {
+    	return BasicStaticConfigurationUtils.getBasicInheritedListModuleProblemProperty(aProperty, defaultValue);
+//    	if (!BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+//    		return defaultValue;
+//    	}
+//		return BasicStaticConfigurationUtils.getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), BasicStaticConfigurationUtils.getModule(), BasicStaticConfigurationUtils.getProblem(), aProperty, defaultValue);
+
+		
+	}
+    public  String getInheritedStringModuleProblemProperty(
+			
+			String aProperty, String defaultValue) {
+    	return BasicStaticConfigurationUtils.getBasicInheritedStringModuleProblemProperty(aProperty, defaultValue);
+//    	if (!BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+//    		return defaultValue;
+//    	}
+//		return BasicStaticConfigurationUtils.getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), BasicStaticConfigurationUtils.getModule(), BasicStaticConfigurationUtils.getProblem(), aProperty, defaultValue);
+
+		
+	}
 }

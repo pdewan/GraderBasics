@@ -1,6 +1,8 @@
 package grader.basics.project;
 
+import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.config.BasicConfigurationManagerSelector;
+import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
@@ -38,9 +40,11 @@ public class BasicProject implements Project {
     protected TraceableLog traceableLog;
     protected boolean noSrc;
     protected String sourceFilePattern = null;
+    protected File buildFolder;
 //    protected SakaiProject project;
 
-    /**
+    
+	/**
      * Basic constructor
      *
      * @param aDirectory The location of the project
@@ -83,12 +87,49 @@ public class BasicProject implements Project {
     public BasicProject(String aSourceFilePattern) throws FileNotFoundException {
     	this (null,  new File("."), null, aSourceFilePattern);
     }
+    protected void searchForSourceAndProjectFolder() throws FileNotFoundException {
+    	
+
+//        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
+        Option<File> src = DirectoryUtils.locateFolder(directory, Project.SOURCE);
+
+        if (src.isEmpty()) {
+        	SourceFolderNotFound.newCase(directory.getAbsolutePath(), this).getMessage();
+
+        	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(directory, sourceFilePattern);
+        	if (!sourceFiles.isEmpty()) {
+                    File aSourceFile = sourceFiles.iterator().next();
+                    sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
+                    this.directory = sourceFolder.getParentFile();
+                    SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
+        	} else {
+                    ProjectFolderNotFound.newCase(directory.getAbsolutePath(), this).getMessage();
+                    throw new FileNotFoundException("No source files found");
+        	}
+        	noSrc = true;
+//                throw new FileNotFoundException("No src folder");
+//        	sourceFolder = aDirectory;
+//        	this.directory = sourceFolder;
+        } else {
+            sourceFolder = src.get();
+            this.directory = src.get().getParentFile();
+        }
+    }
     // rewriting Josh's code
     // going back to Josh';s code
     public BasicProject(Object aProject, File aDirectory, String name, String aSourceFilePattern) throws FileNotFoundException {
         // Find the folder. We could be there or it could be in a different folder
-    	if (aDirectory == null) {
-            throw new FileNotFoundException("No directory given");
+//    	File anActualDirectory = aDirectory;
+//    	boolean aNeedToSearchForProject = true;
+    	if (aDirectory == null) { 
+//    		String aLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
+//            if (aLocation != null) {
+//            	aNeedToSearchForProject = false;
+//            } else {
+//            	aLocation = ".";
+//            }
+//            aDirectory = new File(aLocation);
+    		throw new FileNotFoundException("No directory given");
         }
     	sourceFilePattern = aSourceFilePattern;
     	setProject(aProject);
@@ -100,37 +141,38 @@ public class BasicProject implements Project {
 
     	directory = aDirectory;
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
-        Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
-
-        if (src.isEmpty()) {
-        	SourceFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
-
-        	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(aDirectory, sourceFilePattern);
-        	if (!sourceFiles.isEmpty()) {
-                    File aSourceFile = sourceFiles.iterator().next();
-                    sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
-                    this.directory = sourceFolder.getParentFile();
-                    SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
-        	} else {
-                    ProjectFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
-                    throw new FileNotFoundException("No source files found");
-        	}
-        	noSrc = true;
-//                throw new FileNotFoundException("No src folder");
-//        	sourceFolder = aDirectory;
-//        	this.directory = sourceFolder;
-        } else {
-            sourceFolder = src.get();
-            this.directory = src.get().getParentFile();
-        }
-        
+//        Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
+//
+//        if (src.isEmpty()) {
+//        	SourceFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
+//
+//        	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(aDirectory, sourceFilePattern);
+//        	if (!sourceFiles.isEmpty()) {
+//                    File aSourceFile = sourceFiles.iterator().next();
+//                    sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
+//                    this.directory = sourceFolder.getParentFile();
+//                    SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
+//        	} else {
+//                    ProjectFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
+//                    throw new FileNotFoundException("No source files found");
+//        	}
+//        	noSrc = true;
+////                throw new FileNotFoundException("No src folder");
+////        	sourceFolder = aDirectory;
+////        	this.directory = sourceFolder;
+//        } else {
+//            sourceFolder = src.get();
+//            this.directory = src.get().getParentFile();
+//        }
+        searchForSourceAndProjectFolder();
 
         try {
 //            File sourceFolder = new File(this.directory, "src");
-            File buildFolder = getBuildFolder("main." + name);
+             buildFolder = getBuildFolder("main." + name);
 //            if (AProject.isMakeClassDescriptions())
 //            classesManager = Option.apply((ClassesManager) new ProjectClassesManager(project, buildFolder, sourceFolder));
-            classesManager = createClassesManager(buildFolder);
+             if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage() == BasicLanguageDependencyManager.JAVA_LANGUAGE)
+             classesManager = createClassesManager(buildFolder);
 
         
         } catch (Exception e) {
@@ -172,7 +214,7 @@ public class BasicProject implements Project {
     protected File searchBuildFolder(String preferredClass) throws FileNotFoundException {
   	   for (String aBinary:Project.BINARIES) {
   		   bin = DirectoryUtils.locateFolder(directory, aBinary);
-  		   if (bin != null)
+  		   if (bin != null && !bin.isEmpty())
   			   break;
   	   }
 //        if (out == null)
@@ -238,6 +280,7 @@ public class BasicProject implements Project {
      * @return The build folder
      * @throws FileNotFoundException
      */
+    @Deprecated
     public File getNonCachingBuildFolder(String preferredClass) throws FileNotFoundException {
 //        Option<File> out = DirectoryUtils.locateFolder(directory, "out");
         Option<File> anOut = DirectoryUtils.locateFolder(directory, Project.BINARY_2);
@@ -393,4 +436,8 @@ public class BasicProject implements Project {
     public File getProjectFolder() {
     	return directory;
     }
+    @Override
+    public File getBuildFolder() {
+		return buildFolder;
+	}
 }
