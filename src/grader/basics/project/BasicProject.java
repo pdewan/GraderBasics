@@ -171,7 +171,7 @@ public class BasicProject implements Project {
              buildFolder = getBuildFolder("main." + name);
 //            if (AProject.isMakeClassDescriptions())
 //            classesManager = Option.apply((ClassesManager) new ProjectClassesManager(project, buildFolder, sourceFolder));
-             if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage() == BasicLanguageDependencyManager.JAVA_LANGUAGE)
+//             if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage() == BasicLanguageDependencyManager.JAVA_LANGUAGE)
              classesManager = createClassesManager(buildFolder);
 
         

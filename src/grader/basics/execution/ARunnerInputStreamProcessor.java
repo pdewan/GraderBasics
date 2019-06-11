@@ -14,7 +14,9 @@ public class ARunnerInputStreamProcessor implements RunnerInputStreamProcessor{
 	protected String processName;
 	protected Boolean onlyProcess;
 	OutputStreamWriter inputWriter;
-	public static final String IN_PROMPT = "$";
+//	public static final String IN_PROMPT = "$";
+	public static final String IN_PROMPT = "Provided Input:";
+
 	String inPrefix = IN_PROMPT;
 	
 	public ARunnerInputStreamProcessor(

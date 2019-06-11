@@ -108,7 +108,7 @@ public class DirectoryUtils {
     }
 
 	public static Set<File> getSourceFiles(File sourceFolder, String aSourceFilePattern) {
-	Set<File> javaFiles = getFiles(sourceFolder, new FileFilter() {
+	Set<File> aSourceFiles = getFiles(sourceFolder, new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
 //			return pathname.getName().endsWith(".java");
@@ -124,7 +124,7 @@ public class DirectoryUtils {
 
 		}
 	});
-	return javaFiles;
+	return aSourceFiles;
 	}
 	
 	public static boolean hasSuffix (String name, List<String> ignoreSuffixes) {

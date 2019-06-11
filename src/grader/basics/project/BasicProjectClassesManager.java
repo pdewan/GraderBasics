@@ -291,8 +291,12 @@ public class BasicProjectClassesManager implements ClassesManager {
 //		}
 //		return null;
 		
-		if (BasicGradingEnvironment.get().isLoadClasses() ) {
-			return classLoader.loadClass(className);
+		if (BasicLanguageDependencyManager.isJava() && BasicGradingEnvironment.get().isLoadClasses() ) {
+			Class retVal = classLoader.loadClass(className);
+			if (retVal == null) {
+				System.err.println("Could not load: " + className);
+			}
+			return retVal;
 		}
 		return null;
     }
@@ -318,12 +322,16 @@ public class BasicProjectClassesManager implements ClassesManager {
 //					c = classLoader.loadClass(className);
 //				}
 				Class c = loadClass(className);
+				// do not really need the if, but just in case we do different things
+				// in the two cases
 				if (c != null) {
 //					classDescriptions.add(new BasicClassDescription(c, file));
 					classDescriptions.add(createClassDescription(c, file));
 
 				} else {
-					System.err.println ("Could not load:" + className);
+					classDescriptions.add(createClassDescription(null, file));
+					
+//					System.err.println ("Could not load:" + className);
 				}
 //				else if (AProject.isLoadClasses()) {
 //					c = classLoader.loadClass(className);

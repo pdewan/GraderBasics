@@ -394,7 +394,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	
     @Override
 	public void appendProcessOutput(String aProcess, String newVal) {
-    	String aProcessName = aProcess == null?"main":aProcess;
+    	String aProcessName = aProcess == null?BasicProcessRunner.MAIN_ENTRY_POINT:aProcess;
     	if (BasicRunningProject.isEchoOutput())
     		Tracer.info(this, "Received output from " + aProcessName + ": " + newVal);
 //    	doAppendProcessOutput(aProcess, newVal);

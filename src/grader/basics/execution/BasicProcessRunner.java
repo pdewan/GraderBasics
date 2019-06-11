@@ -745,11 +745,13 @@ public class BasicProcessRunner implements Runner {
 			String[] args, int timeout) throws NotRunnableException {
 //		RunningProject retVal = new RunningProject(project, anOutputBasedInputGenerator, input);
 		RunningProject retVal = createRunningProject(project, anOutputBasedInputGenerator, input);
-
+		String aMainEntryPoint = mainEntryPoint();
+		String aProcessName = aMainEntryPoint == null?BasicProcessRunner.MAIN_ENTRY_POINT:aMainEntryPoint;
 
 		TimedProcess process = run(retVal, anOutputBasedInputGenerator, command, input, args,
 				timeout, 
-				mainEntryPoint(),
+				aProcessName,
+//				mainEntryPoint(),				
 //				MainClassFinder.MAIN_ENTRY_POINT, 
 				true);
 		return retVal;
@@ -1158,7 +1160,8 @@ public class BasicProcessRunner implements Runner {
 			return specifiedMainClass;
 		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
 		if (aRetVal == null) {
-			return "main";
+//			return "main";
+			return BasicProcessRunner.MAIN_ENTRY_POINT;
 		}
 		return aRetVal;
 	}

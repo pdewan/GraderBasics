@@ -20,7 +20,8 @@ public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrO
 		scanner = new Scanner(errorOrOut);
 		runner = aRunner;
 		semaphore = new Semaphore(1);
-		processName = aProcessName;
+		
+		processName = aProcessName == null?BasicProcessRunner.MAIN_ENTRY_POINT:aProcessName;
 		onlyProcess = anOnlyProcess;
 		if (!onlyProcess)
 			outPrefix = "(" + aProcessName + ")";

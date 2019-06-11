@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BasicLanguageDependencyManager {
-	static  String sourceFileSuffix = ".java";
+//	static  String sourceFileSuffix = ".java";
+	static  String sourceFileSuffix;
+
 	 static Map<String, String> languageToSourceFileSuffix = new HashMap<>();
 	 protected static Map<String, String> languageToBinaryFileSuffix = new HashMap<>();
 	 protected static Map<String, MainClassFinder> languageToMainClassFinder = new HashMap();
@@ -77,9 +79,16 @@ public class BasicLanguageDependencyManager {
 
 
 	public static String getSourceFileSuffix() {
+		if (sourceFileSuffix == null) {
+			getLanguage(); // has side effect of setting source file suffix
+		}
 		return sourceFileSuffix;
 	}
 
+//	public static boolean isJava() {
+//		String aLanguage = getLanguage();
+//		return JAVA_LANGUAGE.equals(JAVA_LANGUAGE);
+//	}
 
 	public static String getLanguage() {
 //		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage();
@@ -117,7 +126,7 @@ public class BasicLanguageDependencyManager {
 //		return languageToPermissionGenerator.get(getLanguage());
 //	}
 	public static boolean isJava() {
-		return getLanguage() == JAVA_LANGUAGE;
+		return JAVA_LANGUAGE. equals(getLanguage());
 	}
 //	public static void setCOBj(ConfigurationManager aConfigurationManager) {
 //		String cObj = aConfigurationManager.getCourseConfiguration().getString(StaticConfigurationUtils.C_OBJ);
