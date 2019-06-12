@@ -116,59 +116,140 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     
     protected void maybeWaitForResort() throws InterruptedException {
     	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getWaitForResort()) {
+    		Tracer.info(this, System.currentTimeMillis() + ":Waiting for output resort");
+    		// should this be sleep?
     		wait(BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getResortTime());
     		
     	}
+    }
+    protected void resortingOutputProcessing() {
+    	try {
+			if (pendingOutput.isEmpty()) {
+//				System.out.println("waitimng for received output" );
+//	    		Tracer.info(this, "Waiting for received output");
+
+				wait();
+//				System.out.println("end wait 1");
+			} else {
+				Tracer.info(this, System.currentTimeMillis() + ": waiting for resort time");
+				wait(BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getResortTime());
+			}
+			long aCurrentTime = System.nanoTime();
+			Tracer.info(this, aCurrentTime + ":Finished waiting for input");
+			List<AProcessOutput> copy = new LinkedList<>(pendingOutput);
+			Collections.sort(pendingOutput);
+			
+			if (!pendingOutput.equals(copy)) {
+				System.out.println("***** Input reordered");
+			}
+
+			while (!pendingOutput.isEmpty()) {
+				AProcessOutput aProcessOutput = pendingOutput.peek();
+				long aTime = aProcessOutput.time;
+				if (aCurrentTime - aTime > timeToWaitForConcurrentOutput) {
+					if (hasOutput && aTime < maxNotificationTime) {
+						long diff = (maxNotificationTime - aTime);
+						timeToWaitForConcurrentOutput = Math.max(diff, timeToWaitForConcurrentOutput);
+						System.err.println("+++" + diff + " " + timeToWaitForConcurrentOutput);
+					}
+					hasOutput = true;
+					maxNotificationTime = Math.max(maxNotificationTime, aTime);
+					pendingOutput.removeFirst();
+					if (isEchoOutput())
+						Tracer.info(this, System.currentTimeMillis() + ":Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+					doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
+				} else {
+//					System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
+//					System.out.println("***** Pending: \n" + pendingOutput);
+					break;
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
+    protected void normalOutputProcessing() {
+    	try {
+			while (pendingOutput.isEmpty()) {
+//				System.out.println("waitimng for received output" );
+	    		Tracer.info(this, "Waiting for received output");
+
+				wait();
+//				System.out.println("end wait 1");
+			}
+			
+
+			while (!pendingOutput.isEmpty()) {
+				AProcessOutput aProcessOutput = pendingOutput.removeFirst();
+				
+					if (isEchoOutput())
+						Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+					doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
+				
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
     
     @Override
     public void run() {
     	while (true) {
     		synchronized(this) {
-	    		try {
-	    			if (pendingOutput.isEmpty()) {
-//	    				System.out.println("waitimng for received output" );
-	    				wait();
-//	    				System.out.println("end wait 1");
-	    			} else {
-//	    				System.out.println(Thread.currentThread() + " Waiting for resort time");
-//	    				wait(RESORT_TIME);
-	    				maybeWaitForResort();
-//	    				wait((long)Math.ceil(maxDiff/1e6));
-//	    				System.out.println("end wait 2");
-	    			}
-					long aCurrentTime = System.nanoTime();
-					List<AProcessOutput> copy = new LinkedList<>(pendingOutput);
-					Collections.sort(pendingOutput);
-					
-					if (!pendingOutput.equals(copy)) {
-						System.out.println("***** Input reordered");
-					}
-	
-					while (!pendingOutput.isEmpty()) {
-						AProcessOutput aProcessOutput = pendingOutput.peek();
-						long aTime = aProcessOutput.time;
-						if (aCurrentTime - aTime > timeToWaitForConcurrentOutput) {
-							if (hasOutput && aTime < maxNotificationTime) {
-								long diff = (maxNotificationTime - aTime);
-								timeToWaitForConcurrentOutput = Math.max(diff, timeToWaitForConcurrentOutput);
-								System.err.println("+++" + diff + " " + timeToWaitForConcurrentOutput);
-							}
-							hasOutput = true;
-							maxNotificationTime = Math.max(maxNotificationTime, aTime);
-							pendingOutput.removeFirst();
-							if (isEchoOutput())
-								Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
-							doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
-						} else {
-//							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
-//							System.out.println("***** Pending: \n" + pendingOutput);
-							break;
-						}
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+    			// not caching the resorting as we may want to change it dynamically
+    	    	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getWaitForResort()) {
+    	    		resortingOutputProcessing();
+    	    	} else {
+    	    		normalOutputProcessing();
+    	    	}
+
+//	    		try {
+//	    			if (pendingOutput.isEmpty()) {
+////	    				System.out.println("waitimng for received output" );
+//	    	    		Tracer.info(this, "Waiting for received output");
+//
+//	    				wait();
+////	    				System.out.println("end wait 1");
+//	    			} else {
+////	    				System.out.println(Thread.currentThread() + " Waiting for resort time");
+////	    				wait(RESORT_TIME);
+//	    				maybeWaitForResort();
+////	    				wait((long)Math.ceil(maxDiff/1e6));
+////	    				System.out.println("end wait 2");
+//	    			}
+//					long aCurrentTime = System.nanoTime();
+//					Tracer.info(this, aCurrentTime + ":Finished waiting for input");
+//					List<AProcessOutput> copy = new LinkedList<>(pendingOutput);
+//					Collections.sort(pendingOutput);
+//					
+//					if (!pendingOutput.equals(copy)) {
+//						System.out.println("***** Input reordered");
+//					}
+//	
+//					while (!pendingOutput.isEmpty()) {
+//						AProcessOutput aProcessOutput = pendingOutput.peek();
+//						long aTime = aProcessOutput.time;
+//						if (aCurrentTime - aTime > timeToWaitForConcurrentOutput) {
+//							if (hasOutput && aTime < maxNotificationTime) {
+//								long diff = (maxNotificationTime - aTime);
+//								timeToWaitForConcurrentOutput = Math.max(diff, timeToWaitForConcurrentOutput);
+//								System.err.println("+++" + diff + " " + timeToWaitForConcurrentOutput);
+//							}
+//							hasOutput = true;
+//							maxNotificationTime = Math.max(maxNotificationTime, aTime);
+//							pendingOutput.removeFirst();
+//							if (isEchoOutput())
+//								Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+//							doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
+//						} else {
+////							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
+////							System.out.println("***** Pending: \n" + pendingOutput);
+//							break;
+//						}
+//					}
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
     		}
     	}
     }
@@ -396,7 +477,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public void appendProcessOutput(String aProcess, String newVal) {
     	String aProcessName = aProcess == null?BasicProcessRunner.MAIN_ENTRY_POINT:aProcess;
     	if (BasicRunningProject.isEchoOutput())
-    		Tracer.info(this, "Received output from " + aProcessName + ": " + newVal);
+    		Tracer.info(this, System.currentTimeMillis() + ":Received output from " + aProcessName + ": " + newVal);
 //    	doAppendProcessOutput(aProcess, newVal);
     	Matcher timeMatcher = timePattern.matcher(newVal);
 //    	System.out.println("+++** " + newVal);
@@ -602,7 +683,7 @@ public void appendCumulativeOutput() {
         maybeSetCurrentProjectIO();
         try {
         	int anOutputSleepTime = getOutputSleepTime();
-            System.out.println(("Current thread:" + Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime ));
+            Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " waiting for pending output from threads ");
 
 			Thread.sleep(getOutputSleepTime()); // wait for output to be received
 		} catch (InterruptedException e) {
