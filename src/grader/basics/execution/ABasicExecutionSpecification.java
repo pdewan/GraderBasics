@@ -29,6 +29,12 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	protected Map<String, List<String>> processToStartTags = new HashMap<>();
 	protected Map<String, String> runtimeGraderStringProperties = new HashMap<>();
 	protected Map<String, String> runtimeStudentStringProperties = new HashMap<>();
+	protected Map<String, Integer> runtimeGraderIntegerProperties = new HashMap<>();
+	protected Map<String, Integer> runtimeStudentIntegerProperties = new HashMap<>();
+	protected Map<String, Boolean> runtimeGraderBooleanProperties = new HashMap<>();
+	protected Map<String, Boolean> runtimeStudentBooleanProperties = new HashMap<>();
+	protected Map<String, List<String>> runtimeGraderListProperties = new HashMap<>();
+	protected Map<String, List<String>> runtimeStudentListProperties = new HashMap<>();
 	/* (non-Javadoc)
 	 * @see grader.execution.ExecutionSpecification#getProcessTeams()
 	 */
@@ -96,7 +102,7 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	 */
 	@Override
 	public void setSleepTime(String aProcess, int aSleepTime) {
-		Tracer.info(this, "Setting sleep time: " + aSleepTime);
+		Tracer.info(this, "Setting sleep time for process " + aProcess + " to " + aSleepTime);
 		 processToSleepTime.put(aProcess, aSleepTime);
 	}
 	
@@ -167,27 +173,58 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 		
 	}
 	
-	public static long RESORT_TIME = 100;
+	public static int RESORT_TIME = 100;
+	public static boolean WAIT_FOR_RESORT = true;
 
-	protected  long resortTime = RESORT_TIME;
-    protected  boolean waitForResort = true;
+//	protected  long resortTime = RESORT_TIME;
+//    protected  boolean waitForResort = true;
     @Override
-    public   void setResortTime(long aResortTime) {
-    	resortTime = aResortTime;
+    public   void setGraderResortTime(Integer aResortTime) {
+//    	resortTime = aResortTime;
+    	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.RESORT_TIME, aResortTime);
+    	
+    }
+    @Override
+    public void setGraderProcessOutputWaitTime(Integer newVal) {
+//    	resortTime = aResortTime;
+    	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, newVal);
+    	
+    }
+    @Override
+    public void setGraderProcessTeamOutputWaitTime(Integer newVal) {
+//    	resortTime = aResortTime;
+    	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.TEAM_OUTPUT_WAIT_TIME, newVal);
     	
     }
     @Override
     public  long getResortTime() {
-    	return resortTime;
+    	return getIntegerProperty(BasicStaticConfigurationUtils.RESORT_TIME, RESORT_TIME);
     }
     @Override
-    public  void setWaitForResort(boolean newVal) {
-    	waitForResort = newVal;
+    public  Integer getProcessOutputSleepTime() {
+    	return getIntegerProperty(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, BasicRunningProject.PROCESS_OUTPUT_SLEEP_TIME);
+    }
+    @Override
+	public  Integer getProcessTeamOutputSleepTime() {
+    	return getIntegerProperty(BasicStaticConfigurationUtils.TEAM_OUTPUT_WAIT_TIME, BasicRunningProject.PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME);
+
+	}
+    @Override
+    public  void setGraderWaitForResort(boolean newVal) {
+//    	waitForResort = newVal;
+    	runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.WAIT_FOR_RESORT, newVal);
+
+    }
+    @Override
+    public boolean getWaitForResortProperty() {
+    	return getBooleanProperty(BasicStaticConfigurationUtils.WAIT_FOR_RESORT, WAIT_FOR_RESORT);
     }
     
     @Override
     public  boolean getWaitForResort() {
-    	return BasicStaticConfigurationUtils.isTeamProcess() && waitForResort;
+//    	return BasicStaticConfigurationUtils.isTeamProcess() && waitForResort;
+    	return BasicStaticConfigurationUtils.isTeamProcess() && getWaitForResortProperty();
+
     }
     protected String gradableProjectLocation = null;
     @Override
@@ -220,6 +257,16 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	return binaryFolderLocation;
 //    	return getStringProperty(BasicStaticConfigurationUtils.BINARY_LOCATION, null);
     }
+    protected String objectFolderLocation = null;
+
+    @Override
+    public String getObjectFolderLocation() {
+    	if (objectFolderLocation == null) {
+    		objectFolderLocation = getStringProperty(BasicStaticConfigurationUtils.OBJECT_LOCATION, null);
+    	}
+    	return objectFolderLocation;
+//    	return getStringProperty(BasicStaticConfigurationUtils.BINARY_LOCATION, null);
+    }
     // should we cache these values?
     protected String language;
     @Override
@@ -230,16 +277,67 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	return language;
 //    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
     }
+//    // no caching as 
+//    @Override
+//    public List<String> getBasicCommand() {
+//    	List<String> aCommand = getInheritedListModuleProblemProperty(BasicStaticConfigurationUtils.EXECUTION_COMMAND, null);
+//    	if (aCommand != null && !aCommand.isEmpty()) {
+//    		return aCommand;
+//    	}
+////    	String aLangugage = getLanguage();
+//    	return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
+//    	
+//    }
     // no caching as 
     @Override
     public List<String> getBasicCommand() {
-    	List<String> aCommand = getInheritedListModuleProblemProperty(BasicStaticConfigurationUtils.EXECUTION_COMMAND, null);
+    	List<String> aCommand = getListProperty(BasicStaticConfigurationUtils.EXECUTION_COMMAND, null);
     	if (aCommand != null && !aCommand.isEmpty()) {
     		return aCommand;
     	}
 //    	String aLangugage = getLanguage();
     	return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
     	
+    }
+    @Override
+    public Integer getIntegerProperty(String aProperty, Integer aDefault) {
+    	Integer retVal = getInheritedIntegerModuleProblemProperty(aProperty, null);
+//		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
+		if (retVal != null) {
+			return retVal;
+		}
+    	 retVal = runtimeStudentIntegerProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+//    	if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+    		    
+//    	}
+    	retVal = runtimeGraderIntegerProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+    	return aDefault;
+    }
+    @Override
+    public Boolean getBooleanProperty(String aProperty, Boolean aDefault) {
+    	Boolean retVal = getInheritedBooleanModuleProblemProperty(aProperty, null);
+//		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
+		if (retVal != null) {
+			return retVal;
+		}
+    	 retVal = runtimeStudentBooleanProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+//    	if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+    		    
+//    	}
+    	retVal = runtimeGraderBooleanProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+    	return aDefault;
     }
     
     @Override
@@ -263,6 +361,26 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	return aDefault;
     }
     @Override
+    public List<String> getListProperty(String aProperty, List<String> aDefault) {
+    	List<String> retVal = getInheritedListModuleProblemProperty(aProperty, null);
+//		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
+		if (retVal != null) {
+			return retVal;
+		}
+    	retVal = runtimeStudentListProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+//    	if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+    		    
+//    	}
+    	retVal = runtimeGraderListProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+    	return aDefault;
+    }
+    @Override
     public void setStudentStringProperty(String aProperty, String aValue) {
     	runtimeStudentStringProperties.put(aProperty, aValue);
     }
@@ -274,6 +392,17 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     public void setGraderStringProperty(String aProperty, String aValue) {
     	runtimeGraderStringProperties.put(aProperty, aValue);
     }
+    public  Integer getInheritedIntegerModuleProblemProperty(
+			
+			String aProperty, Integer defaultValue) {
+    	return BasicStaticConfigurationUtils.getBasicInheritedIntegerModuleProblemProperty(aProperty, defaultValue);
+//    	if (!BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+//    		return defaultValue;
+//    	}
+//		return BasicStaticConfigurationUtils.getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), BasicStaticConfigurationUtils.getModule(), BasicStaticConfigurationUtils.getProblem(), aProperty, defaultValue);
+
+		
+	}
     public  List<String> getInheritedListModuleProblemProperty(
 			
 			String aProperty, List<String> defaultValue) {
@@ -289,6 +418,17 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 			
 			String aProperty, String defaultValue) {
     	return BasicStaticConfigurationUtils.getBasicInheritedStringModuleProblemProperty(aProperty, defaultValue);
+//    	if (!BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+//    		return defaultValue;
+//    	}
+//		return BasicStaticConfigurationUtils.getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), BasicStaticConfigurationUtils.getModule(), BasicStaticConfigurationUtils.getProblem(), aProperty, defaultValue);
+
+		
+	}
+  public  Boolean getInheritedBooleanModuleProblemProperty(
+			
+			String aProperty, Boolean defaultValue) {
+    	return BasicStaticConfigurationUtils.getBasicInheritedBooleanModuleProblemProperty(aProperty, defaultValue);
 //    	if (!BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
 //    		return defaultValue;
 //    	}

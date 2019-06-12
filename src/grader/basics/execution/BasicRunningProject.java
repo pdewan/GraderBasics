@@ -172,7 +172,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     	try {
 			while (pendingOutput.isEmpty()) {
 //				System.out.println("waitimng for received output" );
-	    		Tracer.info(this, "Waiting for received output");
+//	    		Tracer.info(this, "Waiting for received output");
 
 				wait();
 //				System.out.println("end wait 1");
@@ -641,24 +641,29 @@ public void appendCumulativeOutput() {
     public static final int PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME = 5000;
     public static final int PROCESS_OUTPUT_SLEEP_TIME = 1000;
 
-    protected static Integer processOutputSleepTime = PROCESS_OUTPUT_SLEEP_TIME;
+//    protected static Integer processOutputSleepTime = PROCESS_OUTPUT_SLEEP_TIME;
     public static Integer getProcessOutputSleepTime() {
-		return processOutputSleepTime;
+    	return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getProcessOutputSleepTime();
+//		return processOutputSleepTime;
 	}
 
 	public static void setProcessOutputSleepTime(Integer processOutputSleepTime) {
-		BasicRunningProject.processOutputSleepTime = processOutputSleepTime;
+//		BasicRunningProject.processOutputSleepTime = processOutputSleepTime;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderProcessOutputWaitTime(processOutputSleepTime);
+
 	}
 
-	protected static Integer processTeamOutputSleepTime = PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME;
+//	protected static Integer processTeamOutputSleepTime = PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME;
 
     
 	public static Integer getProcessTeamOutputSleepTime() {
-		return processTeamOutputSleepTime;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getProcessTeamOutputSleepTime();
+//		return processTeamOutputSleepTime;
 	}
 
-	public static void setProcessTeamOutputSleepTime(Integer processTeamOutputSleepTime) {
-		BasicRunningProject.processTeamOutputSleepTime = processTeamOutputSleepTime;
+	public static void setProcessTeamOutputSleepTime(Integer newVal) {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderProcessTeamOutputWaitTime(newVal);
+//		BasicRunningProject.processTeamOutputSleepTime = processTeamOutputSleepTime;
 	}
 	
 	public static int getOutputSleepTime() {

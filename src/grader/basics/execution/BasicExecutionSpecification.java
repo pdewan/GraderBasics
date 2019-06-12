@@ -29,9 +29,9 @@ public interface BasicExecutionSpecification {
 
 	public abstract void setEntryPoint(String aProcess, String anEntryPoint);
 	void resetProcessTeams();
-	void setResortTime(long aResortTime);
+	void setGraderResortTime(Integer aResortTime);
 	long getResortTime();
-	void setWaitForResort(boolean newVal);
+	void setGraderWaitForResort(boolean newVal);
 	boolean getWaitForResort();
 	void setStudentStringProperty(String aProperty, String aValue);
 	void setGraderStringProperty(String aProperty, String aValue);
@@ -42,6 +42,15 @@ public interface BasicExecutionSpecification {
 	String getSourceFolderLocation();
 	String getBinaryFolderLocation();
 	List<String> getBasicCommand();
+	String getObjectFolderLocation();
+	List<String> getListProperty(String aProperty, List<String> aDefault);
+	Integer getIntegerProperty(String aProperty, Integer aDefault);
+	Boolean getBooleanProperty(String aProperty, Boolean aDefault);
+	Integer getProcessOutputSleepTime();
+	Integer getProcessTeamOutputSleepTime();
+	boolean getWaitForResortProperty();
+	void setGraderProcessOutputWaitTime(Integer newVal);
+	void setGraderProcessTeamOutputWaitTime(Integer newVal);
 	
 	
 

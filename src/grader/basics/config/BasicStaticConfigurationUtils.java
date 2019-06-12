@@ -71,6 +71,13 @@ public class BasicStaticConfigurationUtils {
 	public static final String GRADABLE_PROJECT_LOCATION = "gradableProjectLocation";
 	public static final String SOURCE_LOCATION = "sourceLocation";
 	public static final String BINARY_LOCATION = "binaryLocation";
+	public static final String OBJECT_LOCATION = "objectLocation";
+	public static final String OUTPUT_WAIT_TIME = "outputWaitTime";
+	public static final String TEAM_OUTPUT_WAIT_TIME = "teamOutputWaitTime";
+	public static final String WAIT_FOR_RESORT = "waitForResort";
+	public static final String RESORT_TIME = "resortTime";
+
+
 
 	private static  List<String> basicCommand;
 	private static Map<String, List<String>> processToBasicCommand = new HashMap();
@@ -843,6 +850,26 @@ public class BasicStaticConfigurationUtils {
 		}
 
 	 return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	}
+	public static Boolean getBasicInheritedBooleanModuleProblemProperty(
+			String property, Boolean defaultValue) {
+		if (!isUseProjectConfiguration() ||
+			 // cannot use project configuration before location is known to create project
+			 property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION) { // can do == as we are using named constants
+			return defaultValue;
+		}
+
+	 return getInheritedBooleanModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	}
+	public static Integer getBasicInheritedIntegerModuleProblemProperty(
+			String property, Integer defaultValue) {
+		if (!isUseProjectConfiguration() ||
+			 // cannot use project configuration before location is known to create project
+			 property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION) { // can do == as we are using named constants
+			return defaultValue;
+		}
+
+	 return getInheritedIntegerModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
 	}
 	public static List<String> getBasicInheritedListModuleProblemProperty(
 			String property, List<String> defaultValue) {
