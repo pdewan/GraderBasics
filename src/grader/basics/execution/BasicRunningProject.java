@@ -183,7 +183,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 				AProcessOutput aProcessOutput = pendingOutput.removeFirst();
 				
 					if (isEchoOutput())
-						Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+						Tracer.info(this, System.currentTimeMillis() + ":Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
 					doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
 				
 			}

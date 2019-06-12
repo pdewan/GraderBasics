@@ -90,5 +90,7 @@ public interface Project {
 
 	File getBuildFolder() throws FileNotFoundException;
 
+	File getObjectFolder();
+
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }
