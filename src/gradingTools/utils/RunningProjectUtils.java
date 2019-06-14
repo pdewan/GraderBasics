@@ -1,5 +1,6 @@
 package gradingTools.utils;
 
+import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
@@ -27,6 +28,12 @@ public class RunningProjectUtils extends BasicProjectExecution{
 			String... inputs)
 			throws NotRunnableException {
 		return runProject(project, BasicProjectExecution.DEFAULT_INPUT_SEPARATOR, timeout, anOutputBasedInputGenerator, inputs);
+	}
+	public static RunningProject runProject(Project project,  InputGenerator anOutputBasedInputGenerator,
+			String... inputs)
+			throws NotRunnableException {
+		Integer aTimeout = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getProcessTimeOut();
+		return runProject(project, BasicProjectExecution.DEFAULT_INPUT_SEPARATOR, aTimeout, anOutputBasedInputGenerator, inputs);
 	}
 	public static RunningProject runProject(Project project, String inputSeparator, int timeout, String... inputs) throws NotRunnableException {
 		return runProject(project, timeout, null, inputs);
