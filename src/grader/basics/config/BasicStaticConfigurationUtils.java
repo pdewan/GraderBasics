@@ -76,17 +76,28 @@ public class BasicStaticConfigurationUtils {
 	public static final String TEAM_OUTPUT_WAIT_TIME = "teamOutputWaitTime";
 	public static final String WAIT_FOR_RESORT = "waitForResort";
 	public static final String RESORT_TIME = "resortTime";
+	public static final String PROCESS_TIMEOUT = "processTimeout";
+	public static final String METHOD_TIMEOUT = "methodTimeout";
+	public static final String CONSTRUCTOR_TIMEOUT = "constructorTimeout";
+	public static final String USE_METHOD_CONSTRUCTOR_TIMEOUT = "useMethodConstructorTimeout";
+	public static final String USE_PROCESS_TIMEOUT = "useProcessTimeout";
+	public static final String WAIT_FOR_METHOD_CONSTRUCTOR_AND_PROCESSES = "waitFotMethodConstructorAndProcesses";
+
+
 
 
 
 	private static  List<String> basicCommand;
 	private static Map<String, List<String>> processToBasicCommand = new HashMap();
 	private static String duplicatedClassPathSeparator;
-	private static List<String> processTeams;
+	private static List<String> graderProcessTeams;
+
 	private static boolean useProjectConfiguration;
 	private static String module;
 	
 	private static String problem;
+	protected static String test;
+	protected static String testSuite;
 	protected static List<String> emptyList = new ArrayList();
 
 
@@ -107,6 +118,13 @@ public class BasicStaticConfigurationUtils {
 			Arrays.asList(DEFAULT_JAVA_BASIC_COMMAND_ARRAY);
 	public static final List<String> DEFAULT_OE_BASIC_COMMAND =
 			Arrays.asList(DEFAULT_OE_BASIC_COMMAND_ARRAY);
+	public static final int DEFAULT_SLEEP_TIME = 2000;
+	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
+	// milliseconds
+public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
+public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
+
+	
 	public static String toVariable(String aVariableName) {
 		return "{" + aVariableName + "}";
 	}
@@ -789,13 +807,13 @@ public class BasicStaticConfigurationUtils {
 
 	}
 	public static List<String> getProcessTeams() {
-		return processTeams;
+		return graderProcessTeams;
 	}
 	public static void setProcessTeams(List<String> newVal) {
-		 processTeams = newVal;;
+		 graderProcessTeams = newVal;;
 	}
 	public static boolean isTeamProcess() {
-		return processTeams != null && processTeams.isEmpty();
+		return graderProcessTeams != null && graderProcessTeams.isEmpty();
 	}
 	public static boolean isUseProjectConfiguration() {
 		return useProjectConfiguration;
@@ -805,7 +823,7 @@ public class BasicStaticConfigurationUtils {
 	}
 	public static Boolean getInheritedBooleanModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
-			String problem, String property, Boolean defaultValue) {
+			String problem, String aTest, String property, Boolean defaultValue) {
 	
 		Boolean retVal = configuration.getBoolean(module + "." + problem + "."
 				+ property, null);
@@ -825,7 +843,7 @@ public class BasicStaticConfigurationUtils {
 	
 	public static Integer getInheritedIntegerModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
-			String problem, String property, Integer defaultValue) {
+			String problem, String test, String property, Integer defaultValue) {
 	
 		Integer retVal = configuration.getInteger(module + "." + problem + "."
 				+ property, null);
@@ -849,7 +867,7 @@ public class BasicStaticConfigurationUtils {
 			return defaultValue;
 		}
 
-	 return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	 return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, test, property, defaultValue);
 	}
 	public static Boolean getBasicInheritedBooleanModuleProblemProperty(
 			String property, Boolean defaultValue) {
@@ -859,7 +877,7 @@ public class BasicStaticConfigurationUtils {
 			return defaultValue;
 		}
 
-	 return getInheritedBooleanModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	 return getInheritedBooleanModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, test, property, defaultValue);
 	}
 	public static Integer getBasicInheritedIntegerModuleProblemProperty(
 			String property, Integer defaultValue) {
@@ -869,7 +887,7 @@ public class BasicStaticConfigurationUtils {
 			return defaultValue;
 		}
 
-	 return getInheritedIntegerModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	 return getInheritedIntegerModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, test, property, defaultValue);
 	}
 	public static List<String> getBasicInheritedListModuleProblemProperty(
 			String property, List<String> defaultValue) {
@@ -877,18 +895,25 @@ public class BasicStaticConfigurationUtils {
 			return defaultValue;
 		}
 
-	 return getInheritedListModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, property, defaultValue);
+	 return getInheritedListModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, test, property, defaultValue);
 	}
 	public static String getInheritedStringModuleProblemProperty(
-			PropertiesConfiguration configuration, String module,
-			String problem, String property, String defaultValue) {
+			PropertiesConfiguration configuration, String module, 
+			String problem, String aTest, String property, String defaultValue) {
 		if (configuration == null) {
 			System.err.println("Null configuration, returning " + defaultValue + " for " + property);
 			return defaultValue;
 		}
-	
-		String retVal = configuration.getString(module + "." + problem + "."
+		String retVal = configuration.getString(module + "." + problem + "." + aTest + "."
 				+ property, null);
+		if (retVal != null) {
+			return retVal;
+		}
+		retVal = configuration.getString(module + "." + problem + "."
+				+ property, null);
+	
+//		String retVal = configuration.getString(module + "." + problem + "."
+//				+ property, null);
 		if (retVal != null) {
 			return retVal;
 		}
@@ -906,10 +931,18 @@ public class BasicStaticConfigurationUtils {
 	}
 	public static List<String> getInheritedListModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
-			String problem, String property, List<String> aDefaultValue) {
-	
-		List retVal = configuration.getList(module + "." + problem + "."
+			String problem, String aTest, String property, List<String> aDefaultValue) {
+		List retVal = configuration.getList(module + "." + problem + "." + aTest + "."
 				+ property);
+	
+		if (retVal.isEmpty()) {
+			retVal = configuration.getList(module + "." + problem + "."
+					+ property);
+		}
+		
+	
+//		List retVal = configuration.getList(module + "." + problem + "."
+//				+ property);
 	
 		if (retVal.isEmpty()) {
 			retVal = configuration.getList(module + "." + property);
@@ -927,8 +960,12 @@ public class BasicStaticConfigurationUtils {
 	public static String getModule() {
 		return module;
 	}
-	public static void setModuleAndProblem(Class aTestClass) {
-		Package aPackage = aTestClass.getPackage();
+	public static void setTest(Class aTest) {
+		test = aTest.getSimpleName();
+	}
+	public static void setModuleProblemAndSuite(Class aSuiteClass) {
+		testSuite = aSuiteClass.getSimpleName();
+		Package aPackage = aSuiteClass.getPackage();
 		String aPackageName = aPackage.getName();
 		String[] aPackageComponents = aPackageName.split("\\.");
 		if (aPackageComponents.length < 3) {
@@ -952,6 +989,12 @@ public class BasicStaticConfigurationUtils {
 	public static void setProblem(String problem) {
 		BasicStaticConfigurationUtils.problem = problem;
 	}
+	public static String getTest() {
+		return test;
+	}
+	public static void settest(String newVal) {
+		test = newVal;
+	}
 	
 	
 	public static String getLanguage() {
@@ -959,8 +1002,10 @@ public class BasicStaticConfigurationUtils {
 //			return JAVA;
 			return BasicLanguageDependencyManager.JAVA_LANGUAGE;
 
-		return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
+		return getInheritedStringModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, test, LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
 
 	}
-	
+	public static String toCompoundProperty(String aParent, String aChild) {
+		return aParent + "." + aChild;
+	}
 }

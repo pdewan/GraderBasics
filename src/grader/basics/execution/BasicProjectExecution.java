@@ -38,9 +38,9 @@ import util.misc.TeePrintStream;
 import util.trace.Tracer;
 
 public class BasicProjectExecution {
-	static boolean useMethodAndConstructorTimeOut = true;
-	static boolean useProcessTimeOut = true;
-	static boolean waitForMethodAndConstructors = true;
+//	static boolean useMethodAndConstructorTimeOut = true;
+//	static boolean useProcessTimeOut = true;
+//	static boolean waitForMethodAndConstructors = true;
 
 	
 	public static final String PRINTS = "System.out";
@@ -59,34 +59,40 @@ public class BasicProjectExecution {
 	static ExecutorService executor = createExecutor();
 
 	
-	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
-																// milliseconds
-	public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
-	public static final int PROCESS_TIME_OUT = 4; // in seconds
-	protected static int constructorTimeOut = DEFAULT_CONSTRUCTOR_TIME_OUT;
+//	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
+//																// milliseconds
+//	public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
+//	public static final int PROCESS_TIME_OUT = 4; // in seconds
+//	protected static int constructorTimeOut = DEFAULT_CONSTRUCTOR_TIME_OUT;
 
-	protected static int methodTimeOut = DEFAULT_METHOD_TIME_OUT;
-	protected static int processTimeOut = PROCESS_TIME_OUT;
+//	protected static int methodTimeOut = DEFAULT_METHOD_TIME_OUT;
+//	protected static int processTimeOut = PROCESS_TIME_OUT;
 
 	static Object[] emptyObjectArray = {};
+	static BasicExecutionSpecification basicExecutionSpecification = BasicExecutionSpecificationSelector.getBasicExecutionSpecification();
 
 	public static int getConstructorTimeOut() {
-		return constructorTimeOut;
+//		return constructorTimeOut;
+		return basicExecutionSpecification.getConstructorTimeOut();
 	}
 
 	public static void setConstructorTimeOut(int constructorTimeOut) {
-		BasicProjectExecution.constructorTimeOut = constructorTimeOut;
+//		BasicProjectExecution.constructorTimeOut = constructorTimeOut;
+		basicExecutionSpecification.setConstructorTimeOut(constructorTimeOut);
 	}
 
 	public static int getMethodTimeOut() {
-		return methodTimeOut;
+		return basicExecutionSpecification.getMethodTimeOut();
+//		return methodTimeOut;
 	}
 
 	public static void setMethodTimeOut(int methodTimeOut) {
-		BasicProjectExecution.methodTimeOut = methodTimeOut;
+//		BasicProjectExecution.methodTimeOut = methodTimeOut;
+		basicExecutionSpecification.setMethodTimeOut(methodTimeOut);
 	}
 	public static int getProcessTimeOut() {
-		return processTimeOut;
+//		return processTimeOut;
+		return basicExecutionSpecification.getProcessTimeOut();
 	}
 	
 	public static ExecutorService createExecutor() {
@@ -94,7 +100,9 @@ public class BasicProjectExecution {
 	}
 
 	public static void setProcessTimeOut(int newVal) {
-		processTimeOut = newVal;
+		basicExecutionSpecification.setProcessTimeOut(newVal);
+//		processTimeOut = newVal;
+		
 	}
 	public static final String DELIMITER = 
 	"_________________________________________________________________________";
@@ -244,20 +252,24 @@ public class BasicProjectExecution {
 //	}
 
 	public static boolean isUseMethodAndConstructorTimeOut() {
-		return useMethodAndConstructorTimeOut;
+		return basicExecutionSpecification.isUseMethodAndConstructorTimeOut();
+//		return useMethodAndConstructorTimeOut;
 	}
 
 	public static void setUseMethodAndConstructorTimeOut(
 			boolean useMethodAndConstructorTimeOut) {
-		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
+		basicExecutionSpecification.setUseMethodAndConstructorTimeOut(useMethodAndConstructorTimeOut);
+//		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
 	}
 	public static boolean isUseProcessTimeOut() {
-		return useProcessTimeOut;
+		return basicExecutionSpecification.isUseProcessTimeOut();
+//		return useProcessTimeOut;
 	}
 
 	public static void setUseProcessTimeOut(
 			boolean newVal) {
-		useProcessTimeOut = newVal;
+		basicExecutionSpecification.setUseProcessTimeOut(newVal);
+//		useProcessTimeOut = newVal;
 	}
 
 	public static Object timedInvokeWithExceptions(Object anObject,
@@ -999,7 +1011,9 @@ public class BasicProjectExecution {
 
 	public static ResultingOutErr forkMain(String[] args, String... input)
 			throws NotRunnableException {
-		return forkMain(null, args, PROCESS_TIME_OUT, input);
+//		return forkMain(null, args, PROCESS_TIME_OUT, input);
+		return forkMain(null, args, getProcessTimeOut(), input);
+
 	}
 
 	public static ResultingOutErr forkMain(String aMainClassName,
@@ -1031,12 +1045,15 @@ public class BasicProjectExecution {
 	public static String forkMainWithExplicitCommand(Class aProxyClass,
 			String[] args, String... input) {
 		return forkProjectMainWithExplicitCommand(aProxyClass, args,
-				PROCESS_TIME_OUT, input);
+				getProcessTimeOut(), input);
+//		PROCESS_TIME_OUT, input);
 	}
 
 	public static ResultingOutErr forkMain(Class aProxyClass, String[] args,
 			String... input) {
-		return forkProjectMain(aProxyClass, args, PROCESS_TIME_OUT, input);
+		return forkProjectMain(aProxyClass, args, getProcessTimeOut(), input);
+
+//		return forkProjectMain(aProxyClass, args, PROCESS_TIME_OUT, input);
 	}
 
 	static final String[] emptyStringArray = new String[] {};
@@ -1470,12 +1487,14 @@ public class BasicProjectExecution {
 		return allInputsStr;
 	}
 	public static boolean isWaitForMethodConstructorsAndProcesses() {
-		return waitForMethodAndConstructors;
+		return basicExecutionSpecification.isWaitForMethodConstructorAndProcesses();
+//		return waitForMethodAndConstructors;
 	}
 
 	public static void setWaitForMethodConstructorsAndProcesses(
-			boolean waitForMethodAndConstructors) {
-		BasicProjectExecution.waitForMethodAndConstructors = waitForMethodAndConstructors;
+			boolean newVal) {
+//		BasicProjectExecution.waitForMethodAndConstructors = waitForMethodAndConstructors;
+		basicExecutionSpecification.setWaitForMethodConstructorAndProcesses(newVal);
 	}
 
 	public static final String DEFAULT_INPUT_SEPARATOR = "\n";

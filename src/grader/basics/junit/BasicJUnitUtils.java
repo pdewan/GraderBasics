@@ -1,5 +1,6 @@
 package grader.basics.junit;
 
+import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.observers.TestLogFileWriterFactory;
 import grader.basics.project.BasicProjectIntrospection;
 //import grader.junit.GraderTestCase;
@@ -97,6 +98,8 @@ public class BasicJUnitUtils {
 	}
 	
 	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
+		//  the suite class will
+		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);
 		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
 //		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());

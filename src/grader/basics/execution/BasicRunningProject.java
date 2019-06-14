@@ -830,7 +830,7 @@ public void appendCumulativeOutput() {
 
     @Override
 	public void terminateProcess(String aProcess) {
-        Tracer.info(this, "Terminating:" + aProcess);
+        Tracer.info(this, System.currentTimeMillis() +":Terminating:" + aProcess);
 //
         try {
             processToOut.get(aProcess).getSemaphore().acquire(); // this is deadlocking, need to debug

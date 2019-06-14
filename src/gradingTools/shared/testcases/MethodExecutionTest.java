@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.ResultWithOutput;
@@ -235,7 +236,7 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		return emptyStringLines;
 	}
 	protected long getTimeOut() {
-		return BasicProjectExecution.DEFAULT_METHOD_TIME_OUT;
+		return BasicStaticConfigurationUtils.DEFAULT_METHOD_TIME_OUT;
 	}
 	protected boolean isValidOutput() {
 		return true;

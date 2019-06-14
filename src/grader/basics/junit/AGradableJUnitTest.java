@@ -1,5 +1,6 @@
 package grader.basics.junit;
 
+import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 
@@ -26,6 +27,7 @@ import util.annotations.Position;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
+import util.trace.Tracer;
 import bus.uigen.attributes.AttributeNames;
 import bus.uigen.introspect.Attribute;
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
@@ -249,8 +251,10 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public TestCaseResult test()
 			throws NotAutomatableException, NotGradableException {
 		try {
+			Tracer.resetNumTraces();// previous test output should not affect this one
 			numTests++;
 			Class aJUnitClass = getJUnitClass();
+			BasicStaticConfigurationUtils.setTest(aJUnitClass);
 //			JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
 
 			runListener.setJUnitName(aJUnitClass.getName());
