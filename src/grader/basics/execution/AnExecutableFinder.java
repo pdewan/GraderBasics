@@ -23,7 +23,10 @@ public class AnExecutableFinder implements MainClassFinder {
     	
     }
     
-
+    /*
+     * This  is ignoring other executables
+     * @see grader.basics.execution.MainClassFinder#getEntryPoints(grader.basics.project.Project, java.lang.String)
+     */
     public Map<String, String> getEntryPoints(grader.basics.project.Project frameworkProject, String aSpecifiedMainClass) throws NotRunnableException {
         try {
 //    	File binaryFolder = frameworkProject.getBuildFolder("");
@@ -32,10 +35,20 @@ public class AnExecutableFinder implements MainClassFinder {
     	File[] binaryChildren =  binaryFolder.listFiles();
 //        List<FileProxy> binaryChildren =  binaryFolder.getC
     	Map<String, String> retVal = new HashMap();
+    	String aMainFile = null;
         for ( File child:binaryChildren) {
-        	if (child.getName().endsWith(EXECUTABLE_SUFFIX)) {
-        		retVal.put(BasicProcessRunner.MAIN_ENTRY_POINT, child.getName());
-        		return retVal;
+        	String aChildName = child.getName();
+        	if (aChildName.endsWith(EXECUTABLE_SUFFIX)) {
+        		if (aSpecifiedMainClass != null && aChildName.contains(aSpecifiedMainClass)) {
+        			aMainFile = aChildName;
+        			retVal.put(BasicProcessRunner.MAIN_ENTRY_POINT, aChildName);
+        		} else {
+        			retVal.put(aChildName, aChildName);
+        		}
+//        		retVal.put(BasicProcessRunner.MAIN_ENTRY_POINT, child.getName());
+//        		retVal.put(aChildName, aChildName);
+
+//        		return retVal;
 //        		return child.getName();
         	}
         	

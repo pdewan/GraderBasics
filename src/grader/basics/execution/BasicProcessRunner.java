@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -820,34 +821,15 @@ public class BasicProcessRunner implements Runner {
 			if (anOnlyProcess)
 			runner.start();
 
-			// // Prepare to run the process
-//			String classPath = GradingEnvironment.get().getClasspath();
+
 			String classPath = getClassPath();
 			
 			
-			// // ProcessBuilder builder = new ProcessBuilder("java", "-cp",
-			// GradingEnvironment.get()
-			// // .getClasspath(), entryPoint);
-			// String[] command =
-			// StaticConfigurationUtils.getExecutionCommand(entryPoint);
+	
 			ProcessBuilder builder;
 			if (aCommand.length == 0) { // this part should not execute, onlyif
 										// command is null
-				
-//				Object[] aPermissions = null; 
-//				if (project instanceof ProjectWrapper) {
-//					TestCase aTestCase = 
-//            		((ProjectWrapper) project).getProject().getCurrentTestCase();
-//					if (aTestCase != null) {
-//						aPermissions = aTestCase.getPermissions();
-//					}
-//            	}
-//				if (aPermissions == null) {
-//					
-//				    aPermissions	= LanguageDependencyManager.getDefaultPermissible().getPermissions();
-//				}
-//				File aPermissionsFile = LanguageDependencyManager.getPermissionGenerator().permissionFile(project, aPermissions);
-//				File aPermissionsFile = JavaProjectToPermissionFile.getPermissionFile(project);
+
 				File aPermissionsFile = getPermissionFile();
 
 				// Prepare to run the process
@@ -895,21 +877,15 @@ public class BasicProcessRunner implements Runner {
 					return null; // this should not happen
 				}
 			}
-			// ProcessBuilder builder = new ProcessBuilder("java", "-cp",
-			// classPath, entryPoint);
+		
 			builder.directory(folder);
-			// System.out.println("Running process: java -cp \""
-			// + GradingEnvironment.get().getClasspath() + "\" " + entryPoint);
-			// System.out.println("Running process: java -cp \""
-			// + classPath + "\" " + entryPoint);
+			
 			if (folder != null)
 				Tracer.info(this,"Running in folder: "
 						+ folder.getAbsolutePath());
 
-			// Start the process
-			// TimedProcess process = new TimedProcess(builder, timeout);
+		
 			process = new TimedProcess(builder, timeout);
-//			result = process; // may set to null if error
 			runner.setCurrentTimeProcess(process);
 
 			 processObj = process.start();
@@ -918,41 +894,13 @@ public class BasicProcessRunner implements Runner {
 						folder.getAbsolutePath(),
 						(entryPoints != null) ? entryPoints
 								.get(
-//										MainClassFinder.MAIN_ENTRY_POINT
+
 										getMainEntryPoint()
 										) : 
 											null,
 						classPath, this);
 
-			// Print output to the console
-			// InputStream processOut = process.getInputStream();
-			// final Scanner scanner = new Scanner(processOut);
-			// final Semaphore outputSemaphore = new Semaphore(1);
-			// outputSemaphore.acquire();
-			//
-			// new Thread(new Runnable() {
-			// @Override
-			// public void run() {
-			// while (scanner.hasNextLine()) {
-			// String line = scanner.nextLine();
-			// System.out.println(line);
-			// runner.appendOutput(line + "\n");
-			// }
-			// scanner.close();
-			// outputSemaphore.release();
-			// }
-			// }).start();
-
-			// Print output to the console
-			// InputStream processOut = process.getInputStream();
-			// final Scanner scanner = new Scanner(processOut);
-			// making this a global variable
-			// final Semaphore outputSemaphore = new Semaphore(1);
 			
-//			RunnerErrorOrOutStreamProcessor outRunnable = 
-//					new ARunnerOutputStreamProcessor(
-//					process.getInputStream(), runner, /*outputSemaphore,*/
-//					aProcessName, anOnlyProcess);
 			RunnerErrorOrOutStreamProcessor outRunnable = 
 					createRunnerOutputStreamProcessor(
 					process.getInputStream(), runner, /*outputSemaphore,*/
@@ -964,53 +912,7 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessOut(aProcessName, outRunnable);
 
 			outThread.start();
-			// outputSemaphore.acquire();
-
-			// new Thread(new Runnable() {
-			// @Override
-			// public void run() {
-			// while (scanner.hasNextLine()) {
-			// String line = scanner.nextLine();
-			// System.out.println(line);
-			// runner.appendOutput(line + "\n");
-			// }
-			// scanner.close();
-			// outputSemaphore.release();
-			// }
-			// }).start();
-
-			// // Print error output to the console
-			// InputStream processErrorOut = process.getErrorStream();
-			// final Scanner errorScanner = new Scanner(processErrorOut);
-			// final Semaphore errorSemaphore = new Semaphore(1);
-			// errorSemaphore.acquire();
-			//
-			// new Thread(new Runnable() {
-			//
-			// @Override
-			// public void run() {
-			// while (errorScanner.hasNextLine()) {
-			// String line = errorScanner.nextLine();
-			// System.err.println(line);
-			// runner.appendErrorOutput(line + "\n");
-			// }
-			// errorScanner.close();
-			// errorSemaphore.release();
-			// }
-			// }).start();
-			// ;
-
-			// Print error output to the console
-			// InputStream processErrorOut = process.getErrorStream();
-			// final Scanner errorScanner = new Scanner(processErrorOut);
-
-			// making it a global variable
-			// final Semaphore errorSemaphore = new Semaphore(1);
-
-			// errorSemaphore.acquire();
-//			RunnerErrorOrOutStreamProcessor errorRunnable = new ARunnerErrorStreamProcessor(
-//					process.getErrorStream(), runner, /*errorSemaphore,*/
-//					aProcessName, anOnlyProcess);
+			
 			RunnerErrorOrOutStreamProcessor errorRunnable = createRunnerErrorStreamProcessor(
 					process.getErrorStream(), runner, /*errorSemaphore,*/
 					aProcessName, anOnlyProcess);
@@ -1020,30 +922,13 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessErr(aProcessName, errorRunnable);
 
 			errorThread.start();
-			// (new Thread (new AnErrorStreamProcessor(process,
-			// runner)).start();
-
-			// new Thread(new Runnable() {
-			//
-			// @Override
-			// public void run() {
-			// while (errorScanner.hasNextLine()) {
-			// String line = errorScanner.nextLine();
-			// System.err.println(line);
-			// runner.appendErrorOutput(line + "\n");
-			// }
-			// errorScanner.close();
-			// errorSemaphore.release();
-			// }
-			// }).start();
-			// ;
+			
 
 			// Write to the process
 			// This can be done after the process is started, so one can create
 			// a coordinator of various processes
 			// using the output of one process to influence the input of another
 			
-//			RunnerInputStreamProcessor aProcessIn = new ARunnerInputStreamProcessor(process.getOutputStream(), runner, aProcessName,  anOnlyProcess);
 			RunnerInputStreamProcessor aProcessIn = createRunnerInputStreamProcessor(process.getOutputStream(), runner, aProcessName,  anOnlyProcess);
 
 			runner.setProcessIn(aProcessName, aProcessIn);
@@ -1051,7 +936,7 @@ public class BasicProcessRunner implements Runner {
 			if (anOutputBasedInputGenerator == null) {
 				aProcessIn.newInput(input);
 				aProcessIn.terminateInput(); // for incremental input, allow it to be given afterwards and do not close
-			} else if (!input.isEmpty()) {
+			} else if (input != null && !input.isEmpty()) {
 				aProcessIn.newInput(input); // not sure an empty input makes a difference but just in case
 			}
 			
@@ -1079,8 +964,7 @@ public class BasicProcessRunner implements Runner {
 							classPath, this);
 				} catch (Exception e) {
 					e.printStackTrace();
-//					outputSemaphore.release();
-//					errorSemaphore.release();
+
 					outRunnable.getSemaphore().release();
 					errorRunnable.getSemaphore().release();
 					String entryPoint = "";
@@ -1154,14 +1038,47 @@ public class BasicProcessRunner implements Runner {
 	 *            The project to run
 	 * @return The class canonical name. i.e. "foo.bar.SomeClass"
 	 * @throws NotRunnableException
+	 * should really use the method below which checks the specified class
 	 */
 	protected String getMainEntryPoint() {
 		if (specifiedMainClass != null)
 			return specifiedMainClass;
-		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
+		return getMainEntryPoint(project, specifiedMainClass);
+//		Map<String, String> anEntryPoints = getEntryPoints();
+////		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
+//		String aRetVal = anEntryPoints.get(BasicProcessRunner.MAIN_ENTRY_POINT);
+//
+//		if (aRetVal == null) {
+//			if (anEntryPoints.size() > 0) {
+//				aRetVal = anEntryPoints.values().iterator().next();
+//				if (anEntryPoints.size() > 1) {
+//					System.err.println("Returning first of multiple entry points:" + anEntryPoints.values());
+//				}
+//			} else {
+//			
+////			return "main";
+//			return BasicProcessRunner.MAIN_ENTRY_POINT;
+//			}
+//		}
+//		return aRetVal;
+	}
+	public static String getMainEntryPoint(Project aProject, String specifiedMainClass) {
+		
+		Map<String, String> anEntryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(aProject, specifiedMainClass);
+//		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
+		String aRetVal = anEntryPoints.get(BasicProcessRunner.MAIN_ENTRY_POINT);
+
 		if (aRetVal == null) {
+			if (anEntryPoints.size() > 0) {
+				aRetVal = anEntryPoints.values().iterator().next();
+				if (anEntryPoints.size() > 1) {
+					System.err.println("Returning first of multiple entry points:" + anEntryPoints.values());
+				}
+			} else {
+			
 //			return "main";
 			return BasicProcessRunner.MAIN_ENTRY_POINT;
+			}
 		}
 		return aRetVal;
 	}

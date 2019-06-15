@@ -514,8 +514,13 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	}	
 	
 	@Override
-	public  void setProcessTimeOut(int newVal) {
+	public  void setGraderProcessTimeOut(int newVal) {
 		runtimeGraderIntegerProperties.put(PROCESS_TIMEOUT, newVal);
+
+	}
+	@Override
+	public  void setStudentProcessTimeOut(int newVal) {
+		runtimeStudentIntegerProperties.put(PROCESS_TIMEOUT, newVal);
 
 	}
 	@Override
@@ -524,9 +529,14 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 //		return useMethodAndConstructorTimeOut;
 	}
 	@Override
-	public void setUseMethodAndConstructorTimeOut(
+	public void setGraderUseMethodAndConstructorTimeOut(
 			boolean useMethodAndConstructorTimeOut) {
 		runtimeGraderBooleanProperties.put(USE_METHOD_CONSTRUCTOR_TIMEOUT, useMethodAndConstructorTimeOut);
+//		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
+	}
+	public void setStudentUseMethodAndConstructorTimeOut(
+			boolean useMethodAndConstructorTimeOut) {
+		runtimeStudentBooleanProperties.put(USE_METHOD_CONSTRUCTOR_TIMEOUT, useMethodAndConstructorTimeOut);
 //		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
 	}
 	@Override

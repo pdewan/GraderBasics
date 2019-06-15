@@ -51,18 +51,19 @@ public interface BasicExecutionSpecification {
 	boolean getWaitForResortProperty();
 	void setGraderProcessOutputWaitTime(Integer newVal);
 	void setGraderProcessTeamOutputWaitTime(Integer newVal);
-	void setProcessTimeOut(int newVal);
+	void setGraderProcessTimeOut(int newVal);
 	int getProcessTimeOut();
 	void setMethodTimeOut(int methodTimeOut);
 	int getMethodTimeOut();
 	void setConstructorTimeOut(int constructorTimeOut);
 	Integer getConstructorTimeOut();
 	boolean isUseMethodAndConstructorTimeOut();
-	void setUseMethodAndConstructorTimeOut(boolean useMethodAndConstructorTimeOut);
+	void setGraderUseMethodAndConstructorTimeOut(boolean useMethodAndConstructorTimeOut);
 	boolean isUseProcessTimeOut();
 	void setUseProcessTimeOut(boolean newVal);
 	boolean isWaitForMethodConstructorAndProcesses();
 	void setWaitForMethodConstructorAndProcesses(boolean newVal);
+	void setStudentProcessTimeOut(int newVal);
 	
 	
 

@@ -100,7 +100,7 @@ public class BasicProjectExecution {
 	}
 
 	public static void setProcessTimeOut(int newVal) {
-		basicExecutionSpecification.setProcessTimeOut(newVal);
+		basicExecutionSpecification.setGraderProcessTimeOut(newVal);
 //		processTimeOut = newVal;
 		
 	}
@@ -258,7 +258,7 @@ public class BasicProjectExecution {
 
 	public static void setUseMethodAndConstructorTimeOut(
 			boolean useMethodAndConstructorTimeOut) {
-		basicExecutionSpecification.setUseMethodAndConstructorTimeOut(useMethodAndConstructorTimeOut);
+		basicExecutionSpecification.setGraderUseMethodAndConstructorTimeOut(useMethodAndConstructorTimeOut);
 //		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
 	}
 	public static boolean isUseProcessTimeOut() {

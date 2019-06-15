@@ -92,6 +92,7 @@ public class ABasicMainClassFinder implements MainClassFinder {
      * @throws grader.basics.execution.NotRunnableException
      * @see grader.basics.execution.ABasicMainClassFinder which repeats this code (sigh)
      * Both need to be kept consistent
+     * Checks if specified main class exists and has a main method, unlike the C checker
      */
     public Map<String, String> getEntryPoints(grader.basics.project.Project project, String aSpecifiedMainClass) throws NotRunnableException {
     	return getEntryPoints(project, new String[] {aSpecifiedMainClass});
@@ -166,7 +167,9 @@ public class ABasicMainClassFinder implements MainClassFinder {
 //		}
         
         grader.basics.project.ClassesManager manager = project.getClassesManager().get();
-
+        /*
+         * we are basically returnin the first one that matches
+         */
         for (grader.basics.project.ClassDescription description : manager.getClassDescriptions()) {
             try {
                 description.getJavaClass().getMethod("main", String[].class);
