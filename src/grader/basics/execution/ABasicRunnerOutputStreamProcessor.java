@@ -50,7 +50,11 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 		numLinesOutput++;
 		// Printing moved to BasicRunningProject when signaled instead of when received
 		// Tracer.info(this,"Process line:" + s);
-		runner.appendCumulativeOutput(s + "\n"); // append cumulative output
+	    String aNewOutputLine = s + "\n";
+	    
+//		runner.appendCumulativeOutput(s + "\n"); // append cumulative output
+		runner.appendCumulativeOutput(aNewOutputLine ); // append cumulative output
+
 		// if (processName != null) {
 
 		// Printing moved to BasicRunningProject when signaled instead of when received
@@ -60,6 +64,7 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 //		runner.appendProcessOutput(processName, s + "\n"); // append this process output
 		runner.appendProcessOutput(processName, s); // append this process output
 		// }
+//		Tracer.info(this, "Appended output:" + s);
 		maybeTraceLine(s);
 		// if (StaticConfigurationUtils.getTrace()) {
 		//

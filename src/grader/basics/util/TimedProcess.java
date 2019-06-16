@@ -2,6 +2,7 @@ package grader.basics.util;
 
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.project.BasicProjectIntrospection;
+import util.trace.Tracer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,6 +72,7 @@ public class TimedProcess {
         return timedCall(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
+            	Tracer.info(this, "Waiting for process to finish within seconds:" + timeout);
                 return process.waitFor();
             }
         }, timeout, TimeUnit.SECONDS);

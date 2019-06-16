@@ -61,7 +61,12 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     protected Map<String, List<String>> processToProcessedOutputLines = new HashMap<>();
     protected Map<String, LinesMatcher> processToProcessedLineMatcher;
     protected StringBuffer allProcessedOutput = new StringBuffer(5000);
-    protected List<String> allProcessedOutputLines = new ArrayList(400);
+    protected StringBuffer allReceivedOutputAndErrors = new StringBuffer(5000);
+    protected StringBuffer allReceivedErros = new StringBuffer(5000);
+
+    protected List<String> allProcessedOutputLines = new ArrayList(1000);
+    protected List<String> allReceivedOutputAndErrorLines = new ArrayList(1000);
+
     
     protected Map<String, StringBuffer> processToReceivedOutput = new HashMap<>();
     protected Map<String, List<String>> processToReceivedOutputLines = new HashMap<>();
@@ -78,9 +83,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	
 	protected Map<String, String> processToOutputAndErrors = new HashMap<>();
 
-    protected String output = ""; // why is this a string and not a string buffer?
-    protected String errorOutput = "";
-    protected String outputAndErrors = "";
+//    protected String output = ""; // why is this a string and not a string buffer?
+//    protected String errorOutput = "";
+//    protected String outputAndErrors = "";
     protected NotRunnableException exception;
     protected String outputFileName;
     protected StringBuffer projectOutput;
@@ -256,21 +261,14 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, List<String> aProcesses, Map<String, String> aProcessToInput) {
         exception = null;
-        output = null;
+//        output = null;
         processes = aProcesses;
         maybeProcessProjectWrappper(aProject);
-//        if (aProject != null && aProject instanceof ProjectWrapper) {
-//            projectWrapper = (ProjectWrapper) aProject;
-//            project = projectWrapper.getProject();
-//            outputFileName = project.getOutputFileName();
-//            projectOutput = project.getCurrentOutput();
-////			input.append(project.getCurrentInput());
-//        }
+
         outputBasedInputGenerator = anOutputBasedInputGenerator;
         if (outputBasedInputGenerator != null) {
             outputBasedInputGenerator.addProcessInputListener(this); // maybe this should be in another class
         }
-//		processToInput = aProcessToInput;
         if (aProcessToInput != null) {
             for (String aProcess : aProcessToInput.keySet()) {
                 String anInput = aProcessToInput.get(aProcess);
@@ -335,19 +333,24 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public void end() {
         runningState.release();
     }
-
+    /**
+     * The difference between appendProcessOutput and this method is that this one
+     * has a \n in it
+     */
     @Override
-	public void appendCumulativeOutput(String newVal) {
-//    	System.out.println(Thread.currentThread() + " appending output" + newVal);
-        if (this.output == null && newVal != null) {
-            this.output = "";
-        }
-        this.output += newVal;
-//		if (outputBasedInputGeneraor != null) {
-//			outputBasedInputGeneraor.newOutputLine(null, newVal);
-//		}
-
-        outputAndErrors += newVal;
+	public synchronized void  appendCumulativeOutput(String newVal) {
+    	allReceivedOutputAndErrors.append(newVal);
+    	
+//    	allReceivedOutputAndErrorLines.add(newVal);
+//        if (this.output == null && newVal != null) {
+//            this.output = "";
+//        }
+//        this.output += newVal;
+//        Tracer.info(this, System.currentTimeMillis() + ": Appended output:" + newVal);
+//        System.out.println("Output:" + output);
+//
+//
+//        outputAndErrors += newVal;
 
     }
 
@@ -369,8 +372,10 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     		processToProcessedLineMatcher = new HashMap<>();
     		Set<String> aKeys = processToProcessedOutputLines.keySet();
     		if (aKeys.size() == 0) {
-//    			System.err.println("Empty key set for processes:" + output);
-    			String[] anOutputLines = output.split("\n");
+//    			String[] anOutputLines = output.split("\n");
+    			String[] anOutputLines = new String[allProcessedOutputLines.size()];
+//    			String[] anOutputLines = allProcessedOutputLines.toArray();
+    			anOutputLines = allProcessedOutputLines.toArray(anOutputLines);
     			LinesMatcher aLineMatcher =  new ALinesMatcher(anOutputLines);
     			processToProcessedLineMatcher.put("main", aLineMatcher);
     			return processToProcessedLineMatcher;
@@ -474,11 +479,17 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public static final Pattern timePattern = Pattern.compile("@([0-9]+) ");
 	
     @Override
+    /**
+     * A newVal does not have a \n in it. All processedoutput is resorted
+     */
 	public void appendProcessOutput(String aProcess, String newVal) {
     	String aProcessName = aProcess == null?BasicProcessRunner.MAIN_ENTRY_POINT:aProcess;
     	if (BasicRunningProject.isEchoOutput())
     		Tracer.info(this, System.currentTimeMillis() + ":Received output from " + aProcessName + ": " + newVal);
-//    	doAppendProcessOutput(aProcess, newVal);
+    	allReceivedOutputAndErrorLines.add(newVal); // we do not resort errors, so mix them with received output
+
+    	
+    	//    	doAppendProcessOutput(aProcess, newVal);
     	Matcher timeMatcher = timePattern.matcher(newVal);
 //    	System.out.println("+++** " + newVal);
 //		int anAtIndex = newVal.indexOf('@');
@@ -505,6 +516,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	}
 
     @Override
+    /**
+     * we are not resorting errors!
+     */
 	public void appendErrorOutput(String aProcess, String newVal) {
         StringBuffer processErrors = processToErrors.get(aProcess);
         List<String> processErrorLines = processToErrorLines.get(aProcess);
@@ -533,37 +547,46 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
     @Override
 	public void setOutput(String output) {
-        this.output = output;
+//        this.output = output;
+    	allProcessedOutput.setLength(0);
+    	allProcessedOutput.append(output);
     }
 
     @Override
 	public String getOutput() {
-        return output;
+//        return output;
+    	return allProcessedOutput.toString();
     }
 
     @Override
 	public String getOutputAndErrors() {
-        return outputAndErrors;
+//        return outputAndErrors;
+    	return allReceivedOutputAndErrors.toString();
     }
 
     @Override
 	public void appendErrorOutput(String anErrorOutput) {
-        if (this.errorOutput == null && anErrorOutput != null) {
-            this.errorOutput = "";
-        }
-        this.errorOutput += anErrorOutput;
-        outputAndErrors += anErrorOutput;
+    	allReceivedOutputAndErrors.append(anErrorOutput);
+    	allReceivedErros.append(anErrorOutput);
+//        if (this.errorOutput == null && anErrorOutput != null) {
+//            this.errorOutput = "";
+//        }
+//        this.errorOutput += anErrorOutput;
+//        outputAndErrors += anErrorOutput;
 
     }
 
     @Override
 	public void setErrorOutput(String errorOutput) {
-        this.errorOutput = errorOutput;
+//        this.errorOutput = errorOutput;
+    	allReceivedErros.setLength(0);
+    	allReceivedErros.append(errorOutput);
     }
 
     @Override
 	public String getErrorOutput() {
-        return errorOutput;
+//        return errorOutput;
+    	return allReceivedOutputAndErrors.toString();
     }
 
     @Override
@@ -639,7 +662,7 @@ public void appendCumulativeOutput() {
     }
     
     public static final int PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME = 5000;
-    public static final int PROCESS_OUTPUT_SLEEP_TIME = 1000;
+    public static final int PROCESS_OUTPUT_SLEEP_TIME = 2000;
 
 //    protected static Integer processOutputSleepTime = PROCESS_OUTPUT_SLEEP_TIME;
     public static Integer getProcessOutputSleepTime() {
@@ -699,7 +722,9 @@ public void appendCumulativeOutput() {
 //            project.setCurrentOutput(new StringBuffer(output));
 //            project.setCurrentInput(input.toString());
 //        }
-        return output;
+//        System.out.println("returning output:" + output);
+//        return output;
+        return allProcessedOutput.toString();
     }
     
     protected void maybeAppendToProjectInput(String anInput) {
