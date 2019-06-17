@@ -120,7 +120,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     
     
     protected void maybeWaitForResort() throws InterruptedException {
-    	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getWaitForResort()) {
+    	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isWaitForResort()) {
     		Tracer.info(this, System.currentTimeMillis() + ":Waiting for output resort");
     		// should this be sleep?
     		wait(BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getResortTime());
@@ -202,7 +202,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     	while (true) {
     		synchronized(this) {
     			// not caching the resorting as we may want to change it dynamically
-    	    	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getWaitForResort()) {
+    	    	if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isWaitForResort()) {
     	    		resortingOutputProcessing();
     	    	} else {
     	    		normalOutputProcessing();

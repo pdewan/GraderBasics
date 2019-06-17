@@ -65,8 +65,14 @@ public class BasicStaticConfigurationUtils {
 	public static final String IMPLICIT_REQUIRMENTS_ROOT = "implicitRequirementsRoot";
 	public static final String DEFAULT_IMPLICIT_REQUIRMENTS_ROOT = "gradingTools";
 	public static final String USE_EXECEUTOR = "useExecutor";
+	public static final boolean DEFAULT_USE_EXECUTOR = false;
 	public static final String EXECUTOR = "executor";
-	public static final String C_OBJ = "language.C.obj";	
+	// this makes no sense, but it is consistent with config file
+	public static final String DEFAULT_EXECUTOR = "D:/dewan_backup/Java/Grader/executor";
+	public static final String C_OBJ = "language.C.obj";
+	public static final String DEFAULT_C_OBJ = "o";
+	public static final String MODULES = "modules";
+	public static final String DEFAULT_MODULE = "Comp101";
 	public static final String FORK_MAIN = "forkMain";
 	public static final String GRADABLE_PROJECT_LOCATION = "gradableProjectLocation";
 	public static final String SOURCE_LOCATION = "sourceLocation";
@@ -824,6 +830,9 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 	public static Boolean getInheritedBooleanModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
 			String problem, String aTest, String property, Boolean defaultValue) {
+		if (configuration == null) {
+			return defaultValue;
+		}
 	
 		Boolean retVal = configuration.getBoolean(module + "." + problem + "."
 				+ property, null);
@@ -844,6 +853,9 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 	public static Integer getInheritedIntegerModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
 			String problem, String test, String property, Integer defaultValue) {
+		if (configuration == null) {
+			return defaultValue;
+		}
 	
 		Integer retVal = configuration.getInteger(module + "." + problem + "."
 				+ property, null);
@@ -859,6 +871,37 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 		return retVal;
 	
 	}
+	
+	public static String getConfigurationBasicDirectString (String property, String defaultValue) {
+		
+			if (!isUseProjectConfiguration()) {
+				 // cannot use project configuration before location is known to create project
+				return defaultValue;
+			}
+		 PropertiesConfiguration aConfiguration = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration();
+		 if (aConfiguration == null) {
+			 return defaultValue;
+		 }
+		 return aConfiguration.getString(property, defaultValue);
+		
+	}
+	public static List getConfigurationBasicDirectList (String property, List  defaultValue) {
+		
+		if (!isUseProjectConfiguration()) {
+			 // cannot use project configuration before location is known to create project
+			return defaultValue;
+		}
+	 PropertiesConfiguration aConfiguration = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration();
+	 if (aConfiguration == null) {
+		 return defaultValue;
+	 }
+	 List retVal = aConfiguration.getList(property);
+	 if (retVal == null) {
+		 return defaultValue;
+	 }
+	 return retVal;
+	
+}
 	public static String getBasicInheritedStringModuleProblemProperty(
 			String property, String defaultValue) {
 		if (!isUseProjectConfiguration() ||
@@ -889,8 +932,8 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 
 	 return getInheritedIntegerModuleProblemProperty(BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration(), module, problem, test, property, defaultValue);
 	}
-	public static List<String> getBasicInheritedListModuleProblemProperty(
-			String property, List<String> defaultValue) {
+	public static List getBasicInheritedListModuleProblemProperty(
+			String property, List defaultValue) {
 		if (!isUseProjectConfiguration() ) { // can do == as we are using named constants
 			return defaultValue;
 		}
@@ -929,9 +972,12 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 		return retVal;
 	
 	}
-	public static List<String> getInheritedListModuleProblemProperty(
+	public static List getInheritedListModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
 			String problem, String aTest, String property, List<String> aDefaultValue) {
+		if (configuration == null) {
+			return aDefaultValue;
+		}
 		List retVal = configuration.getList(module + "." + problem + "." + aTest + "."
 				+ property);
 	

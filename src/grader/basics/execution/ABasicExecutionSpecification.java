@@ -17,11 +17,12 @@ import jdk.internal.dynalink.beans.StaticClass;
 import util.trace.Tracer;
 import static grader.basics.config.BasicStaticConfigurationUtils.*;
 /*
- * We are duplicating code in BasicStaticConfigiration and keepin the same kind of state.
+ * We are duplicating code in BasicStaticConfigiration and keeping the same kind of state.
  * So we do not really need BasicStaticConfigiration
  * Let us keep them consistent
  * 
- * Actually we need all of this.
+ * Actually we need all of this so we can override instance methods, which you cannot in
+ * BasicStaticSpecification.
  */
 public class ABasicExecutionSpecification implements BasicExecutionSpecification {
 	protected List<String> emptyList = new ArrayList();
@@ -49,8 +50,8 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	protected Map<String, Integer> runtimeStudentIntegerProperties = new HashMap<>();
 	protected Map<String, Boolean> runtimeGraderBooleanProperties = new HashMap<>();
 	protected Map<String, Boolean> runtimeStudentBooleanProperties = new HashMap<>();
-	protected Map<String, List<String>> runtimeGraderListProperties = new HashMap<>();
-	protected Map<String, List<String>> runtimeStudentListProperties = new HashMap<>();
+	protected Map<String, List> runtimeGraderListProperties = new HashMap<>();
+	protected Map<String, List> runtimeStudentListProperties = new HashMap<>();
 	
 	@Override
     public Integer getIntegerProperty(String aProperty, Integer aDefault) {
@@ -113,9 +114,53 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	}
     	return aDefault;
     }
+    protected String getConfigurationDirectString(String aProperty, String aDefault) {
+    	return BasicStaticConfigurationUtils.getConfigurationBasicDirectString(aProperty, aDefault);
+    }
+    protected List getConfigurationDirectList(String aProperty, List aDefault) {
+    	return BasicStaticConfigurationUtils.getConfigurationBasicDirectList(aProperty, aDefault);
+    }
+    public String getDirectStringProperty(String aProperty, String aDefault) {
+    	String retVal = getConfigurationDirectString(aProperty, null);
+//		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
+		if (retVal != null) {
+			return retVal;
+		}
+    	 retVal = runtimeStudentStringProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+//    	if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+    		    
+//    	}
+    	retVal = runtimeGraderStringProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+    	return aDefault;
+    }
+    public List<String> getDirectListProperty(String aProperty, List<String> aDefault) {
+    	List<String> retVal = getConfigurationDirectList(aProperty, null);
+//		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
+		if (retVal != null) {
+			return retVal;
+		}
+    	 retVal = runtimeStudentListProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+//    	if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
+    		    
+//    	}
+    	retVal = runtimeGraderListProperties.get(aProperty);
+    	if (retVal != null) {
+    		return retVal;
+    	}
+    	return aDefault;
+    }
     @Override
-    public List<String> getListProperty(String aProperty, List<String> aDefault) {
-    	List<String> retVal = getInheritedListModuleProblemProperty(aProperty, null);
+    public List getListProperty(String aProperty, List aDefault) {
+    	List retVal = getInheritedListModuleProblemProperty(aProperty, null);
 //		retVal = BasicConfigurationManagerSelector.getConfigurationManager().getOrCreateProjectConfiguration().getString(aProperty);  
 		if (retVal != null) {
 			return retVal;
@@ -153,7 +198,7 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 
 		
 	}
-    public  List<String> getInheritedListModuleProblemProperty(
+    public  List getInheritedListModuleProblemProperty(
 			
 			String aProperty, List<String> defaultValue) {
     	return BasicStaticConfigurationUtils.getBasicInheritedListModuleProblemProperty(aProperty, defaultValue);
@@ -396,7 +441,7 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 
 	}
     @Override
-    public  boolean getWaitForResort() {
+    public  boolean isWaitForResort() {
 //    	return BasicStaticConfigurationUtils.isTeamProcess() && waitForResort;
     	return BasicStaticConfigurationUtils.isTeamProcess() && getWaitForResortProperty();
 
@@ -524,6 +569,11 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 
 	}
 	@Override
+	public  boolean isUseExecutor() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.USE_EXECEUTOR, BasicStaticConfigurationUtils.DEFAULT_USE_EXECUTOR);
+//		return useMethodAndConstructorTimeOut;
+	}
+	@Override
 	public  boolean isUseMethodAndConstructorTimeOut() {
 		return getBooleanProperty(USE_METHOD_CONSTRUCTOR_TIMEOUT, true);
 //		return useMethodAndConstructorTimeOut;
@@ -558,6 +608,41 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 			boolean newVal) {
 		runtimeGraderBooleanProperties.put(WAIT_FOR_METHOD_CONSTRUCTOR_AND_PROCESSES, newVal);
 //		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
+	}
+//	@Override
+//	public String getDynamicExecutionFileName() {
+////		return StaticConfigurationUtils.getInheritedStringModuleProblemProperty(AConfigurationManager.DYNAMIC_CONFIG_PROPERTY, AConfigurationManager.DYNAMIC_CONFIGURATION_FILE_NAME);
+//		return StaticConfigurationUtils.getDynamicExecutionFileName();
+//	}
+	 
+
+	@Override
+	public String getCObjSuffix() {
+		return getDirectStringProperty(BasicStaticConfigurationUtils.C_OBJ, BasicStaticConfigurationUtils.DEFAULT_C_OBJ);
+//		return  StaticConfigurationUtils.getInheritedStringModuleProblemProperty(StaticConfigurationUtils.C_OBJ, StaticConfigurationUtils.DEFAULT_C_OBJ);
+	}
+
+	@Override
+	public String getExecutorDirectory() {
+		return getDirectStringProperty(BasicStaticConfigurationUtils.EXECUTOR, BasicStaticConfigurationUtils.DEFAULT_EXECUTOR);
+	}
+	@Override
+    public   void setGraderModules(List<String> aModules) {
+//    	resortTime = aResortTime;
+    	runtimeGraderListProperties.put(BasicStaticConfigurationUtils.MODULES, aModules);
+    	
+    }
+	@Override
+    public   void setGraderModule(String aModule) {
+		List<String> aModules = new ArrayList();
+		aModules.add(aModule);
+//    	resortTime = aResortTime;
+    	runtimeGraderListProperties.put(BasicStaticConfigurationUtils.MODULES, aModules);
+    	
+    }
+	@Override
+	public List<String> getModules() {
+		return getDirectListProperty(BasicStaticConfigurationUtils.MODULES, null);
 	}
 
     

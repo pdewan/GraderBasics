@@ -32,7 +32,7 @@ public interface BasicExecutionSpecification {
 	void setGraderResortTime(Integer aResortTime);
 	long getResortTime();
 	void setGraderWaitForResort(boolean newVal);
-	boolean getWaitForResort();
+	boolean isWaitForResort();
 	void setStudentStringProperty(String aProperty, String aValue);
 	void setGraderStringProperty(String aProperty, String aValue);
 	String getStringProperty(String aProperty, String aDefault);
@@ -43,7 +43,7 @@ public interface BasicExecutionSpecification {
 	String getBinaryFolderLocation();
 	List<String> getBasicCommand();
 	String getObjectFolderLocation();
-	List<String> getListProperty(String aProperty, List<String> aDefault);
+	List getListProperty(String aProperty, List aDefault);
 	Integer getIntegerProperty(String aProperty, Integer aDefault);
 	Boolean getBooleanProperty(String aProperty, Boolean aDefault);
 	Integer getProcessOutputSleepTime();
@@ -64,6 +64,13 @@ public interface BasicExecutionSpecification {
 	boolean isWaitForMethodConstructorAndProcesses();
 	void setWaitForMethodConstructorAndProcesses(boolean newVal);
 	void setStudentProcessTimeOut(int newVal);
+//	String getDynamicExecutionFileName();
+	String getCObjSuffix();
+	String getExecutorDirectory();
+	boolean isUseExecutor();
+	List<String> getModules();
+	void setGraderModules(List<String> aModules);
+	void setGraderModule(String aModule);
 	
 	
 
