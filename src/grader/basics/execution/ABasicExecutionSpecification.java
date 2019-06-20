@@ -302,10 +302,13 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	 * @see grader.execution.ExecutionSpecification#getSleepTime(java.lang.String)
 	 */
 	@Override
-	public Integer getSleepTime(String aProcess) {
-		return getIntegerProperty(
-				toCompoundProperty(aProcess, SLEEP_TIME), 
-				DEFAULT_SLEEP_TIME);
+	public Integer getResourceReleaseTime(String aProcess) {
+		Integer aRetVal = getIntegerProperty(
+				toCompoundProperty(aProcess, RESOURCE_RELEASE_TIME), 
+				null);
+		if (aRetVal != null)
+			return aRetVal;
+		return getResourceReleaseTime();
 				
 //		return graderProcessToSleepTime.get(aProcess);
 	}
@@ -314,11 +317,47 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	 * @see grader.execution.ExecutionSpecification#setSleepTime(java.lang.String, int)
 	 */
 	@Override
-	public void setSleepTime(String aProcess, int aSleepTime) {
-		Tracer.info(this, "Setting sleep time for process " + aProcess + " to " + aSleepTime);
+	public void setGraderResourceReleaseTime(String aProcess, int aSleepTime) {
+		Tracer.info(this, "Setting grader resource release time for process " + aProcess + " to " + aSleepTime);
 //		 graderProcessToSleepTime.put(aProcess, aSleepTime);
 		runtimeGraderIntegerProperties.put(
-				toCompoundProperty(aProcess, SLEEP_TIME), 
+				toCompoundProperty(aProcess, RESOURCE_RELEASE_TIME), 
+				aSleepTime);
+	}
+	@Override
+	public void setStudentResourceReleaseTime(String aProcess, int aSleepTime) {
+		Tracer.info(this, "Setting grader resource release time for process " + aProcess + " to " + aSleepTime);
+//		 graderProcessToSleepTime.put(aProcess, aSleepTime);
+		runtimeStudentIntegerProperties.put(
+				toCompoundProperty(aProcess, RESOURCE_RELEASE_TIME), 
+				aSleepTime);
+	}
+	@Override
+	public Integer getResourceReleaseTime() {
+		return getIntegerProperty(
+				RESOURCE_RELEASE_TIME, 
+				DEFAULT_RESOURCE_RELEASE_TIME);
+				
+//		return graderProcessToSleepTime.get(aProcess);
+	}
+	
+	/* (non-Javadoc)
+	 * @see grader.execution.ExecutionSpecification#setSleepTime(java.lang.String, int)
+	 */
+	@Override
+	public void setGraderResourceReleaseTime(int aSleepTime) {
+		Tracer.info(this, "Setting grader resource release time to " + aSleepTime);
+//		 graderProcessToSleepTime.put(aProcess, aSleepTime);
+		runtimeGraderIntegerProperties.put(
+				RESOURCE_RELEASE_TIME, 
+				aSleepTime);
+	}
+	@Override
+	public void setStudentResourceReleaseTime (int aSleepTime) {
+		Tracer.info(this, "Setting grader resource release time to " + aSleepTime);
+//		 graderProcessToSleepTime.put(aProcess, aSleepTime);
+		runtimeStudentIntegerProperties.put(
+				RESOURCE_RELEASE_TIME, 
 				aSleepTime);
 	}
 	
@@ -524,6 +563,26 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 //    	return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
 //    	
 //    }
+    @Override
+    public List<String> getBasicCommand(String aProcess) {
+    	String aProperty = toCompoundProperty(aProcess, BasicStaticConfigurationUtils.EXECUTION_COMMAND);
+    	List<String> aCommand = getListProperty(aProperty, null);
+    	if (aCommand != null && !aCommand.isEmpty()) {
+    		return aCommand;
+    	}
+    	aCommand = getBasicCommand(); // more inheritance
+    	if (aCommand != null && !aCommand.isEmpty()) {
+    		return aCommand;
+    	}
+//    	String aLangugage = getLanguage();
+    	return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
+    	
+    }
+    @Override
+    public void setGraderBasicCommand(String aProcess, List<String> aCommand) {
+    	String aProperty = toCompoundProperty(aProcess, BasicStaticConfigurationUtils.EXECUTION_COMMAND);
+    	runtimeGraderListProperties.put(aProperty, aCommand);
+    }
     // no caching as 
     @Override
     public List<String> getBasicCommand() {
@@ -534,6 +593,10 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 //    	String aLangugage = getLanguage();
     	return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
     	
+    }
+    @Override
+    public void setGraderBasicCommand(List<String> aCommand) {
+    	runtimeGraderListProperties.put(BasicStaticConfigurationUtils.EXECUTION_COMMAND, aCommand);
     }
     @Override
     public  Integer getConstructorTimeOut() {
@@ -626,6 +689,9 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	public String getExecutorDirectory() {
 		return getDirectStringProperty(BasicStaticConfigurationUtils.EXECUTOR, BasicStaticConfigurationUtils.DEFAULT_EXECUTOR);
 	}
+	
+	
+	
 	@Override
     public   void setGraderModules(List<String> aModules) {
 //    	resortTime = aResortTime;
@@ -640,6 +706,12 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	runtimeGraderListProperties.put(BasicStaticConfigurationUtils.MODULES, aModules);
     	
     }
+//	@Override
+//	public String getCObjSuffix() {
+//		return getDirectStringProperty(BasicStaticConfigurationUtils.C_OBJ, BasicStaticConfigurationUtils.DEFAULT_C_OBJ);
+//
+////		return  StaticConfigurationUtils.getInheritedStringModuleProblemProperty(StaticConfigurationUtils.C_OBJ, StaticConfigurationUtils.DEFAULT_C_OBJ);
+//	}
 	@Override
 	public List<String> getModules() {
 		return getDirectListProperty(BasicStaticConfigurationUtils.MODULES, null);

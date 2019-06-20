@@ -542,6 +542,7 @@ public class BasicProcessRunner implements Runner {
 		ThreadSupport.sleep(PORT_RELEASE_TIME);
 	}
 	
+	
 //	protected String searchForEntryPoint (String aProcess) {
 //		return null; // should have a seter for this
 ////		List<String> basicCommand = StaticConfigurationUtils
@@ -578,9 +579,11 @@ public class BasicProcessRunner implements Runner {
 //		return null;
 //	}
 	
-	protected int getSleepTime(String aProcess) {
+	protected int getResourceReleaseTime(String aProcess) {
 //		return executionSpecification.getSleepTime(aProcess);
-		return 1000;
+		return executionSpecification.getResourceReleaseTime(aProcess);
+		// why was this hardwired
+//		return 1000;
 	}
 	
 	protected String[] getCommand(String aProcess, String anEntryPoint, String anEntryTag, String[] anArgs ) {
@@ -599,7 +602,7 @@ public class BasicProcessRunner implements Runner {
 //				new String[0]);
 		String[] anArgs = getArgs(aProcess);
 //		int aSleepTime = executionSpecification.getSleepTime(aProcess);
-		int aSleepTime = getSleepTime(aProcess);
+		int aSleepTime = getResourceReleaseTime(aProcess);
 
 //		String[] command = StaticConfigurationUtils.getExecutionCommand(project,
 //				aProcess, folder, anEntryPoint, aClassWithEntryTag, anArgs);
@@ -614,6 +617,7 @@ public class BasicProcessRunner implements Runner {
 																					// finish
 		nameToProcess.put(aProcess, aTimedProcess);
 		runner.setProcess(aProcess, aTimedProcess);
+		Tracer.info(this, "Sleeping for " + aSleepTime + "ms to wait for release of resources of terminated process:" + aProcess);
 		ThreadSupport.sleep(aSleepTime); // should be before and not after., so ports can be released, or maybe before and after
 		// some processes may be added dynamically on firing of events, will
 		// support them later
@@ -1193,7 +1197,7 @@ public class BasicProcessRunner implements Runner {
 		{
 			anEntryPoint = executionSpecification.getEntryPoint(aProcess);
 			if (anEntryPoint == null)
-				throw EntryPointNotFound.newCase(this);
+				throw EntryPointNotFound.newCase(this, basicCommand);
 		}
 		if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
 			getFolder(anEntryPoint);

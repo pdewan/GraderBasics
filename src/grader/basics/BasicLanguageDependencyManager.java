@@ -128,6 +128,13 @@ public class BasicLanguageDependencyManager {
 	public static boolean isJava() {
 		return JAVA_LANGUAGE. equals(getLanguage());
 	}
+	public static void setCOBj(String aCObj) {
+		if (aCObj != null)
+	
+		languageToBinaryFileSuffix.put(C_LANGUAGE, "." + aCObj);
+
+	
+}
 //	public static void setCOBj(ConfigurationManager aConfigurationManager) {
 //		String cObj = aConfigurationManager.getCourseConfiguration().getString(StaticConfigurationUtils.C_OBJ);
 //		if (cObj == null)
@@ -154,6 +161,8 @@ public class BasicLanguageDependencyManager {
 		
 		languageToMainClassFinder.put(JAVA_LANGUAGE, JavaMainClassFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(C_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
+
+		
 //		
 //		languageToCompiler.put(JAVA_LANGUAGE, JavaClassFilesCompilerSelector.getClassFilesCompiler() );
 //		languageToCompiler.put(C_LANGUAGE, CFilesCompilerSelector.getClassFilesCompiler());

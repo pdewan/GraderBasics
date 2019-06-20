@@ -1712,7 +1712,7 @@ public class BasicProjectIntrospection {
 	public static boolean isCheckAllSpecifiedTags() {
 		return checkAllSpecifiedTags;
 	}
-
+    // should be a property
 	public static void setCheckAllSpecifiedTags(boolean newVal) {
 		checkAllSpecifiedTags = newVal;
 	}

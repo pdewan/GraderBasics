@@ -45,7 +45,7 @@ public class BasicStaticConfigurationUtils {
 
 	public static final String ENTRY_TAG = "entryTag";
 	public static final String ENTRY_TAGS = "entryTags";
-	public static final String SLEEP_TIME = "sleepTime";
+	public static final String RESOURCE_RELEASE_TIME = "sleepTime";
 	public static final String ARGS = "args";
 	public static final String START_TAGS = "startTags";
 	public static final String TERMINATING = "terminating";
@@ -93,15 +93,15 @@ public class BasicStaticConfigurationUtils {
 
 
 
-	private static  List<String> basicCommand;
-	private static Map<String, List<String>> processToBasicCommand = new HashMap();
+//	private static  List<String> basicCommand;
+//	private static Map<String, List<String>> processToBasicCommand = new HashMap();
 	private static String duplicatedClassPathSeparator;
 	private static List<String> graderProcessTeams;
 
 	private static boolean useProjectConfiguration;
-	private static String module;
+	protected static String module;
 	
-	private static String problem;
+	protected static String problem;
 	protected static String test;
 	protected static String testSuite;
 	protected static List<String> emptyList = new ArrayList();
@@ -124,7 +124,7 @@ public class BasicStaticConfigurationUtils {
 			Arrays.asList(DEFAULT_JAVA_BASIC_COMMAND_ARRAY);
 	public static final List<String> DEFAULT_OE_BASIC_COMMAND =
 			Arrays.asList(DEFAULT_OE_BASIC_COMMAND_ARRAY);
-	public static final int DEFAULT_SLEEP_TIME = 2000;
+	public static final int DEFAULT_RESOURCE_RELEASE_TIME = 2000;
 	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
 	// milliseconds
 public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
@@ -135,17 +135,20 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 		return "{" + aVariableName + "}";
 	}
 	public static void setBasicCommandToDefaultEntryPointCommand() {
-		basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderBasicCommand(DEFAULT_JAVA_BASIC_COMMAND);
+//		basicCommand = DEFAULT_JAVA_BASIC_COMMAND;
 	}
-	public static void setBasicCommandToDefaultCommand() {
-		basicCommand =  DEFAULT_OE_BASIC_COMMAND;
+	public static void setBasicCommandToDefaultEntryTagCommand() {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderBasicCommand(DEFAULT_OE_BASIC_COMMAND);
+//		basicCommand =  DEFAULT_OE_BASIC_COMMAND;
 	}
 	public static List<String> getBasicCommand() {
-		if (basicCommand == null) {
-			basicCommand = DEFAULT_OE_BASIC_COMMAND;
-		}
-////		return getInheritedListModuleProblemProperty(EXECUTION_COMMAND);
-		return basicCommand;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBasicCommand();
+//		if (basicCommand == null) {
+//			basicCommand = DEFAULT_OE_BASIC_COMMAND;
+//		}
+//////		return getInheritedListModuleProblemProperty(EXECUTION_COMMAND);
+//		return basicCommand;
 	}
 	public static boolean hasClassPath() {
 //		getBasicCommand();
@@ -234,18 +237,21 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 	public static void setPotentialMainEntryPointNames(String[] aNames) {
 		potentialMainEntryPoints = aNames;
 	}
+	// we really do not need this method, for backwards compatibility
 	public static List<String> getBasicCommand(String aProcessName) {	
-		List<String> retVal = processToBasicCommand.get(aProcessName);
-		if (retVal == null) {
-//			retVal = getBasicCommand();
-			retVal = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBasicCommand();
-		}
-		
-		return retVal;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBasicCommand(aProcessName);
+//		List<String> retVal = processToBasicCommand.get(aProcessName);
+//		if (retVal == null) {
+////			retVal = getBasicCommand();
+//			retVal = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBasicCommand();
+//		}
+//		
+//		return retVal;
 		
 	}
-	public static void setBasicCommand(String aProcessName, List<String> aCommand) {		
-		processToBasicCommand.put(aProcessName, aCommand);
+	public static void setBasicCommand(String aProcessName, List<String> aCommand) {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderBasicCommand(aProcessName, aCommand);
+//		processToBasicCommand.put(aProcessName, aCommand);
 	
 	}
 	public static boolean hasEntryPoint(List<String> aCommand) {

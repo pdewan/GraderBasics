@@ -187,12 +187,14 @@ public class ABasicMainClassFinder implements MainClassFinder {
 	@Override
 	public List<String> getDefaultCommand() {
 		if (defaultCommand == null) {
-			return BasicStaticConfigurationUtils.getBasicCommand();
+//			return BasicStaticConfigurationUtils.getBasicCommand();
+			return BasicStaticConfigurationUtils.DEFAULT_JAVA_BASIC_COMMAND;
+
 		} else {
 			return defaultCommand;
 		}
 	}
-
+    // Wwhy do we need this?
 	@Override
 	public void setDefaultCommand(List<String> aCommand) {
 		defaultCommand = aCommand;

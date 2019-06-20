@@ -22,8 +22,8 @@ public interface BasicExecutionSpecification {
 	public abstract void setArgs(String aProcess, List<String> anEntryArgs);
 	public List<String> getStartTags(String aProcess);
 	public void setStartTags(String aProcess, List<String> aStartTags) ;
-	public abstract Integer getSleepTime(String aProcess);
-	public abstract void setSleepTime(String aProcess, int aSleepTime);
+	public abstract Integer getResourceReleaseTime(String aProcess);
+	public abstract void setGraderResourceReleaseTime(String aProcess, int aSleepTime);
 	public abstract List<String> getArgs(String aProcess);
 	public abstract String getEntryPoint(String aProcess);
 
@@ -71,6 +71,13 @@ public interface BasicExecutionSpecification {
 	List<String> getModules();
 	void setGraderModules(List<String> aModules);
 	void setGraderModule(String aModule);
+	List<String> getBasicCommand(String aProcess);
+	void setGraderBasicCommand(String aProcess, List<String> aCommand);
+	void setGraderBasicCommand(List<String> aCommand);
+	void setStudentResourceReleaseTime(String aProcess, int aSleepTime);
+	Integer getResourceReleaseTime();
+	void setGraderResourceReleaseTime(int aSleepTime);
+	void setStudentResourceReleaseTime(int aSleepTime);
 	
 	
 
