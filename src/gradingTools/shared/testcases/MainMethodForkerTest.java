@@ -1,5 +1,6 @@
 package gradingTools.shared.testcases;
 
+import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
 import grader.basics.execution.ResultingOutErr;
@@ -54,14 +55,17 @@ public class MainMethodForkerTest extends MethodExecutionTest {
 //		return new String[]{"3", "a an the a an the a a a an an an the the the"};
 //	}
 	
-	
+	/*
+	 * This stuff is inconsistent with the FORK_MAIN_PROPERTY
+	 */
 	protected boolean forkMain() {
-		return true;
+//		return true;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isForkMain();
 	}
 	protected void callOrForkMain(boolean aFork) throws Throwable {
 //		setupProcesses();
 		resultingOutError = BasicProjectExecution.callOrForkMain(
-				true, getMainClassName(), getMainArgs(),getInputLines());
+				aFork, getMainClassName(), getMainArgs(),getInputLines());
 			interactiveInputProject = resultingOutError.getRunningProject();
 	}
 	protected void setupProcesses() {

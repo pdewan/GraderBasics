@@ -8,7 +8,10 @@ import java.util.Set;
 import grader.basics.testcase.JUnitTestCase;
 import util.models.PropertyListenerRegisterer;
 
-
+/**
+ * An instance of this is created automatically from a JUnit test case
+ *
+ */
 public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializable  {
 	public static final String TEST_RUN_STARTED = "TestRunStarted";
 	public static final String TEST_RUN_FINISHED = "TestRunEnded";

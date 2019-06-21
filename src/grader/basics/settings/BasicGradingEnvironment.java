@@ -170,6 +170,9 @@ public class BasicGradingEnvironment {
 //    	return null;
     	return findLibInMyClassPath(separator, "oeall");
     }
+    /*
+     * Strange, it is returnin the complete class path
+     */
     protected String findLocalGraderClassPath(String separator) {
     	String result = System.getProperty("java.class.path");
 //    	System.out.println("Classpath:" + result);

@@ -543,13 +543,15 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 //    	return getStringProperty(BasicStaticConfigurationUtils.BINARY_LOCATION, null);
     }
     // should we cache these values?
-    protected String language;
+//    protected String language;
     @Override
+    // no caching as each project can have different language
     public String getLanguage() {
-    	if (language == null) {
-    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
-    	}
-    	return language;
+    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
+//    	if (language == null) {
+//    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
+//    	}
+//    	return language;
 //    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
     }
 //    // no caching as 
@@ -653,13 +655,38 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 //		BasicProjectExecution.useMethodAndConstructorTimeOut = useMethodAndConstructorTimeOut;
 	}
 	@Override
+	public  boolean isCheckAllSpecifiedTags() {
+		return getBooleanProperty(CHECK_ALL_SPECIFIED_TAGS, DEFAULT_CHECK_ALL_SPECIFIED_TAGS);
+//		return useMethodAndConstructorTimeOut;
+	}
+	@Override
+	public void setGraderCheckAllSpecifiedTags(
+			boolean newVal) {
+		runtimeGraderBooleanProperties.put(CHECK_ALL_SPECIFIED_TAGS, newVal);
+	}
+//		BasicProjectEx
+	@Override
 	public  boolean isUseProcessTimeOut() {
 		return getBooleanProperty(USE_PROCESS_TIMEOUT, true);
 	}
 	@Override
-	public  void setUseProcessTimeOut(
+	public  void setGraderUseProcessTimeOut(
 			boolean newVal) {
 		runtimeGraderBooleanProperties.put(USE_PROCESS_TIMEOUT, newVal);
+	}
+	@Override
+	public  boolean isForkMain() {
+		return getBooleanProperty(FORK_MAIN, DEFAULT_FORK_MAIN);
+	}
+	@Override
+	public  void setGraderForkMain(
+			boolean newVal) {
+		runtimeGraderBooleanProperties.put(FORK_MAIN, newVal);
+	}
+	@Override
+	public  void setStudentForkMain(
+			boolean newVal) {
+		runtimeStudentBooleanProperties.put(FORK_MAIN, newVal);
 	}
 	@Override
 	public  boolean isWaitForMethodConstructorAndProcesses() {

@@ -31,6 +31,10 @@ import util.trace.Tracer;
 import bus.uigen.attributes.AttributeNames;
 import bus.uigen.introspect.Attribute;
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
+/**
+ * This is the object displayed in the LocalChecks UI as a  (leaf-level?) tree node.
+ *
+ */
 public class AGradableJUnitTest implements GradableJUnitTest{
 	public static final Color UNTESTED_COLOR = Color.BLACK;
 	public static final Color ALL_FAIL_COLOR = Color.RED;
@@ -160,7 +164,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		setIsRestriction(aJUnitClass);
 		setIsExtra(aJUnitClass);
 		setGroup(aJUnitClass);
-		JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
+		JUnitTestsEnvironment.addPassFailJUnitTestClass(aJUnitClass, this);
 
 //		this.jUnitClass = aJUnitClass;
 //		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {

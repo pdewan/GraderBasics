@@ -1707,14 +1707,16 @@ public class BasicProjectIntrospection {
 		}
 	}
 
-	static boolean checkAllSpecifiedTags = false;
+//	static boolean checkAllSpecifiedTags = false;
 
 	public static boolean isCheckAllSpecifiedTags() {
-		return checkAllSpecifiedTags;
+//		return checkAllSpecifiedTags;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isCheckAllSpecifiedTags();
 	}
     // should be a property
 	public static void setCheckAllSpecifiedTags(boolean newVal) {
-		checkAllSpecifiedTags = newVal;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderCheckAllSpecifiedTags(newVal);
+//		checkAllSpecifiedTags = newVal;
 	}
 
 	public static boolean matchAllTags(Set<String> anActualSet,

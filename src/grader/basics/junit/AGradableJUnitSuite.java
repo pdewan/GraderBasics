@@ -22,6 +22,10 @@ import util.annotations.Visible;
 
 // why is the implicit pattern stack pattern?
 @StructurePattern(StructurePatternNames.LIST_PATTERN)
+/**
+ * This is an internal node in the tree node created by the LocalChecks UI.
+ * It starts a test run when it is double clicked.
+ */
 public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		GradableJUnitSuite, PropertyChangeListener {
 	Set<Class> previousPassClasses, previousFailClasses, previousPartialPassClasses;

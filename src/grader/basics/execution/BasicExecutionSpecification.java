@@ -60,7 +60,7 @@ public interface BasicExecutionSpecification {
 	boolean isUseMethodAndConstructorTimeOut();
 	void setGraderUseMethodAndConstructorTimeOut(boolean useMethodAndConstructorTimeOut);
 	boolean isUseProcessTimeOut();
-	void setUseProcessTimeOut(boolean newVal);
+	void setGraderUseProcessTimeOut(boolean newVal);
 	boolean isWaitForMethodConstructorAndProcesses();
 	void setWaitForMethodConstructorAndProcesses(boolean newVal);
 	void setStudentProcessTimeOut(int newVal);
@@ -78,6 +78,11 @@ public interface BasicExecutionSpecification {
 	Integer getResourceReleaseTime();
 	void setGraderResourceReleaseTime(int aSleepTime);
 	void setStudentResourceReleaseTime(int aSleepTime);
+	boolean isCheckAllSpecifiedTags();
+	void setGraderCheckAllSpecifiedTags(boolean newVal);
+	boolean isForkMain();
+	void setGraderForkMain(boolean newVal);
+	void setStudentForkMain(boolean newVal);
 	
 	
 

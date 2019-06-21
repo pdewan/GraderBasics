@@ -16,6 +16,11 @@ import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
 @StructurePattern(StructurePatternNames.LIST_PATTERN)
+/**
+ * Top-level node in tree created by LocalChecks
+ * @author dewan
+ *
+ */
 public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	public AGradableJUnitTopLevelSuite(Class aJUnitClass) {
 		super(aJUnitClass);

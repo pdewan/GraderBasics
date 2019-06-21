@@ -268,7 +268,7 @@ public class BasicProjectExecution {
 
 	public static void setUseProcessTimeOut(
 			boolean newVal) {
-		basicExecutionSpecification.setUseProcessTimeOut(newVal);
+		basicExecutionSpecification.setGraderUseProcessTimeOut(newVal);
 //		useProcessTimeOut = newVal;
 	}
 

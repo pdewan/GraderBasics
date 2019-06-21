@@ -33,9 +33,17 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	
 	protected ABufferingTestInputGenerator outputBasedInputGenerator ;
 	protected RunningProject interactiveInputProject;
-
+    /**
+     * This is where we add an instance of the test case.
+     * This means only subclasses of PassFailJUnitTestCase can
+     * be made dependent.This makese sense since they have 
+     * results etc.
+     * 
+     * This is also the superclass of a gradet testcase, and the clases
+     * of these have not been regustered.
+     */
     public PassFailJUnitTestCase() {
-    	JUnitTestsEnvironment.addPassFailJUnitTestCase(this.getClass(), this);
+    	JUnitTestsEnvironment.addPassFailJUnitTestInstance(this);
     }
    
    

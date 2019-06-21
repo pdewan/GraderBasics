@@ -338,7 +338,7 @@ public class BasicJUnitUtils {
 		List<Class> aJUnitOrSuiteClasses = BasicJUnitUtils.getComponentTestsAndSuites(aJUnitSuiteClass);
 		List<Class> aSuiteClasses = BasicJUnitUtils.selectJUnitSuites(aJUnitOrSuiteClasses);
 		List<Class> aTestCases = new ArrayList(aJUnitOrSuiteClasses);
-		aTestCases.removeAll(aSuiteClasses);
+		aTestCases.removeAll(aSuiteClasses); // so test cases are only leaf nodes
 		Map<String, List<GradableJUnitTest>>  aGroupedTopLevelGradables = BasicJUnitUtils.toTopLevelGradables(aTestCases);
 		Map<String, List<GradableJUnitTest>>  aGroupedSuiteGradables = BasicJUnitUtils.toSuiteGradables(aSuiteClasses);
 		Map<String,List<GradableJUnitTest>> aGroupedGradables = new HashMap();
@@ -371,10 +371,10 @@ public class BasicJUnitUtils {
 			String aGroup = aGradableJUnitTest.getGroup();
 			List<GradableJUnitTest> aClasses = aResult.get(aGroup);
 			GradableJUnitSuite aSuite;
-			if (aClasses == null) {
+			if (aClasses == null) { // looks as if we create a Suite node even for ;leaf nodes, why?
 				aClasses = new ArrayList();
 				aResult.put(aGroup, aClasses);
-				aSuite = new AGradableJUnitSuite(aJUnitClass);
+				aSuite = new AGradableJUnitSuite(aJUnitClass);// we already created AGradableJUnitTest earlier
 				aSuite.setExplanation(aGroup);
 				aClasses.add(aSuite);
 			}

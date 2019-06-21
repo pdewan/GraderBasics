@@ -39,7 +39,7 @@ public class BasicLanguageDependencyManager {
 		public static String PYTHON_LANGUAGE = "Python";
 //		 static String language =JAVA_LANGUAGE ;
 		 static String DEFAULT_LANGUAGE =JAVA_LANGUAGE ;
-		 static String language = null ; // not Java
+//		 static String language = null ; // not Java
 
 
 
@@ -64,9 +64,9 @@ public class BasicLanguageDependencyManager {
 
 
 	public static void setLanguage(String language) {
-		BasicLanguageDependencyManager.language = language;
-	sourceFileSuffix = languageToSourceFileSuffix.get(getLanguage());
-	binaryFileSuffix = languageToBinaryFileSuffix.get(getLanguage());
+//		BasicLanguageDependencyManager.language = language;
+	sourceFileSuffix = languageToSourceFileSuffix.get(language);
+	binaryFileSuffix = languageToBinaryFileSuffix.get(language);
 	}
 
 
@@ -89,18 +89,19 @@ public class BasicLanguageDependencyManager {
 //		String aLanguage = getLanguage();
 //		return JAVA_LANGUAGE.equals(JAVA_LANGUAGE);
 //	}
-
+	// do not cache value as different pro
 	public static String getLanguage() {
 //		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage();
-		if (language ==  null) {
+//		if (language ==  null) {
 //			language = 	BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getStringProperty(BasicStaticConfigurationUtils.LANGUAGE, JAVA_LANGUAGE);
-			setLanguage (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage());
+			String language = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage();
+			setLanguage (language);
 
 //
 //			if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
 //				language = BasicStaticConfigurationUtils.getLanguage();
 //			}
-		}
+//		}
 //
 		return language;
 	}

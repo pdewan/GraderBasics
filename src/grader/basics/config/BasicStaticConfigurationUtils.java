@@ -29,7 +29,7 @@ public class BasicStaticConfigurationUtils {
 	public static final String EXECUTION_COMMAND = "execution";
 
 	public static final String LANGUAGE = "language";
-	public static final String REQUIREMENTS = "requirements";
+	
 	public static final String ENTRY_POINT = "entryPoint";
 	public static final String BUILD_FOLDER = "buildFolder";
 	public static final String PERMISSIONS = "permissions";
@@ -74,6 +74,7 @@ public class BasicStaticConfigurationUtils {
 	public static final String MODULES = "modules";
 	public static final String DEFAULT_MODULE = "Comp101";
 	public static final String FORK_MAIN = "forkMain";
+	public static final Boolean DEFAULT_FORK_MAIN = true;
 	public static final String GRADABLE_PROJECT_LOCATION = "gradableProjectLocation";
 	public static final String SOURCE_LOCATION = "sourceLocation";
 	public static final String BINARY_LOCATION = "binaryLocation";
@@ -129,6 +130,9 @@ public class BasicStaticConfigurationUtils {
 	// milliseconds
 public static final int DEFAULT_METHOD_TIME_OUT = 2000; // in milliseconds
 public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
+public static final  String CHECK_ALL_SPECIFIED_TAGS = "checkAllSpecifiedTags";
+public static final  boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
+
 
 	
 	public static String toVariable(String aVariableName) {
@@ -357,7 +361,7 @@ public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 								BasicGradingEnvironment.get().getClassPathSeparator());
 					}
 					 
-					if (command.contains(LOCAL_GRADER_PATH_VAR)) {
+					if (command.contains(LOCAL_GRADER_PATH_VAR)) { // the config property does not have this, I suppose it is to allow student code to invoke api calls in grader
 
 						command = command.replace(LOCAL_GRADER_PATH_VAR,
 						// BasicGradingEnvironment.get().getClasspath());
