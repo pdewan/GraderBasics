@@ -12,6 +12,7 @@ import org.apache.commons.configuration.resolver.EntityRegistry;
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 import jdk.internal.dynalink.beans.StaticClass;
 import util.trace.Tracer;
@@ -682,6 +683,15 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	public  void setGraderForkMain(
 			boolean newVal) {
 		runtimeGraderBooleanProperties.put(FORK_MAIN, newVal);
+	}
+	@Override
+	public  boolean isUseProjectConfiguration() {
+		return getBooleanProperty(USE_PROJECT_CONFIGURATION, DEFAULT_USE_PROJECT_CONFIGURATION);
+	}
+	@Override
+	public  void setUseProjectConfiguration(
+			boolean newVal) {
+		runtimeGraderBooleanProperties.put(USE_PROJECT_CONFIGURATION, newVal);
 	}
 	@Override
 	public  void setStudentForkMain(

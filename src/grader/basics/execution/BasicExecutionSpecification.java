@@ -83,6 +83,8 @@ public interface BasicExecutionSpecification {
 	boolean isForkMain();
 	void setGraderForkMain(boolean newVal);
 	void setStudentForkMain(boolean newVal);
+	boolean isUseProjectConfiguration();
+	void setUseProjectConfiguration(boolean newVal);
 	
 	
 

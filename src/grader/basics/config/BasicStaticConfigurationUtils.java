@@ -89,6 +89,9 @@ public class BasicStaticConfigurationUtils {
 	public static final String USE_METHOD_CONSTRUCTOR_TIMEOUT = "useMethodConstructorTimeout";
 	public static final String USE_PROCESS_TIMEOUT = "useProcessTimeout";
 	public static final String WAIT_FOR_METHOD_CONSTRUCTOR_AND_PROCESSES = "waitFotMethodConstructorAndProcesses";
+	public static final String USE_PROJECT_CONFIGURATION = "useProjectConfiguration";
+	public static final boolean DEFAULT_USE_PROJECT_CONFIGURATION = false;
+
 
 
 
@@ -832,10 +835,12 @@ public static final  boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
 		return graderProcessTeams != null && graderProcessTeams.isEmpty();
 	}
 	public static boolean isUseProjectConfiguration() {
-		return useProjectConfiguration;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isUseProjectConfiguration();
+//		return useProjectConfiguration;
 	}
-	public static void setUseProjectConfiguration(boolean useProjectConfiguration) {
-		BasicStaticConfigurationUtils.useProjectConfiguration = useProjectConfiguration;
+	public static void setUseProjectConfiguration(boolean newVal) {
+//		BasicStaticConfigurationUtils.useProjectConfiguration = useProjectConfiguration;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setUseProjectConfiguration(newVal);
 	}
 	public static Boolean getInheritedBooleanModuleProblemProperty(
 			PropertiesConfiguration configuration, String module,
@@ -897,7 +902,8 @@ public static final  boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
 	}
 	public static List getConfigurationBasicDirectList (String property, List  defaultValue) {
 		
-		if (!isUseProjectConfiguration()) {
+		if (property == BasicStaticConfigurationUtils.MODULES || // infinite recursion
+			!isUseProjectConfiguration()) {
 			 // cannot use project configuration before location is known to create project
 			return defaultValue;
 		}
@@ -914,9 +920,11 @@ public static final  boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
 }
 	public static String getBasicInheritedStringModuleProblemProperty(
 			String property, String defaultValue) {
-		if (!isUseProjectConfiguration() ||
-			 // cannot use project configuration before location is known to create project
-			 property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION) { // can do == as we are using named constants
+		if (
+			// cannot use project configuration before location is known to create project
+			property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION || // can do == as we are using named constants
+			!isUseProjectConfiguration() ) {
+//			property == BasicStaticConfigurationUtils.USE_PROJECT_CONFIGURATION){ 
 			return defaultValue;
 		}
 
@@ -924,9 +932,9 @@ public static final  boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
 	}
 	public static Boolean getBasicInheritedBooleanModuleProblemProperty(
 			String property, Boolean defaultValue) {
-		if (!isUseProjectConfiguration() ||
-			 // cannot use project configuration before location is known to create project
-			 property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION) { // can do == as we are using named constants
+		if (
+			property == BasicStaticConfigurationUtils.USE_PROJECT_CONFIGURATION || // avoiding recursion
+			!isUseProjectConfiguration() ) {			  
 			return defaultValue;
 		}
 
@@ -934,9 +942,7 @@ public static final  boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
 	}
 	public static Integer getBasicInheritedIntegerModuleProblemProperty(
 			String property, Integer defaultValue) {
-		if (!isUseProjectConfiguration() ||
-			 // cannot use project configuration before location is known to create project
-			 property == BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION) { // can do == as we are using named constants
+		if (!isUseProjectConfiguration()) {
 			return defaultValue;
 		}
 

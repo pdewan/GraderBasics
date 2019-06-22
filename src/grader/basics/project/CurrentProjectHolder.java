@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 
 import grader.basics.execution.BasicExecutionSpecification;
 import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.execution.GradingMode;
 
 public class CurrentProjectHolder {
 	static Project currentProject;
@@ -18,7 +19,7 @@ public class CurrentProjectHolder {
 		CurrentProjectHolder.localProject = localProject;
 	}
 	public static Project getOrCreateCurrentProject() {
-		if (currentProject == null) {
+		if (currentProject == null && !GradingMode.getGraderRun()) {
 			currentProject = createCurrentProject(); 
 			setLocalProject(true);
 		}
@@ -52,7 +53,7 @@ public class CurrentProjectHolder {
 		}
 	}
 	public static File getProjectLocation() {
-		if (projectLocation == null) {
+		if (projectLocation == null ) {
 			String aProjectLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
 			projectLocation = new File(aProjectLocation);
 		}

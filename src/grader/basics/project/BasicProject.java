@@ -190,11 +190,8 @@ public class BasicProject implements Project {
         		 objectFolder = buildFolder;
         	 }
         	
-//             buildFolder = getBuildFolder("main." + name);
-        	 
-//            if (AProject.isMakeClassDescriptions())
-//            classesManager = Option.apply((ClassesManager) new ProjectClassesManager(project, buildFolder, sourceFolder));
-//             if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLanguage() == BasicLanguageDependencyManager.JAVA_LANGUAGE)
+//         	CurrentProjectHolder.setProject(this); // so that classesManager can find it
+
              classesManager = createClassesManager(buildFolder);
 
         

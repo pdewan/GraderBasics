@@ -22,30 +22,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BasicLanguageDependencyManager {
-//	static  String sourceFileSuffix = ".java";
 	static  String sourceFileSuffix;
 
 	 static Map<String, String> languageToSourceFileSuffix = new HashMap<>();
 	 protected static Map<String, String> languageToBinaryFileSuffix = new HashMap<>();
 	 protected static Map<String, MainClassFinder> languageToMainClassFinder = new HashMap();
-//	 static Map<String, ClassFilesCompiler> languageToCompiler = new HashMap();
-//	 static Map<String, CheckStyleInvoker> languageToCheckStyleInvoker = new HashMap();
-//	 static Map<String, Permissible> languageToDefaultPermissible = new HashMap<>();
-//	 static Map<String, PermissionsGenerator> languageToPermissionGenerator = new HashMap<>();;
 
 		
 		public static String JAVA_LANGUAGE = "Java";
 		public static String C_LANGUAGE = "C";
 		public static String PYTHON_LANGUAGE = "Python";
-//		 static String language =JAVA_LANGUAGE ;
 		 static String DEFAULT_LANGUAGE =JAVA_LANGUAGE ;
-//		 static String language = null ; // not Java
 
 
 
 
 	
-	public static  String binaryFileSuffix = ".class";
+//	public static  String binaryFileSuffix = ".class";
 
 
 	public static void setSourceFileSuffix(String sourceFileSuffix) {
@@ -65,8 +58,8 @@ public class BasicLanguageDependencyManager {
 
 	public static void setLanguage(String language) {
 //		BasicLanguageDependencyManager.language = language;
-	sourceFileSuffix = languageToSourceFileSuffix.get(language);
-	binaryFileSuffix = languageToBinaryFileSuffix.get(language);
+//	sourceFileSuffix = languageToSourceFileSuffix.get(language);
+//	binaryFileSuffix = languageToBinaryFileSuffix.get(language);
 	}
 
 
@@ -74,15 +67,17 @@ public class BasicLanguageDependencyManager {
 
 
 	public static void setBinaryFileSuffix(String binaryFileSuffix) {
-		BasicLanguageDependencyManager.binaryFileSuffix = binaryFileSuffix;
+//		BasicLanguageDependencyManager.binaryFileSuffix = binaryFileSuffix;
 	}
 
 
 	public static String getSourceFileSuffix() {
-		if (sourceFileSuffix == null) {
-			getLanguage(); // has side effect of setting source file suffix
-		}
-		return sourceFileSuffix;
+		String aLanguage = getLanguage();
+		return languageToSourceFileSuffix.get(aLanguage);
+//		if (sourceFileSuffix == null) {
+//			getLanguage(); // has side effect of setting source file suffix
+//		}
+//		return sourceFileSuffix;
 	}
 
 //	public static boolean isJava() {
@@ -108,7 +103,9 @@ public class BasicLanguageDependencyManager {
 
 
 	public static String getBinaryFileSuffix() {
-		return binaryFileSuffix;
+		String aLanguage = getLanguage();
+		return languageToBinaryFileSuffix.get(aLanguage);
+//		return binaryFileSuffix;
 	}
 	public static MainClassFinder getMainClassFinder() {
 		return languageToMainClassFinder.get(getLanguage());
