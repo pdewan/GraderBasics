@@ -206,7 +206,7 @@ public class BasicProject implements Project {
     protected Option<ClassesManager> createClassesManager(File buildFolder) throws ClassNotFoundException, IOException {
 //        classesManager = Option.apply((ClassesManager) new ProjectClassesManager(project, buildFolder, sourceFolder));
 
-       return Option.apply((ClassesManager) new BasicProjectClassesManager(null, buildFolder, sourceFolder, sourceFilePattern));
+       return Option.apply((ClassesManager) new BasicProjectClassesManager(this, null, buildFolder, sourceFolder, sourceFilePattern));
 
     }
     protected Option<File> out;

@@ -35,7 +35,7 @@ import util.trace.Tracer;
  * @see ClassesManager
  */
 public class BasicProjectClassesManager implements ClassesManager {
-
+	protected Project basicProject;
     protected final File buildFolder;
     protected final File sourceFolder;
     protected ClassLoader classLoader;
@@ -106,10 +106,12 @@ public class BasicProjectClassesManager implements ClassesManager {
 //        }
     }
     public BasicProjectClassesManager(
+    		Project aBasicProject,
     		/*SakaiProject aProject,*/ 
     		Object aProject, // do not want any dependencies on type
     		File buildFolder, File sourceFolder, String aSourceFilePattern) throws IOException,
             ClassNotFoundException {
+    	basicProject = aBasicProject;
     	setProject(aProject);
     	sourceFilePattern = aSourceFilePattern;
 //        project = aProject;
@@ -117,51 +119,16 @@ public class BasicProjectClassesManager implements ClassesManager {
         this.buildFolder = buildFolder;
         this.sourceFolder = sourceFolder;
 
-        // Create the Class Loader and load the classes
-//        if (BasicGradingEnvironment.get().isLoadClasses() ) {
-////        	classLoader = project.getClassLoader();
-////        	if (classLoader == null)
-//        	setOtherLoaders();
-////        	if (project != null) {
-////        	proxyClassLoader = project.getClassLoader();
-////        	}
-//            classLoader = new URLClassLoader(new URL[]{buildFolder.toURI().toURL()});
-//        }
+
         initializeClassLoaders();
         classDescriptions = new HashSet<ClassDescription>();
         tagsToClasses.clear();
 
         loadClasses(sourceFolder);
-//        checkStyle(project, sourceFolder);
         maybeCheckStyle();
     }
     
-//    protected void checkStyle(SakaiProject aProject, File aSourceFolder) {
-//    		if (!BasicGradingEnvironment.get().isCheckStyle())
-//    			return;    		
-//    	    File aFile = new File (aProject.getCheckStyleFileName());
-//    	    if (aFile.exists()) { // have already run it, should we add a method to project to record?
-//    	    	return;
-//    	    }
-//    	    RunningProject aRunner = LanguageDependencyManager.getCheckStyleInvoker().checkStyle(aSourceFolder.getAbsolutePath());
-//			String aCheckStyleOutputFile = aProject.getCheckStyleFileName();
-//			String aCheckStyleOutput = aRunner.getOutput();
-//			String[] aLines = aCheckStyleOutput.split("\n");			
-//			try {
-//				PrintWriter pw = new PrintWriter(new FileWriter(aCheckStyleOutputFile));
-//				 
-//				for (int i = 0; i < aLines.length; i++) {
-//					pw.println(aLines[i]);
-//				}
-//			 
-//				pw.close();
-////				Common.writeText(aCheckStyleOutputFile, aCheckStyleOutput);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		
-//    }
+
     
     protected ClassDescription createClassDescription (Class<?> javaClass, File source) {
     	return new BasicClassDescription(javaClass, source);
