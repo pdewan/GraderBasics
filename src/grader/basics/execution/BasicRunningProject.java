@@ -751,8 +751,11 @@ public void appendCumulativeOutput() {
 	@Override
     public void newInputLine(String aProcessName, String anInput) {
     	Tracer.info(this, "New input " + anInput + "for " + aProcessName );
-    	if (aProcessName != null)
+    	if (aProcessName != null && processToIn.get(aProcessName) != null) {
         processToIn.get(aProcessName).newInput(anInput + "\n");
+    	} else {
+    		System.err.println("process name = " + aProcessName + " processToIn " + processToIn);
+    	}
     	maybeAppendToProjectInput(anInput);
 //        project.appendCurrentInput(anInput);// this should go, 
         if (aProcessName != null && processToInput != null) {

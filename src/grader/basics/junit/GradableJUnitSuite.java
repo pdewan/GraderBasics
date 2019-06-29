@@ -16,5 +16,6 @@ public interface GradableJUnitSuite extends GradableJUnitTest{
 	double getPreviousScore();
 	void test(Class aJUnitClass);
 	GradableJUnitTest findTest(Class aJUnitClass);
+	List<GradableJUnitTest> children();
 
 }

@@ -50,13 +50,7 @@ public class BasicJUnitUtils {
 
 	}
 
-//	public static  Map<String,List<GraderTestCase>>  toGraderTestCaseMap (Map<String,List<GradableJUnitTest>> aGradableJUnitTestCaseMap) {
-//		Map<String,List<GraderTestCase>> retVal = new HashMap();
-//		for (String aGroup:aGradableJUnitTestCaseMap.keySet()) {
-//			retVal.put(aGroup, toGraderTestCaseList(aGradableJUnitTestCaseMap.get(aGroup)));
-//		}
-//		return retVal;
-//	}
+
 	public static Set<GradableJUnitSuite> findGradableTrees(Collection<Class> aClasses) {
 		Set<Class> aSuiteClasses = findTopLevelSuites(aClasses);
 		return toGradableTrees(aSuiteClasses);
@@ -65,7 +59,7 @@ public class BasicJUnitUtils {
 	public static Set<GradableJUnitSuite> toGradableTrees(Collection<Class> aJUnitClasses ) {
 		Set<GradableJUnitSuite> result = new HashSet();
 		for (Class aClass:aJUnitClasses) {
-			GradableJUnitSuite aTree = toGradableTree (aClass);
+			GradableJUnitSuite aTree = toGradableTree (aClass).rootNode;
 			if (aTree != null) {
 				result.add(aTree);
 			}
@@ -81,7 +75,7 @@ public class BasicJUnitUtils {
 		
 		return new AGradableJUnitTest(aSuiteOrTestClass);
 	}
-	return toGradableTree(aSuiteOrTestClass);
+	return toGradableTree(aSuiteOrTestClass).rootNode;
 	}
 	public  static GradableJUnitTest createGradable (String aKeyWord) {
 		Class aClass = BasicProjectIntrospection.findClassByKeyword(aKeyWord);
@@ -90,7 +84,7 @@ public class BasicJUnitUtils {
 	
 	public static void interactiveTestAll(Class<?> aJUnitSuiteClass) {
 		GraderBasicsTraceUtility.setTracing();
-		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
+		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
 		aGradable.testAll();
@@ -101,7 +95,7 @@ public class BasicJUnitUtils {
 		//  the suite class will
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);
 		GraderBasicsTraceUtility.setTracing();
-		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass);
+		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
 //		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
@@ -128,56 +122,51 @@ public class BasicJUnitUtils {
 	    Tracer.info(BasicJUnitUtils.class, "" + aResult.wasSuccessful());
 
 	}
-	public static GradableJUnitSuite toGradableTree (Class<?> aJUnitSuiteClass) {
+	
+	public static GradableTreeConstructionResult toGradableTree (Class<?> aJUnitSuiteClass) {
+		GradableTreeConstructionResult aResult = new GradableTreeConstructionResult();
 		if (aJUnitSuiteClass == null) {
-			return null;
+			return aResult;
 		}
-//		if (!isJUnitSuite(aJUnitSuiteClass)) {
-//			
-//			return new AGradableJUnitTest(aJUnitSuiteClass);
-//		}
-		Map<String,List<GradableJUnitTest>> aGradableJUnitTestCaseMap = BasicJUnitUtils.toGroupedGradables(aJUnitSuiteClass);
-		GradableJUnitSuite retVal = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
-//		List<GradableJUnitTest> retVal = new ArrayList();
+		GradableJUnitSuite rootNode = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+		aResult.rootNode = rootNode;
+
+		Map<String,List<GradableJUnitTest>> aGradableJUnitTestCaseMap = BasicJUnitUtils.toGroupedGradables(rootNode, aJUnitSuiteClass);
+//		GradableJUnitSuite retVal = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+		aResult.groupedGradables = aGradableJUnitTestCaseMap;
 		for (String aGroup:aGradableJUnitTestCaseMap.keySet()) {
 			List<GradableJUnitTest> aGradables = aGradableJUnitTestCaseMap.get(aGroup);
 			if (aGradables.size() == 2) { // an ungrouped test
-				retVal.add(aGradables.get(1));
+				rootNode.add(aGradables.get(1));
 			} else {
-				retVal.add(aGradables.get(0)); // will also have the children
+				rootNode.add(aGradables.get(0)); // will also have the children
 			}
-//			retVal.put(aGroup, toGraderTestCaseList(aGradableJUnitTestCaseMap.get(aGroup)));
 		}
-		return retVal;
+		rootNode.assignMaxScores();
+		return aResult;
 	}
-//	public static GraderTestCase toGraderTestCase(GradableJUnitTest aGradableJUnitCase){
-//		return new AGraderTestCase(aGradableJUnitCase);
-//	}
-//	public static  List<GraderTestCase> toGraderTestCaseList(List<GradableJUnitTest> aGradableJUnitCaseList){
-//		List<GraderTestCase> retVal = new ArrayList();
-//		for (GradableJUnitTest aGradableJUnitTestCase:aGradableJUnitCaseList) {
-//			if (aGradableJUnitTestCase instanceof GradableJUnitSuite)  
-//				continue; // that is just for display and hierarchy purposes
-//			retVal.add(new AGraderTestCase(aGradableJUnitTestCase));
+//	public static GradableJUnitSuite toGradableTree (Class<?> aJUnitSuiteClass) {
+//		GradableTreeConstructionResult aResult = new GradableTreeConstructionResult();
+//
+//		if (aJUnitSuiteClass == null) {
+//			return aResult;
 //		}
-//		return retVal;
+//
+//		GradableJUnitSuite rootNode = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+//
+//		Map<String,List<GradableJUnitTest>> aGradableJUnitTestCaseMap = BasicJUnitUtils.toGroupedGradables(rootNode, aJUnitSuiteClass);
+////		GradableJUnitSuite retVal = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+//		for (String aGroup:aGradableJUnitTestCaseMap.keySet()) {
+//			List<GradableJUnitTest> aGradables = aGradableJUnitTestCaseMap.get(aGroup);
+//			if (aGradables.size() == 2) { // an ungrouped test
+//				rootNode.add(aGradables.get(1));
+//			} else {
+//				rootNode.add(aGradables.get(0)); // will also have the children
+//			}
+//		}
+//		return rootNode;
 //	}
-//	@Override
-//	public void addJUnitTestSuite (Class<?> aJUnitSuiteClass) {
-//		List<Class> aJUnitOrSuiteClasses = getTopLevelJUnitTestsAndSuites(aJUnitSuiteClass);
-//		List<Class> aSuiteClasses = selectJUnitSuites(aJUnitOrSuiteClasses);
-//		List<Class> aTestCases = new ArrayList(aJUnitOrSuiteClasses);
-//		aTestCases.removeAll(aSuiteClasses);
-//		Map<String, List<GradableJUnitTest>>  aGroupedTopLevelGradables = toTopLevelGradables(aTestCases);
-//		Map<String, List<GradableJUnitTest>>  aGroupedSuiteGradables = toSuiteGradables(aSuiteClasses);
-//		Map<String,List<GradableJUnitTest>> aGroupedGradables = new HashMap();
-//		aGroupedGradables.putAll(aGroupedTopLevelGradables);
-//		aGroupedGradables.putAll(aGroupedSuiteGradables);
-//		List<GradableJUnitTest> aGradableTree = toGradableTree(aGroupedGradables);
-//		ObjectEditor.treeEdit(aGradableTree);
-//		Map<String, List<GraderTestCase>> aGroupedTestCases = toGraderTestCaseMap(aGroupedGradables);		
-//		addGroupedTwoLevelTestCases(aGroupedTestCases);		
-//	}
+
 	public static List<Class> selectJUnitSuites (List<Class> aJUnitSuiteAndTestCases) {
 		List<Class> retVal = new ArrayList();
 		for (Class aJUnitTestCase:aJUnitSuiteAndTestCases) {
@@ -188,118 +177,10 @@ public class BasicJUnitUtils {
 		return retVal;
 	}
 	
-//	public void addJUnitTestSuiteFlat (Class<?> aJUnitSuiteClass) {
-//		List<Class> aJUnitClasses = getJUnitTestClassesDeep(aJUnitSuiteClass);
-//		Map<String, List<JUnitTestToGraderTestCase>>  aGroupedTestCases = createAndCollectTopLevelTestCases(aJUnitClasses);
-//		Map<String, List<JUnitTestToGraderTestCase>>  aGroupedSuiteTestCases = createAndCollectSuiteTestCases(aSuiteClasses)(aJUnitClasses);
-//
-//		addGroupedTwoLevelTestCases(aGroupedTestCases);
-//		
-//	}
-//	static GraderTestCase[] testCasesType = {};
-	
-//	public void addGroupedTwoLevelTestCases(Map<String, List<GraderTestCase>> aTestCases) {
-//		for (String aGroup:aTestCases.keySet()) {
-//			List<GraderTestCase> aJUnitTestToGraderTestCases = aTestCases.get(aGroup);
-//			double aTotalScore = computeTotalScore(aJUnitTestToGraderTestCases);
-//			setPointWeights(aJUnitTestToGraderTestCases, aTotalScore);
-//			GraderTestCase aFirstCase = aJUnitTestToGraderTestCases.get(0);
-//			
-//			boolean anIsRestriction = aFirstCase.isRestriction();
-//			boolean anIsExtraCredit = aFirstCase.isExtra();
-//			if (anIsRestriction) {
-//				addRestriction(aGroup, aTotalScore, aJUnitTestToGraderTestCases.toArray(testCasesType));
-//			} else {
-//				addFeature(aGroup, aTotalScore, anIsExtraCredit, aJUnitTestToGraderTestCases.toArray(testCasesType));
-//			}			
-//		}		
-//	}
-//	public void separateAndAddtestCasesAndSuite(Map<String, List<JUnitTestToGraderTestCase>> aTestCases) {
-//		for (String aGroup:aTestCases.keySet()) {
-//			List<JUnitTestToGraderTestCase> aJUnitTestToGraderTestCases = aTestCases.get(aGroup);
-//			double aTotalScore = computeTotalScore(aJUnitTestToGraderTestCases);
-//			setPointWeights(aJUnitTestToGraderTestCases, aTotalScore);
-//			JUnitTestToGraderTestCase aFirstCase = aJUnitTestToGraderTestCases.get(0);
-//			
-//			boolean anIsRestriction = aFirstCase.isRestriction();
-//			boolean anIsExtraCredit = aFirstCase.isExtra();
-//			if (anIsRestriction) {
-//				addRestriction(aGroup, aTotalScore, aJUnitTestToGraderTestCases.toArray(testCasesType));
-//			} else {
-//				addFeature(aGroup, aTotalScore, anIsExtraCredit, aJUnitTestToGraderTestCases.toArray(testCasesType));
-//			}			
-//		}		
-//	}
-//	public void addGroupedFlatTestCases(Map<String, List<GraderTestCase>> aTestCases) {
-//		for (String aGroup:aTestCases.keySet()) {
-//			List<GraderTestCase> aJUnitTestToGraderTestCases = aTestCases.get(aGroup);
-//			double aTotalScore = computeTotalScore(aJUnitTestToGraderTestCases);
-//			setPointWeights(aJUnitTestToGraderTestCases, aTotalScore);
-//			GraderTestCase aFirstCase = aJUnitTestToGraderTestCases.get(0);
-//			
-//			boolean anIsRestriction = aFirstCase.isRestriction();
-//			boolean anIsExtraCredit = aFirstCase.isExtra();
-//			if (anIsRestriction) {
-//				addRestriction(aGroup, aTotalScore, aJUnitTestToGraderTestCases.toArray(testCasesType));
-//			} else {
-//				addFeature(aGroup, aTotalScore, anIsExtraCredit, aJUnitTestToGraderTestCases.toArray(testCasesType));
-//			}			
-//		}		
-//	}
-	
-	
-//	public static double  computeTotalScore (List<GraderTestCase> aJUnitTestToGraderTestCases) {
-//		double aRetVal = 0;
-//		for (GraderTestCase aJUnitTestToGraderTestCase:aJUnitTestToGraderTestCases) {
-//			Double aMaxScore = aJUnitTestToGraderTestCase.getMaxScore();
-//			if (aMaxScore != null)
-//			aRetVal += aJUnitTestToGraderTestCase.getMaxScore();
-//		}
-//		return aRetVal;
-//	}
-//	public static void setPointWeights (List<GraderTestCase> aJUnitTestToGraderTestCases) {
-//		double aTotalScore = computeTotalScore(aJUnitTestToGraderTestCases);
-//		setPointWeights(aJUnitTestToGraderTestCases, aTotalScore);
-//	}
-//	
-//	public static void setPointWeights (List<GraderTestCase> aJUnitTestToGraderTestCases, double aTotalScore) {
-//		for (GraderTestCase aJUnitTestToGraderTestCase:aJUnitTestToGraderTestCases) {
-//			Double aMaxScore = aJUnitTestToGraderTestCase.getMaxScore();
-//			if (aMaxScore != null)
-//			aJUnitTestToGraderTestCase.setPointWeight(aMaxScore/aTotalScore);
-//		}
-//	}
-//	public  Map<String, List<GraderTestCase>> createAndCollectSuiteTestCases(List<Class> aSuiteClasses) {
-//		Map<String, List<GraderTestCase>> aResult = new HashMap();
-//		for (Class aSuiteClass:aSuiteClasses) {
-//			GradableJUnitTest aSuiteProperties = new AGradableJUnitTest(aSuiteClass);
-////			String aFeatureName =  aProperties.getExplanation();
-//			Double aFeatureScore = aSuiteProperties.getMaxScore();
-//			List<Class> aLeafTestCases = getJUnitTestClassesDeep(aSuiteClass);
-//			Double aTestMaxScore = null;
-//			if (aSuiteProperties.getMaxScore() != null) {
-//				aTestMaxScore = aSuiteProperties.getMaxScore()/aLeafTestCases.size();
-//			}
-//
-//			List<GraderTestCase> aTestCases = new ArrayList();
-//			for (Class aLeafTestCase:aLeafTestCases) {
-//				GradableJUnitTest aTestCaseProperties = new AGradableJUnitTest(aLeafTestCase); 
-//				if (aTestMaxScore != null) {
-//					aTestCaseProperties.setMaxScore(aTestMaxScore);	
-//					aTestCaseProperties.setGroup(aSuiteProperties.getExplanation());
-//					aTestCaseProperties.setRestriction(aSuiteProperties.isRestriction());
-//					aTestCaseProperties.setExtra(aSuiteProperties.isExtra());
-//				}
-//				GraderTestCase aJUnitTestToGraderTestCase =
-//					 	new AGraderTestCase(aTestCaseProperties);
-//				aTestCases.add(aJUnitTestToGraderTestCase);
-//			}
-//			
-//			aResult.put(aSuiteProperties.getExplanation(), aTestCases);
-//			
-//		}
-//		return aResult;
-//	}
+    /*
+     * Creates a displayable Suite OE node from a list of classes and assign them scores.
+     * This method does both. Going to separate them out.
+     */
 	public static  Map<String, List<GradableJUnitTest>> toSuiteGradables(List<Class> aSuiteClasses) {
 		Map<String, List<GradableJUnitTest>> aResult = new HashMap();
 		for (Class aSuiteClass:aSuiteClasses) {
@@ -308,16 +189,16 @@ public class BasicJUnitUtils {
 			Double aFeatureScore = aSuiteGradable.getMaxScore();
 			List<Class> aLeafTestCases = getJUnitTestClassesDeep(aSuiteClass);
 			Double aTestMaxScore = null;
-			if (aSuiteGradable.getMaxScore() != null) {
-				aTestMaxScore = aSuiteGradable.getMaxScore()/
-						aLeafTestCases.size();
-			}
+//			if (aSuiteGradable.getMaxScore() != null) {
+//				aTestMaxScore = aSuiteGradable.getMaxScore()/
+//						aLeafTestCases.size();
+//			}
 
 			List<GradableJUnitTest> aGradables = new ArrayList();
 			for (Class aLeafTestCase:aLeafTestCases) {
 				GradableJUnitTest aGradable = new AGradableJUnitTest(aLeafTestCase); 
 				if (aTestMaxScore != null) {
-					aGradable.setMaxScore(aTestMaxScore);	
+//					aGradable.setMaxScore(aTestMaxScore);	
 					aGradable.setGroup(aSuiteGradable.getExplanation());
 					aGradable.setRestriction(aSuiteGradable.isRestriction());
 					aGradable.setExtra(aSuiteGradable.isExtra());
@@ -330,11 +211,66 @@ public class BasicJUnitUtils {
 				aGradables.add(0, aSuiteGradable); // for consistency add it always
 //			}
 			aResult.put(aSuiteGradable.getExplanation(), aGradables);
+			// we no longer need this as we are 
+//			maybeAssignMaxScores(aSuiteGradable, aGradables);
 			
 		}
 		return aResult;
 	}
-	public static Map<String,List<GradableJUnitTest>> toGroupedGradables(Class<?> aJUnitSuiteClass) {
+	public static  void  maybeAssignMaxScores(GradableJUnitTest aSuiteGradable, 
+			Collection<GradableJUnitTest> aGradables) {
+	
+			Double aTestMaxScore = null;
+			if (aSuiteGradable.getMaxScore() != null) {
+				aTestMaxScore = aSuiteGradable.getMaxScore()/
+						aGradables.size();
+			}
+
+//			List<GradableJUnitTest> aGradables = new ArrayList();
+			for (GradableJUnitTest aGradable:aGradables) {
+				if (aTestMaxScore != null) {
+					aGradable.setMaxScore(aTestMaxScore);	
+					
+				}
+				
+			}
+		
+	}
+//	public static  Map<String, List<GradableJUnitTest>> toSuiteGradables(List<Class> aSuiteClasses) {
+//		Map<String, List<GradableJUnitTest>> aResult = new HashMap();
+//		for (Class aSuiteClass:aSuiteClasses) {
+//			GradableJUnitSuite aSuiteGradable = new AGradableJUnitSuite(aSuiteClass);
+////			String aFeatureName =  aProperties.getExplanation();
+//			Double aFeatureScore = aSuiteGradable.getMaxScore();
+//			List<Class> aLeafTestCases = getJUnitTestClassesDeep(aSuiteClass);
+//			Double aTestMaxScore = null;
+//			if (aSuiteGradable.getMaxScore() != null) {
+//				aTestMaxScore = aSuiteGradable.getMaxScore()/
+//						aLeafTestCases.size();
+//			}
+//
+//			List<GradableJUnitTest> aGradables = new ArrayList();
+//			for (Class aLeafTestCase:aLeafTestCases) {
+//				GradableJUnitTest aGradable = new AGradableJUnitTest(aLeafTestCase); 
+//				if (aTestMaxScore != null) {
+//					aGradable.setMaxScore(aTestMaxScore);	
+//					aGradable.setGroup(aSuiteGradable.getExplanation());
+//					aGradable.setRestriction(aSuiteGradable.isRestriction());
+//					aGradable.setExtra(aSuiteGradable.isExtra());
+//				}
+//				
+//				aGradables.add(aGradable);
+//			}
+//			aSuiteGradable.addAll(aGradables);
+////			if (aGradables.size() > 1) { // they need a parent
+//				aGradables.add(0, aSuiteGradable); // for consistency add it always
+////			}
+//			aResult.put(aSuiteGradable.getExplanation(), aGradables);
+//			
+//		}
+//		return aResult;
+//	}
+	public static Map<String,List<GradableJUnitTest>> toGroupedGradables(GradableJUnitTest aTopLevelSuite, Class<?> aJUnitSuiteClass) {
 		List<Class> aJUnitOrSuiteClasses = BasicJUnitUtils.getComponentTestsAndSuites(aJUnitSuiteClass);
 		List<Class> aSuiteClasses = BasicJUnitUtils.selectJUnitSuites(aJUnitOrSuiteClasses);
 		List<Class> aTestCases = new ArrayList(aJUnitOrSuiteClasses);
@@ -344,6 +280,9 @@ public class BasicJUnitUtils {
 		Map<String,List<GradableJUnitTest>> aGroupedGradables = new HashMap();
 		aGroupedGradables.putAll(aGroupedTopLevelGradables);
 		aGroupedGradables.putAll(aGroupedSuiteGradables);
+//		if (aGroupedSuiteGradables.size() == 0) { // no internal nodes
+//			maybeAssignMaxScores(aTopLevelSuite, aTopLevelSuite.getL);
+//		}
 		return aGroupedGradables;
 	}
 	

@@ -59,19 +59,18 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializa
 	Set<Class> getPassClasses();
 	Set<Class> getPartialPassClasses();
 	Set<Class> getFailClasses();
-//	void setTopLevelSuite(GradableJUnitSuite newVal);
-//	GradableJUnitSuite getTopLevelSuite();
-//	Class[] getUntestedClasses();
-//	void setWriteToConsole(boolean newVal);
-//	boolean isWriteToConsole();
-//	boolean isWriteToFile();
-//	void setWriteToFile(boolean writeToFile);
-//	boolean isWriteToServer();
+
 	Set<Class> getUntestedClasses();
 	public static double round(double aDouble) {
 		return (double) Math.round(aDouble * 10)/10.0;
 	}
 	double getDisplayedScore();
 	JUnitTestCase getJUnitTestCase();
+	boolean isDefinesMaxScore();
+	void setDefinesMaxScore(boolean definesMaxScore);
+	void fillLeafNodeDescendents(List<GradableJUnitTest> retVal);
+	public MaxScoreAssignmentResult assignMaxScores();
+
+
 
 }

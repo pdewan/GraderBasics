@@ -46,6 +46,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	Class jUnitClass;
 	Color color = UNTESTED_COLOR;
 	boolean isExtra;
+	
+
+	boolean definesMaxScore = false;
 //	boolean writeToConsole;
 //	boolean writeToFile;	
 //	boolean writeToServer;
@@ -59,6 +62,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	GradableJUnitSuite topLevelSuite;
 	RunNotifier runNotifier = new RunNotifier();
 //	RunNotifier runNotifier = RunNotifierFactory.getRunNotifier();
+	GradableJUnitSuite parentSuite;
+
+	
 
 	AJUnitTestResult runListener = new AJUnitTestResult();
 	JUnitTestCase jUnitTest;
@@ -101,6 +107,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {
 			MaxValue aMaxValue =  (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
 			maxScore = (double) aMaxValue.value();
+			definesMaxScore = true;
 		} else {
 			maxScore = null;
 			maybeSetDefaultMaxScore();
@@ -166,13 +173,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		setGroup(aJUnitClass);
 		JUnitTestsEnvironment.addPassFailJUnitTestClass(aJUnitClass, this);
 
-//		this.jUnitClass = aJUnitClass;
-//		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {
-//			MaxValue aMaxValue =  (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
-//			maxScore = aMaxValue.value();
-//		} else {
-//			maxScore = DEFAULT_SCORE;
-//		}
+
 		
 	}
 	@Visible(false)
@@ -457,7 +458,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	}
 	@Override
 	public int numLeafNodeDescendents() {
-		return 0;
+		return 1;
 	}
 //	public static void main (String[] args) {
 //		ObjectEditor.edit(new bus.uigen.test.ACompositeColorer());
@@ -562,5 +563,42 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
+	@Override
+	@Visible(false)
+	public boolean isDefinesMaxScore() {
+		return definesMaxScore;
+	}
+	@Override
+	@Visible(false)
+	public void setDefinesMaxScore(boolean definesMaxScore) {
+		this.definesMaxScore = definesMaxScore;
+	}
+
+	@Override
+	@Visible(false)
+	public void fillLeafNodeDescendents(List<GradableJUnitTest> retVal) {
+		retVal.add(this);
+	}
+
+	@Override
+	@Visible(false)
+	public MaxScoreAssignmentResult assignMaxScores() {
+		MaxScoreAssignmentResult aMaxScoreAssignmentResult = new MaxScoreAssignmentResult();
+		aMaxScoreAssignmentResult.assignedScores = maxScore;
+//		if (!isDefinesMaxScore()) {
+		if (maxScore == DEFAULT_SCORE) { // may not define score and yet be 
+			aMaxScoreAssignmentResult.unassignedLeafNodes.add(this);
+		}
+		return aMaxScoreAssignmentResult;
+	}
+	
+	@Visible(false)
+	public GradableJUnitSuite getParentSuite() {
+		return parentSuite;
+	}
+	@Visible(false)	public void setParentSuite(GradableJUnitSuite parentSuite) {
+		this.parentSuite = parentSuite;
+	}
+	
 	
 }

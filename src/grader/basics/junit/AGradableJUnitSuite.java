@@ -19,6 +19,7 @@ import util.annotations.Position;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
+import util.trace.Tracer;
 
 // why is the implicit pattern stack pattern?
 @StructurePattern(StructurePatternNames.LIST_PATTERN)
@@ -37,6 +38,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		super(aJUnitClass);
 		topLevelSuite = this; // will be overridden by parent if they exist
 	}
+	
 
 	public GradableJUnitTest get(int anIndex) {
 		return children.get(anIndex);
@@ -44,6 +46,11 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	public int size() {
 		return children.size();
+	}
+	@Override
+	@Visible(false)
+	public List<GradableJUnitTest> children() {
+		return children;
 	}
 
 	@Visible(false)
@@ -87,14 +94,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		
 	}
 	protected void testRunStarted(GradableJUnitTest aTest) throws PropertyVetoException {
-//		Description aDescription = Description.createTestDescription(getJUnitClass().getSimpleName(), getExplanation(), null);
-//		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
-//		String aClassName = aTest.getJUnitClass().getSimpleName();
-//		String aName = aTest.getExplanation();
-////		String anId = aTest.getJUnitClass().getName();
-//		// aClassName and aName not really needed, as aTest has that info.
-//		Description aDescription = Description.createTestDescription(aClassName, aName, this);
-//		RunVetoerFactory.getRunVetoer().fireTestRunStarted(aDescription);
+
 		RunVetoerFactory.getOrCreateRunVetoer().vetoableChange(new PropertyChangeEvent(this, TEST_RUN_STARTED, this, null));
 
 		notifyTestRunStarted(aTest);
@@ -153,8 +153,67 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	}
 
 	@Override
+	@Visible(false)
 	public int numLeafNodeDescendents() {
-		return children.size();
+		int retVal = 0;
+		for (GradableJUnitTest aChild:children) {
+			retVal += aChild.numLeafNodeDescendents();
+		}
+		return retVal;
+	}
+	@Visible(false)
+	public void fillLeafNodeDescendents(List<GradableJUnitTest> retVal) {
+		for (GradableJUnitTest aChild:children) {
+			aChild.fillLeafNodeDescendents(retVal);
+		}
+	}
+	@Visible(false)
+	public List<GradableJUnitTest> getLeafNodeDescendents() {
+		List<GradableJUnitTest> retVal = new ArrayList();
+		fillLeafNodeDescendents(retVal);
+		return retVal;
+	}
+	@Override
+	@Visible(false)
+	public MaxScoreAssignmentResult assignMaxScores() {
+		MaxScoreAssignmentResult aMaxScoreAssignmentResult = new MaxScoreAssignmentResult();
+//		double anAssignedMaxScore = 0;
+		for (GradableJUnitTest aChild:children) {
+			MaxScoreAssignmentResult aChildResult = aChild.assignMaxScores();
+			aMaxScoreAssignmentResult.assignedScores += aChildResult.assignedScores;
+			aMaxScoreAssignmentResult.unassignedLeafNodes.addAll(aChildResult.unassignedLeafNodes);	
+			
+		}
+//		if (!isDefinesMaxScore()) { // no maxScore annotation
+
+		if (maxScore == DEFAULT_SCORE) { // no maxScore annotation
+			return aMaxScoreAssignmentResult;
+		}
+		double anUnassignedMaxScore = maxScore - aMaxScoreAssignmentResult.assignedScores;
+		if (anUnassignedMaxScore < 0) {
+			Tracer.info(this, "Ignoring MaxScore:" + maxScore + " of " + jUnitClass.getSimpleName() + " as it is less than sum total of Max Scorse of descendents:" + aMaxScoreAssignmentResult.assignedScores );
+			return aMaxScoreAssignmentResult;
+		}
+		double aDistributedScore = anUnassignedMaxScore/aMaxScoreAssignmentResult.unassignedLeafNodes.size();
+		for (GradableJUnitTest anUnassignedLeafNode:aMaxScoreAssignmentResult.unassignedLeafNodes) {
+			anUnassignedLeafNode.setMaxScore(aDistributedScore);
+		}
+		aMaxScoreAssignmentResult.unassignedLeafNodes.clear();
+		aMaxScoreAssignmentResult.assignedScores = maxScore;
+		return aMaxScoreAssignmentResult;
+		
+		
+	}
+	
+	
+	@Override
+	@Visible(false)
+	public int numInternalNodeDescendents() {
+		int retVal = 0;
+		for (GradableJUnitTest aChild:children) {
+			retVal += aChild.numInternalNodeDescendents();
+		}
+		return retVal;
 	}
 
 	@Visible(false)
@@ -226,13 +285,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	@Visible(false)
 	public Double getMaxScore() {
-		// if (maxScore == null) {
-		// double retVal = 0;
-		// for (GradableJUnitTest aTest:children) {
-		// retVal += aTest.getMaxScore();
-		// }
-		// maxScore = retVal;
-		// }
+		
 		return maxScore;
 	}
 
@@ -249,9 +302,10 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	}
 
 	// do nothing as we need to know if the score was set or not
-	protected void maybeSetDefaultMaxScore() {
-
-	}
+	// we have defines maxScore
+//	protected void maybeSetDefaultMaxScore() {
+//
+//	}
 
 	@Visible(false)
 	public List<TestCaseResult> getTestCaseResults() {
