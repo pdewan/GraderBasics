@@ -1,7 +1,7 @@
 package gradingTools.utils;
 
+import grader.basics.config.BasicProjectExecution;
 import grader.basics.execution.BasicExecutionSpecificationSelector;
-import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
 import grader.basics.project.Project;

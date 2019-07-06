@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import grader.basics.config.BasicProjectExecution;
 import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.ResultWithOutput;
 import grader.basics.execution.ResultingOutErr;

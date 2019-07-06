@@ -1,6 +1,6 @@
 package grader.basics.util;
 
-import grader.basics.execution.BasicProjectExecution;
+import grader.basics.config.BasicProjectExecution;
 import grader.basics.project.BasicProjectIntrospection;
 import util.trace.Tracer;
 

@@ -85,6 +85,8 @@ public interface BasicExecutionSpecification {
 	void setStudentForkMain(boolean newVal);
 	boolean isUseProjectConfiguration();
 	void setUseProjectConfiguration(boolean newVal);
+	String getEntryPoint();
+	void setEntryPoint(String anEntryPoint);
 	
 	
 

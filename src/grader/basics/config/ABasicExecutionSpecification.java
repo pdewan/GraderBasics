@@ -1,4 +1,4 @@
-package grader.basics.execution;
+package grader.basics.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +10,8 @@ import java.util.concurrent.Executors;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 
 import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.config.BasicConfigurationManagerSelector;
-import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.execution.BasicExecutionSpecification;
+import grader.basics.execution.BasicRunningProject;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 import jdk.internal.dynalink.beans.StaticClass;
@@ -414,6 +414,17 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 		Tracer.info(this, "Setting start tag processes: " + aProcess + " - " + newVal);
 		runtimeGraderListProperties.put(toCompoundProperty(aProcess, START_TAGS), newVal);
 //		graderProcessToStartTags.put(aProcess, aStartTags);
+	}
+	@Override
+	public String getEntryPoint() {
+		return getStringProperty(ENTRY_POINT, null);
+
+//		return graderProcessToEntryPoint.get(aProcess);
+	}
+	@Override
+	public void setEntryPoint(String anEntryPoint) {
+		runtimeGraderStringProperties.put(ENTRY_POINT, anEntryPoint);
+//		graderProcessToEntryPoint.put(aProcess, anEntryPoint);
 	}
 
 	@Override

@@ -405,7 +405,7 @@ public class BasicProjectClassesManager implements ClassesManager {
      * @return The canonical class name.
      * @throws IOException
      */
-    protected String getClassName(File file) throws IOException {
+    public static String getClassName(File file) throws IOException {
 
         // Figure out the package
 //        List<String> lines = FileUtils.readLines(file, null);

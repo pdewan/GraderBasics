@@ -1,5 +1,6 @@
 package grader.basics.execution;
 
+import grader.basics.config.BasicProjectExecution;
 
 public class AMainInNewThread  implements Runnable{
 	String mainName;

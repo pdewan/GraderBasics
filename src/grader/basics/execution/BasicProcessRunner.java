@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.config.BasicProjectExecution;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.BasicProjectIntrospection;
 //import framework.execution.ARunningProject;
@@ -1067,10 +1068,13 @@ public class BasicProcessRunner implements Runner {
 //		return aRetVal;
 	}
 	public static String getMainEntryPoint(Project aProject, String specifiedMainClass) {
-		
+		if (specifiedMainClass == null) {
+			specifiedMainClass = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
+		}
 		Map<String, String> anEntryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(aProject, specifiedMainClass);
 //		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
 		String aRetVal = anEntryPoints.get(BasicProcessRunner.MAIN_ENTRY_POINT);
+//		String aRetVal = anEntryPoints.get(BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint());
 
 		if (aRetVal == null) {
 			if (anEntryPoints.size() > 0) {

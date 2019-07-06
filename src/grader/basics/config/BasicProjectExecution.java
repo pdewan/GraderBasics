@@ -1,5 +1,18 @@
-package grader.basics.execution;
+package grader.basics.config;
 
+import grader.basics.execution.AConstructorExecutionCallable;
+import grader.basics.execution.AMethodExecutionCallable;
+import grader.basics.execution.AResultWithOutput;
+import grader.basics.execution.BasicExecutionSpecification;
+import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.execution.BasicProcessRunner;
+import grader.basics.execution.JavaMainClassFinderSelector;
+import grader.basics.execution.NotRunnableException;
+import grader.basics.execution.ResultWithOutput;
+import grader.basics.execution.ResultingOutErr;
+import grader.basics.execution.Runner;
+import grader.basics.execution.RunnerSelector;
+import grader.basics.execution.RunningProject;
 //import framework.execution.ARunningProject;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
@@ -1107,20 +1120,11 @@ public class BasicProjectExecution {
 	}
 	public static ResultingOutErr callMain(String aMainName, String[] args,
 			String... anInput) throws Throwable {
-		return callOrForkMain(BasicGradingEnvironment.get().isForkMain(), aMainName, args, anInput);
-//		if (!isReRunInfiniteProceses()
-//				&& CurrentProjectHolder.getOrCreateCurrentProject()
-//						.isInfinite())
-//			return null;
-//		if (BasicGradingEnvironment.get().isForkMain()) {
-////			if (!isReRunInfiniteProceses()
-////					&& CurrentProjectHolder.getOrCreateCurrentProject()
-////							.isInfinite())
-////				return null;
-//			return forkMain(aMainName, args, anInput);
-//		} else {
-//			return invokeMain(aMainName, args, anInput);
-//		}
+//		return callOrForkMain(BasicGradingEnvironment.get().isForkMain(), aMainName, args, anInput);
+		return callOrForkMain(
+				BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isForkMain(), 
+				aMainName, args, anInput);
+
 	}
 	public static ResultingOutErr callOrForkMain(boolean isFork, String aMainName, String[] args,
 			String... anInput) throws Throwable {
@@ -1162,7 +1166,8 @@ public class BasicProjectExecution {
 
 	public static ResultingOutErr callCorrespondingMain(Class aProxyClass,
 			String[] args, String... anInput) throws Throwable {
-		if (BasicGradingEnvironment.get().isForkMain()) {
+		if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isForkMain()) {
+//		if (BasicGradingEnvironment.get().isForkMain()) {
 			return forkMain(aProxyClass, args, anInput);
 		} else {
 			return invokeCorrespondingMain(aProxyClass, args, anInput);
