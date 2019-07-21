@@ -349,6 +349,7 @@ public class ATestLogFileWriter extends RunListener {
 	                            StandardOpenOption.CREATE);
 	            out = new PrintWriter(bufWriter, true);
 	            if (aNewFile) {
+	            	aFile.createNewFile();
 	            	appendLine(HEADER);
 	            }
 	        } catch (IOException e) {

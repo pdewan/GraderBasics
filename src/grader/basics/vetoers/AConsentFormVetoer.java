@@ -25,7 +25,9 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 	boolean consentFormChecked = false;
 	public static final String CONSENT_INFO_FILE_NAME = "http://www.cs.unc.edu/~dewan/comp401/current/Downloads/Adult%20Consent%20Form.htm";
 	public static final String CONSENT_FILE_NAME = "Consent.txt";
-	public static final String LOG_DIRECTORY = "Checks";
+//	public static final String LOG_DIRECTORY = "Checks";
+	public static final String LOG_DIRECTORY = "Logs/Checks";
+
 	public static final String AGREE_FILE_FULL_NAME = LOG_DIRECTORY
 			+ "/" + CONSENT_FILE_NAME;
 	public static final String MESSAGE_CONTENTS = 
