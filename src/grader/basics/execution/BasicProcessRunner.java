@@ -14,7 +14,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.config.BasicProjectExecution;
+import grader.basics.config.BasicExecutionSpecification;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.BasicProjectIntrospection;
 //import framework.execution.ARunningProject;

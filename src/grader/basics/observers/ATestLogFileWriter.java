@@ -392,6 +392,7 @@ public class ATestLogFileWriter extends RunListener {
 	}
 	
 	protected boolean maybeReadLastLineOfLogFile(String aLogFileName) {
+		try {
 		File aFile = new File(aLogFileName);
 		if (!aFile.exists()) {
 			return true;
@@ -407,6 +408,10 @@ public class ATestLogFileWriter extends RunListener {
 		lastLineNormalized = lastLine.replaceAll("\\+|-", ""); // normalize it
 		normalizedLastLines = lastLineNormalized.split(",");
 		return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	public static String tail( File file, int lines) {
 		if (file == null) {

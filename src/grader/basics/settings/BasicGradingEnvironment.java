@@ -3,7 +3,7 @@ package grader.basics.settings;
 import java.io.File;
 import java.io.IOException;
 
-import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import util.trace.Tracer;
 
 /**

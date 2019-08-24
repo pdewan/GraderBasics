@@ -1,0 +1,1566 @@
+<Events startTimestamp="1566575676922" logVersion="1.0.0.1">
+  <Command __id="1433" _type="EclipseCommand" commandID="org.eclipse.jdt.ui.edit.text.java.toggle.comment" date="Sat Aug 24 09:04:51 EDT 2019" timestamp="76215072" />
+  <Command __id="1434" _type="EclipseCommand" commandID="org.eclipse.ui.file.save" date="Sat Aug 24 09:04:53 EDT 2019" timestamp="76216084" />
+  <Command __id="1435" _type="ShellCommand" date="Sat Aug 24 09:05:14 EDT 2019" timestamp="76237564" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="1436" _type="ShellCommand" date="Sat Aug 24 09:05:24 EDT 2019" timestamp="76247728" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="1437" _type="ShellCommand" date="Sat Aug 24 09:05:28 EDT 2019" timestamp="76251210" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="1438" _type="ShellCommand" date="Sat Aug 24 09:07:49 EDT 2019" timestamp="76392220" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="1439" _type="EclipseCommand" commandID="org.eclipse.jdt.ui.edit.text.java.rename.element" date="Sat Aug 24 09:07:49 EDT 2019" timestamp="76392233" />
+  <Command __id="1440" _type="ShellCommand" date="Sat Aug 24 09:07:59 EDT 2019" timestamp="76402631" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="1441" _type="ShellCommand" date="Sat Aug 24 09:08:35 EDT 2019" timestamp="76438892" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="1443" _type="MoveCaretCommand" caretOffset="1021" date="Sat Aug 24 09:14:02 EDT 2019" docOffset="1021" timestamp="76765288" />
+  <Command __id="1444" _type="ShellCommand" date="Sat Aug 24 09:15:30 EDT 2019" timestamp="76853781" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="1445" _type="ShellCommand" date="Sat Aug 24 09:15:47 EDT 2019" timestamp="76870201" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="1446" _type="EclipseCommand" commandID="org.eclipse.search.ui.openFileSearchPage" date="Sat Aug 24 09:15:47 EDT 2019" timestamp="76870220" />
+  <Command __id="1447" _type="MoveCaretCommand" caretOffset="1238" date="Sat Aug 24 09:15:51 EDT 2019" docOffset="1238" timestamp="76874782" />
+  <Command __id="1448" _type="SelectTextCommand" caretOffset="1245" date="Sat Aug 24 09:15:51 EDT 2019" end="1245" start="1224" timestamp="76875023" />
+  <Command __id="1449" _type="CopyCommand" date="Sat Aug 24 09:15:52 EDT 2019" timestamp="76875923" />
+  <Command __id="1450" _type="ShellCommand" date="Sat Aug 24 09:16:03 EDT 2019" timestamp="76887039" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="1451" _type="PasteCommand" date="Sat Aug 24 09:16:05 EDT 2019" timestamp="76889064" />
+  <Command __id="1452" _type="ShellCommand" date="Sat Aug 24 09:16:09 EDT 2019" timestamp="76892362" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="1453" _type="EclipseCommand" commandID="org.eclipse.search.ui.openFileSearchPage" date="Sat Aug 24 09:16:09 EDT 2019" timestamp="76892448" />
+  <Command __id="1455" _type="MoveCaretCommand" caretOffset="39062" date="Sat Aug 24 09:16:33 EDT 2019" docOffset="40903" timestamp="76916150" />
+  <Command __id="1456" _type="ShellCommand" date="Sat Aug 24 09:17:07 EDT 2019" timestamp="76950193" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="1457" _type="ShellCommand" date="Sat Aug 24 09:17:12 EDT 2019" timestamp="76955690" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="1458" _type="EclipseCommand" commandID="org.eclipse.jdt.ui.edit.text.java.rename.element" date="Sat Aug 24 09:17:12 EDT 2019" timestamp="76955704" />
+  <Command __id="2111" _type="MoveCaretCommand" caretOffset="124" date="Sat Aug 24 10:54:04 EDT 2019" docOffset="187" timestamp="82767911" />
+  <Command __id="2113" _type="MoveCaretCommand" caretOffset="371" date="Sat Aug 24 10:54:24 EDT 2019" docOffset="371" timestamp="82787253" />
+  <Command __id="2114" _type="EclipseCommand" commandID="AUTOGEN:::org.eclipse.jdt.debug.CompilationUnitEditor.BreakpointRulerActions/org.eclipse.jdt.debug.ui.actions.ManageBreakpointRulerAction" date="Sat Aug 24 10:54:27 EDT 2019" timestamp="82790642" />
+  <Command __id="2115" _type="BreakPointCommand" date="Sat Aug 24 10:54:27 EDT 2019" lineNumber="10" timestamp="82790643" type="BreakPointAdded" />
+  <Command __id="2117" _type="MoveCaretCommand" caretOffset="0" date="Sat Aug 24 10:54:33 EDT 2019" docOffset="0" timestamp="82796967" />
+  <Command __id="2118" _type="EclipseCommand" commandID="AUTOGEN:::org.eclipse.jdt.debug.CompilationUnitEditor.BreakpointRulerActions/org.eclipse.jdt.debug.ui.actions.ManageBreakpointRulerAction" date="Sat Aug 24 10:54:42 EDT 2019" timestamp="82805648" />
+  <Command __id="2119" _type="BreakPointCommand" date="Sat Aug 24 10:54:42 EDT 2019" lineNumber="10" timestamp="82805649" type="BreakPointAdded" />
+  <Command __id="2120" _type="ShellCommand" date="Sat Aug 24 10:54:51 EDT 2019" timestamp="82814798" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2121" _type="EHExceptionCommand" date="Sat Aug 24 10:54:55 EDT 2019" timestamp="82818397" type="Exception">
+    <outputString><![CDATA[W*** Received notification(s) for unknown (possibly invisible or unrecognized atomic-shape) property: TestRunStarted of object: PointAngleSuite[13.0 pts](grader.basics.junit.AGradableJUnitSuite@d1f74b8). Ignoring notification.
+]]></outputString>
+  </Command>
+  <Command __id="2122" _type="ShellCommand" date="Sat Aug 24 10:54:55 EDT 2019" timestamp="82818561" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2123" _type="RunCommand" date="Sat Aug 24 10:54:55 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="82818700" type="Run" />
+  <Command __id="2124" _type="MoveCaretCommand" caretOffset="275" date="Sat Aug 24 10:54:56 EDT 2019" docOffset="275" timestamp="82819912" />
+  <Command __id="2125" _type="ExceptionCommand" date="Sat Aug 24 10:54:57 EDT 2019" timestamp="82820459" type="Exception">
+    <exceptionString><![CDATA[Terminated execution after milliseconds:2000 suspecting infinite loop
+java.util.concurrent.TimeoutException
+	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:204)
+	at grader.basics.execution.BasicProjectExecution.timedInvoke(BasicProjectExecution.java:311)
+	at grader.basics.execution.BasicProjectExecution.timedInvoke(BasicProjectExecution.java:286)
+	at grader.basics.project.BasicProjectIntrospection.createInstance(BasicProjectIntrospection.java:2309)
+	at grader.basics.project.BasicProjectIntrospection.createInstance(BasicProjectIntrospection.java:2152)
+	at gradingTools.compXYZ.assignment1.testcases.AbstractPointTest.createPoint(AbstractPointTest.java:29)
+	at gradingTools.compXYZ.assignment1.testcases.AbstractPointTest.test(AbstractPointTest.java:39)
+	at gradingTools.compXYZ.assignment1.testcases.PointAngleZeroDegreeTest.test(PointAngleZeroDegreeTest.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at grader.basics.junit.AGradableJUnitTest.test(AGradableJUnitTest.java:267)
+	at grader.basics.junit.AGradableJUnitSuite.open(AGradableJUnitSuite.java:127)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at bus.uigen.reflect.local.AVirtualMethod.methodInvoke(AVirtualMethod.java:270)
+	at bus.uigen.reflect.UnifiedMethod.invoke(UnifiedMethod.java:219)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1444)
+	at bus.uigen.undo.BasicCommand.execute(BasicCommand.java:69)
+	at bus.uigen.undo.AHistoryUndoer.execute(AHistoryUndoer.java:99)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1906)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1701)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1585)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1538)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1531)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1406)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1357)
+	at bus.uigen.editors.TreeAdapter.mouseClicked(TreeAdapter.java:469)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:278)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:277)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6592)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3342)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6354)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2261)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4966)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2319)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4914)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4552)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4484)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2305)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2772)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:772)
+	at java.desktop/java.awt.EventQueue.access$600(EventQueue.java:97)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:721)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:715)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:743)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+java.lang.NullPointerException
+	at java.base/java.util.Hashtable.put(Hashtable.java:475)
+	at util.models.Hashcodetable.put(Hashcodetable.java:15)
+	at grader.basics.project.BasicProjectIntrospection.forceCreateProxy(BasicProjectIntrospection.java:2181)
+	at grader.basics.project.BasicProjectIntrospection.createProxy(BasicProjectIntrospection.java:2196)
+	at grader.basics.project.BasicProjectIntrospection.createInstance(BasicProjectIntrospection.java:2311)
+	at grader.basics.project.BasicProjectIntrospection.createInstance(BasicProjectIntrospection.java:2152)
+	at gradingTools.compXYZ.assignment1.testcases.AbstractPointTest.createPoint(AbstractPointTest.java:29)
+	at gradingTools.compXYZ.assignment1.testcases.AbstractPointTest.test(AbstractPointTest.java:39)
+	at gradingTools.compXYZ.assignment1.testcases.PointAngleZeroDegreeTest.test(PointAngleZeroDegreeTest.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at grader.basics.junit.AGradableJUnitTest.test(AGradableJUnitTest.java:267)
+	at grader.basics.junit.AGradableJUnitSuite.open(AGradableJUnitSuite.java:127)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at bus.uigen.reflect.local.AVirtualMethod.methodInvoke(AVirtualMethod.java:270)
+	at bus.uigen.reflect.UnifiedMethod.invoke(UnifiedMethod.java:219)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1444)
+	at bus.uigen.undo.BasicCommand.execute(BasicCommand.java:69)
+	at bus.uigen.undo.AHistoryUndoer.execute(AHistoryUndoer.java:99)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1906)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1701)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1585)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1538)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1531)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1406)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1357)
+	at bus.uigen.editors.TreeAdapter.mouseClicked(TreeAdapter.java:469)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:278)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:277)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6592)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3342)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6354)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2261)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4966)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2319)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4914)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4552)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4484)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2305)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2772)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:772)
+	at java.desktop/java.awt.EventQueue.access$600(EventQueue.java:97)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:721)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:715)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:743)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+Test Failed:Cartesian Point class not found
+Steps traced since last test:
+I***(BasicProjectClassesManager) finding type by name:gradingTools.compXYZ.assignment1.testcases.Point
+I***(BasicProjectClassesManager) finding type by name:Point
+I***(BasicProjectIntrospection) Looking for unique class matching name null tags [] name regex .*Point.* tag regex null
+I***(BasicProjectClassesManager) finding type by name match:.*Point.*
+I***(BasicProjectIntrospection) Found no class matching descriptor.
+I***(BasicProjectIntrospection) Looking for unique class matching name null tags [Point] name regex null tag regex null
+I***(BasicProjectClassesManager) Finding type by pattern:point
+I***(BasicProjectIntrospection) Found no class matching descriptor.
+I***(BasicProjectIntrospection) Looking for best class matching methods [public abstract void gradingTools.compXYZ.assignment1.testcases.Point.print(), public abstract int gradingTools.compXYZ.assignment1.testcases.Point.getY(), public abstract int gradingTools.compXYZ.assignment1.testcases.Point.getX(), public abstract gradingTools.compXYZ.assignment1.testcases.Point gradingTools.compXYZ.assignment1.testcases.Point.translate(gradingTools.compXYZ.assignment1.testcases.Point,int,int), public abstract double gradingTools.compXYZ.assignment1.testcases.Point.getAngle(), public abstract double gradingTools.compXYZ.assignment1.testcases.Point.getRadius()]
+I***(BasicProjectClassesManager) finding type by name:gradingTools.compXYZ.assignment1.testcases.Point
+I***(BasicProjectClassesManager) finding type by name:Point
+I***(BasicProjectIntrospection) Looking for unique class matching name null tags [] name regex .*Point.* tag regex null
+I***(BasicProjectClassesManager) finding type by name match:.*Point.*
+I***(BasicProjectIntrospection) Found no class matching descriptor.
+I***(BasicProjectIntrospection) Looking for unique class matching name null tags [Point] name regex null tag regex null
+I***(BasicProjectClassesManager) Finding type by pattern:point
+I***(BasicProjectIntrospection) Found no class matching descriptor.
+I***(BasicProjectIntrospection) Looking for best class matching methods [public abstract void gradingTools.compXYZ.assignment1.testcases.Point.print(), public abstract int gradingTools.compXYZ.assignment1.testcases.Point.getY(), public abstract int gradingTools.compXYZ.assignment1.testcases.Point.getX(), public abstract gradingTools.compXYZ.assignment1.testcases.Point gradingTools.compXYZ.assignment1.testcases.Point.translate(gradingTools.compXYZ.assignment1.testcases.Point,int,int), public abstract double gradingTools.compXYZ.assignment1.testcases.Point.getAngle(), public abstract double gradingTools.compXYZ.assignment1.testcases.Point.getRadius()]
+I***(BasicProjectIntrospection) Found type:class testables.java.wrongangle.WALocation
+I***(BasicProjectIntrospection) Found type:class testables.java.wrongangle.WALocation
+I***(BasicProjectExecution) Calling constructor public testables.java.wrongangle.WALocation(int,int)with args:[10, 0]timeOut:2000
+I***(BasicProjectIntrospection) Class instantiation failed:java.lang.NullPointerException
+
+]]></exceptionString>
+  </Command>
+  <Command __id="2126" _type="ShellCommand" date="Sat Aug 24 10:55:26 EDT 2019" timestamp="82849718" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2127" _type="ShellCommand" date="Sat Aug 24 10:55:26 EDT 2019" timestamp="82849864" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2128" _type="RunCommand" date="Sat Aug 24 10:56:03 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="82886991" type="Debug" />
+  <Command __id="2129" _type="RunCommand" date="Sat Aug 24 10:56:03 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="82886991" type="Debug" />
+  <Command __id="2130" _type="RunCommand" date="Sat Aug 24 10:56:03 EDT 2019" kind="HitBreakPoint" projectName="DemoCourseLocalBasicChecks" timestamp="82886991" type="Run" />
+  <Command __id="2131" _type="ShellCommand" date="Sat Aug 24 10:56:51 EDT 2019" timestamp="82934968" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2132" _type="ShellCommand" date="Sat Aug 24 10:57:22 EDT 2019" timestamp="82965593" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2133" _type="EclipseCommand" commandID="org.eclipse.search.ui.openFileSearchPage" date="Sat Aug 24 10:57:22 EDT 2019" timestamp="82965674" />
+  <Command __id="2134" _type="ShellCommand" date="Sat Aug 24 10:57:22 EDT 2019" timestamp="82965928" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2135" _type="ShellCommand" date="Sat Aug 24 10:57:25 EDT 2019" timestamp="82968210" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2137" _type="SelectTextCommand" caretOffset="668" date="Sat Aug 24 10:57:30 EDT 2019" end="668" start="643" timestamp="82974004" />
+  <DocumentChange __id="1914" _type="Delete" date="Sat Aug 24 10:20:35 EDT 2019" docASTNodeCount="120" docActiveCodeLength="835" docExpressionCount="78" docLength="886" endLine="21" length="2" offset="487" repeat="2" startLine="21" timestamp="80758551" timestamp2="80758755">
+    <text><![CDATA[EC]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1918" _type="Insert" date="Sat Aug 24 10:20:36 EDT 2019" docASTNodeCount="120" docActiveCodeLength="837" docExpressionCount="78" docLength="888" length="2" offset="487" repeat="2" timestamp="80759428" timestamp2="80759696">
+    <text><![CDATA[AC]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1927" _type="Delete" date="Sat Aug 24 10:20:49 EDT 2019" docASTNodeCount="120" docActiveCodeLength="835" docExpressionCount="78" docLength="886" endLine="21" length="2" offset="487" repeat="2" startLine="21" timestamp="80772664" timestamp2="80772878">
+    <text><![CDATA[AC]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1931" _type="Insert" date="Sat Aug 24 10:20:50 EDT 2019" docASTNodeCount="120" docActiveCodeLength="837" docExpressionCount="78" docLength="888" length="2" offset="487" repeat="2" timestamp="80773510" timestamp2="80773860">
+    <text><![CDATA[Ts]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1935" _type="Delete" date="Sat Aug 24 10:20:51 EDT 2019" docASTNodeCount="120" docActiveCodeLength="836" docExpressionCount="78" docLength="887" endLine="21" length="1" offset="488" startLine="21" timestamp="80774416">
+    <text><![CDATA[s]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1937" _type="Insert" date="Sat Aug 24 10:20:51 EDT 2019" docASTNodeCount="120" docActiveCodeLength="843" docExpressionCount="78" docLength="894" length="7" offset="488" repeat="7" timestamp="80774568" timestamp2="80775684">
+    <text><![CDATA[estable]]></text>
+  </DocumentChange>
+  <Command __id="1960" _type="FileOpenCommand" date="Sat Aug 24 10:21:11 EDT 2019" docASTNodeCount="240" docActiveCodeLength="1674" docExpressionCount="145" docLength="1798" projectName="DemoCourseLocalBasicChecks" timestamp="80794237">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\testcases\ECAbstractPointTest.java]]></filePath>
+    <snapshot><![CDATA[package testables.java.testcases;
+
+import grader.basics.junit.BasicJUnitUtils;
+import grader.basics.junit.NotesAndScore;
+import grader.basics.project.BasicProjectIntrospection;
+import testables.java.allcorrect.TestablePoint;
+
+import org.junit.Assert;
+
+public abstract class ECAbstractPointTest {
+
+	public static final String ANGLE_TESTS = "Angle Tests";
+	boolean checkStructure;
+
+	TestablePoint point;
+	double fractionComplete = 0.0;
+
+	protected void assertAngle(double aComputed, double aCorrect) {
+		Assert.assertTrue("computedAngle " + aComputed + " != correctAngle " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < 0.1);
+
+	}
+	protected void assertRadius(double aComputed, double aCorrect) {
+		Assert.assertTrue("computedRadius " + aComputed + " != correctRadius " + aCorrect + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, Math.abs(aComputed - aCorrect) < 0.1);
+	}
+	protected abstract void checkComputations (double aComputedAngle, double aComputedRadius, double aCorrectAngle, double aCorrectRadius) ;
+	public void createPoint(int theX, int theY) {
+		point = (TestablePoint) BasicProjectIntrospection.createInstance(
+				TestablePoint.class, new Object[] { theX, theY});
+	}
+	public void test(int theX, int theY, double aCorrectRadius,
+			double aCorrectAngle) {
+		try {
+//			point = (ACreditPoint) BasicProjectIntrospection.createInstance(
+//					ECreditPoint.class, new Object[] { theX, theY});
+			createPoint(theX, theY);
+			double aComputedRadius =  point.getRadius();
+			double aComputedAngle = point.getAngle();
+			checkComputations(aComputedAngle, aComputedRadius, aCorrectAngle, aCorrectRadius);		
+
+		} catch (Exception e) {
+			BasicJUnitUtils.assertTrue(e, fractionComplete);
+		}
+	}
+}
+]]></snapshot>
+  </Command>
+  <Command __id="1964" _type="FileOpenCommand" date="Sat Aug 24 10:21:26 EDT 2019" docASTNodeCount="101" docActiveCodeLength="497" docExpressionCount="67" docLength="501" projectName="DemoCourseLocalBasicChecks" timestamp="80809525">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\testcases\Main.java]]></filePath>
+  </Command>
+  <DocumentChange __id="1968" _type="Delete" date="Sat Aug 24 10:21:31 EDT 2019" docASTNodeCount="101" docActiveCodeLength="495" docExpressionCount="67" docLength="499" endLine="11" length="2" offset="338" repeat="2" startLine="11" timestamp="80814717" timestamp2="80814966">
+    <text><![CDATA[EC]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1972" _type="Insert" date="Sat Aug 24 10:21:32 EDT 2019" docASTNodeCount="101" docActiveCodeLength="503" docExpressionCount="67" docLength="507" length="8" offset="338" repeat="8" timestamp="80815599" timestamp2="80816767">
+    <text><![CDATA[Testable]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1990" _type="Delete" date="Sat Aug 24 10:21:40 EDT 2019" docASTNodeCount="101" docActiveCodeLength="501" docExpressionCount="67" docLength="505" endLine="11" length="2" offset="366" repeat="2" startLine="11" timestamp="80823181" timestamp2="80823446">
+    <text><![CDATA[EC]]></text>
+  </DocumentChange>
+  <DocumentChange __id="1994" _type="Insert" date="Sat Aug 24 10:21:40 EDT 2019" docASTNodeCount="101" docActiveCodeLength="510" docExpressionCount="67" docLength="514" length="9" offset="366" repeat="9" timestamp="80823917" timestamp2="80825752">
+    <text><![CDATA[ATestable]]></text>
+  </DocumentChange>
+  <DocumentChange __id="2018" _type="Insert" date="Sat Aug 24 10:21:48 EDT 2019" docASTNodeCount="109" docActiveCodeLength="561" docExpressionCount="74" docLength="565" length="51" offset="62" repeat="2" timestamp="80832016" timestamp2="80832016">
+    <text><![CDATA[
+
+import testables.java.allcorrect.TestablePoint;]]></text>
+  </DocumentChange>
+  <DocumentChange __id="2026" _type="Delete" date="Sat Aug 24 10:21:53 EDT 2019" docASTNodeCount="109" docActiveCodeLength="557" docExpressionCount="74" docLength="561" endLine="4" length="4" offset="62" startLine="2" timestamp="80836876">
+    <text><![CDATA[
+
+]]></text>
+  </DocumentChange>
+  <DocumentChange __id="2027" _type="Insert" date="Sat Aug 24 10:21:53 EDT 2019" docASTNodeCount="117" docActiveCodeLength="620" docExpressionCount="81" docLength="624" length="63" offset="62" repeat="3" timestamp="80836877" timestamp2="80836878">
+    <text><![CDATA[
+
+import testables.java.allcorrect.ATestableCartesianPoint;
+]]></text>
+  </DocumentChange>
+  <Command __id="2037" _type="FileOpenCommand" date="Sat Aug 24 10:22:22 EDT 2019" docASTNodeCount="120" docActiveCodeLength="843" docExpressionCount="78" docLength="894" projectName="DemoCourseLocalBasicChecks" timestamp="80865702">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\testcases\ECPointTranslationTest.java]]></filePath>
+    <snapshot><![CDATA[package testables.java.testcases;
+
+import grader.basics.junit.BasicJUnitUtils;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ECPointTranslationTest extends ECAbstractPointTest{
+
+	@Override
+	protected void checkComputations(double aComputedAngle,
+			double aComputedRadius, double aCorrectAngle, double aCorrectRadius) {
+		// TODO Auto-generated method stub
+		
+	}
+	// all or nothing
+	@Test
+	public void test() {
+		try {
+			
+			createPoint(5, 10);
+			TestablePoint retVal = point.translate(point, 5, 10);
+			int actualX = retVal.getX();
+			int actualY = retVal.getY();
+			Assert.assertTrue(
+					"X property " +  actualX +  " is not equal to 10 or " +						
+					"Y property " + actualY + " is not equal to 20 ",					
+					actualX == 10 && actualY == 20) ;
+		} catch (Exception e) {
+			BasicJUnitUtils.assertTrue(e, fractionComplete);
+		}
+	}
+
+}
+]]></snapshot>
+  </Command>
+  <DocumentChange __id="2044" _type="Insert" date="Sat Aug 24 10:22:32 EDT 2019" docASTNodeCount="128" docActiveCodeLength="892" docExpressionCount="85" docLength="943" length="49" offset="80" repeat="2" timestamp="80875766" timestamp2="80875767">
+    <text><![CDATA[
+import testables.java.allcorrect.TestablePoint;]]></text>
+  </DocumentChange>
+  <Command __id="2061" _type="FileOpenCommand" date="Sat Aug 24 10:24:04 EDT 2019" docASTNodeCount="1390" docActiveCodeLength="11547" docExpressionCount="908" docLength="18769" projectName="GraderBasics" timestamp="80967984">
+    <filePath><![CDATA[D:\dewan_backup\Java\GraderBasics\src\grader\basics\project\BasicProject.java]]></filePath>
+    <snapshot><![CDATA[package grader.basics.project;
+
+import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.config.BasicConfigurationManagerSelector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.execution.BasicProcessRunner;
+import grader.basics.execution.NotRunnableException;
+import grader.basics.execution.RunningProject;
+import grader.basics.settings.BasicGradingEnvironment;
+import grader.basics.trace.BinaryFolderMade;
+import grader.basics.trace.BinaryFolderNotFound;
+import grader.basics.trace.ProjectFolderNotFound;
+import grader.basics.trace.SourceFolderAssumed;
+import grader.basics.trace.SourceFolderNotFound;
+import grader.basics.util.DirectoryUtils;
+import grader.basics.util.Option;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import util.pipe.InputGenerator;
+import util.trace.TraceableLog;
+import util.trace.TraceableLogFactory;
+import util.trace.Tracer;
+//import scala.Option;
+
+/**
+ * A "standard" project. That is, an IDE-based java project.
+ */
+public class BasicProject implements Project {
+    
+	protected boolean isInfinite;
+    protected File projectFolder;
+    protected File sourceFolder;
+    protected Option<ClassesManager> classesManager;
+    protected TraceableLog traceableLog;
+    protected boolean noSrc;
+    protected String sourceFilePattern = null;
+    protected File buildFolder;
+    protected File objectFolder;
+//    protected SakaiProject project;
+
+    
+	/**
+     * Basic constructor
+     *
+     * @param aDirectory The location of the project
+     * @param name      The name of the project, such as "Assignment1"
+     * @throws FileNotFoundException
+     */
+//    public StandardProject(File directory, String name) throws FileNotFoundException {
+//        // Find the folder. We could be there or it could be in a different folder
+//    	if (directory == null) return;
+//        Option<File> src = DirectoryUtils.locateFolder(directory, "src");
+//        if (src.isEmpty()) {
+//          throw new FileNotFoundException("No src folder");
+////
+////        	noSrc = true;
+////        	sourceFolder = directory;
+////        	this.directory = sourceFolder;
+//        } else {
+//        sourceFolder = src.get();
+//        this.directory = src.get().getParentFile();
+//        }
+//
+//        try {
+//            File sourceFolder = new File(this.directory, "src");
+//            File buildFolder = getBuildFolder("main." + name);
+//            classesManager = Option.apply((ClassesManager) new ProjectClassesManager(buildFolder, sourceFolder));
+//        } catch (Exception e) {
+//            classesManager = Option.empty();
+//        }
+//
+//        // Create the traceable log
+//        traceableLog = TraceableLogFactory.getTraceableLog();
+//
+//    }
+//	public StandardProject(SakaiProject project, File aDirectory, String name) throws FileNotFoundException {
+//		
+//	}
+    protected void setProject (Object aProject) {
+    	
+    }
+    public BasicProject(String aSourceFilePattern) throws FileNotFoundException {
+    	this (null,  new File("."), null, aSourceFilePattern);
+    }
+    protected void searchForSourceAndProjectFolder() throws FileNotFoundException {
+    	
+
+//        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
+        Option<File> src = DirectoryUtils.locateFolder(projectFolder, Project.SOURCE);
+
+        if (src.isEmpty()) {
+        	SourceFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
+
+        	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(projectFolder, sourceFilePattern);
+        	if (!sourceFiles.isEmpty()) {
+                    File aSourceFile = sourceFiles.iterator().next();
+                    sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
+                    this.projectFolder = sourceFolder.getParentFile();
+                    SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
+        	} else {
+                    ProjectFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
+                    throw new FileNotFoundException("No source files found");
+        	}
+        	noSrc = true;
+//                throw new FileNotFoundException("No src folder");
+//        	sourceFolder = aDirectory;
+//        	this.directory = sourceFolder;
+        } else {
+            sourceFolder = src.get();
+            this.projectFolder = src.get().getParentFile();
+        }
+    }
+    // rewriting Josh's code
+    // going back to Josh';s code
+    public BasicProject(Object aProject, File aDirectory, String name, String aSourceFilePattern) throws FileNotFoundException {
+        // Find the folder. We could be there or it could be in a different folder
+//    	File anActualDirectory = aDirectory;
+//    	boolean aNeedToSearchForProject = true;
+    	if (aDirectory == null) { 
+//    		String aLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
+//            if (aLocation != null) {
+//            	aNeedToSearchForProject = false;
+//            } else {
+//            	aLocation = ".";
+//            }
+//            aDirectory = new File(aLocation);
+    		throw new FileNotFoundException("No directory given");
+        }
+    	sourceFilePattern = aSourceFilePattern;
+    	setProject(aProject);
+    	
+    	// will do this in standardproject
+//    	project = aProject;
+//    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
+//    	BasicConfigurationManagerSelector.getConfigurationManager().setProjectDirectory(aDirectory);
+
+    	projectFolder = aDirectory;
+//        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
+//        Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
+//
+//        if (src.isEmpty()) {
+//        	SourceFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
+//
+//        	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(aDirectory, sourceFilePattern);
+//        	if (!sourceFiles.isEmpty()) {
+//                    File aSourceFile = sourceFiles.iterator().next();
+//                    sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
+//                    this.directory = sourceFolder.getParentFile();
+//                    SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
+//        	} else {
+//                    ProjectFolderNotFound.newCase(aDirectory.getAbsolutePath(), this).getMessage();
+//                    throw new FileNotFoundException("No source files found");
+//        	}
+//        	noSrc = true;
+////                throw new FileNotFoundException("No src folder");
+////        	sourceFolder = aDirectory;
+////        	this.directory = sourceFolder;
+//        } else {
+//            sourceFolder = src.get();
+//            this.directory = src.get().getParentFile();
+//        }
+        searchForSourceAndProjectFolder();
+
+        try {
+//            File sourceFolder = new File(this.directory, "src");
+        	 String aBinaryFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBinaryFolderLocation();
+        	 if (aBinaryFolderLocation != null) {
+        		 Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, aBinaryFolderLocation);
+        		 if (anOption != null && !anOption.isEmpty()) {
+        			 buildFolder = anOption.get();
+        		 }
+        	 } 
+        	 if (buildFolder == null) {
+        		 buildFolder = getBuildFolder("main." + name);
+        	 }
+        	 String anObjectFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getObjectFolderLocation();
+        	 if (anObjectFolderLocation != null) {
+        		 Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, anObjectFolderLocation);
+        		 if (anOption != null && !anOption.isEmpty()) {
+        			 objectFolder = anOption.get();
+        		 }
+        	 } 
+        	 if (objectFolder == null) {
+        		 objectFolder = buildFolder;
+        	 }
+        	
+//         	CurrentProjectHolder.setProject(this); // so that classesManager can find it
+
+             classesManager = createClassesManager(buildFolder);
+
+        
+        } catch (Exception e) {
+        	e.printStackTrace();
+            classesManager = Option.empty();
+        }
+
+        // Create the traceable log
+        traceableLog = TraceableLogFactory.getTraceableLog();
+    }
+    protected Option<ClassesManager> createClassesManager(File buildFolder) throws ClassNotFoundException, IOException {
+//        classesManager = Option.apply((ClassesManager) new ProjectClassesManager(project, buildFolder, sourceFolder));
+
+       return Option.apply((ClassesManager) new BasicProjectClassesManager(this, null, buildFolder, sourceFolder, sourceFilePattern));
+
+    }
+    protected Option<File> out;
+    protected Option<File> bin;
+    protected Map<String, File> preferredClassToBuildFolder = new HashMap(); // wonder if it will ever have more than one entry
+    /**
+     * Caching version of Josh's code
+     * This figures out where the build folder is, taking into account variations due to IDE
+     *
+     * @param preferredClass The name of the class that has the main method, such as "main.Assignment1"
+     * @return The build folder
+     * @throws FileNotFoundException
+     */
+    public File getBuildFolder(String preferredClass) throws FileNotFoundException {
+    	  File retVal = preferredClassToBuildFolder.get(preferredClass);
+    	  if (retVal == null) {
+    		  retVal = searchBuildFolder(preferredClass);
+    		  if (retVal == null)
+    			  return null;
+    		  preferredClassToBuildFolder.put(preferredClass, retVal);
+    	  }
+    	  return retVal;
+    }
+    
+    protected File searchBuildFolder(String preferredClass) throws FileNotFoundException {
+  	   for (String aBinary:Project.BINARIES) {
+  		   bin = DirectoryUtils.locateFolder(projectFolder, aBinary);
+  		   if (bin != null && !bin.isEmpty())
+  			   break;
+  	   }
+//        if (out == null)
+//  	  out = DirectoryUtils.locateFolder(directory, Project.BINARY_2);
+//
+//
+//      
+//
+//        if (bin == null)
+//      bin = DirectoryUtils.locateFolder(directory,  Project.BINARY_0); // just to handle grader itself, as it has execuot.c
+//      if (bin.isEmpty())
+//      	bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
+
+
+
+
+      // If there is no 'out' or 'bin' folder then give up
+//      if (out.isEmpty() && bin.isEmpty()) {
+      if (bin == null || bin.isEmpty()) {
+
+      	if (noSrc) {
+                  return sourceFolder;
+              } 
+//          throw new FileNotFoundException();
+      	BinaryFolderNotFound.newCase(projectFolder.getAbsolutePath(), this);
+      	File retVal = new File(projectFolder, Project.BINARY);
+      	retVal.mkdirs();
+//      	project.getClassLoader().setBinaryFileSystemFolderName(retVal.getAbsolutePath());
+      	BinaryFolderMade.newCase(retVal.getAbsolutePath(), this);
+      	return retVal.getAbsoluteFile();
+      	
+      } else {
+          // There can be more folders under it, so look around some more
+          // But first check the class name to see what we are looking for
+          File dir = null;
+//          if (out.isDefined()) {
+//              dir = out.get();
+//          }
+          if (bin.isDefined()) {
+              dir = bin.get();
+          }
+          if (preferredClass == null || preferredClass.isEmpty()) {
+              return dir;
+          }
+
+          if (preferredClass.contains(".")) {
+              Option<File> packageDir = DirectoryUtils.locateFolder(dir, preferredClass.split("\\.")[0]);
+              if (packageDir.isDefined()) {
+                  return packageDir.get().getParentFile();
+              } else {
+                  return dir;
+              }
+          } else {
+              return dir;
+          }
+      }
+  }
+    
+    /**
+     * This figures out where the build folder is, taking into account variations due to IDE
+     *
+     * @param preferredClass The name of the class that has the main method, such as "main.Assignment1"
+     * @return The build folder
+     * @throws FileNotFoundException
+     */
+    @Deprecated
+    public File getNonCachingBuildFolder(String preferredClass) throws FileNotFoundException {
+//        Option<File> out = DirectoryUtils.locateFolder(directory, "out");
+        Option<File> anOut = DirectoryUtils.locateFolder(projectFolder, Project.BINARY_2);
+//        if (out.isEmpty())
+//        	out = DirectoryUtils.locateFolder(directory, Project.BINARY_0);
+
+        
+
+//        Option<File> bin = DirectoryUtils.locateFolder(directory, "bin");
+        Option<File> aBin = DirectoryUtils.locateFolder(projectFolder,  Project.BINARY_0); // just to handle grader itself, as it has execuot.c
+        if (aBin.isEmpty())
+//        Option<File> bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
+        	aBin = DirectoryUtils.locateFolder(projectFolder,  Project.BINARY);
+
+
+
+
+        // If there is no 'out' or 'bin' folder then give up
+        if (anOut.isEmpty() && aBin.isEmpty()) {
+        	if (noSrc) {
+                    return sourceFolder;
+                } 
+//            throw new FileNotFoundException();
+        	BinaryFolderNotFound.newCase(projectFolder.getAbsolutePath(), this);
+        	File retVal = new File(projectFolder, Project.BINARY);
+        	retVal.mkdirs();
+//        	project.getClassLoader().setBinaryFileSystemFolderName(retVal.getAbsolutePath());
+        	BinaryFolderMade.newCase(retVal.getAbsolutePath(), this);
+        	return retVal.getAbsoluteFile();
+        	
+        } else {
+            // There can be more folders under it, so look around some more
+            // But first check the class name to see what we are looking for
+            File dir = null;
+            if (anOut.isDefined()) {
+                dir = anOut.get();
+            }
+            if (aBin.isDefined()) {
+                dir = aBin.get();
+            }
+            if (preferredClass == null || preferredClass.isEmpty()) {
+                return dir;
+            }
+
+            if (preferredClass.contains(".")) {
+                Option<File> packageDir = DirectoryUtils.locateFolder(dir, preferredClass.split("\\.")[0]);
+                if (packageDir.isDefined()) {
+                    return packageDir.get().getParentFile();
+                } else {
+                    return dir;
+                }
+            } else {
+                return dir;
+            }
+        }
+    }
+
+    @Override
+    public TraceableLog getTraceableLog() {
+        return traceableLog;
+    }
+
+    @Override
+    public RunningProject start(String input) throws NotRunnableException {
+//        return new ReflectionRunner(this).run(input);
+    	return null; // should not be called
+    }
+
+    @Override
+    public RunningProject launch(String input) throws NotRunnableException {
+        return new BasicProcessRunner(this).run(input);
+    }
+
+//    @Override
+//    public RunningProject start(String input, int timeout) throws NotRunnableException {
+//        return new ReflectionRunner(this).run(input, timeout);
+//    }
+
+    @Override
+    public RunningProject launch(InputGenerator anOutputBasedInputGenerator, String input, int timeout) throws NotRunnableException {
+        return new BasicProcessRunner(this).run(anOutputBasedInputGenerator, input, timeout);
+    }
+    @Override
+    public RunningProject launch(InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput, int timeout) throws NotRunnableException {
+        return new BasicProcessRunner(this).run(anOutputBasedInputGenerator, aProcessToInput, timeout);
+    }
+    
+    @Override
+    public RunningProject launch( String input, int timeout) throws NotRunnableException {
+        return new BasicProcessRunner(this).run(input, timeout);
+    }
+    @Override
+    public RunningProject launch( String input, String[] anArgs, int timeout) throws NotRunnableException {
+        return new BasicProcessRunner(this).run(input, anArgs, timeout);
+    }
+//
+    @Override
+    public RunningProject launchInteractive() throws NotRunnableException {
+    	return null; // should not be called
+//    	ARunningProject retVal = new InteractiveConsoleProcessRunner(this).run("");
+////    	retVal.createFeatureTranscript();
+//    	return retVal;
+////        return new InteractiveConsoleProcessRunner(this).run("");
+    }
+//    @Override
+//    public RunningProject launchInteractive(String[] args) throws NotRunnableException {
+//    	ARunningProject retVal = new InteractiveConsoleProcessRunner(this).run("", args);
+////    	retVal.createFeatureTranscript();
+//    	return retVal;
+////        return new InteractiveConsoleProcessRunner(this).run("");
+//    }
+
+    @Override
+    public Option<ClassesManager> getClassesManager() {
+        return classesManager;
+    }
+
+    @Override
+    public File getSourceFolder() {
+        return sourceFolder;
+    }
+    public String toString() {
+    	return sourceFolder + " :" + sourceFilePattern;
+    }
+    public static void main (String[] args) {
+    	try {
+			BasicGradingEnvironment.get().setLoadClasses(true);
+//			Project aProject = new BasicProject(null, new File("."), null);
+			Project anAllCorrectProject = new BasicProject(null, new File("."), null, "allcorrect");
+
+			Class anAllCorrectClass = BasicProjectIntrospection.findClass(anAllCorrectProject, "ACartesianPoint");
+			System.out.println ("An all correct" + anAllCorrectClass);
+			Project aWrongAngleProject = new BasicProject(null, new File("."), null, "wrongangle");
+
+			Class aWrongAngleClass = BasicProjectIntrospection.findClass(anAllCorrectProject, "ACartesianPoint");
+			System.out.println ("A wrong" + aWrongAngleClass);
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    @Override
+    public boolean isInfinite() {
+    	return isInfinite;
+    }
+    @Override
+    public void setInfinite(boolean newVal) {
+    	isInfinite = newVal;
+    }
+    @Override
+    public File getProjectFolder() {
+    	return projectFolder;
+    }
+    @Override
+    public File getBuildFolder() {
+		return buildFolder;
+	}
+    @Override
+    public File getObjectFolder() {
+		return objectFolder;
+	}
+}
+]]></snapshot>
+  </Command>
+  <Command __id="2104" _type="FileOpenCommand" date="Sat Aug 24 10:53:32 EDT 2019" docASTNodeCount="228" docActiveCodeLength="1272" docExpressionCount="144" docLength="1473" projectName="DemoCourseLocalBasicChecks" timestamp="82735746">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\allcorrect\ATestableCartesianPoint.java]]></filePath>
+    <snapshot><![CDATA[package testables.java.allcorrect;
+
+import util.annotations.Explanation;
+import util.annotations.Tags;
+import bus.uigen.ObjectEditor;
+@Explanation("Uses Cartesian representation.")
+@Tags({"cartesian", "point"})
+public class ATestableCartesianPoint implements TestablePoint {	
+	protected int x, y;
+	public ATestableCartesianPoint(int theX, int theY) {
+		x = theX;
+		y = theY;
+	}
+	public ATestableCartesianPoint(double theRadius, double theAngle) {
+		x =  (int) (theRadius*Math.cos(theAngle));
+		y = (int) (theRadius*Math.sin(theAngle));
+	}
+	public int getX() { return x; }
+	public int getY() { return y; } 	
+	public double getAngle() { 
+		return Math.atan2(y, x); 
+//		return 0;
+	}
+	@Tags({"radius", "getter"})	
+	public double getRadius() { 
+		return Math.sqrt(x*x + y*y); 
+//		return 0;
+	}
+//	@Override
+//	public void print (String aString, ACPoint aPoint) {
+//		System.out.println (aString + aPoint.getX() + " " + aPoint.getY());
+//	}
+	public void print () {
+		System.out.println ("X: " + x + " Y:" + y);
+	}
+	@Override
+	public TestablePoint translate (TestablePoint aPoint, int anXDelta, int aYDelta) {
+		return new ATestableCartesianPoint (aPoint.getX() + anXDelta, aPoint.getY() + aYDelta);
+	}
+	public static void main(String args[]) {
+		TestablePoint point =  new ATestableCartesianPoint (50, 100);
+//		ObjectEditor.edit(point);
+		point = new ATestableCartesianPoint(100, Math.PI/4);
+		ObjectEditor.edit(point);
+//		
+	}
+}
+]]></snapshot>
+  </Command>
+  <Command __id="2108" _type="FileOpenCommand" date="Sat Aug 24 10:53:49 EDT 2019" docASTNodeCount="111" docActiveCodeLength="655" docExpressionCount="60" docLength="1054" projectName="DemoCourseLocalBasicChecks" timestamp="82752191">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\missingcode\MCCartesianPoint.java]]></filePath>
+  </Command>
+  <Command __id="2110" _type="FileOpenCommand" date="Sat Aug 24 10:54:04 EDT 2019" docASTNodeCount="228" docActiveCodeLength="1272" docExpressionCount="144" docLength="1473" projectName="DemoCourseLocalBasicChecks" timestamp="82767804">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\allcorrect\ATestableCartesianPoint.java]]></filePath>
+  </Command>
+  <Command __id="2112" _type="FileOpenCommand" date="Sat Aug 24 10:54:24 EDT 2019" docASTNodeCount="111" docActiveCodeLength="655" docExpressionCount="60" docLength="1054" projectName="DemoCourseLocalBasicChecks" timestamp="82787155">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\missingcode\MCCartesianPoint.java]]></filePath>
+  </Command>
+  <Command __id="2116" _type="FileOpenCommand" date="Sat Aug 24 10:54:33 EDT 2019" docASTNodeCount="127" docActiveCodeLength="694" docExpressionCount="71" docLength="1017" projectName="DemoCourseLocalBasicChecks" timestamp="82796838">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\testables\java\wrongangle\WALocation.java]]></filePath>
+  </Command>
+  <Command __id="2136" _type="FileOpenCommand" date="Sat Aug 24 10:57:30 EDT 2019" docASTNodeCount="390" docActiveCodeLength="3185" docExpressionCount="242" docLength="10443" projectName="GraderBasics" timestamp="82973863">
+    <filePath><![CDATA[D:\dewan_backup\Java\GraderBasics\src\grader\basics\execution\ABasicMainClassFinder.java]]></filePath>
+    <snapshot><![CDATA[package grader.basics.execution;
+
+
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.BasicProjectIntrospection;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+//import grader.project.Project;
+//import framework.project.ClassDescription;
+//import framework.project.ClassesManager;
+//import framework.project.Project;
+
+public class ABasicMainClassFinder implements MainClassFinder {
+    public static final String DEFAULT_MAIN_PACKAGE_NAME = "main";
+    
+    protected boolean isEntryPoint (String aCandidate,
+    		grader.basics.project.Project aProject
+//    		framework.project.ClassesManager manager
+    		) {
+    	if (aCandidate == null)
+    		return false;
+    	Class aCandidateClass = BasicProjectIntrospection.findClass(aProject, aCandidate);
+    	if (aCandidateClass == null) {
+    		return false;
+    	}
+    	try {
+    	Method method = aCandidateClass.getMethod("main", String[].class);
+		return method != null;
+
+    	} catch (NoSuchMethodException e) {
+    		return false;
+    	}
+		
+//    	for (framework.project.ClassDescription description : manager.getClassDescriptions()) {
+//			try {
+//				if (!description.getJavaClass().getCanonicalName().equals(aCandidate))
+//					continue;
+//				Method method = description.getJavaClass().getMethod("main", String[].class);
+//				
+//				return method != null;
+//				
+////				return description.getJavaClass().getCanonicalName();
+////				return description.getJavaClass().getCanonicalName();
+//
+//			} catch (NoSuchMethodException e) {
+//				return false;
+//			}
+//		}
+//    	return false;
+    	
+    }
+    
+//    protected List<String> getEntryPoints(ProxyClassLoader aLoader, Project project) throws NotRunnableException {
+//		if (project.getClassesManager() == null)
+//			throw new NotRunnableException();
+//		List<String> entryPoints = new ArrayList();
+//	
+//
+//		ClassesManager manager = project.getClassesManager();
+////		String aCandidate = StaticConfigurationUtils.getEntryPoint();
+////		if (isEntryPoint(aCandidate, manager)) {
+////			entryPoints.add(aCandidate);
+////			return entryPoints;
+////		}
+//		for (ClassDescription description : manager.getClassDescriptions()) {
+//			try {
+//				description.getJavaClass().getMethod("main", String[].class);
+//				entryPoints.add(description.getJavaClass().getCanonicalName());
+//				return entryPoints;
+////				return description.getJavaClass().getCanonicalName();
+////				return description.getJavaClass().getCanonicalName();
+//
+//			} catch (NoSuchMethodException e) {
+//				// Move along
+//			}
+//		}
+//		throw new NotRunnableException();
+//	}
+    protected void setEntryPoints(grader.basics.project.Project project, Map<String, String> anEntryPoints) {
+//      ProjectWrapper projectWrapper = (ProjectWrapper) project;
+//      projectWrapper.getProject().setEntryPoints(anEntryPoints);
+
+
+    }
+    /**
+     * This figures out what class is the "entry point", or, what class has main(args)
+     * @param project The project to run
+     * @return The class canonical name. i.e. "foo.bar.SomeClass"
+     * @throws grader.basics.execution.NotRunnableException
+     * @see grader.basics.execution.ABasicMainClassFinder which repeats this code (sigh)
+     * Both need to be kept consistent
+     * Checks if specified main class exists and has a main method, unlike the C checker
+     */
+    public Map<String, String> getEntryPoints(grader.basics.project.Project project, String aSpecifiedMainClass) throws NotRunnableException {
+    	return getEntryPoints(project, new String[] {aSpecifiedMainClass});
+ //        if (project.getClassesManager().isEmpty())
+//            throw new NotRunnableException();
+////        ProjectWrapper projectWrapper = (ProjectWrapper) project;
+//		Map<String, String> entryPoints = new HashMap();
+//
+////        framework.project.ClassesManager manager = project.getClassesManager().get();
+//        
+////        String aCandidate = StaticConfigurationUtils.getEntryPoint();
+//        String aCandidate = aSpecifiedMainClass;
+//        if (aCandidate != null) {
+////        	if (isEntryPoint(aCandidate, manager))  {
+//            if (isEntryPoint(aCandidate, project))  {
+//
+//        		entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+//        		return entryPoints;
+//        	}
+//        }
+////		if (isEntryPoint(aCandidate, manager)) {
+//		if (isEntryPoint(aCandidate, project)) {
+//
+//			entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+//			return entryPoints;
+//		}
+//        grader.basics.project.ClassesManager manager = project.getClassesManager().get();
+//
+//        for (grader.basics.project.ClassDescription description : manager.getClassDescriptions()) {
+//            try {
+//                description.getJavaClass().getMethod("main", String[].class);
+//                entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, description.getJavaClass().getCanonicalName());
+////                projectWrapper.getProject().setEntryPoints(entryPoints);
+//                setEntryPoints(project, entryPoints);
+//                return entryPoints;
+////                return description.getJavaClass().getCanonicalName();
+//            } catch (NoSuchMethodException e) {
+//            }
+//        }
+//        throw new NotRunnableException();
+    }
+    /**
+     * This figures out what class is the "entry point", or, what class has main(args)
+     * @param project The project to run
+     * @return The class canonical name. i.e. "foo.bar.SomeClass"
+     * @throws grader.basics.execution.NotRunnableException
+     * @see grader.basics.execution.ABasicMainClassFinder which repeats this code (sigh)
+     * Both need to be kept consistent
+     */
+    @Override
+    public Map<String, String> getEntryPoints(grader.basics.project.Project project, String[] aSpecifiedMainClasses) throws NotRunnableException {
+        if (project.getClassesManager().isEmpty())
+            throw new NotRunnableException();
+//        ProjectWrapper projectWrapper = (ProjectWrapper) project;
+		Map<String, String> entryPoints = new HashMap();
+
+//        framework.project.ClassesManager manager = project.getClassesManager().get();
+        
+//        String aCandidate = StaticConfigurationUtils.getEntryPoint();
+        for (String aCandidate:aSpecifiedMainClasses) {
+            if (isEntryPoint(aCandidate, project))  {
+
+        		entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+        		return entryPoints;
+        	}
+        }
+////		if (isEntryPoint(aCandidate, manager)) {
+//		if (isEntryPoint(aCandidate, project)) {
+//
+//			entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, aCandidate);
+//			return entryPoints;
+//		}
+        
+        grader.basics.project.ClassesManager manager = project.getClassesManager().get();
+        /*
+         * we are basically returnin the first one that matches
+         */
+        for (grader.basics.project.ClassDescription description : manager.getClassDescriptions()) {
+            try {
+                description.getJavaClass().getMethod("main", String[].class);
+                entryPoints.put(BasicProcessRunner.MAIN_ENTRY_POINT, description.getJavaClass().getCanonicalName());
+//                projectWrapper.getProject().setEntryPoints(entryPoints);
+                setEntryPoints(project, entryPoints);
+                return entryPoints;
+//                return description.getJavaClass().getCanonicalName();
+            } catch (NoSuchMethodException e) {
+            }
+        }
+        throw new NotRunnableException();
+    }
+    protected List<String> defaultCommand;
+	@Override
+	public List<String> getDefaultCommand() {
+		if (defaultCommand == null) {
+//			return BasicStaticConfigurationUtils.getBasicCommand();
+			return BasicStaticConfigurationUtils.DEFAULT_JAVA_BASIC_COMMAND;
+
+		} else {
+			return defaultCommand;
+		}
+	}
+    // Wwhy do we need this?
+	@Override
+	public void setDefaultCommand(List<String> aCommand) {
+		defaultCommand = aCommand;
+	}
+    
+//    public Class nonPackagedMainClass ( ProxyClassLoader aProxyClassLoader, Project aProject) {
+//    	try {
+//			return  aProxyClassLoader.loadClass(getEntryPoints(aProxyClassLoader, aProject).get(0));
+//		} catch (ClassNotFoundException e1) {
+//			
+//			e1.printStackTrace();
+//			return null;
+//		} catch (NotRunnableException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//			return null;
+//		}
+//    }
+//    
+//
+//    public Class mainClass(RootCodeFolder aRootCodeFolder, ProxyClassLoader aProxyClassLoader, String expectedName, Project aProject) {
+//        
+//    	
+//    	String binaryFolderName = aRootCodeFolder.getBinaryProjectFolderName();
+//        String mainFolderName = binaryFolderName + "/" + DEFAULT_MAIN_PACKAGE_NAME;
+//        List<FileProxy> mainBinaryChildren = aRootCodeFolder.getRootFolder().getChildrenOf(
+//                mainFolderName);
+//        if (mainBinaryChildren.size() != 1) {
+//        	return  nonPackagedMainClass(aProxyClassLoader, aProject);
+//        }
+//
+//        else if (mainBinaryChildren.size() == 1) {
+//            String mainClassAbsoluteFileName = mainBinaryChildren.get(0).getMixedCaseAbsoluteName();
+//            String classFileName = Common.absoluteNameToLocalName(mainClassAbsoluteFileName);
+//            int dotIndex = classFileName.indexOf('.');
+//            String className = classFileName.substring(0, dotIndex);
+//
+//            String mainClassFileName = DEFAULT_MAIN_PACKAGE_NAME + "." + className;
+//            try {
+//                return aProxyClassLoader.loadClass(mainClassFileName);
+//            } catch (ClassNotFoundException e) {
+//            	// not sure of this makes sense
+//            	return  nonPackagedMainClass(aProxyClassLoader, aProject);
+////                try {
+////					return  aProxyClassLoader.loadClass(getEntryPoint(aProject));
+////				} catch (ClassNotFoundException e1) {
+////					
+////					e1.printStackTrace();
+////					return null;
+////				} catch (NotRunnableException e1) {
+////					// TODO Auto-generated catch block
+////					e1.printStackTrace();
+////					return null;
+////				}
+//            }
+//        }
+//
+//        return null;
+//    }
+
+}
+]]></snapshot>
+  </Command>
+  <Command __id="2138" _type="ShellCommand" date="Sat Aug 24 10:57:41 EDT 2019" timestamp="82984921" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2139" _type="ShellCommand" date="Sat Aug 24 10:57:44 EDT 2019" timestamp="82987923" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2140" _type="EclipseCommand" commandID="org.eclipse.search.ui.openFileSearchPage" date="Sat Aug 24 10:57:44 EDT 2019" timestamp="82987953" />
+  <Command __id="2141" _type="ShellCommand" date="Sat Aug 24 10:57:44 EDT 2019" timestamp="82988074" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2142" _type="ShellCommand" date="Sat Aug 24 10:58:50 EDT 2019" timestamp="83053931" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2143" _type="MoveCaretCommand" caretOffset="643" date="Sat Aug 24 11:01:53 EDT 2019" docOffset="810" timestamp="83237076" />
+  <Command __id="2158" _type="FileOpenCommand" date="Sat Aug 24 11:04:51 EDT 2019" docASTNodeCount="102" docActiveCodeLength="705" docExpressionCount="78" docLength="1087" projectName="DemoCourseLocalBasicChecks" timestamp="83414296">
+    <filePath><![CDATA[D:\dewan_backup\Java\DemoCourseLocalBasicChecks\src\gradingTools\compXYZ\assignment1\testcases\autoproxyreference\AnAutoPointProxy.java]]></filePath>
+    <snapshot><![CDATA[package gradingTools.compXYZ.assignment1.testcases.autoproxyreference;
+
+
+//import org.junit.Test;
+import grader.basics.project.BasicProjectIntrospection;
+import gradingTools.compXYZ.assignment1.testcases.directreference.ADirectPointProxy;
+import gradingTools.compXYZ.assignment1.testcases.multi.MultiPoint;
+import gradingTools.compXYZ.assignment1.testcases.multi.MultiPointProxy;
+//import gradingTools.testables.comp999junit.assignment1.wrongangle.ACartesianPoint;
+//import gradingTools.testables.comp999junit.assignment1.wrongangle.Point;
+import util.annotations.MaxValue;
+
+@MaxValue(6)
+//@Explanation("Radius and Angle Correctly Computed")
+//@Group(CartesianPointSuite.ANGLE_TESTS)
+public class AnAutoPointProxy extends ADirectPointProxy implements MultiPointProxy{	
+	@Override
+	protected MultiPoint instantiatePoint(int theX, int theY) {
+		return (MultiPoint) BasicProjectIntrospection.createInstance(MultiPoint.class, new Object[] { theX, theY});
+
+//		return (Point) ProjectIntrospection.createInstance(ACartesianPoint.class, new Object[] { theX, theY});
+	}
+}
+]]></snapshot>
+  </Command>
+  <Command __id="2159" _type="SelectTextCommand" caretOffset="156" date="Sat Aug 24 11:04:51 EDT 2019" end="156" start="131" timestamp="83414432" />
+  <Command __id="2160" _type="MoveCaretCommand" caretOffset="131" date="Sat Aug 24 11:04:53 EDT 2019" docOffset="131" timestamp="83416371" />
+  <Command __id="2161" _type="FileOpenCommand" date="Sat Aug 24 11:04:54 EDT 2019" docASTNodeCount="8719" docActiveCodeLength="58772" docExpressionCount="5267" docLength="79387" projectName="GraderBasics" timestamp="83417576">
+    <filePath><![CDATA[D:\dewan_backup\Java\GraderBasics\src\grader\basics\project\BasicProjectIntrospection.java]]></filePath>
+  </Command>
+  <Command __id="2162" _type="EclipseCommand" commandID="org.eclipse.jdt.ui.edit.text.java.open.editor" date="Sat Aug 24 11:04:54 EDT 2019" timestamp="83417657" />
+  <Command __id="2163" _type="SelectTextCommand" caretOffset="138" date="Sat Aug 24 11:04:54 EDT 2019" end="138" start="113" timestamp="83417723" />
+  <Command __id="2164" _type="ShellCommand" date="Sat Aug 24 11:05:00 EDT 2019" timestamp="83423811" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2165" _type="ShellCommand" date="Sat Aug 24 11:05:16 EDT 2019" timestamp="83439796" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2166" _type="MoveCaretCommand" caretOffset="142" date="Sat Aug 24 11:05:16 EDT 2019" docOffset="1388" timestamp="83439922" />
+  <Command __id="2167" _type="ShellCommand" date="Sat Aug 24 11:05:17 EDT 2019" timestamp="83441055" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2168" _type="ShellCommand" date="Sat Aug 24 11:05:23 EDT 2019" timestamp="83446906" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2169" _type="ShellCommand" date="Sat Aug 24 11:05:30 EDT 2019" timestamp="83453451" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2170" _type="ShellCommand" date="Sat Aug 24 11:05:49 EDT 2019" timestamp="83472233" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2171" _type="MoveCaretCommand" caretOffset="73306" date="Sat Aug 24 11:06:12 EDT 2019" docOffset="74552" timestamp="83495283" />
+  <Command __id="2172" _type="MoveCaretCommand" caretOffset="72088" date="Sat Aug 24 11:06:36 EDT 2019" docOffset="73334" timestamp="83519589" />
+  <Command __id="2276" _type="RunCommand" date="Sat Aug 24 11:10:41 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83764905" type="Debug" />
+  <Command __id="2277" _type="RunCommand" date="Sat Aug 24 11:10:41 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83764907" type="Debug" />
+  <Command __id="2278" _type="RunCommand" date="Sat Aug 24 11:10:41 EDT 2019" kind="HitBreakPoint" projectName="DemoCourseLocalBasicChecks" timestamp="83764907" type="Run" />
+  <Command __id="2279" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.DebugLast" date="Sat Aug 24 11:10:43 EDT 2019" timestamp="83766174" />
+  <Command __id="2280" _type="RunCommand" date="Sat Aug 24 11:10:43 EDT 2019" kind="HitBreakPoint" projectName="DemoCourseLocalBasicChecks" timestamp="83766364" type="Run" />
+  <Command __id="2281" _type="RunCommand" date="Sat Aug 24 11:10:43 EDT 2019" kind="HitBreakPoint" projectName="DemoCourseLocalBasicChecks" timestamp="83766364" type="Run" />
+  <Command __id="2282" _type="RunCommand" date="Sat Aug 24 11:10:43 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83766571" type="Run" />
+  <Command __id="2283" _type="RunCommand" date="Sat Aug 24 11:10:43 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83766655" type="Run" />
+  <Command __id="2284" _type="RunCommand" date="Sat Aug 24 11:10:43 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83766783" type="Run" />
+  <Command __id="2285" _type="EHExceptionCommand" date="Sat Aug 24 11:10:43 EDT 2019" timestamp="83766870" type="Exception">
+    <outputString><![CDATA[I***Tracer: showInfo = true
+]]></outputString>
+  </Command>
+  <Command __id="2286" _type="EHExceptionCommand" date="Sat Aug 24 11:10:44 EDT 2019" timestamp="83767178" type="Exception">
+    <outputString><![CDATA[Buffer traced nessages =true
+]]></outputString>
+  </Command>
+  <Command __id="2287" _type="RunCommand" date="Sat Aug 24 11:10:44 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83767548" type="Run" />
+  <Command __id="2288" _type="RunCommand" date="Sat Aug 24 11:10:44 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83767549" type="Run" />
+  <Command __id="2289" _type="RunCommand" date="Sat Aug 24 11:10:44 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83767551" type="Run" />
+  <Command __id="2290" _type="RunCommand" date="Sat Aug 24 11:10:44 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83767552" type="Run" />
+  <Command __id="2291" _type="EHExceptionCommand" date="Sat Aug 24 11:10:44 EDT 2019" timestamp="83767949" type="Exception">
+    <outputString><![CDATA[ObjectEditor(Version 22, built on Thu Dec 06 16:26:09 EST 2018). Copyright Prasun Dewan, 2012, All rights reserved. US Patent Appl. No.: 12/532,327
+]]></outputString>
+  </Command>
+  <Command __id="2292" _type="ShellCommand" date="Sat Aug 24 11:10:45 EDT 2019" timestamp="83768785" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="2293" _type="EHExceptionCommand" date="Sat Aug 24 11:10:49 EDT 2019" timestamp="83773000" type="Exception">
+    <outputString><![CDATA[W*** Received notification(s) for unknown (possibly invisible or unrecognized atomic-shape) property: TestRunStarted of object: PointAngleSuite[13.0 pts](grader.basics.junit.AGradableJUnitSuite@d1f74b8). Ignoring notification.
+]]></outputString>
+  </Command>
+  <Command __id="2294" _type="ShellCommand" date="Sat Aug 24 11:10:49 EDT 2019" timestamp="83773018" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="2295" _type="RunCommand" date="Sat Aug 24 11:10:50 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="83773098" type="Run" />
+  <Command __id="2297" _type="MoveCaretCommand" caretOffset="71847" date="Sat Aug 24 11:10:51 EDT 2019" docOffset="73093" timestamp="83774763" />
+  <Command __id="2298" _type="RunCommand" date="Sat Aug 24 11:10:52 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83775212" type="Run" />
+  <Command __id="2299" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:10:53 EDT 2019" timestamp="83776104" />
+  <Command __id="2300" _type="RunCommand" date="Sat Aug 24 11:10:53 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83776108" type="Run" />
+  <Command __id="2325" _type="RunCommand" date="Sat Aug 24 11:11:49 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83832456" type="Run" />
+  <Command __id="2326" _type="PredictionCommand" date="Sat Aug 24 11:11:49 EDT 2019" prediction_type="MakingProgress" timestamp="83832460" />
+  <Command __id="2327" _type="RunCommand" date="Sat Aug 24 11:13:11 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83914810" type="Run" />
+  <Command __id="2328" _type="RunCommand" date="Sat Aug 24 11:13:13 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83916113" type="Run" />
+  <Command __id="2329" _type="RunCommand" date="Sat Aug 24 11:13:13 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83916127" type="Run" />
+  <Command __id="2330" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:13:37 EDT 2019" timestamp="83940638" />
+  <Command __id="2331" _type="RunCommand" date="Sat Aug 24 11:13:37 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83940641" type="Run" />
+  <Command __id="2332" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:13:38 EDT 2019" timestamp="83941246" />
+  <Command __id="2333" _type="RunCommand" date="Sat Aug 24 11:13:38 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83941254" type="Run" />
+  <Command __id="2335" _type="MoveCaretCommand" caretOffset="63709" date="Sat Aug 24 11:13:39 EDT 2019" docOffset="63845" timestamp="83942268" />
+  <Command __id="2336" _type="RunCommand" date="Sat Aug 24 11:13:41 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83944199" type="Run" />
+  <Command __id="2338" _type="MoveCaretCommand" caretOffset="31623" date="Sat Aug 24 11:13:41 EDT 2019" docOffset="32869" timestamp="83944620" />
+  <Command __id="2339" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:13:42 EDT 2019" timestamp="83945541" />
+  <Command __id="2340" _type="RunCommand" date="Sat Aug 24 11:13:42 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83945548" type="Run" />
+  <Command __id="2341" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:13:46 EDT 2019" timestamp="83949241" />
+  <Command __id="2342" _type="RunCommand" date="Sat Aug 24 11:13:46 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83949249" type="Run" />
+  <Command __id="2343" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepReturn" date="Sat Aug 24 11:14:35 EDT 2019" timestamp="83998540" />
+  <Command __id="2344" _type="RunCommand" date="Sat Aug 24 11:14:35 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="83998547" type="Run" />
+  <Command __id="2345" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepReturn" date="Sat Aug 24 11:14:37 EDT 2019" timestamp="84000541" />
+  <Command __id="2346" _type="RunCommand" date="Sat Aug 24 11:14:37 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84000548" type="Run" />
+  <Command __id="2347" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:14:47 EDT 2019" timestamp="84010483" />
+  <Command __id="2348" _type="RunCommand" date="Sat Aug 24 11:14:47 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84010493" type="Run" />
+  <Command __id="2349" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:14:48 EDT 2019" timestamp="84011159" />
+  <Command __id="2350" _type="RunCommand" date="Sat Aug 24 11:14:48 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84011169" type="Run" />
+  <Command __id="2351" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:14:51 EDT 2019" timestamp="84014199" />
+  <Command __id="2352" _type="RunCommand" date="Sat Aug 24 11:14:51 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84014213" type="Run" />
+  <Command __id="2353" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:14:52 EDT 2019" timestamp="84015861" />
+  <Command __id="2354" _type="RunCommand" date="Sat Aug 24 11:14:52 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84015865" type="Run" />
+  <Command __id="2355" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:15:13 EDT 2019" timestamp="84036613" />
+  <Command __id="2356" _type="RunCommand" date="Sat Aug 24 11:15:13 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84036616" type="Run" />
+  <Command __id="2357" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:15:32 EDT 2019" timestamp="84055947" />
+  <Command __id="2358" _type="RunCommand" date="Sat Aug 24 11:15:32 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84055950" type="Run" />
+  <Command __id="2359" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:15:33 EDT 2019" timestamp="84056678" />
+  <Command __id="2360" _type="RunCommand" date="Sat Aug 24 11:15:33 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84056682" type="Run" />
+  <Command __id="2361" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepReturn" date="Sat Aug 24 11:15:35 EDT 2019" timestamp="84058579" />
+  <Command __id="2362" _type="RunCommand" date="Sat Aug 24 11:15:35 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84058583" type="Run" />
+  <Command __id="2363" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:15:36 EDT 2019" timestamp="84059755" />
+  <Command __id="2364" _type="RunCommand" date="Sat Aug 24 11:15:36 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84059767" type="Run" />
+  <Command __id="2365" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepReturn" date="Sat Aug 24 11:15:42 EDT 2019" timestamp="84065869" />
+  <Command __id="2366" _type="RunCommand" date="Sat Aug 24 11:15:42 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84065876" type="Run" />
+  <Command __id="2367" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:15:44 EDT 2019" timestamp="84067595" />
+  <Command __id="2368" _type="RunCommand" date="Sat Aug 24 11:15:44 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84067613" type="Run" />
+  <Command __id="2369" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:15:46 EDT 2019" timestamp="84069363" />
+  <Command __id="2370" _type="RunCommand" date="Sat Aug 24 11:15:46 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84069375" type="Run" />
+  <Command __id="2371" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:15:47 EDT 2019" timestamp="84070349" />
+  <Command __id="2372" _type="RunCommand" date="Sat Aug 24 11:15:47 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84070358" type="Run" />
+  <Command __id="2373" _type="RunCommand" date="Sat Aug 24 11:15:49 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84072646" type="Run" />
+  <Command __id="2374" _type="MoveCaretCommand" caretOffset="32305" date="Sat Aug 24 11:15:55 EDT 2019" docOffset="33551" timestamp="84079061" />
+  <Command __id="2399" _type="RunCommand" date="Sat Aug 24 11:16:56 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84139111" type="Run" />
+  <Command __id="2400" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:16:57 EDT 2019" timestamp="84140262" />
+  <Command __id="2401" _type="RunCommand" date="Sat Aug 24 11:16:57 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84140270" type="Run" />
+  <Command __id="2402" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:16:58 EDT 2019" timestamp="84141119" />
+  <Command __id="2403" _type="RunCommand" date="Sat Aug 24 11:16:58 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84141127" type="Run" />
+  <Command __id="2404" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepInto" date="Sat Aug 24 11:16:58 EDT 2019" timestamp="84141590" />
+  <Command __id="2405" _type="RunCommand" date="Sat Aug 24 11:16:58 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84141597" type="Run" />
+  <Command __id="2406" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:23:33 EDT 2019" timestamp="84536904" />
+  <Command __id="2407" _type="RunCommand" date="Sat Aug 24 11:23:33 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84536917" type="Run" />
+  <Command __id="2408" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:23:34 EDT 2019" timestamp="84537489" />
+  <Command __id="2409" _type="RunCommand" date="Sat Aug 24 11:23:34 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84537499" type="Run" />
+  <Command __id="2410" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.StepOver" date="Sat Aug 24 11:23:34 EDT 2019" timestamp="84538070" />
+  <Command __id="2411" _type="RunCommand" date="Sat Aug 24 11:23:34 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="84538075" type="Run" />
+  <Command __id="2412" _type="MoveCaretCommand" caretOffset="15657" date="Sat Aug 24 11:24:45 EDT 2019" docOffset="16903" timestamp="84608463" />
+  <Command __id="2414" _type="InsertStringCommand" date="Sat Aug 24 11:24:47 EDT 2019" repeat="3" timestamp="84610169" timestamp2="84610973">
+    <data><![CDATA[?**]]></data>
+  </Command>
+  <Command __id="2420" _type="InsertStringCommand" date="Sat Aug 24 11:24:48 EDT 2019" timestamp="84611444" timestamp2="84611444">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="2422" _type="EclipseCommand" commandID="eventLogger.styledTextCommand.DELETE_PREVIOUS" date="Sat Aug 24 11:24:48 EDT 2019" repeat="6" timestamp="84612004" timestamp2="84613031" />
+  <Command __id="2434" _type="InsertStringCommand" date="Sat Aug 24 11:24:50 EDT 2019" repeat="3" timestamp="84613697" timestamp2="84614413">
+    <data><![CDATA[?**]]></data>
+  </Command>
+  <Command __id="2440" _type="InsertStringCommand" date="Sat Aug 24 11:24:51 EDT 2019" timestamp="84614850" timestamp2="84614850">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="2442" _type="EclipseCommand" commandID="eventLogger.styledTextCommand.DELETE_PREVIOUS" date="Sat Aug 24 11:24:52 EDT 2019" repeat="6" timestamp="84615275" timestamp2="84616460" />
+  <Command __id="2454" _type="InsertStringCommand" date="Sat Aug 24 11:24:53 EDT 2019" repeat="3" timestamp="84617030" timestamp2="84618166">
+    <data><![CDATA[/**]]></data>
+  </Command>
+  <Command __id="2461" _type="InsertStringCommand" date="Sat Aug 24 11:24:55 EDT 2019" timestamp="84618815" timestamp2="84618815">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="2462" _type="SelectTextCommand" caretOffset="15738" date="Sat Aug 24 11:24:59 EDT 2019" end="15738" start="15665" timestamp="84622713" />
+  <Command __id="2464" _type="InsertStringCommand" date="Sat Aug 24 11:25:00 EDT 2019" repeat="45" timestamp="84623374" timestamp2="84631000">
+    <data><![CDATA[It returns the first class, which is probbaly]]></data>
+  </Command>
+  <Command __id="3207" _type="EclipseCommand" commandID="org.eclipse.ui.file.save" date="Sat Aug 24 11:37:53 EDT 2019" timestamp="85396674" />
+  <Command __id="3208" _type="MoveCaretCommand" caretOffset="1453" date="Sat Aug 24 11:37:57 EDT 2019" docOffset="1562" timestamp="85400461" />
+  <Command __id="3209" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.DebugLast" date="Sat Aug 24 11:38:10 EDT 2019" timestamp="85413316" />
+  <Command __id="3210" _type="EclipseCommand" commandID="" date="Sat Aug 24 11:38:10 EDT 2019" repeat="2" timestamp="85413318" timestamp2="85413336" />
+  <Command __id="3212" _type="RunCommand" date="Sat Aug 24 11:38:10 EDT 2019" kind="HitBreakPoint" projectName="DemoCourseLocalBasicChecks" timestamp="85413471" type="Run" />
+  <Command __id="3213" _type="RunCommand" date="Sat Aug 24 11:38:10 EDT 2019" kind="HitBreakPoint" projectName="DemoCourseLocalBasicChecks" timestamp="85413471" type="Run" />
+  <Command __id="3214" _type="RunCommand" date="Sat Aug 24 11:38:10 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85413821" type="Run" />
+  <Command __id="3215" _type="RunCommand" date="Sat Aug 24 11:38:10 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="85413922" type="Run" />
+  <Command __id="3216" _type="RunCommand" date="Sat Aug 24 11:38:10 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85414045" type="Run" />
+  <Command __id="3217" _type="EHExceptionCommand" date="Sat Aug 24 11:38:11 EDT 2019" timestamp="85414187" type="Exception">
+    <outputString><![CDATA[I***Tracer: showInfo = true
+]]></outputString>
+  </Command>
+  <Command __id="3218" _type="EHExceptionCommand" date="Sat Aug 24 11:38:11 EDT 2019" timestamp="85414464" type="Exception">
+    <outputString><![CDATA[Buffer traced nessages =true
+]]></outputString>
+  </Command>
+  <Command __id="3219" _type="RunCommand" date="Sat Aug 24 11:38:11 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85414863" type="Run" />
+  <Command __id="3220" _type="RunCommand" date="Sat Aug 24 11:38:11 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85414865" type="Run" />
+  <Command __id="3221" _type="RunCommand" date="Sat Aug 24 11:38:11 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85414871" type="Run" />
+  <Command __id="3222" _type="RunCommand" date="Sat Aug 24 11:38:11 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85414872" type="Run" />
+  <Command __id="3223" _type="EHExceptionCommand" date="Sat Aug 24 11:38:12 EDT 2019" timestamp="85415319" type="Exception">
+    <outputString><![CDATA[ObjectEditor(Version 22, built on Thu Dec 06 16:26:09 EST 2018). Copyright Prasun Dewan, 2012, All rights reserved. US Patent Appl. No.: 12/532,327
+]]></outputString>
+  </Command>
+  <Command __id="3224" _type="ShellCommand" date="Sat Aug 24 11:38:13 EDT 2019" timestamp="85416252" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="3225" _type="EHExceptionCommand" date="Sat Aug 24 11:38:18 EDT 2019" timestamp="85421712" type="Exception">
+    <outputString><![CDATA[W*** Received notification(s) for unknown (possibly invisible or unrecognized atomic-shape) property: TestRunStarted of object: PointAngleSuite[13.0 pts](grader.basics.junit.AGradableJUnitSuite@d1f74b8). Ignoring notification.
+]]></outputString>
+  </Command>
+  <Command __id="3226" _type="ShellCommand" date="Sat Aug 24 11:38:18 EDT 2019" timestamp="85421903" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="3227" _type="RunCommand" date="Sat Aug 24 11:38:18 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="85422039" type="Run" />
+  <Command __id="3229" _type="MoveCaretCommand" caretOffset="71679" date="Sat Aug 24 11:38:19 EDT 2019" docOffset="72925" timestamp="85422519" />
+  <Command __id="3230" _type="MoveCaretCommand" caretOffset="71837" date="Sat Aug 24 11:38:20 EDT 2019" docOffset="73083" timestamp="85423446" />
+  <Command __id="3231" _type="BreakPointCommand" date="Sat Aug 24 11:38:23 EDT 2019" lineNumber="2300" timestamp="85426288" type="BreakPointRemoved" />
+  <Command __id="3232" _type="EclipseCommand" commandID="AUTOGEN:::org.eclipse.jdt.debug.CompilationUnitEditor.BreakpointRulerActions/org.eclipse.jdt.debug.ui.actions.ManageBreakpointRulerAction" date="Sat Aug 24 11:38:23 EDT 2019" timestamp="85426315" />
+  <DocumentChange __id="4171" _type="Insert" date="Sat Aug 24 12:02:27 EDT 2019" docASTNodeCount="191" docActiveCodeLength="1034" docExpressionCount="119" docLength="1034" length="11" offset="436" repeat="8" timestamp="86870978" timestamp2="86873199">
+    <text><![CDATA[
+		StringU]]></text>
+  </DocumentChange>
+  <Command __id="4172" _type="InsertStringCommand" date="Sat Aug 24 12:02:27 EDT 2019" timestamp="86870989" timestamp2="86870989">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="4174" _type="InsertStringCommand" date="Sat Aug 24 12:02:28 EDT 2019" repeat="7" timestamp="86871385" timestamp2="86873210">
+    <data><![CDATA[StringU]]></data>
+  </Command>
+  <Command __id="4187" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="false" date="Sat Aug 24 12:02:30 EDT 2019" start_end="START" timestamp="86873718" />
+  <Command __id="4188" _type="EclipseCommand" commandID="org.eclipse.ui.edit.text.contentAssist.proposals" date="Sat Aug 24 12:02:30 EDT 2019" timestamp="86873857" />
+  <Command __id="4189" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="false" date="Sat Aug 24 12:02:45 EDT 2019" start_end="END" timestamp="86888528" />
+  <Command __id="4190" _type="ShellCommand" date="Sat Aug 24 12:02:48 EDT 2019" timestamp="86891083" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="4191" _type="ShellCommand" date="Sat Aug 24 12:03:18 EDT 2019" timestamp="86921364" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="4192" _type="FileOpenCommand" date="Sat Aug 24 12:03:58 EDT 2019" docASTNodeCount="313" docActiveCodeLength="2387" docExpressionCount="210" docLength="2540" projectName="GraderBasics" timestamp="86961271">
+    <filePath><![CDATA[D:\dewan_backup\Java\GraderBasics\src\grader\basics\TestImplementationAPI.java]]></filePath>
+    <snapshot><![CDATA[package grader.basics;
+
+import java.io.File;
+import java.util.Map;
+
+import grader.basics.config.BasicExecutionSpecification;
+import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.execution.BasicProcessRunner;
+import grader.basics.execution.BasicProjectExecution;
+import grader.basics.execution.BasicRunningProject;
+import grader.basics.execution.NotRunnableException;
+import grader.basics.execution.Runner;
+import grader.basics.execution.RunningProject;
+import trace.grader.basics.GraderBasicsTraceUtility;
+import util.pipe.InputGenerator;
+import util.trace.Tracer;
+import grader.basics.project.Project;
+
+public class TestImplementationAPI {
+	public static RunningProject createRunningProject(File aWorkingDirectory, InputGenerator anOutputBasedInputGenerator, String[] command, int timeout, String[] inputs,
+			String[] args) throws NotRunnableException {
+		 String input = (inputs == null || inputs.length == 0)?null:BasicProjectExecution.toInputString(inputs);
+		 Runner processRunner = new BasicProcessRunner(aWorkingDirectory);
+		 RunningProject aRunningProject =  
+				 
+					 new BasicRunningProject(null, anOutputBasedInputGenerator, input);
+
+//				 BasicProcessRunner.createRunningProject(null, anOutputBasedInputGenerator, input);
+//	     return processRunner.run(null, command, "", args, 3000);
+	    processRunner.run(aRunningProject, anOutputBasedInputGenerator, command, input, args, timeout, "main", true);
+	    return aRunningProject;
+	}
+	public static RunningProject createRunningProject(File aWorkingDirectory, InputGenerator anOutputBasedInputGenerator, String[] command, String... inputs) throws NotRunnableException {
+		 return createRunningProject(aWorkingDirectory, anOutputBasedInputGenerator, command, getProcessTimeout(), inputs, null);
+	}
+	public static void setGraderProcessTimeout(int aTimeout) {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderProcessTimeOut(aTimeout);
+	}
+	public static int getProcessTimeout() {
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getProcessTimeOut();
+	}
+	public static Map<String, String> getEntryPoints(Project project, String aSpecifiedMainClass) {
+		return BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(project, aSpecifiedMainClass);	
+	}
+	public static String getMainEntryPoint(Project project, String aSpecifiedMainClass) {
+		return BasicProcessRunner.getMainEntryPoint(project, aSpecifiedMainClass);
+	}
+	
+	
+}
+]]></snapshot>
+  </Command>
+  <Command __id="4193" _type="MoveCaretCommand" caretOffset="0" date="Sat Aug 24 12:03:58 EDT 2019" docOffset="0" timestamp="86961439" />
+  <Command __id="4194" _type="MoveCaretCommand" caretOffset="46" date="Sat Aug 24 12:04:02 EDT 2019" docOffset="46" timestamp="86965395" />
+  <Command __id="4195" _type="MoveCaretCommand" caretOffset="651" date="Sat Aug 24 12:04:07 EDT 2019" docOffset="651" timestamp="86970988" />
+  <DocumentChange __id="4196" _type="Insert" date="Sat Aug 24 12:04:08 EDT 2019" docASTNodeCount="313" docActiveCodeLength="2396" docExpressionCount="210" docLength="2549" length="9" offset="651" repeat="8" timestamp="86971507" timestamp2="86974378">
+    <text><![CDATA[
+imporyt]]></text>
+  </DocumentChange>
+  <Command __id="4197" _type="InsertStringCommand" date="Sat Aug 24 12:04:08 EDT 2019" timestamp="86971516" timestamp2="86971516">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="4199" _type="InsertStringCommand" date="Sat Aug 24 12:04:09 EDT 2019" repeat="7" timestamp="86972232" timestamp2="86974389">
+    <data><![CDATA[imporyt]]></data>
+  </Command>
+  <DocumentChange __id="4212" _type="Delete" date="Sat Aug 24 12:04:12 EDT 2019" docASTNodeCount="313" docActiveCodeLength="2394" docExpressionCount="210" docLength="2547" endLine="17" length="2" offset="658" repeat="2" startLine="17" timestamp="86975182" timestamp2="86975284">
+    <text><![CDATA[yt]]></text>
+  </DocumentChange>
+  <Command __id="4213" _type="EclipseCommand" commandID="eventLogger.styledTextCommand.DELETE_PREVIOUS" date="Sat Aug 24 12:04:12 EDT 2019" repeat="2" timestamp="86975185" timestamp2="86975291" />
+  <DocumentChange __id="4216" _type="Insert" date="Sat Aug 24 12:04:12 EDT 2019" docASTNodeCount="323" docActiveCodeLength="2432" docExpressionCount="219" docLength="2585" length="38" offset="658" repeat="4" timestamp="86975511" timestamp2="86977822">
+    <text><![CDATA[t org.apache.commons.lang.StringUtils;]]></text>
+  </DocumentChange>
+  <Command __id="4217" _type="InsertStringCommand" date="Sat Aug 24 12:04:12 EDT 2019" repeat="2" timestamp="86975527" timestamp2="86975902">
+    <data><![CDATA[t ]]></data>
+  </Command>
+  <Command __id="4221" _type="PasteCommand" date="Sat Aug 24 12:04:13 EDT 2019" timestamp="86976608" />
+  <Command __id="4223" _type="InsertStringCommand" date="Sat Aug 24 12:04:14 EDT 2019" timestamp="86977833" timestamp2="86977833">
+    <data><![CDATA[;]]></data>
+  </Command>
+  <Command __id="4224" _type="MoveCaretCommand" caretOffset="693" date="Sat Aug 24 12:04:19 EDT 2019" docOffset="693" timestamp="86982159" />
+  <Command __id="4225" _type="SelectTextCommand" caretOffset="695" date="Sat Aug 24 12:04:19 EDT 2019" end="695" start="684" timestamp="86982353" />
+  <Command __id="4226" _type="SelectTextCommand" caretOffset="698" date="Sat Aug 24 12:04:19 EDT 2019" end="698" start="653" timestamp="86982573" />
+  <DocumentChange __id="4227" _type="Delete" date="Sat Aug 24 12:04:20 EDT 2019" docASTNodeCount="313" docActiveCodeLength="2387" docExpressionCount="210" docLength="2540" endLine="18" length="45" offset="653" startLine="17" timestamp="86983717">
+    <text><![CDATA[import org.apache.commons.lang.StringUtils;
+]]></text>
+  </DocumentChange>
+  <Command __id="4228" _type="EclipseCommand" commandID="org.eclipse.ui.edit.delete" date="Sat Aug 24 12:04:20 EDT 2019" timestamp="86983746" />
+  <Command __id="4229" _type="EclipseCommand" commandID="org.eclipse.ui.file.save" date="Sat Aug 24 12:04:22 EDT 2019" timestamp="86985247" />
+  <Command __id="4230" _type="MoveCaretCommand" caretOffset="515" date="Sat Aug 24 12:11:42 EDT 2019" docOffset="515" timestamp="87425096" />
+  <Command __id="4275" _type="FileOpenCommand" date="Sat Aug 24 12:26:19 EDT 2019" docASTNodeCount="281" docActiveCodeLength="1746" docExpressionCount="174" docLength="2032" projectName="comp110-grader" timestamp="88303043">
+    <filePath><![CDATA[D:\dewan_backup\Java\Grader\src\main\java\grader\requirements\interpreter\checkers\ADiffChecker.java]]></filePath>
+    <snapshot><![CDATA[package grader.requirements.interpreter.checkers;
+
+import grader.basics.util.DirectoryUtils;
+
+import java.io.File;
+import java.io.IOException;
+
+import util.misc.Common;
+
+public class ADiffChecker implements InterpretedChecker{
+	protected String diffTool;
+	
+	String TEMP_DIR = "tmp";
+	
+	public ADiffChecker() {
+		File dir = new File(TEMP_DIR);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+	}
+
+//	@Override
+//	public boolean isExpandFiles() {
+//		return false;
+//	}
+	public int getNumArgs() {
+		return 3;
+	}	
+	public File maybeCreateFile(String aFileName) {
+		File aFile = new File(aFileName);
+		if (!aFile.exists()) {
+			try {
+				aFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return aFile;
+	}
+	@Override
+	public InterpretedCheckerResult check(String[] anArgs) {
+		try {
+			String anOptions = anArgs[0];
+			String anArg1Text = anArgs[1];
+			String anArg2Text = anArgs[2];
+			String anArg1FileName =  TEMP_DIR + "/" + "diffFile1.txt";
+			String anArg2FileName = TEMP_DIR + "/" + "diffFile2.txt";
+			String aResultFileName = TEMP_DIR + "/" + "diffresult.txt";
+			File anArg1File = maybeCreateFile(anArg1FileName);
+			File anArg2File = maybeCreateFile(anArg2FileName);
+			maybeCreateFile(aResultFileName);
+			Common.writeText(anArg1File, anArg1Text);
+			Common.writeText(anArg2File, anArg2Text);
+//			DirectoryUtils.diff("-i -w -b",  anArg1File,
+//					anArg2File, aResultFileName);
+			DirectoryUtils.diff(anArgs[0],  anArg1File,
+					anArg2File, aResultFileName);
+			StringBuffer aDiffResult = Common.toText(aResultFileName);
+//			if (aDiffResult.length() > 0)
+//			aDiffResult.insert(0, "Model output diff actual output:\n");
+			String aNotes = aDiffResult.toString();
+			boolean aResult = aNotes.isEmpty();
+			return new ACheckerResult(aNotes, aResult);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ACheckerResult(e.getMessage(), false);
+		}
+
+	}
+
+
+	
+
+}
+]]></snapshot>
+  </Command>

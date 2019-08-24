@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 
-import grader.basics.config.BasicProjectExecution;
+import grader.basics.execution.BasicProjectExecution;
 import util.trace.Tracer;
 
 public class AGradedClassProxyInvocationHandler implements InvocationHandler {

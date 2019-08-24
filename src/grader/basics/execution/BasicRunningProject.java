@@ -1,5 +1,6 @@
 package grader.basics.execution;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.project.Project;
 import grader.basics.util.TimedProcess;
 

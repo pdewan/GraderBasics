@@ -2,7 +2,7 @@ package grader.basics.project;
 
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.config.BasicConfigurationManagerSelector;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;

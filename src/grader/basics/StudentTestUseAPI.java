@@ -2,8 +2,8 @@ package grader.basics;
 
 import java.io.File;
 
-import grader.basics.execution.BasicExecutionSpecification;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicExecutionSpecification;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.Runner;

@@ -1,0 +1,254 @@
+<Events startTimestamp="1566500503221" logVersion="1.0.0.1">
+  <Command __id="87" _type="FileOpenCommand" date="Thu Aug 22 15:31:50 EDT 2019" docASTNodeCount="1" docActiveCodeLength="35" docExpressionCount="0" docLength="35" projectName="test-c" timestamp="1807679">
+    <filePath><![CDATA[D:\dewan_backup\Java\eclipse\test-c\project.properties]]></filePath>
+    <snapshot><![CDATA[Comp524f19.Assignment1.language = C]]></snapshot>
+  </Command>
+  <Command __id="88" _type="FileOpenCommand" date="Thu Aug 22 15:32:14 EDT 2019" docASTNodeCount="69" docActiveCodeLength="584" docExpressionCount="49" docLength="584" projectName="PL_Java" timestamp="1831530">
+    <filePath><![CDATA[D:\dewan_backup\Java\PLTeaching\PL_Java\src\tests\RunCTest.java]]></filePath>
+  </Command>
+  <Command __id="89" _type="MoveCaretCommand" caretOffset="109" date="Thu Aug 22 15:32:14 EDT 2019" docOffset="252" timestamp="1831654" />
+  <Command __id="90" _type="EclipseCommand" commandID="org.eclipse.jdt.debug.ui.localJavaShortcut.debug" date="Thu Aug 22 15:32:20 EDT 2019" timestamp="1837483" />
+  <Command __id="91" _type="EclipseCommand" commandID="" date="Thu Aug 22 15:32:20 EDT 2019" timestamp="1837549" />
+  <Command __id="92" _type="EclipseCommand" commandID="" date="Thu Aug 22 15:32:23 EDT 2019" repeat="5" timestamp="1840048" timestamp2="1840993" />
+  <Command __id="97" _type="RunCommand" date="Thu Aug 22 15:32:24 EDT 2019" kind="HitBreakPoint" projectName="PL_Java" timestamp="1841416" type="Run" />
+  <Command __id="98" _type="RunCommand" date="Thu Aug 22 15:32:24 EDT 2019" kind="HitBreakPoint" projectName="PL_Java" timestamp="1841417" type="Run" />
+  <Command __id="99" _type="RunCommand" date="Thu Aug 22 15:32:25 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1841878" type="Run" />
+  <Command __id="100" _type="RunCommand" date="Thu Aug 22 15:32:25 EDT 2019" kind="StepInto" projectName="(Unknown)" timestamp="1842034" type="Run" />
+  <Command __id="101" _type="RunCommand" date="Thu Aug 22 15:32:25 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1842238" type="Run" />
+  <Command __id="102" _type="EHExceptionCommand" date="Thu Aug 22 15:32:25 EDT 2019" timestamp="1842596" type="Exception">
+    <outputString><![CDATA[I***Tracer: showInfo = true
+Buffer traced nessages =false
+]]></outputString>
+  </Command>
+  <Command __id="103" _type="RunCommand" date="Thu Aug 22 15:32:26 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1843739" type="Run" />
+  <Command __id="104" _type="RunCommand" date="Thu Aug 22 15:32:26 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1843739" type="Run" />
+  <Command __id="105" _type="RunCommand" date="Thu Aug 22 15:32:26 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1843742" type="Run" />
+  <Command __id="106" _type="RunCommand" date="Thu Aug 22 15:32:26 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1843744" type="Run" />
+  <Command __id="107" _type="EHExceptionCommand" date="Thu Aug 22 15:32:27 EDT 2019" timestamp="1844286" type="Exception">
+    <outputString><![CDATA[ObjectEditor(Version 22, built on Thu Dec 06 16:26:09 EST 2018). Copyright Prasun Dewan, 2012, All rights reserved. US Patent Appl. No.: 12/532,327
+]]></outputString>
+  </Command>
+  <Command __id="108" _type="ShellCommand" date="Thu Aug 22 15:32:28 EDT 2019" timestamp="1845454" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="109" _type="ShellCommand" date="Thu Aug 22 15:32:44 EDT 2019" timestamp="1860839" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="110" _type="RunCommand" date="Thu Aug 22 15:32:47 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1863857" type="Run" />
+  <Command __id="111" _type="RunCommand" date="Thu Aug 22 15:32:50 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="1867159" type="Run" />
+  <Command __id="206" _type="RunCommand" date="Thu Aug 22 15:36:09 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2066449" type="Run" />
+  <Command __id="207" _type="EHExceptionCommand" date="Thu Aug 22 15:36:10 EDT 2019" timestamp="2066911" type="Exception">
+    <outputString><![CDATA[ObjectEditor(Version 22, built on Thu Dec 06 16:26:09 EST 2018). Copyright Prasun Dewan, 2012, All rights reserved. US Patent Appl. No.: 12/532,327
+]]></outputString>
+  </Command>
+  <Command __id="208" _type="ShellCommand" date="Thu Aug 22 15:36:11 EDT 2019" timestamp="2067824" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="209" _type="ExceptionCommand" date="Thu Aug 22 15:36:15 EDT 2019" timestamp="2071829" type="Exception">
+    <exceptionString><![CDATA[java.io.FileNotFoundException: Logs\LocalChecks\comp524f19_assignment1_Assignment1Suite.csv (Access is denied)
+java.lang.NullPointerException
+	at grader.basics.observers.ATestLogFileWriter.maybeReadLastLineOfLogFile(ATestLogFileWriter.java:399)
+	at grader.basics.observers.ATestLogFileWriter.testRunStarted(ATestLogFileWriter.java:125)
+	at org.junit.runner.notification.SynchronizedRunListener.testRunStarted(SynchronizedRunListener.java:35)
+	at org.junit.runner.notification.RunNotifier$1.notifyListener(RunNotifier.java:91)
+	at org.junit.runner.notification.RunNotifier$SafeNotifier.run(RunNotifier.java:72)
+	at org.junit.runner.notification.RunNotifier.fireTestRunStarted(RunNotifier.java:88)
+	at grader.basics.junit.AGradableJUnitTopLevelSuite.testRunStarted(AGradableJUnitTopLevelSuite.java:96)
+	at grader.basics.junit.AGradableJUnitTopLevelSuite.maybeProcessTestRunStarted(AGradableJUnitTopLevelSuite.java:80)
+	at grader.basics.junit.AGradableJUnitTopLevelSuite.propertyChange(AGradableJUnitTopLevelSuite.java:120)
+	at java.desktop/java.beans.PropertyChangeSupport.fire(PropertyChangeSupport.java:341)
+	at java.desktop/java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:333)
+	at java.desktop/java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:266)
+	at grader.basics.junit.AGradableJUnitSuite.notifyTestRunStarted(AGradableJUnitSuite.java:82)
+	at grader.basics.junit.AGradableJUnitSuite.testRunStarted(AGradableJUnitSuite.java:100)
+	at grader.basics.junit.AGradableJUnitSuite.open(AGradableJUnitSuite.java:126)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at bus.uigen.reflect.local.AVirtualMethod.methodInvoke(AVirtualMethod.java:270)
+	at bus.uigen.reflect.UnifiedMethod.invoke(UnifiedMethod.java:219)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1444)
+	at bus.uigen.undo.BasicCommand.execute(BasicCommand.java:69)
+	at bus.uigen.undo.AHistoryUndoer.execute(AHistoryUndoer.java:99)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1906)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1701)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1585)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1538)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1531)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1406)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1357)
+	at bus.uigen.editors.TreeAdapter.mouseClicked(TreeAdapter.java:469)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:278)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:277)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6592)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3342)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6354)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2261)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4966)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2319)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4914)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4552)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4484)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2305)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2772)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:772)
+	at java.desktop/java.awt.EventQueue.access$600(EventQueue.java:97)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:721)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:715)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:743)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+W*** Received notification(s) for unknown (possibly invisible or unrecognized atomic-shape) property: TestRunStarted of object: PromptSuite[25.0 pts](grader.basics.junit.AGradableJUnitSuite@7cd1ac19). Ignoring notification.
+I***(TestCaseResult) ### gradingTools.comp524f19.assignment1.testcases.PromptTestCase: 1.0
+]]></exceptionString>
+  </Command>
+  <Command __id="210" _type="RunCommand" date="Thu Aug 22 15:36:15 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2071855" type="Run" />
+  <Command __id="211" _type="RunCommand" date="Thu Aug 22 15:36:15 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2071911" type="Run" />
+  <Command __id="212" _type="RunCommand" date="Thu Aug 22 15:36:15 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2071913" type="Run" />
+  <Command __id="213" _type="EHExceptionCommand" date="Thu Aug 22 15:36:15 EDT 2019" timestamp="2072037" type="Exception">
+    <outputString><![CDATA[Premature end of file before int was input, exiting
+]]></outputString>
+  </Command>
+  <Command __id="214" _type="RunCommand" date="Thu Aug 22 15:36:17 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2073941" type="Run" />
+  <Command __id="215" _type="RunCommand" date="Thu Aug 22 15:36:17 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2073955" type="Run" />
+  <Command __id="216" _type="RunCommand" date="Thu Aug 22 15:36:17 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2073961" type="Run" />
+  <Command __id="217" _type="EHExceptionCommand" date="Thu Aug 22 15:36:17 EDT 2019" timestamp="2074106" type="Exception">
+    <outputString><![CDATA[Premature end of file before decimal was input, exiting
+]]></outputString>
+  </Command>
+  <Command __id="218" _type="ShellCommand" date="Thu Aug 22 15:36:19 EDT 2019" timestamp="2075861" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="219" _type="RunCommand" date="Thu Aug 22 15:36:19 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2076002" type="Run" />
+  <Command __id="220" _type="RunCommand" date="Thu Aug 22 15:36:19 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2076018" type="Run" />
+  <Command __id="221" _type="RunCommand" date="Thu Aug 22 15:36:19 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2076022" type="Run" />
+  <Command __id="222" _type="ExceptionCommand" date="Thu Aug 22 15:36:21 EDT 2019" timestamp="2078109" type="Exception">
+    <exceptionString><![CDATA[I***(TestCaseResult) ### anonymous: 1.0
+I***(TestCaseResult) ### anonymous: 0.0
+I***(TestCaseResult) ### anonymous: 1.0
+I***(TestCaseResult) ### anonymous: 1.0
+java.io.FileNotFoundException: Logs\LocalChecks\comp524f19_assignment1_Assignment1Suite.csv (Access is denied)
+java.lang.NullPointerException
+	at grader.basics.observers.ATestLogFileWriter.maybeReadLastLineOfLogFile(ATestLogFileWriter.java:399)
+	at grader.basics.observers.ATestLogFileWriter.testRunStarted(ATestLogFileWriter.java:125)
+	at org.junit.runner.notification.SynchronizedRunListener.testRunStarted(SynchronizedRunListener.java:35)
+	at org.junit.runner.notification.RunNotifier$1.notifyListener(RunNotifier.java:91)
+	at org.junit.runner.notification.RunNotifier$SafeNotifier.run(RunNotifier.java:72)
+	at org.junit.runner.notification.RunNotifier.fireTestRunStarted(RunNotifier.java:88)
+	at grader.basics.junit.AGradableJUnitTopLevelSuite.testRunStarted(AGradableJUnitTopLevelSuite.java:96)
+	at grader.basics.junit.AGradableJUnitTopLevelSuite.maybeProcessTestRunStarted(AGradableJUnitTopLevelSuite.java:80)
+	at grader.basics.junit.AGradableJUnitTopLevelSuite.propertyChange(AGradableJUnitTopLevelSuite.java:120)
+	at java.desktop/java.beans.PropertyChangeSupport.fire(PropertyChangeSupport.java:341)
+	at java.desktop/java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:333)
+	at java.desktop/java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:266)
+	at grader.basics.junit.AGradableJUnitSuite.notifyTestRunStarted(AGradableJUnitSuite.java:82)
+	at grader.basics.junit.AGradableJUnitSuite.testRunFinished(AGradableJUnitSuite.java:106)
+	at grader.basics.junit.AGradableJUnitSuite.open(AGradableJUnitSuite.java:128)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at bus.uigen.reflect.local.AVirtualMethod.methodInvoke(AVirtualMethod.java:270)
+	at bus.uigen.reflect.UnifiedMethod.invoke(UnifiedMethod.java:219)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1444)
+	at bus.uigen.undo.BasicCommand.execute(BasicCommand.java:69)
+	at bus.uigen.undo.AHistoryUndoer.execute(AHistoryUndoer.java:99)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1906)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1701)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethods(MethodInvocationManager.java:1585)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1538)
+	at bus.uigen.controller.MethodInvocationManager.invokeMethod(MethodInvocationManager.java:1531)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1406)
+	at bus.uigen.controller.MethodInvocationManager.invokeDoubleClickMethod(MethodInvocationManager.java:1357)
+	at bus.uigen.editors.TreeAdapter.mouseClicked(TreeAdapter.java:469)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:278)
+	at java.desktop/java.awt.AWTEventMulticaster.mouseClicked(AWTEventMulticaster.java:277)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6592)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3342)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6354)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2261)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4966)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2319)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4914)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4552)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4484)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2305)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2772)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4798)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:772)
+	at java.desktop/java.awt.EventQueue.access$600(EventQueue.java:97)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:721)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:715)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:743)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+]]></exceptionString>
+  </Command>
+  <Command __id="224" _type="SelectTextCommand" caretOffset="10682" date="Thu Aug 22 15:36:33 EDT 2019" end="10682" start="10647" timestamp="2090092" />
+  <Command __id="225" _type="EclipseCommand" commandID="org.eclipse.debug.ui.commands.Terminate" date="Thu Aug 22 15:36:52 EDT 2019" timestamp="2109112" />
+  <Command __id="226" _type="RunCommand" date="Thu Aug 22 15:36:52 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2109157" type="Debug" />
+  <Command __id="227" _type="RunCommand" date="Thu Aug 22 15:36:52 EDT 2019" kind="HitBreakPoint" projectName="(Unknown)" timestamp="2109157" type="Debug" />
+  <Command __id="228" _type="RunCommand" date="Thu Aug 22 15:36:52 EDT 2019" kind="HitBreakPoint" projectName="PL_Java" timestamp="2109157" type="Run" />
+  <Command __id="229" _type="ShellCommand" date="Thu Aug 22 15:37:13 EDT 2019" timestamp="2130306" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="230" _type="ShellCommand" date="Thu Aug 22 15:37:13 EDT 2019" timestamp="2130388" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="231" _type="MoveCaretCommand" caretOffset="10660" date="Thu Aug 22 15:37:34 EDT 2019" docOffset="11896" timestamp="2151460" />
+  <Command __id="232" _type="EclipseCommand" commandID="org.eclipse.jdt.ui.edit.text.java.open.editor" date="Thu Aug 22 15:37:35 EDT 2019" timestamp="2152771" />
+  <Command __id="233" _type="MoveCaretCommand" caretOffset="12555" date="Thu Aug 22 15:37:52 EDT 2019" docOffset="13791" timestamp="2169098" />
+  <Command __id="234" _type="MoveCaretCommand" caretOffset="10561" date="Thu Aug 22 15:38:08 EDT 2019" docOffset="11797" timestamp="2185141" />
+  <Command __id="236" _type="InsertStringCommand" date="Thu Aug 22 15:38:10 EDT 2019" timestamp="2187090" timestamp2="2187090">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="237" _type="MoveCaretCommand" caretOffset="10561" date="Thu Aug 22 15:38:12 EDT 2019" docOffset="11797" timestamp="2188957" />
+  <Command __id="239" _type="InsertStringCommand" date="Thu Aug 22 15:38:12 EDT 2019" repeat="5" timestamp="2189684" timestamp2="2190979">
+    <data><![CDATA[try {]]></data>
+  </Command>
+  <Command __id="248" _type="MoveCaretCommand" caretOffset="11135" date="Thu Aug 22 15:38:18 EDT 2019" docOffset="12371" timestamp="2195647" />
+  <Command __id="250" _type="InsertStringCommand" date="Thu Aug 22 15:38:21 EDT 2019" timestamp="2197808" timestamp2="2197808">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="252" _type="InsertStringCommand" date="Thu Aug 22 15:38:21 EDT 2019" repeat="3" timestamp="2198716" timestamp2="2199793">
+    <data><![CDATA[} {]]></data>
+  </Command>
+  <Command __id="258" _type="InsertStringCommand" date="Thu Aug 22 15:38:23 EDT 2019" timestamp="2200753" timestamp2="2200753">
+    <data><![CDATA[]]></data>
+  </Command>
+  <Command __id="259" _type="MoveCaretCommand" caretOffset="11140" date="Thu Aug 22 15:38:25 EDT 2019" docOffset="12376" timestamp="2202569" />
+  <Command __id="261" _type="InsertStringCommand" date="Thu Aug 22 15:38:26 EDT 2019" repeat="19" timestamp="2202853" timestamp2="2207740">
+    <data><![CDATA[ catch (Exception e]]></data>
+  </Command>
+  <Command __id="298" _type="MoveCaretCommand" caretOffset="11167" date="Thu Aug 22 15:38:32 EDT 2019" docOffset="12403" timestamp="2209162" />
+  <Command __id="300" _type="InsertStringCommand" date="Thu Aug 22 15:38:32 EDT 2019" repeat="2" timestamp="2209778" timestamp2="2210071">
+    <data><![CDATA[e.]]></data>
+  </Command>
+  <Command __id="303" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="true" date="Thu Aug 22 15:38:35 EDT 2019" start_end="START" timestamp="2212597" />
+  <Command __id="308" _type="ShellCommand" date="Thu Aug 22 15:38:37 EDT 2019" timestamp="2213973" type="ECLIPSE_LOST_FOCUS" />
+  <Command __id="309" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="false" date="Thu Aug 22 15:38:37 EDT 2019" start_end="END" timestamp="2214020" />
+  <Command __id="310" _type="ShellCommand" date="Thu Aug 22 15:38:39 EDT 2019" timestamp="2216054" type="ECLIPSE_GAINED_FOCUS" />
+  <Command __id="312" _type="InsertStringCommand" date="Thu Aug 22 15:38:40 EDT 2019" repeat="4" timestamp="2217370" timestamp2="2219462">
+    <data><![CDATA[	e,.]]></data>
+  </Command>
+  <Command __id="319" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="true" date="Thu Aug 22 15:38:42 EDT 2019" start_end="START" timestamp="2219467" />
+  <Command __id="330" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="false" date="Thu Aug 22 15:38:48 EDT 2019" start_end="END" timestamp="2225292" />
+  <Command __id="332" _type="InsertStringCommand" date="Thu Aug 22 15:38:48 EDT 2019" timestamp="2225316" timestamp2="2225316">
+    <data><![CDATA[.]]></data>
+  </Command>
+  <Command __id="333" _type="AssistCommand" assist_type="CONTENT_ASSIST" auto_activated="true" date="Thu Aug 22 15:38:48 EDT 2019" start_end="START" timestamp="2225331" />
+</Events>

@@ -10,7 +10,7 @@ import org.junit.Assert;
 import util.annotations.IsExtra;
 import util.annotations.MaxValue;
 import util.trace.Tracer;
-import grader.basics.config.BasicProjectExecution;
+import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
 import grader.basics.junit.NotesAndScore;
 import grader.basics.project.BasicProjectIntrospection;

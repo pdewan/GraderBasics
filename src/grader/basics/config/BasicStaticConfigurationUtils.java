@@ -11,7 +11,6 @@ import java.util.Map;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.project.Project;
 import grader.basics.settings.BasicGradingEnvironment;
 import util.trace.Tracer;

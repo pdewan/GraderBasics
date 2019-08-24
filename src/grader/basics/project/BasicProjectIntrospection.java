@@ -1,10 +1,10 @@
 package grader.basics.project;
 
 import grader.basics.config.BasicConfigurationManagerSelector;
-import grader.basics.config.BasicProjectExecution;
+import grader.basics.config.BasicExecutionSpecification;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.execution.BasicExecutionSpecification;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.execution.BasicProjectExecution;
 import grader.basics.junit.BasicJUnitUtils;
 //import framework.grading.testing.TestCase;
 import grader.basics.junit.GradableJUnitSuite;
@@ -517,7 +517,10 @@ public class BasicProjectIntrospection {
 		return retVal.toArray(emptyMethodArray);
 
 	}
-
+/**
+ * It returns the first class, which is probably the right thing to do
+ * for efficiency.
+ */
 	public static Set<Class> findBestClassesByMethods(Project aProject,
 			Method[] aMethods, boolean findClass) {
 

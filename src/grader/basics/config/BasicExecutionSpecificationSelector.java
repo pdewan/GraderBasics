@@ -1,6 +1,4 @@
-package grader.basics.execution;
-
-import grader.basics.config.ABasicExecutionSpecification;
+package grader.basics.config;
 
 public class BasicExecutionSpecificationSelector {
 	public static BasicExecutionSpecification executionSpecification;

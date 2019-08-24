@@ -1,7 +1,7 @@
 package gradingTools.shared.testcases;
 
-import grader.basics.config.BasicProjectExecution;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.GradingMode;
 import grader.basics.execution.ResultingOutErr;
 import grader.basics.junit.JUnitTestsEnvironment;

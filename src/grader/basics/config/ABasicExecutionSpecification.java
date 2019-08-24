@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 
 import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.execution.BasicExecutionSpecification;
 import grader.basics.execution.BasicRunningProject;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;

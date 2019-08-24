@@ -1,18 +1,7 @@
-package grader.basics.config;
+package grader.basics.execution;
 
-import grader.basics.execution.AConstructorExecutionCallable;
-import grader.basics.execution.AMethodExecutionCallable;
-import grader.basics.execution.AResultWithOutput;
-import grader.basics.execution.BasicExecutionSpecification;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
-import grader.basics.execution.BasicProcessRunner;
-import grader.basics.execution.JavaMainClassFinderSelector;
-import grader.basics.execution.NotRunnableException;
-import grader.basics.execution.ResultWithOutput;
-import grader.basics.execution.ResultingOutErr;
-import grader.basics.execution.Runner;
-import grader.basics.execution.RunnerSelector;
-import grader.basics.execution.RunningProject;
+import grader.basics.config.BasicExecutionSpecification;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 //import framework.execution.ARunningProject;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;

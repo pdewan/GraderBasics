@@ -1,7 +1,7 @@
 package grader.basics;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.execution.BasicExecutionSpecificationSelector;
 import grader.basics.execution.ExecutableFinderSelector;
 import grader.basics.execution.JavaMainClassFinderSelector;
 //import grader.checkStyle.CheckStyleInvoker;
