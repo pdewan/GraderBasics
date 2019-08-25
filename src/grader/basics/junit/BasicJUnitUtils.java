@@ -91,6 +91,7 @@ public class BasicJUnitUtils {
 		ObjectEditor.treeEdit(aGradable);
 	}
 	
+	
 	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
 		//  the suite class will
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);

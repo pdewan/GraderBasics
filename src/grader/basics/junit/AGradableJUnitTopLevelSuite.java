@@ -85,7 +85,9 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 
 	}
 	protected void testRunStarted(GradableJUnitTest aTest) throws PropertyVetoException{
-		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+		String aClassName = aTest.getSimpleName();
+
 		String aName = aTest.getExplanation();
 //		String anId = aTest.getJUnitClass().getName();
 		// aClassName and aName not really needed, as aTest has that info.

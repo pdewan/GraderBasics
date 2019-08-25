@@ -45,7 +45,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	int defaultScore = DEFAULT_SCORE;
 	Class jUnitClass;
 	Color color = UNTESTED_COLOR;
-	boolean isExtra;
+	protected boolean isExtra;
 	
 
 	boolean definesMaxScore = false;
@@ -53,7 +53,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //	boolean writeToFile;	
 //	boolean writeToServer;
 	boolean isRestriction;
-	Double maxScore;
+	protected Double maxScore;
 	Double computedMaxScore;
 	Double score = 0.0001;
 	String explanation;
@@ -104,6 +104,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	}
 	@Visible(false)
 	public void setMaxScore (Class aJUnitClass) {
+		if (aJUnitClass == null) {
+			return;
+		}
 		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {
 			MaxValue aMaxValue =  (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
 			maxScore = (double) aMaxValue.value();
@@ -252,6 +255,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		retVal.add(testCaseResult);
 		return retVal;
 	}
+	protected void testNullJUnitClass() {
+		
+	}
 	@Visible(false)
 	public TestCaseResult test()
 			throws NotAutomatableException, NotGradableException {
@@ -259,18 +265,28 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			Tracer.resetNumTraces();// previous test output should not affect this one
 			numTests++;
 			Class aJUnitClass = getJUnitClass();
-			BasicStaticConfigurationUtils.setTest(aJUnitClass);
+//			BasicStaticConfigurationUtils.setTest(aJUnitClass);
+			BasicStaticConfigurationUtils.setTest(getSimpleName());
+
 //			JUnitTestsEnvironment.addGradableJUnitTest(aJUnitClass, this);
 
-			runListener.setJUnitName(aJUnitClass.getName());
+//			runListener.setJUnitName(aJUnitClass.getName());
+			runListener.setJUnitName(getSimpleName());
+			if (aJUnitClass != null) {
+
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
 			aRunner.run(runNotifier);
 			testCaseResult = runListener.getTestCaseResult();
+			failure = runListener.getFailure();
+
+			} else {
+				testNullJUnitClass();
+			}
 			jUnitTest = getJUnitTestCase();
 			if (jUnitTest != null) {
 				jUnitTest.setLastResult(testCaseResult);
 			}
-			failure = runListener.getFailure();
+//			failure = runListener.getFailure();
 			fractionComplete = testCaseResult.getPercentage();
 			showResult(testCaseResult);
 //			status = aTestCaseResult.getPercentage()*100 + " % complete";
@@ -354,6 +370,11 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	}
 	
 	protected String description = null;
+	@Override
+	@Visible(false)
+	public String getSimpleName() {
+		return getJUnitClass().getSimpleName();
+	}
 	public String getName() {
 		if (description == null) {
 		String aScore = "[" + GradableJUnitTest.round(getComputedMaxScore()) + " pts" + "]";
@@ -361,8 +382,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 				"(extra credit)"
 				:"";
 //		description = explanation + aScore + anExtra;
-		description = getJUnitClass().getSimpleName() + aScore + anExtra;
-
+//		description = getJUnitClass().getSimpleName() + aScore + anExtra;
+		description = getSimpleName() + aScore + anExtra;
 		}
 		return description;
 	}

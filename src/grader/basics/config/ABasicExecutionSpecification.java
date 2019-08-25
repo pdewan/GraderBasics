@@ -521,8 +521,19 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     public void setStudentGradableProjectLocation(String aValue) {
     	runtimeStudentStringProperties.put(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, aValue);
     }
+protected String requirementsLocation = null;
+    
+    @Override
+    // the default value is null, so this caching will not really help
+    public String getRequirementsLocation() {
+    	if (requirementsLocation == null) {
+    		requirementsLocation = getStringProperty(BasicStaticConfigurationUtils.REQUIREMENTS_LOCATION, DEFAULT_REQUIREMENTS_LOCATION);
+    	}
+    	return sourceFolderLocation;
+//    	return getStringProperty(BasicStaticConfigurationUtils.SOURCE_LOCATION, null);
+    }
+    
     protected String sourceFolderLocation = null;
-
     
     @Override
     // the default value is null, so this caching will not really help

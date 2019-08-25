@@ -8,12 +8,25 @@ import org.apache.commons.lang.NotImplementedException;
 
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.util.DirectoryUtils;
+//import grader.config.AConfigurationManager;
+import util.trace.Tracer;
 
 public class ABasicConfigurationManager implements BasicConfigurationManager{
     public static final String PROJECT_CONFIG_FILE = "project.properties";
 //    File projectDirectory;
 
 	protected PropertiesConfiguration projectConfiguration;
+
+	public static final String COURSE_FILE = "course.properties";
+	public static final String CONFIG_DIR = "config";
+    PropertiesConfiguration moduleConfiguration;
+
+
+	public static final String COURSE_CONFIGURATION_FILE_NAME = "./" + CONFIG_DIR + "/" + COURSE_FILE;
+
+	public ABasicConfigurationManager() {
+		setCourseConfiguration(createCourseConfiguration());
+	}
 	@Override
 	public void clear() {
 		projectConfiguration = null;
@@ -43,6 +56,33 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
 //	public File getProjectDirectory() {
 //		return projectDirectory;
 //	}
+	protected PropertiesConfiguration createCourseConfiguration() {
+	       
+        try {
+        	File aFile = new File(ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME);
+        	if (!aFile.exists()) {
+//        		Tracer.warning (ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
+        		Tracer.info (this, ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
+
+        		return null;
+        	}
+			return new PropertiesConfiguration(ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME);
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+        
+        // Andrew might need to add stuff like in the method below
+
+}
+	@Override
+    public PropertiesConfiguration getCourseConfiguration() {
+        return moduleConfiguration;
+    }
+    @Override
+    public void setCourseConfiguration(PropertiesConfiguration newVal) {
+        this.moduleConfiguration = newVal;
+    }
 	@Override
 	public void createProjectConfiguration (File aProjectDirectory) {	
 		File[] aFiles = aProjectDirectory.listFiles();

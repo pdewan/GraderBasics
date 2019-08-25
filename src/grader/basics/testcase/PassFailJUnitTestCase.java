@@ -97,9 +97,13 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		
         try {
         	lastResult = test(CurrentProjectHolder.getOrCreateCurrentProject(), true);  
-        	
+        	if (lastResult == null) {
+        		BasicJUnitUtils.assertTrue("Test returned null result", 0, false);
+        		
+        	} else {
     		BasicJUnitUtils.assertTrue(lastResult.getNotes(), lastResult.getPercentage(), lastResult.isPass());
-        } catch (Throwable e) {
+        	}
+        	} catch (Throwable e) {
         	e.printStackTrace();
         	if (lastResult != null) {
         		BasicJUnitUtils.assertTrue(e, lastResult.getPercentage());

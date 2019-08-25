@@ -12,4 +12,6 @@ public interface BasicConfigurationManager {
 //	File getProjectDirectory();
 	PropertiesConfiguration getProjectConfiguration();
 	void clear();
+	PropertiesConfiguration getCourseConfiguration();
+	void setCourseConfiguration(PropertiesConfiguration newVal);
 }

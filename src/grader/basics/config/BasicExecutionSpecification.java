@@ -87,6 +87,7 @@ public interface BasicExecutionSpecification {
 	void setUseProjectConfiguration(boolean newVal);
 	String getEntryPoint();
 	void setEntryPoint(String anEntryPoint);
+	String getRequirementsLocation();
 	
 	
 
