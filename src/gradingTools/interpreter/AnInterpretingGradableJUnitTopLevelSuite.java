@@ -9,6 +9,7 @@ import com.sun.xml.internal.ws.encoding.RootOnlyCodec;
 
 import bus.uigen.ObjectEditor;
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.file.FileProxy;
 import grader.basics.file.RootFolderProxy;
 import grader.basics.file.filesystem.AFileSystemRootFolderProxy;
@@ -123,6 +124,9 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		
 	}
 	public static FileProxy getUnspecifiedRequirementsFile (RootFolderProxy aCurrentDirFile) {
+		if (aCurrentDirFile == null) {
+			return null;
+		}
 //		Set<String> aFiles = aCurrentDirFile.getChildrenNames();
 		List<FileProxy> aFiles = aCurrentDirFile.getFileEntries();
 //		String aFileName = null;
@@ -152,8 +156,20 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 	public static void main (String[] args) {
 		RootFolderProxy anAssignmentData = searchForAssignmentDataProxy(new File("."));
 		FileProxy aRequirementsFile = getUnspecifiedRequirementsFile(anAssignmentData);
+		if (aRequirementsFile == null) {
+			System.err.println("Could not find requirements file");
+			return;
+		}
+		String aFileName = aRequirementsFile.getMixedCaseLocalName();
+		String[] aFileNameComponents = aFileName.split("_|-");
+		if (aFileNameComponents.length < 3) {
+			System.err.println(aFileName + " not of the form <Course>_<Problem>_Requirements.csv");
+		} else {
+			BasicStaticConfigurationUtils.setModule(aFileNameComponents[0]);
+			BasicStaticConfigurationUtils.setProblem(aFileNameComponents[1]);
+		}
 		
-		System.out.println(aRequirementsFile);
+//		System.out.println(aRequirementsFile);
 		CSVRequirementsSpecification aSpecification = new ACSVRequirementsSpecification(aRequirementsFile);
 		GradableJUnitSuite aTopLevelSuite = new AnInterpretingGradableJUnitTopLevelSuite(aSpecification);
 		ObjectEditor.treeEdit(aTopLevelSuite);
