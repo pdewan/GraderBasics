@@ -91,7 +91,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		int aNumRequirements = aCSVRequirementsSpecification.getNumberOfRequirements();
 		stringToGradableSuite.put(emptyString, this);			
 
-		for (int aRequirementNumber = 0; aRequirementNumber <=  aNumRequirements; aRequirementNumber++) {
+		for (int aRequirementNumber = 0; aRequirementNumber <  aNumRequirements; aRequirementNumber++) {
 			String aDescription = aCSVRequirementsSpecification.getDescription(aRequirementNumber);
 			if (aDescription == null) {
 				continue;
