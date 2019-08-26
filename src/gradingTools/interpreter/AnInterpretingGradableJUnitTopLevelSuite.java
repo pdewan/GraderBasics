@@ -2,7 +2,9 @@ package gradingTools.interpreter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.sun.xml.internal.ws.encoding.RootOnlyCodec;
@@ -14,6 +16,7 @@ import grader.basics.file.FileProxy;
 import grader.basics.file.RootFolderProxy;
 import grader.basics.file.filesystem.AFileSystemRootFolderProxy;
 import grader.basics.file.zipfile.AZippedRootFolderProxy;
+import grader.basics.junit.AGradableJUnitSuite;
 import grader.basics.junit.AGradableJUnitTopLevelSuite;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
@@ -24,6 +27,8 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 import util.annotations.Visible;
 
 public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopLevelSuite{
+	protected Map<String, GradableJUnitSuite> stringToGradableSuite = new HashMap<>();
+	public static final String emptyString = "";
 
 	public AnInterpretingGradableJUnitTopLevelSuite(CSVRequirementsSpecification aCSVRequirementsSpecification) {
 		super(null);
@@ -40,8 +45,51 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 	public String getSimpleName() {
 		return "root";
 	}
+	protected void addLeaf(
+			GradableJUnitSuite aParentSuite,
+			CSVRequirementsSpecification aCSVRequirementsSpecification, 			
+			int aRequirementNumber,
+			String aSimpleDescription) {
+//		String aDescription = aCSVRequirementsSpecification.getDescription(aRequirementNumber);
+//		if (aDescription == null) {
+//			return;
+//		}
+			
+//		String[] aDescriptionNames = aDescription.split("\\.");
+//		String aSimpleDescription = aDescriptionNames[aDescriptionNames.length - 1];
+		PassFailJUnitTestCase aPassFailJUnitTestCase = new AnInterpretingJUnitTestCase(aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber);
+		GradableJUnitTest aGradableJUnitTest = 
+				new AnInterpretingGradableJUnitTest(AnInterpretingJUnitTestCase.class, aPassFailJUnitTestCase,aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber );
+		aParentSuite.add(aGradableJUnitTest);
+	}
+	protected void addDescendents(
+			CSVRequirementsSpecification aCSVRequirementsSpecification, 
+			int aRequirementNumber, 
+			String[] aDescriptionComponents, 
+			String aParentString, 
+			int anIndex) {
+		GradableJUnitSuite aParentSuite = stringToGradableSuite.get(aParentString);
+		
+		
+		if (anIndex == aDescriptionComponents.length - 1 ) {
+			
+			addLeaf(aParentSuite, aCSVRequirementsSpecification, aRequirementNumber, aDescriptionComponents[anIndex]);	
+			return;
+		} else {
+			String aNodeFullName = aParentString + "_" + aDescriptionComponents[anIndex];
+			GradableJUnitSuite anInternalNode = stringToGradableSuite.get(aNodeFullName);
+			if (anInternalNode == null) {
+				anInternalNode = new AnInterpretingGradableJUnitSuite(aDescriptionComponents[anIndex]); // may need special node
+				stringToGradableSuite.put(aNodeFullName, anInternalNode);
+				aParentSuite.add(anInternalNode);
+			}
+			addDescendents(aCSVRequirementsSpecification, aRequirementNumber, aDescriptionComponents, aNodeFullName, anIndex + 1);			
+		}
+		
+	}
 	protected void addDescendents(CSVRequirementsSpecification aCSVRequirementsSpecification) {
 		int aNumRequirements = aCSVRequirementsSpecification.getNumberOfRequirements();
+		stringToGradableSuite.put(emptyString, this);			
 
 		for (int aRequirementNumber = 0; aRequirementNumber <=  aNumRequirements; aRequirementNumber++) {
 			String aDescription = aCSVRequirementsSpecification.getDescription(aRequirementNumber);
@@ -50,13 +98,16 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 			}
 				
 			String[] aDescriptionNames = aDescription.split("\\.");
-			String aSimpleDescription = aDescriptionNames[aDescriptionNames.length - 1];
-			PassFailJUnitTestCase aPassFailJUnitTestCase = new AnInterpretingJUnitTestCase(aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber);
-			GradableJUnitTest aGradableJUnitTest = 
-					new AnInterpretingGradableJUnitTest(AnInterpretingJUnitTestCase.class, aPassFailJUnitTestCase,aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber );
-			add(aGradableJUnitTest);
+			addDescendents(aCSVRequirementsSpecification, aRequirementNumber, aDescriptionNames, emptyString, 0);
+
+//			String aSimpleDescription = aDescriptionNames[aDescriptionNames.length - 1];
+//			PassFailJUnitTestCase aPassFailJUnitTestCase = new AnInterpretingJUnitTestCase(aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber);
+//			GradableJUnitTest aGradableJUnitTest = 
+//					new AnInterpretingGradableJUnitTest(AnInterpretingJUnitTestCase.class, aPassFailJUnitTestCase,aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber );
+//			add(aGradableJUnitTest);
 		}
 	}
+	@Visible(false)
 	public static RootFolderProxy searchForAssignmentDataProxy(File aParentFolder) {
 		File aFile = searchForAssignmentDataFolder(aParentFolder);
 		
@@ -67,6 +118,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		}
 		return new AZippedRootFolderProxy(aFile.getAbsolutePath());
 	}
+	@Visible(false)
 	public static File searchForAssignmentDataFolder(File aParentFolder) {
 		File[] aFiles = aParentFolder.listFiles();
 //		System.out.println(aParentFolder.getAbsolutePath());
@@ -95,6 +147,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		}
 		return null;		
 	}
+	@Visible(false)
 	public static File getSpecifiedRequirementsFile (File aCurrentDirFile, String aRelativeLocation) {
 		try {
 			String aCurrentDir = aCurrentDirFile.getCanonicalPath();
@@ -105,6 +158,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 			return null;
 		}
 	}
+	@Visible(false)
 	public static File getUnspecifiedRequirementsFile (File aCurrentDirFile) {
 		File anAssignmentsDataFolder = searchForAssignmentDataFolder(aCurrentDirFile) ;
 		
@@ -123,6 +177,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		}
 		
 	}
+	@Visible(false)
 	public static FileProxy getUnspecifiedRequirementsFile (RootFolderProxy aCurrentDirFile) {
 		if (aCurrentDirFile == null) {
 			return null;
@@ -143,6 +198,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		return null;
 		
 	}
+	@Visible(false)
 	public static File getRequirementsFile() {
 		String aConfigurationFileName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getRequirementsLocation();
 		File aCurrentDir = new File(".");
@@ -152,8 +208,8 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 			return getUnspecifiedRequirementsFile(aCurrentDir);
 		}
 	}
-	
-	public static void main (String[] args) {
+	@Visible(false)
+	public static void runSpecifiedTests( ) {
 		RootFolderProxy anAssignmentData = searchForAssignmentDataProxy(new File("."));
 		FileProxy aRequirementsFile = getUnspecifiedRequirementsFile(anAssignmentData);
 		if (aRequirementsFile == null) {
@@ -173,11 +229,33 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		CSVRequirementsSpecification aSpecification = new ACSVRequirementsSpecification(aRequirementsFile);
 		GradableJUnitSuite aTopLevelSuite = new AnInterpretingGradableJUnitTopLevelSuite(aSpecification);
 		ObjectEditor.treeEdit(aTopLevelSuite);
-//		int aNumRequirements = aSpecification.getNumberOfRequirements();
-//		for (int aRequirementNumber = 0; aRequirementNumber <=  aNumRequirements; aRequirementNumber++) {
-//			String aDescription = aSpecification.getDescription(aRequirementNumber);
-//			String[] aDescriptionNames = aDescription.split("\\.");
+	}
+	public static void main (String[] args) {
+		runSpecifiedTests();
+//		RootFolderProxy anAssignmentData = searchForAssignmentDataProxy(new File("."));
+//		FileProxy aRequirementsFile = getUnspecifiedRequirementsFile(anAssignmentData);
+//		if (aRequirementsFile == null) {
+//			System.err.println("Could not find requirements file");
+//			return;
 //		}
+//		String aFileName = aRequirementsFile.getMixedCaseLocalName();
+//		String[] aFileNameComponents = aFileName.split("_|-");
+//		if (aFileNameComponents.length < 3) {
+//			System.err.println(aFileName + " not of the form <Course>_<Problem>_Requirements.csv");
+//		} else {
+//			BasicStaticConfigurationUtils.setModule(aFileNameComponents[0]);
+//			BasicStaticConfigurationUtils.setProblem(aFileNameComponents[1]);
+//		}
+//		
+////		System.out.println(aRequirementsFile);
+//		CSVRequirementsSpecification aSpecification = new ACSVRequirementsSpecification(aRequirementsFile);
+//		GradableJUnitSuite aTopLevelSuite = new AnInterpretingGradableJUnitTopLevelSuite(aSpecification);
+//		ObjectEditor.treeEdit(aTopLevelSuite);
+////		int aNumRequirements = aSpecification.getNumberOfRequirements();
+////		for (int aRequirementNumber = 0; aRequirementNumber <=  aNumRequirements; aRequirementNumber++) {
+////			String aDescription = aSpecification.getDescription(aRequirementNumber);
+////			String[] aDescriptionNames = aDescription.split("\\.");
+////		}
 			
 	}
 
