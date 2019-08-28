@@ -1,21 +1,38 @@
 package grader.basics.config;
 
+import static grader.basics.config.BasicStaticConfigurationUtils.ARGS;
+import static grader.basics.config.BasicStaticConfigurationUtils.CHECK_ALL_SPECIFIED_TAGS;
+import static grader.basics.config.BasicStaticConfigurationUtils.CONSTRUCTOR_TIMEOUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_CHECK_ALL_SPECIFIED_TAGS;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_CONSTRUCTOR_TIME_OUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_FORK_MAIN;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_METHOD_TIME_OUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_PROCESS_TIME_OUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_REQUIREMENTS_LOCATION;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_RESOURCE_RELEASE_TIME;
+import static grader.basics.config.BasicStaticConfigurationUtils.DEFAULT_USE_PROJECT_CONFIGURATION;
+import static grader.basics.config.BasicStaticConfigurationUtils.ENTRY_POINT;
+import static grader.basics.config.BasicStaticConfigurationUtils.ENTRY_TAG;
+import static grader.basics.config.BasicStaticConfigurationUtils.ENTRY_TAGS;
+import static grader.basics.config.BasicStaticConfigurationUtils.FORK_MAIN;
+import static grader.basics.config.BasicStaticConfigurationUtils.METHOD_TIMEOUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.PROCESS_TIMEOUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.RESOURCE_RELEASE_TIME;
+import static grader.basics.config.BasicStaticConfigurationUtils.START_TAGS;
+import static grader.basics.config.BasicStaticConfigurationUtils.USE_METHOD_CONSTRUCTOR_TIMEOUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.USE_PROCESS_TIMEOUT;
+import static grader.basics.config.BasicStaticConfigurationUtils.USE_PROJECT_CONFIGURATION;
+import static grader.basics.config.BasicStaticConfigurationUtils.WAIT_FOR_METHOD_CONSTRUCTOR_AND_PROCESSES;
+import static grader.basics.config.BasicStaticConfigurationUtils.toCompoundProperty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.apache.commons.configuration.resolver.EntityRegistry;
 
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.execution.BasicRunningProject;
-import grader.basics.project.CurrentProjectHolder;
-import grader.basics.project.Project;
-import jdk.internal.dynalink.beans.StaticClass;
 import util.trace.Tracer;
-import static grader.basics.config.BasicStaticConfigurationUtils.*;
 /*
  * We are duplicating code in BasicStaticConfigiration and keeping the same kind of state.
  * So we do not really need BasicStaticConfigiration
