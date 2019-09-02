@@ -2,6 +2,7 @@ package grader.basics.project;
 
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
+import grader.basics.project.source.BasicTextManager;
 import grader.basics.util.Option;
 
 import java.io.File;
@@ -25,6 +26,7 @@ public interface Project {
     public static final String BINARY_4 = "target"; // net beans
     public static final String BINARY_5 = "Debug"; // net beans
     public static final String[] BINARIES  = {BINARY, BINARY_2, BINARY_3, BINARY_4, BINARY_5};
+	
 
 //    
 
@@ -91,6 +93,8 @@ public interface Project {
 	File getBuildFolder() throws FileNotFoundException;
 
 	File getObjectFolder();
+	BasicTextManager getTextManager();
+	String getSource();
 
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }

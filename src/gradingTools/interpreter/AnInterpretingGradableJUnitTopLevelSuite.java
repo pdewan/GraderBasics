@@ -29,8 +29,9 @@ import util.annotations.Visible;
 public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopLevelSuite{
 	protected Map<String, GradableJUnitSuite> stringToGradableSuite = new HashMap<>();
 	public static final String emptyString = "";
+	static protected RootFolderProxy assignmentsDataFolderProxy;
 
-	public AnInterpretingGradableJUnitTopLevelSuite(CSVRequirementsSpecification aCSVRequirementsSpecification) {
+	public AnInterpretingGradableJUnitTopLevelSuite(RootFolderProxy aParentFolder, CSVRequirementsSpecification aCSVRequirementsSpecification) {
 		super(null);
 		addDescendents(aCSVRequirementsSpecification);
 		
@@ -46,6 +47,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		return "root";
 	}
 	protected void addLeaf(
+//			FileProxy aParentFolder,
 			GradableJUnitSuite aParentSuite,
 			CSVRequirementsSpecification aCSVRequirementsSpecification, 			
 			int aRequirementNumber,
@@ -63,6 +65,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		aParentSuite.add(aGradableJUnitTest);
 	}
 	protected void addDescendents(
+//			FileProxy aParentFolder,
 			CSVRequirementsSpecification aCSVRequirementsSpecification, 
 			int aRequirementNumber, 
 			String[] aDescriptionComponents, 
@@ -106,6 +109,13 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 //					new AnInterpretingGradableJUnitTest(AnInterpretingJUnitTestCase.class, aPassFailJUnitTestCase,aSimpleDescription, aCSVRequirementsSpecification, aRequirementNumber );
 //			add(aGradableJUnitTest);
 		}
+	}
+	@Visible(false)
+	public static RootFolderProxy getAssignmentDataProxy() {
+		if (assignmentsDataFolderProxy == null) {
+			assignmentsDataFolderProxy = searchForAssignmentDataProxy(new File("."));
+		}
+		return assignmentsDataFolderProxy;
 	}
 	@Visible(false)
 	public static RootFolderProxy searchForAssignmentDataProxy(File aParentFolder) {
@@ -210,7 +220,9 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 	}
 	@Visible(false)
 	public static void runSpecifiedTests( ) {
-		RootFolderProxy anAssignmentData = searchForAssignmentDataProxy(new File("."));
+//		RootFolderProxy anAssignmentData = searchForAssignmentDataProxy(new File("."));
+		RootFolderProxy anAssignmentData = getAssignmentDataProxy();
+
 		FileProxy aRequirementsFile = getUnspecifiedRequirementsFile(anAssignmentData);
 		if (aRequirementsFile == null) {
 			System.err.println("Could not find requirements file");
@@ -227,7 +239,7 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 		
 //		System.out.println(aRequirementsFile);
 		CSVRequirementsSpecification aSpecification = new ACSVRequirementsSpecification(aRequirementsFile);
-		GradableJUnitSuite aTopLevelSuite = new AnInterpretingGradableJUnitTopLevelSuite(aSpecification);
+		GradableJUnitSuite aTopLevelSuite = new AnInterpretingGradableJUnitTopLevelSuite(assignmentsDataFolderProxy, aSpecification);
 		ObjectEditor.treeEdit(aTopLevelSuite);
 	}
 	public static void main (String[] args) {

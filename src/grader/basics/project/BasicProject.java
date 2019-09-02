@@ -6,6 +6,8 @@ import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
+import grader.basics.project.source.ABasicTextManager;
+import grader.basics.project.source.BasicTextManager;
 import grader.basics.settings.BasicGradingEnvironment;
 import grader.basics.trace.BinaryFolderMade;
 import grader.basics.trace.BinaryFolderNotFound;
@@ -42,6 +44,7 @@ public class BasicProject implements Project {
     protected String sourceFilePattern = null;
     protected File buildFolder;
     protected File objectFolder;
+    protected BasicTextManager textManager;
 //    protected SakaiProject project;
 
     
@@ -115,6 +118,7 @@ public class BasicProject implements Project {
             sourceFolder = src.get();
             this.projectFolder = src.get().getParentFile();
         }
+        textManager = new ABasicTextManager(sourceFolder);
     }
     // rewriting Josh's code
     // going back to Josh';s code
@@ -463,5 +467,22 @@ public class BasicProject implements Project {
     @Override
     public File getObjectFolder() {
 		return objectFolder;
+	}
+    @Override
+    public  String getSource() {
+    	return getTextManager().getAllSourcesText().toString();
+//		return project.
+//				getClassesTextManager().getEditedAllSourcesText(project.getSourceFileName());
+//    	return null;
+		
+//		return Common.toText(aRunningProject.getProject().getSourceFileName()).toString();
+	}
+	@Override
+	public BasicTextManager getTextManager() {
+		return textManager;
+	}
+	public String getAssignmentDataFolderName() {
+		return BasicGradingEnvironment.get()
+				.getDefaultAssignmentsDataFolderName();
 	}
 }
