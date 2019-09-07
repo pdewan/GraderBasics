@@ -1,6 +1,7 @@
 package gradingTools.interpreter;
 
 import grader.basics.junit.AGradableJUnitTest;
+import grader.basics.junit.TestCaseResult;
 import grader.basics.requirements.interpreter.specification.CSVRequirementsSpecification;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import util.annotations.Visible;
@@ -22,8 +23,9 @@ public class AnInterpretingGradableJUnitTest extends AGradableJUnitTest {
 		
 	}
 	@Override
-	protected void testNullJUnitClass() {
+	protected TestCaseResult testNullJUnitClass() {
 		passFailJUnitTestCase.defaultTest();
+		return passFailJUnitTestCase.getLastResult();
 	}
 	@Override
 	/**

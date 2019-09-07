@@ -6,6 +6,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.NotImplementedException;
 
+import grader.basics.assignment.AssignmentDataHolder;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.util.DirectoryUtils;
 //import grader.config.AConfigurationManager;
@@ -61,13 +62,22 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
         try {
         	File aFile = new File(ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME);
         	if (!aFile.exists()) {
+        		
+        		File anAssignmentData = AssignmentDataHolder.getAssignmentDataFile();
+        		String anAlternativeFileName = anAssignmentData.getAbsolutePath() + "/" + COURSE_FILE;
+        		aFile = new File(anAlternativeFileName);
+        		if (!aFile.exists()) {
 //        		Tracer.warning (ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
-        		Tracer.info (this, ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
+//        		Tracer.info (this, ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
+                Tracer.info (this, anAlternativeFileName + " does not exist, using defaults");
 
         		return null;
+        		}
         	}
-			return new PropertiesConfiguration(ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME);
-		} catch (ConfigurationException e) {
+//			return new PropertiesConfiguration(ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME);
+			return new PropertiesConfiguration(aFile);
+
+        } catch (ConfigurationException e) {
 			e.printStackTrace();
 			return null;
 		}

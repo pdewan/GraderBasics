@@ -78,6 +78,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     protected Map<String, TimedProcess> nameToProcess = new HashMap<>();
     protected TimedProcess currentProcess;
     protected boolean destroyed;
+    protected Project project;
 
    
 
@@ -99,6 +100,51 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     protected Map<String, RunnerErrorOrOutStreamProcessor> processToOut = new HashMap<>();
     protected Map<String, RunnerErrorOrOutStreamProcessor> processToErr = new HashMap<>();
     protected List<String> processes;
+    public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, List<String> aProcesses, Map<String, String> aProcessToInput) {
+        project = aProject;
+    	exception = null;
+//        output = null;
+        processes = aProcesses;
+        maybeProcessProjectWrappper(aProject);
+
+        outputBasedInputGenerator = anOutputBasedInputGenerator;
+        if (outputBasedInputGenerator != null) {
+            outputBasedInputGenerator.addProcessInputListener(this); // maybe this should be in another class
+        }
+        if (aProcessToInput != null) {
+            for (String aProcess : aProcessToInput.keySet()) {
+                String anInput = aProcessToInput.get(aProcess);
+                // if (anInput != null)
+                processToInput.put(aProcess, new StringBuffer(anInput));
+//				processToOutput.put(aProcess, new StringBuffer());
+                input.append(anInput);
+            }
+        }
+        if (aProcesses != null) {
+            for (int i = 0; i < aProcesses.size(); i++) {
+                String aProcess = aProcesses.get(i);
+//                if (StaticConfigurationUtils.getTrace()) {
+//                    LocalGlobalTranscriptManager aTranscriptManager = new ALocalGlobalTranscriptManager();
+//                    processToTranscriptManager.put(aProcess, aTranscriptManager);
+//                    aTranscriptManager.setIndexAndLogDirectory(i, project.getStudentAssignment().getFeedbackFolder().getAbsoluteName());
+//                    aTranscriptManager.setProcessName(aProcess);
+//                }
+                maybeProcessTrace(aProcess, i);
+                if (outputBasedInputGenerator != null) {
+                    outputBasedInputGenerator.addProcessName(aProcess);
+
+                }
+            }
+            if (outputBasedInputGenerator != null) {
+                outputBasedInputGenerator.processNamesAdded();
+            }
+
+        }
+        maxNotificationTime = System.nanoTime();
+        Thread aThread = new Thread(this);
+        aThread.setName("Output Sorter");
+        aThread.start();
+    }
     
     protected void maybeProcessProjectWrappper(Project aProject) {
 //    	if (aProject != null && aProject instanceof ProjectWrapper) {
@@ -260,50 +306,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     	}
     }
 
-    public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, List<String> aProcesses, Map<String, String> aProcessToInput) {
-        exception = null;
-//        output = null;
-        processes = aProcesses;
-        maybeProcessProjectWrappper(aProject);
-
-        outputBasedInputGenerator = anOutputBasedInputGenerator;
-        if (outputBasedInputGenerator != null) {
-            outputBasedInputGenerator.addProcessInputListener(this); // maybe this should be in another class
-        }
-        if (aProcessToInput != null) {
-            for (String aProcess : aProcessToInput.keySet()) {
-                String anInput = aProcessToInput.get(aProcess);
-                // if (anInput != null)
-                processToInput.put(aProcess, new StringBuffer(anInput));
-//				processToOutput.put(aProcess, new StringBuffer());
-                input.append(anInput);
-            }
-        }
-        if (aProcesses != null) {
-            for (int i = 0; i < aProcesses.size(); i++) {
-                String aProcess = aProcesses.get(i);
-//                if (StaticConfigurationUtils.getTrace()) {
-//                    LocalGlobalTranscriptManager aTranscriptManager = new ALocalGlobalTranscriptManager();
-//                    processToTranscriptManager.put(aProcess, aTranscriptManager);
-//                    aTranscriptManager.setIndexAndLogDirectory(i, project.getStudentAssignment().getFeedbackFolder().getAbsoluteName());
-//                    aTranscriptManager.setProcessName(aProcess);
-//                }
-                maybeProcessTrace(aProcess, i);
-                if (outputBasedInputGenerator != null) {
-                    outputBasedInputGenerator.addProcessName(aProcess);
-
-                }
-            }
-            if (outputBasedInputGenerator != null) {
-                outputBasedInputGenerator.processNamesAdded();
-            }
-
-        }
-        maxNotificationTime = System.nanoTime();
-        Thread aThread = new Thread(this);
-        aThread.setName("Output Sorter");
-        aThread.start();
-    }
+    
 
     public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, String anInput) {
         this(aProject, anOutputBasedInputGenerator, null, (Map) null);
@@ -378,7 +381,9 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 //    			String[] anOutputLines = allProcessedOutputLines.toArray();
     			anOutputLines = allProcessedOutputLines.toArray(anOutputLines);
     			LinesMatcher aLineMatcher =  new ALinesMatcher(anOutputLines);
-    			processToProcessedLineMatcher.put("main", aLineMatcher);
+    			processToProcessedLineMatcher.put(BasicProcessRunner.MAIN_ENTRY_POINT, aLineMatcher);
+//    			processToProcessedLineMatcher.put("main", aLineMatcher);
+
     			return processToProcessedLineMatcher;
     		}
     		for (String aKey:aKeys) {
@@ -447,7 +452,17 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
 
         }
-        String anAnnotatedLine = aProcess + ":" + newVal;
+//        String anAnnotatedLine = aProcess + ":" + newVal;
+        
+        String anAnnotatedLine = null;
+        if (aProcess == BasicProcessRunner.MAIN_ENTRY_POINT ) {
+        	anAnnotatedLine = newVal;
+
+        } else {
+        	anAnnotatedLine = aProcess + ":" + newVal;
+
+        }
+
         allProcessedOutput.append(anAnnotatedLine);
         aProcessOutput.append(newVal);
 //        System.out.println(" new process output  " + aProcessOutput);
@@ -655,11 +670,11 @@ public void appendCumulativeOutput() {
 //
     }
     
-    protected void maybeSetCurrentProjectIO() {
-//    	 if (project != null) {
-//             project.setCurrentOutput(new StringBuffer(output));
-//             project.setCurrentInput(input.toString());
-//         }
+    protected void maybeSetCurrentProjectIO() {    
+    			String anInput = input.toString();
+    			project.setCurrentInput(anInput);
+    			project.setCurrentOutput(allProcessedOutput);   		
+    	
     }
     
     public static final int PROCESS_TEAM_OUTPUT_OUTPUT_SLEEP_TIME = 5000;

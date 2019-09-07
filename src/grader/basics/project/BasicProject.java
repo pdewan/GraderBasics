@@ -45,6 +45,8 @@ public class BasicProject implements Project {
     protected File buildFolder;
     protected File objectFolder;
     protected BasicTextManager textManager;
+    protected String input = "";
+    protected StringBuffer output;
 //    protected SakaiProject project;
 
     
@@ -484,5 +486,27 @@ public class BasicProject implements Project {
 	public String getAssignmentDataFolderName() {
 		return BasicGradingEnvironment.get()
 				.getDefaultAssignmentsDataFolderName();
+	}
+	@Override
+	public String getCurrentInput() {
+		return input;
+	}
+	@Override
+	public void setCurrentInput(String currentInput) {
+		input = currentInput;
+	}
+	@Override
+	public StringBuffer getCurrentOutput() {
+		return output;
+	}
+	@Override
+	public void clearOutput() {
+		if (output != null) {
+			output.setLength(0);
+		}
+	}
+	@Override
+	public void setCurrentOutput(StringBuffer currentOutput) {
+		output = currentOutput;
 	}
 }

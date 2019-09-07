@@ -203,12 +203,26 @@ public class ACSVRequirementsSpecification implements CSVRequirementsSpecificati
 				return false;
 			}
 	}
+	
+	public static boolean isQuoted(String aString) {
+		return ("\"".equals(aString.charAt(0)) && 
+			"\"".equals(aString.charAt((aString.length() - 1))));
+	}
 
+	public static String trimAndRemoveQuotes(String aString) {
+		String aRetVal = aString.trim();
+		if (isQuoted(aString)) {
+			aRetVal = aRetVal.substring(1, aString.length()-1);
+		}
+		return aRetVal;
+		
+	}
 	
 	public String getInput(int aRequirementNum) {
 		try {
 		int aRowNum = headerRow + 1 + aRequirementNum;
-		return table.get(aRowNum)[INPUT_COLUMN];
+		String aRetVal = table.get(aRowNum)[INPUT_COLUMN];
+		return trimAndRemoveQuotes(aRetVal);
 		} catch (Exception e) {
 			System.out.println("Requirement " + aRequirementNum + " does not have max score ");
 			return null;

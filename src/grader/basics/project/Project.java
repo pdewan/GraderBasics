@@ -95,6 +95,15 @@ public interface Project {
 	File getObjectFolder();
 	BasicTextManager getTextManager();
 	String getSource();
+	String getCurrentInput();
+
+	void setCurrentInput(String currentInput);
+	StringBuffer getCurrentOutput();
+
+	void clearOutput();
+
+	void setCurrentOutput(StringBuffer currentOutput);
+
 
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }

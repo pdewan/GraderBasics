@@ -3,6 +3,7 @@ package grader.basics.junit;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
+import gradingTools.interpreter.AnInterpretingGradableJUnitTest;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
@@ -164,6 +165,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Visible(false)
 	@Override
 	public JUnitTestCase getJUnitTestCase() {
+		if (jUnitClass == null) {
+			return null;
+		}
 		return JUnitTestsEnvironment.getPassFailJUnitTest(jUnitClass);
 	}
 	@Visible(false)
@@ -255,8 +259,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		retVal.add(testCaseResult);
 		return retVal;
 	}
-	protected void testNullJUnitClass() {
-		
+	protected TestCaseResult testNullJUnitClass() {
+		return null;
 	}
 	@Visible(false)
 	public TestCaseResult test()
@@ -278,19 +282,24 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			aRunner.run(runNotifier);
 			testCaseResult = runListener.getTestCaseResult();
 			failure = runListener.getFailure();
-
-			} else {
-				testNullJUnitClass();
-			}
+			
 			jUnitTest = getJUnitTestCase();
 			if (jUnitTest != null) {
 				jUnitTest.setLastResult(testCaseResult);
 			}
-//			failure = runListener.getFailure();
+
+			} else {
+				testCaseResult = testNullJUnitClass();
+//				((AnInterpretingGradableJUnitTest) this)AGradableJUnitTest.get
+//				return null;
+			}
+//			jUnitTest = getJUnitTestCase();
+//			if (jUnitTest != null) {
+//				jUnitTest.setLastResult(testCaseResult);
+//			}
 			fractionComplete = testCaseResult.getPercentage();
 			showResult(testCaseResult);
-//			status = aTestCaseResult.getPercentage()*100 + " % complete";
-//			message = aTestCaseResult.getNotes();			
+			
 			return testCaseResult;
 
 			
