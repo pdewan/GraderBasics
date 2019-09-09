@@ -64,12 +64,14 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
         	if (!aFile.exists()) {
         		
         		File anAssignmentData = AssignmentDataHolder.getAssignmentDataFile();
+        		if (anAssignmentData != null) {
         		String anAlternativeFileName = anAssignmentData.getAbsolutePath() + "/" + COURSE_FILE;
         		aFile = new File(anAlternativeFileName);
+        		}
         		if (!aFile.exists()) {
 //        		Tracer.warning (ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
 //        		Tracer.info (this, ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
-                Tracer.info (this, anAlternativeFileName + " does not exist, using defaults");
+                Tracer.info (this, "course configuration" + " does not exist, using defaults");
 
         		return null;
         		}
@@ -93,8 +95,12 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
     public void setCourseConfiguration(PropertiesConfiguration newVal) {
         this.moduleConfiguration = newVal;
     }
+    protected boolean noProjectConfiguration = false;
 	@Override
 	public void createProjectConfiguration (File aProjectDirectory) {	
+		if (noProjectConfiguration) {
+			return;
+		}
 		File[] aFiles = aProjectDirectory.listFiles();
 		File aConfigFile = null;
 		for (File aFile: aFiles) {
@@ -110,7 +116,8 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
 				e.printStackTrace();
 			}
 		} else {
-			System.err.println("Did not find file " + PROJECT_CONFIG_FILE + " in " + aProjectDirectory.getAbsolutePath());
+			noProjectConfiguration = true;
+			Tracer.info(this, "Did not find file " + PROJECT_CONFIG_FILE + " in " + aProjectDirectory.getAbsolutePath());
 		}
 //		String aConfigFileFullName = aProjectDirectory.getAbsolutePath() + "/" +
 	}

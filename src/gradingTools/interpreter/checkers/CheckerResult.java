@@ -1,6 +1,6 @@
 package gradingTools.interpreter.checkers;
 
-public interface InterpretedCheckerResult {
+public interface CheckerResult {
 	public String getNotes() ;
 	
 	public boolean isSucceeded() ;

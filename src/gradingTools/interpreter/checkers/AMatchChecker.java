@@ -8,7 +8,7 @@ public class AMatchChecker implements InterpretedChecker{
 	}	
 	
 	@Override
-	public InterpretedCheckerResult check(String[] anArgs) {
+	public CheckerResult check(String[] anArgs) {
 		try {
 			
 			boolean aResult = anArgs[0].matches(anArgs[1]);

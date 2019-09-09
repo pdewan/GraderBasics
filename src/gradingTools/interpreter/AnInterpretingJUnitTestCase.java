@@ -12,7 +12,7 @@ import grader.basics.requirements.interpreter.specification.CSVRequirementsSpeci
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.interpreter.checkers.InterpretedChecker;
 import gradingTools.interpreter.checkers.InterpretedCheckerRegistry;
-import gradingTools.interpreter.checkers.InterpretedCheckerResult;
+import gradingTools.interpreter.checkers.CheckerResult;
 import gradingTools.utils.RunningProjectUtils;
 
 public class AnInterpretingJUnitTestCase extends PassFailJUnitTestCase {
@@ -50,7 +50,7 @@ public class AnInterpretingJUnitTestCase extends PassFailJUnitTestCase {
 			anArgs[i] = anActualArg;
 			allArgs += " " + anArg;
 		}
-		InterpretedCheckerResult aResult = aChecker.check(anArgs);
+		CheckerResult aResult = aChecker.check(anArgs);
 		String aFunctionCall = aComparator + " " + allArgs;
 		TestCaseResult retVal;
 		

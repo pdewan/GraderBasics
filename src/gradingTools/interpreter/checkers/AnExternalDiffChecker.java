@@ -40,7 +40,7 @@ public class AnExternalDiffChecker implements InterpretedChecker{
 		return aFile;
 	}
 	@Override
-	public InterpretedCheckerResult check(String[] anArgs) {
+	public CheckerResult check(String[] anArgs) {
 		try {
 			String anOptions = anArgs[0];
 			String anArg1Text = anArgs[1];

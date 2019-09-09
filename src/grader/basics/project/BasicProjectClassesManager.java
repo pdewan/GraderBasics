@@ -679,6 +679,52 @@ public class BasicProjectClassesManager implements ClassesManager {
         return classes;
     }
     
+    protected Map<String, Set<ClassDescription>> supertypesToClasses = new HashMap();
+    /**
+     * Looks for all class descriptions with a particular tag
+     *
+     * @param tag The tag to search for
+     * @return The set of matching class descriptions
+     */
+    @Override
+    public Set<ClassDescription> findBySupertypes(Class[] aSupertypes) {
+    	if (aSupertypes.length == 0) {
+    		return null;
+    	}
+    	List<String> anInterfaceNames = new ArrayList<>(aSupertypes.length);
+    	for (Class anInterface:aSupertypes) {
+    		anInterfaceNames.add(anInterface.getCanonicalName());
+    	}
+    	java.util.Collections.sort(anInterfaceNames);    		
+    	String aKey = anInterfaceNames.toString();
+    	Set<ClassDescription> classes = null;
+    	classes = supertypesToClasses.get(aKey);
+    	if (classes != null) {
+    		return classes;
+    	}
+    	
+    	classes = new HashSet<>();
+//        System.out.println ("Class descriptions:" +classDescriptions);
+        for (ClassDescription description : classDescriptions) {
+        	Class aCandidate = description.getJavaClass();
+        	boolean aMatch = true;
+        	for (Class anInterface:aSupertypes) {
+        		if (anInterface == aCandidate  || !anInterface.isAssignableFrom(aCandidate)) {
+        			aMatch = false;
+        			break;
+        		}        		
+        	}
+        	if (aMatch) {
+        		classes.add(description);
+        	}
+
+
+        }
+        supertypesToClasses.put(aKey, classes);
+        return classes;
+    }
+    
+    
     @Override
     public Set<ClassDescription> findByPattern(String tag) {
     	Tracer.info(this, "Finding type by pattern:" + tag);

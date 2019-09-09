@@ -179,6 +179,32 @@ public class BasicProjectIntrospection {
 		return aRetVal;
 		
 	}
+	public static Class findClassByExistingSupertype(Project aProject, Class anExistingType) {
+		Tracer.info(BasicProjectIntrospection.class,
+				"Looking for unique class of existing type " + anExistingType);
+		Set<Class> aClasses = findClassesByExistingSupertype(aProject, new Class[] {anExistingType});
+				
+		
+		aClasses = removeSuperTypes(aClasses);
+		if (aClasses.size() != 1) {
+			if (aClasses.size() > 1) {
+
+				Tracer.info(BasicProjectIntrospection.class,
+						"Found multiple matching classes:"
+								+ aClasses);
+			} else {
+				Tracer.info(BasicProjectIntrospection.class,
+						"Found no matching class."
+								);
+			}
+			return null;
+		}
+		Class aClass = aClasses.iterator().next();
+		Tracer.info(BasicProjectIntrospection.class,"Found type:" + aClass);
+		return aClass;
+//		return aClasses.iterator().next();
+
+	}
 	public static Class findClass(Project aProject, String aName,
 			String[] aTag, String aNameMatch, String aTagMatch) {
 		String aTagsString = aTag == null ? "" : Arrays.toString(aTag);
@@ -697,6 +723,30 @@ public class BasicProjectIntrospection {
 		// return null;
 		// }
 		// return aClasses.get(0).getJavaClass();
+
+	}
+	public static Set<Class> findClassesByExistingSupertype(Project aProject, Class[] aSupertypes) {
+//		if (aName == null && aTag != null && aTag.length > 0) {
+//			aName = aTag[0];
+//		}
+		Set<Class> result = new HashSet();
+		ClassesManager aClassManager = aProject.getClassesManager().get();
+		if (aClassManager.getClassDescriptions().size() == 0) {
+			Assert.assertTrue(
+					"No compiled classes found in bin, see transcript for compile errors",
+					false);
+		}
+
+		// Set<ClassDescription> aClasses = aProject.getClassesManager().get()
+		// .findClassAndInterfaces(aName, aTag, aNameMatch, aTagMatch);
+		Set<ClassDescription> aClassDescriptions = aClassManager.findBySupertypes(aSupertypes);
+		
+		Set<Class> aRetVal = new HashSet<>(aClassDescriptions.size());
+		for (ClassDescription aClassDescription:aClassDescriptions) {
+			aRetVal.add(aClassDescription.getJavaClass());
+		}
+		return aRetVal;
+		
 
 	}
 
@@ -2154,6 +2204,22 @@ public class BasicProjectIntrospection {
 		toPrimitiveTypes(aParameterTypes);
 		return createInstance(aProxyClass, aParameterTypes, anArgs);
 	}
+	
+	public static Object createInstanceOfPredefinedSupertype(Class aSuperType) {
+		return createInstanceFromPredefinedSupertype(aSuperType, emptyObjectArray );
+	}
+
+	public static Object createInstanceFromPredefinedSupertype(Class aSuperType, Object[] anArgs) {
+		Class[] aParameterTypes = toClasses(anArgs);
+		toPrimitiveTypes(aParameterTypes);
+		Project aProject = CurrentProjectHolder.getCurrentProject();
+		Class anActualClass = BasicProjectIntrospection.
+				findClassByExistingSupertype(aProject, aSuperType);
+		if (anActualClass == null) {
+			return null;
+		}
+		return createInstance(aSuperType, anActualClass, aParameterTypes, anArgs);
+	}
 
 	public static Class[] getInterfaces(Class aClassOrInterface) {
 		Class[] anInterfaces = null;
@@ -2164,12 +2230,11 @@ public class BasicProjectIntrospection {
 		return anInterfaces;
 	}
 	
-	public static Object forceCreateProxy(Class aProxyClass, Object anActualObject) {
-//		// redundant
-//		if (anActualObject instanceof Proxy && !isReverseProxy(anActualObject)) {
-//			return anActualObject;
-//		}
-//		
+	public static Object createTimingOutProxy(Class aProxyClass, Object anActualObject) {
+		Object aCachedValue = objectToProxy.get(anActualObject);
+		if (aCachedValue != null) {
+			return aCachedValue;
+		}
 		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
 				anActualObject);
 		Class[] anInterfaces = null;
@@ -2196,7 +2261,7 @@ public class BasicProjectIntrospection {
 			return anActualObject;
 		}
 		
-		return forceCreateProxy(aProxyClass, anActualObject);
+		return createTimingOutProxy(aProxyClass, anActualObject);
 
 //		InvocationHandler aHandler = new AGradedClassProxyInvocationHandler(
 //				anActualObject);
@@ -2305,33 +2370,50 @@ public class BasicProjectIntrospection {
 						+ Arrays.toString(getTags(aProxyClass)));
 				return null;
 			}
+			
+			return createInstance(aProxyClass, anActualClass, aConctructArgsTypes, anArgs);
 
-			Constructor aConstructor = anActualClass
+//			Constructor aConstructor = anActualClass
+//					.getConstructor(aConctructArgsTypes);
+//			
+//			Object anActualObject = BasicProjectExecution.timedInvoke(
+//					aConstructor, anArgs);
+//			return createProxy(aProxyClass, anActualObject);
+			
+			
+			
+			
+//		} catch (NoSuchMethodException e) {
+//			Tracer.info(
+//					BasicProjectIntrospection.class,
+//					"Cound not find " + "in " + anActualClass
+//							+ " a public constructor with args:"
+//							+ Arrays.toString(aConctructArgsTypes));
+//			System.out.println(e);
+//			return null;
+
+		} catch (Exception e) {
+			Tracer.info(BasicProjectIntrospection.class,
+					"Class instantiation failed:" + e);
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	public static Object createInstance(Class aReturnValueType, Class anActualClass,
+			Class[] aConctructArgsTypes, Object[] anArgs) {
+		try {
+					Constructor aConstructor = anActualClass
 					.getConstructor(aConctructArgsTypes);
 			// Object anActualObject = aConstructor.newInstance(anArgs);
 			Object anActualObject = BasicProjectExecution.timedInvoke(
 					aConstructor, anArgs);
-			return createProxy(aProxyClass, anActualObject);
-			// InvocationHandler aHandler = new
-			// AGradedClassProxyInvocationHandler(
-			// anActualObject);
-			// Class[] anInterfaces = null;
-			// // if (aProxyClass.isInterface())
-			// // anInterfaces = new Class[] {aProxyClass};
-			// // else
-			// // anInterfaces = aProxyClass.getInterfaces();
-			// // return Proxy.newProxyInstance(aProxyClass.getClassLoader(),
-			// // aProxyClass.getInterfaces(), aHandler);
-			// Object aProxy =
-			// Proxy.newProxyInstance(aProxyClass.getClassLoader(),
-			// getInterfaces(aProxyClass), aHandler);
-			// proxyToObject.put(aProxy, anActualObject);
-			// objectToProxy.put(anActualObject, aProxy);
-			// return aProxy;
+			return createProxy(aReturnValueType, anActualObject);
+			
 		} catch (NoSuchMethodException e) {
 			Tracer.info(
 					BasicProjectIntrospection.class,
-					"Cound not find " + "in " + anActualClass
+					"Cound not find in " + anActualClass
 							+ " a public constructor with args:"
 							+ Arrays.toString(aConctructArgsTypes));
 			System.out.println(e);

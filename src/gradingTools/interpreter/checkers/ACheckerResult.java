@@ -1,6 +1,6 @@
 package gradingTools.interpreter.checkers;
 
-public class ACheckerResult implements InterpretedCheckerResult {
+public class ACheckerResult implements CheckerResult {
 	String notes = "";
 	boolean succeeded;
 	

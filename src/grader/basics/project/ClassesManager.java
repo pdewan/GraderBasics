@@ -52,6 +52,8 @@ public interface ClassesManager {
 	Set<ClassDescription> findClassAndInterfaces(String aName, String[] aTag,
 			String aNameMatch, String aTagMatch);
 
+	Set<ClassDescription> findBySupertypes(Class[] anInterfaces);
+
 //	boolean isHasCompileErrors();
 //
 //	void setHasCompileErrors(boolean hasCompileErrors);

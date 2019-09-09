@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -204,7 +205,8 @@ public class BasicProjectExecution {
 	
 
 	public static Object timedInvoke(Object anObject, Method aMethod,
-			Object[] anArgs) throws Throwable {
+			Object... anArgs) throws Throwable {
+		
 		if (isUseMethodAndConstructorTimeOut())
 			return timedInvoke(anObject, aMethod, anArgs, getMethodTimeOut());
 		else {
@@ -1469,8 +1471,11 @@ public class BasicProjectExecution {
 	public static String toInputString(String... inputs) {
 		return toString(DEFAULT_INPUT_SEPARATOR, inputs);
 	}
+	public static String toString(Object... inputs) {
+		return toString(DEFAULT_INPUT_SEPARATOR, inputs);
+	}
 
-	public static String toString(String inputSeparator, String... inputs) {
+	public static String toString(String inputSeparator, Object... inputs) {
 		String allInputsStr = "";
 		for (int i = 0; i < inputs.length; i++) {
 			if (i > 0) {
@@ -1479,6 +1484,16 @@ public class BasicProjectExecution {
 			allInputsStr += inputs[i];
 		}
 		return allInputsStr;
+	}
+	public static String toString( List aList) {
+		String retVal = "";
+		for (int i = 0; i < aList.size(); i++) {
+			if (i > 0) {
+				retVal += DEFAULT_INPUT_SEPARATOR;
+			}
+			retVal += aList.get(i);
+		}
+		return retVal;
 	}
 	public static boolean isWaitForMethodConstructorsAndProcesses() {
 		return basicExecutionSpecification.isWaitForMethodConstructorAndProcesses();
