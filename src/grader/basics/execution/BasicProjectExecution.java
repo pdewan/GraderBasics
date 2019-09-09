@@ -1471,11 +1471,11 @@ public class BasicProjectExecution {
 	public static String toInputString(String... inputs) {
 		return toString(DEFAULT_INPUT_SEPARATOR, inputs);
 	}
-	public static String toString(Object... inputs) {
+	public static String toString(String... inputs) {
 		return toString(DEFAULT_INPUT_SEPARATOR, inputs);
 	}
 
-	public static String toString(String inputSeparator, Object... inputs) {
+	public static String toString(String inputSeparator, String... inputs) {
 		String allInputsStr = "";
 		for (int i = 0; i < inputs.length; i++) {
 			if (i > 0) {
