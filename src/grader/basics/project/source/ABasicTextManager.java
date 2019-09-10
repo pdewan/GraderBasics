@@ -21,6 +21,7 @@ public class ABasicTextManager implements BasicTextManager{
     public ABasicTextManager(File aSourceFolder) {
     	sourceSuffix = BasicLanguageDependencyManager.getSourceFileSuffix();
     	sourceFolder = aSourceFolder;
+    	allSourcesText = new StringBuffer();
     }
 
     //@Override
