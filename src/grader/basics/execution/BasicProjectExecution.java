@@ -1223,6 +1223,22 @@ public class BasicProjectExecution {
 		}
 
 	}
+	public static void invokeMainDirect(Class aMainClass, String... args) throws Throwable {
+		try {
+			
+
+			Method aMainMethod = BasicProjectIntrospection.findMethod(
+					aMainClass, "main", new Class[] { String[].class });
+			if (aMainMethod == null) {
+				System.err.println("No main in class:" + aMainClass);
+			}
+			aMainMethod.invoke(aMainClass, new Object[] { args });
+			
+			// return anOutput;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static ResultingOutErr invokeMain(Class aMainClass, String[] args,
 			String... anInput) throws Throwable {
