@@ -67,16 +67,21 @@ public class BasicProjectIntrospection {
 	static Set<GradableJUnitSuite> topLevelSuites = null;
 
 	public static void clearProjectCaches() {
-		uniqueMainRun = false;
+		proxyToObject.clear();
+		classToMethodMatch.clear();
+		classToProxy.clear();
 		keyToClass.clear();
 		keyToInterface.clear();
 		keyToMethod.clear();
 		methodKeysToArgIndices.clear();
-		userObjects.clear();
-		proxyToObject.clear();
 		objectToProxy.clear();
-		classToProxy.clear();
+		reverseClassToProxy.clear();
+		reverseObjectToProxy.clear();
+		reverseProxyToObject.clear();
 		topLevelSuites = null;
+		uniqueMainRun = false;
+		userObjects.clear();
+		
 		if (BasicStaticConfigurationUtils.isUseProjectConfiguration()) {
 				BasicConfigurationManagerSelector.getConfigurationManager().clear();
 		}
