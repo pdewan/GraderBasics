@@ -31,8 +31,10 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 	public static final String AGREE_FILE_FULL_NAME = LOG_DIRECTORY
 			+ "/" + CONSENT_FILE_NAME;
 	public static final String MESSAGE_CONTENTS = 
-			"I have the read the Adult Consent Form Dated March 24, 2016 for IRB STudy 09-1134.\n"
-					+ "I agree to participate in the study.\n."
+			"I have the read the Adult Consent Form at:" + CONSENT_INFO_FILE_NAME + "\n"
+
+//			"I have the read the Adult Consent Form Dated March 24, 2016 for IRB STudy 09-1134.\n"
+					+ "I agree to participate in the study.\n"
 					+ "I agree to not modify or delete the collected data unless authorized by the study PI.";
 	
 
@@ -40,7 +42,7 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 		JPanel panel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
-				return new Dimension(720, 100);
+				return new Dimension(720, 300);
 			}
 		};
 
@@ -58,7 +60,7 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 		panel.add(aScrolledPane);
 
 		return JOptionPane.showConfirmDialog(null, panel, // Here goes content
-				"Consent for Virtual Radical-Co-location and Beyond",
+				"Consenting to Study Form at \n " + CONSENT_INFO_FILE_NAME,
 				// JOptionPane.OK_CANCEL_OPTION, // Options for JOptionPane
 				JOptionPane.YES_NO_OPTION, // Options for JOptionPane
 				JOptionPane.DEFAULT_OPTION); // Message type
@@ -143,8 +145,9 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 			try {
 				Desktop.getDesktop().browse(new URI(CONSENT_INFO_FILE_NAME));
 			} catch (IOException | URISyntaxException e) {
+				System.err.println("Could not sdisplay browser. Please see: " + CONSENT_INFO_FILE_NAME);
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		// InputStream aStream =
