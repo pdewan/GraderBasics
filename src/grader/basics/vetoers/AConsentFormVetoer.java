@@ -144,7 +144,8 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 		if (Desktop.isDesktopSupported()) {
 			try {
 				Desktop.getDesktop().browse(new URI(CONSENT_INFO_FILE_NAME));
-			} catch (IOException | URISyntaxException e) {
+			} catch (Exception e) {
+			//catch (IOException | URISyntaxException e) {
 				System.err.println("Could not sdisplay browser. Please see: " + CONSENT_INFO_FILE_NAME);
 				// TODO Auto-generated catch block
 //				e.printStackTrace();
