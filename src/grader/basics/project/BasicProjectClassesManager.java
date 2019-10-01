@@ -296,7 +296,8 @@ public class BasicProjectClassesManager implements ClassesManager {
 					classDescriptions.add(createClassDescription(c, file));
 
 				} else {
-					classDescriptions.add(createClassDescription(null, file));
+					Tracer.error("Couldn't load class: " + className);
+//					classDescriptions.add(createClassDescription(null, file));
 					
 //					System.err.println ("Could not load:" + className);
 				}
