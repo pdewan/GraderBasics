@@ -65,8 +65,17 @@ public class BasicProjectIntrospection {
 
 	static Set<String> predefinedPackages = new HashSet();
 	static Set<GradableJUnitSuite> topLevelSuites = null;
+	static Class mainClass;
+	
+	public static void setMainClass (Class aMainClass) {
+		mainClass = aMainClass;
+	}
+	public static Class getMainClass() {
+		return mainClass;
+	}
 
 	public static void clearProjectCaches() {
+		mainClass = null;
 		proxyToObject.clear();
 		classToMethodMatch.clear();
 		classToProxy.clear();
