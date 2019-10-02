@@ -66,11 +66,23 @@ public class BasicProjectIntrospection {
 	static Set<String> predefinedPackages = new HashSet();
 	static Set<GradableJUnitSuite> topLevelSuites = null;
 	static Class mainClass;
+	static boolean useMainClass = false;
 	
+	
+	public static boolean isUseMainClass() {
+		return useMainClass;
+	}
+	public static void setUseMainClass(boolean useMainClass) {
+		BasicProjectIntrospection.useMainClass = useMainClass;
+	}
 	public static void setMainClass (Class aMainClass) {
 		mainClass = aMainClass;
 	}
+	
 	public static Class getMainClass() {
+		if (!isUseMainClass()) {
+			return null;
+		}
 		return mainClass;
 	}
 
