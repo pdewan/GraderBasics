@@ -1,9 +1,6 @@
 package gradingTools.interpreter;
 
 import grader.basics.junit.AGradableJUnitSuite;
-import grader.basics.junit.AGradableJUnitTest;
-import grader.basics.requirements.interpreter.specification.CSVRequirementsSpecification;
-import grader.basics.testcase.PassFailJUnitTestCase;
 import util.annotations.Visible;
 
 public class AnInterpretingGradableJUnitSuite extends AGradableJUnitSuite {

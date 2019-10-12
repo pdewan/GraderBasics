@@ -1,8 +1,5 @@
 package grader.basics.util;
 
-import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.settings.BasicGradingEnvironment;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -14,9 +11,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.settings.BasicGradingEnvironment;
 //import scala.Option;
 import util.misc.Common;
-
 import util.trace.Tracer;
 
 /**

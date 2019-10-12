@@ -2,20 +2,13 @@ package grader.basics.observers;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.text.spi.DateFormatProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,29 +17,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import grader.basics.junit.GradableJUnitSuite;
-import grader.basics.junit.GradableJUnitTest;
-import grader.basics.trace.CheckersLogFolderCreated;
-import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
-
-
-
-
-
-
-
-
-
-
-import grader.basics.util.ClassComparator;
-import grader.basics.vetoers.AConsentFormVetoer;
-
-import org.junit.rules.TestName;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+import grader.basics.junit.GradableJUnitSuite;
+import grader.basics.junit.GradableJUnitTest;
+import grader.basics.trace.CheckersLogFolderCreated;
+import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
+import grader.basics.vetoers.AConsentFormVetoer;
 import util.trace.Tracer;
 
 

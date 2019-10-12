@@ -1,7 +1,9 @@
 package grader.basics;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import grader.basics.config.BasicExecutionSpecificationSelector;
-import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.execution.ExecutableFinderSelector;
 import grader.basics.execution.JavaMainClassFinderSelector;
 //import grader.checkStyle.CheckStyleInvoker;
@@ -17,9 +19,6 @@ import grader.basics.execution.MainClassFinder;
 //import grader.permissions.PermissionsGenerator;
 //import grader.permissions.java.DefaultJavaPermissible;
 //import grader.permissions.java.JavaPermissionsGenerator;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BasicLanguageDependencyManager {
 	static  String sourceFileSuffix;

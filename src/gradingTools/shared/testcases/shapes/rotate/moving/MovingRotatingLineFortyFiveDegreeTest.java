@@ -1,10 +1,7 @@
 package gradingTools.shared.testcases.shapes.rotate.moving;
 
-import util.annotations.Explanation;
-import gradingTools.shared.testcases.shapes.interfaces.TestMovable;
 import gradingTools.shared.testcases.shapes.rotate.detached.DetachedRotatingLineFortyFiveDegreeTest;
-import gradingTools.shared.testcases.shapes.rotate.fixed.RotatingFixedLineSetTest;
-import gradingTools.shared.testcases.shapes.rotate.fixed.RotatingLineFortyFiveDegreeTest;
+import util.annotations.Explanation;
 
 @Explanation("Rotate and then move line")
 public class MovingRotatingLineFortyFiveDegreeTest extends DetachedRotatingLineFortyFiveDegreeTest{

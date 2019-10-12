@@ -2,7 +2,6 @@ package grader.basics.requirements.interpreter;
 
 import grader.basics.project.Project;
 import grader.basics.requirements.interpreter.specification.CSVRequirementsSpecification;
-import gradingTools.interpreter.AnInterpretingGradableJUnitSuite;
 import gradingTools.interpreter.AnInterpretingGradableJUnitTopLevelSuite;
 import util.misc.Common;
 

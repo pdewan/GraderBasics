@@ -1,16 +1,15 @@
 package grader.basics.file.filesystem;
 
-import grader.basics.file.AnAbstractRootFolderProxy;
-import grader.basics.file.FileProxy;
-import grader.basics.file.RootFolderProxy;
-import grader.basics.trace.file.load.RootFileSystemFolderLoaded;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import grader.basics.file.AnAbstractRootFolderProxy;
+import grader.basics.file.FileProxy;
+import grader.basics.file.RootFolderProxy;
+import grader.basics.trace.file.load.RootFileSystemFolderLoaded;
 import util.misc.Common;
 
 public class AFileSystemRootFolderProxy extends AnAbstractRootFolderProxy

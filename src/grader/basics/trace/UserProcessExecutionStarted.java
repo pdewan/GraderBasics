@@ -1,7 +1,5 @@
 package grader.basics.trace;
 
-import java.util.Arrays;
-
 public class UserProcessExecutionStarted extends  UserProcessExecutionInfo {
 	
 	

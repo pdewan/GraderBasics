@@ -1,14 +1,13 @@
 package grader.basics.file.zipfile;
 
-import grader.basics.file.AnAbstractRootFolderProxy;
-import grader.basics.file.RootFolderProxy;
-import grader.basics.trace.file.load.RootFileSystemFolderLoaded;
-
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import grader.basics.file.AnAbstractRootFolderProxy;
+import grader.basics.file.RootFolderProxy;
+import grader.basics.trace.file.load.RootFileSystemFolderLoaded;
 import util.misc.Common;
 import util.trace.Tracer;
 

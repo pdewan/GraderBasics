@@ -1,10 +1,5 @@
 package grader.basics.junit;
 
-import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.project.NotGradableException;
-import grader.basics.testcase.JUnitTestCase;
-import gradingTools.interpreter.AnInterpretingGradableJUnitTest;
-
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -19,6 +14,11 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+import bus.uigen.attributes.AttributeNames;
+import bus.uigen.introspect.Attribute;
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.NotGradableException;
+import grader.basics.testcase.JUnitTestCase;
 import util.annotations.Explanation;
 import util.annotations.Group;
 import util.annotations.IsExtra;
@@ -29,8 +29,6 @@ import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
 import util.trace.Tracer;
-import bus.uigen.attributes.AttributeNames;
-import bus.uigen.introspect.Attribute;
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 /**
  * This is the object displayed in the LocalChecks UI as a  (leaf-level?) tree node.

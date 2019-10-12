@@ -1,37 +1,29 @@
 package grader.basics.execution;
 
-import grader.basics.config.BasicExecutionSpecificationSelector;
-import grader.basics.project.Project;
-import grader.basics.util.TimedProcess;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.project.Project;
+import grader.basics.util.TimedProcess;
 import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.LinesMatcher;
-import util.pipe.ProcessInputListener;
-import util.remote.ProcessExecer;
 //import grader.config.StaticConfigurationUtils;
 //import grader.sakai.project.SakaiProject;
 //import grader.trace.overall_transcript.OverallTranscriptSaved;
 import util.pipe.InputGenerator;
+import util.pipe.ProcessInputListener;
 import util.trace.Tracer;
 
 /**

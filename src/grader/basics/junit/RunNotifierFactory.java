@@ -1,10 +1,9 @@
 package grader.basics.junit;
 
-import grader.basics.project.CurrentProjectHolder;
-import grader.basics.project.Project;
-
 import org.junit.runner.notification.RunNotifier;
 
+import grader.basics.project.CurrentProjectHolder;
+import grader.basics.project.Project;
 import util.models.Hashcodetable;
 
 public class RunNotifierFactory {

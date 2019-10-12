@@ -3,7 +3,6 @@ package grader.basics.settings;
 import java.io.File;
 import java.io.IOException;
 
-import grader.basics.config.BasicExecutionSpecificationSelector;
 import util.trace.Tracer;
 
 /**
@@ -43,6 +42,7 @@ public class BasicGradingEnvironment {
 	protected String osName;
 	protected String editor;
     protected String diff;
+    protected String testProjectSrc;
     protected String browser;
     protected String classpathSeparator;
     protected String classpath, canonicalClassPath, oeClassPath, junitClassPath, localGraderClassPath;
@@ -270,6 +270,13 @@ public class BasicGradingEnvironment {
     }
     public void setDiff(String diff) {
         this.diff = diff;
+    }
+    
+    public String getTestProjectSrc() {
+        return testProjectSrc;
+    }
+    public void setTestProjectSrc(String newVal) {
+        this.testProjectSrc = newVal;
     }
 
     public String getOsName() {

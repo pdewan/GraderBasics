@@ -4,14 +4,11 @@ package grader.basics.execution;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-
-import grader.basics.config.BasicStaticConfigurationUtils;
-
 import java.util.List;
 //import framework.project.ClassDescription;
 //import framework.project.ClassesManager;
 //import framework.project.Project;
+import java.util.Map;
 
 public class AnExecutableFinder implements MainClassFinder {
 	public static final String EXECUTABLE_SUFFIX = ".exe";

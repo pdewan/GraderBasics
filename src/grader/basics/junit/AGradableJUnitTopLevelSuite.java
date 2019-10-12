@@ -1,14 +1,7 @@
 package grader.basics.junit;
 
-import grader.basics.util.ClassComparator;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 import org.junit.runner.Description;
 

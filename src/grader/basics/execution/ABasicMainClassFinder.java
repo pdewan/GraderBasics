@@ -1,9 +1,6 @@
 package grader.basics.execution;
 
 
-import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.project.BasicProjectIntrospection;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +9,9 @@ import java.util.Map;
 //import framework.project.ClassDescription;
 //import framework.project.ClassesManager;
 //import framework.project.Project;
+
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.BasicProjectIntrospection;
 
 public class ABasicMainClassFinder implements MainClassFinder {
     public static final String DEFAULT_MAIN_PACKAGE_NAME = "main";

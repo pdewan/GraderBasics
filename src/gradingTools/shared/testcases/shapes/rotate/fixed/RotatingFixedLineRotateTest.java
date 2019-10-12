@@ -2,10 +2,8 @@ package gradingTools.shared.testcases.shapes.rotate.fixed;
 
 import org.junit.Assert;
 
-import util.assertions.Asserter;
 import grader.basics.junit.NotesAndScore;
 import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
-import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
 public class RotatingFixedLineRotateTest extends RotatingLineTest{
 	protected static Integer inputStudentX = 0;

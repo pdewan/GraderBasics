@@ -1,17 +1,14 @@
 package grader.basics.junit;
 
-import grader.basics.project.NotGradableException;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.runner.Description;
+import grader.basics.project.NotGradableException;
 
 //import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 

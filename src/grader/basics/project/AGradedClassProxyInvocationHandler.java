@@ -2,13 +2,11 @@ package grader.basics.project;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 
 import org.junit.Assert;
 
 import grader.basics.execution.BasicProjectExecution;
-import util.trace.Tracer;
 
 public class AGradedClassProxyInvocationHandler implements InvocationHandler {
 	Class actualClass;

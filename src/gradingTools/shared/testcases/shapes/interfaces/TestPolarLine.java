@@ -1,7 +1,5 @@
 package gradingTools.shared.testcases.shapes.interfaces;
 
-import util.annotations.Tags;
-
 public interface TestPolarLine extends TestLocatable {
 	public void setRadius(double r);
 	

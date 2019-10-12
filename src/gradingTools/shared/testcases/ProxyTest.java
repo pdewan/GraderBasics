@@ -1,23 +1,10 @@
 package gradingTools.shared.testcases;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import org.junit.Assert;
 
-import util.annotations.IsExtra;
-import util.annotations.MaxValue;
-import grader.basics.execution.BasicProjectExecution;
-import grader.basics.execution.GradingMode;
-import grader.basics.junit.NotesAndScore;
 import grader.basics.project.BasicProjectIntrospection;
-import gradingTools.shared.testcases.shapes.interfaces.TestLine;
-import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
-import gradingTools.shared.testcases.shapes.interfaces.TestPolarLine;
-import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
 public abstract class ProxyTest extends MethodExecutionTest{
 	protected Object rootProxy;

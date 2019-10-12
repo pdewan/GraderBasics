@@ -1,9 +1,5 @@
 package grader.basics.util;
 
-import grader.basics.execution.BasicProjectExecution;
-import grader.basics.project.BasicProjectIntrospection;
-import util.trace.Tracer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import grader.basics.execution.BasicProjectExecution;
 
 /**
  * Created with IntelliJ IDEA.

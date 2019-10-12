@@ -2,10 +2,8 @@ package gradingTools.shared.testcases.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import util.pipe.AnAbstractInputGenerator;
-import util.trace.Tracer;
 
 public class ABufferingTestInputGenerator extends AnAbstractInputGenerator {
 	public static final int INITIAL_NUM_LINES = 1000;

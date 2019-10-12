@@ -1,10 +1,5 @@
 package grader.basics.file.zipfile;
 
-import grader.basics.file.AnAbstractFileProxy;
-import grader.basics.file.FileProxy;
-import grader.basics.file.RootFolderProxy;
-import grader.basics.util.GraderFileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +7,11 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import grader.basics.file.AnAbstractFileProxy;
+import grader.basics.file.FileProxy;
+import grader.basics.file.RootFolderProxy;
+import grader.basics.util.GraderFileUtils;
 import util.misc.Common;
-import util.trace.Tracer;
 
 // zip system interface to common interface
 public class AZippedFileProxy extends AnAbstractFileProxy implements FileProxy {

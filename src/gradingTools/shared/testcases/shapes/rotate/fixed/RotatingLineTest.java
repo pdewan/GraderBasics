@@ -1,6 +1,5 @@
 package gradingTools.shared.testcases.shapes.rotate.fixed;
 
-import gradingTools.shared.testcases.shapes.LocatableTest;
 import gradingTools.shared.testcases.shapes.MovableTest;
 import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
 import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;

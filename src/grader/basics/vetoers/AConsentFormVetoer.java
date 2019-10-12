@@ -1,7 +1,5 @@
 package grader.basics.vetoers;
 
-import grader.basics.observers.ATestLogFileWriter;
-
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -12,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
 
 import javax.swing.JOptionPane;

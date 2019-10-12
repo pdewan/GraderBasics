@@ -1,9 +1,6 @@
 package gradingTools.shared.testcases.shapes;
 
-import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
-import gradingTools.shared.testcases.shapes.interfaces.TestMovable;
 import gradingTools.shared.testcases.shapes.interfaces.TestScalable;
-import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
 
 public abstract class ScalableTest extends LocatableTest{
 protected TestScalable scalable;

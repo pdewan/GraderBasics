@@ -1,17 +1,5 @@
 package grader.basics.junit;
 
-import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.observers.TestLogFileWriterFactory;
-import grader.basics.project.BasicProjectIntrospection;
-//import grader.junit.GraderTestCase;
-
-
-
-import grader.basics.project.CurrentProjectHolder;
-import grader.basics.project.Project;
-import grader.basics.vetoers.AConsentFormVetoer;
-import grader.basics.vetoers.AnAlwaysNaySayer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,9 +15,15 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runners.Suite;
 
+import bus.uigen.ObjectEditor;
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.observers.TestLogFileWriterFactory;
+import grader.basics.project.BasicProjectIntrospection;
+//import grader.junit.GraderTestCase;
+import grader.basics.project.CurrentProjectHolder;
+import grader.basics.vetoers.AConsentFormVetoer;
 import trace.grader.basics.GraderBasicsTraceUtility;
 import util.trace.Tracer;
-import bus.uigen.ObjectEditor;
 
 
 public class BasicJUnitUtils {

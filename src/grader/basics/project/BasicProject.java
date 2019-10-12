@@ -1,7 +1,12 @@
 package grader.basics.project;
 
-import grader.basics.BasicLanguageDependencyManager;
-import grader.basics.config.BasicConfigurationManagerSelector;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
@@ -16,19 +21,9 @@ import grader.basics.trace.SourceFolderAssumed;
 import grader.basics.trace.SourceFolderNotFound;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.Option;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import util.pipe.InputGenerator;
 import util.trace.TraceableLog;
 import util.trace.TraceableLogFactory;
-import util.trace.Tracer;
-//import scala.Option;
 
 /**
  * A "standard" project. That is, an IDE-based java project.

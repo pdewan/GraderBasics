@@ -1,15 +1,9 @@
 package grader.basics.junit;
 
-import java.beans.VetoableChangeListener;
-import java.beans.VetoableChangeSupport;
-
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 import grader.basics.vetoers.AJUnitRunVetoer;
 import grader.basics.vetoers.JUnitRunVetoer;
-
-import org.junit.runner.notification.RunNotifier;
-
 import util.models.Hashcodetable;
 
 public class RunVetoerFactory {

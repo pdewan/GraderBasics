@@ -2,9 +2,7 @@ package gradingTools.shared.testcases;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
-import grader.basics.execution.GradingMode;
 import grader.basics.execution.ResultingOutErr;
-import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;

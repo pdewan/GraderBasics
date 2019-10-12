@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 
 import bus.uigen.ObjectEditor;
 import grader.basics.assignment.AssignmentDataHolder;
@@ -19,11 +16,9 @@ import grader.basics.file.FileProxy;
 import grader.basics.file.RootFolderProxy;
 import grader.basics.file.filesystem.AFileSystemRootFolderProxy;
 import grader.basics.file.zipfile.AZippedRootFolderProxy;
-import grader.basics.junit.AGradableJUnitSuite;
 import grader.basics.junit.AGradableJUnitTopLevelSuite;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
-import grader.basics.project.BasicProject;
 import grader.basics.requirements.interpreter.specification.ACSVRequirementsSpecification;
 import grader.basics.requirements.interpreter.specification.CSVRequirementsSpecification;
 import grader.basics.testcase.PassFailJUnitTestCase;

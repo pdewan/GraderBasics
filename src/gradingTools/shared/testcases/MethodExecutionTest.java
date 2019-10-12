@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.junit.Assert;
+
 import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.execution.NotRunnableException;
+import grader.basics.execution.BasicProjectExecution;
+import grader.basics.execution.GradingMode;
 import grader.basics.execution.ResultWithOutput;
 import grader.basics.execution.ResultingOutErr;
 import grader.basics.junit.BasicJUnitUtils;
@@ -22,21 +25,12 @@ import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
-import grader.basics.testcase.JUnitTestCase;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.LinesMatchKind;
 import gradingTools.shared.testcases.utils.LinesMatcher;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import util.awt.AnOutputQueue;
 import util.trace.Tracer;
-import grader.basics.execution.BasicProjectExecution;
-import grader.basics.execution.GradingMode;
 
 
 

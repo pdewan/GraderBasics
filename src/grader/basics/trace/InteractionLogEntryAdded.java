@@ -1,7 +1,5 @@
 package grader.basics.trace;
 
-import grader.basics.trace.FileInfo;
-
 public class InteractionLogEntryAdded extends FileInfo {
 	String entry;
 	

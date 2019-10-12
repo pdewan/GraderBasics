@@ -1,10 +1,5 @@
 package grader.basics.file.filesystem;
 
-import grader.basics.file.AnAbstractFileProxy;
-import grader.basics.file.FileProxy;
-import grader.basics.file.RootFolderProxy;
-import grader.basics.util.GraderFileUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import grader.basics.file.AnAbstractFileProxy;
+import grader.basics.file.FileProxy;
+import grader.basics.file.RootFolderProxy;
+import grader.basics.util.GraderFileUtils;
 import util.misc.Common;
 
 // file system translated to common interface for zip file and file system

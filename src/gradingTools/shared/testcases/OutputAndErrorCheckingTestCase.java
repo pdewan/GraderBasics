@@ -1,14 +1,11 @@
 package gradingTools.shared.testcases;
 
-import grader.basics.execution.BasicProjectExecution;
-import grader.basics.execution.ResultingOutErr;
-import grader.basics.project.CurrentProjectHolder;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import util.misc.Common;
+import grader.basics.execution.BasicProjectExecution;
+import grader.basics.execution.ResultingOutErr;
 import util.trace.Tracer;
 
 public abstract class OutputAndErrorCheckingTestCase extends

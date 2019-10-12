@@ -1,10 +1,9 @@
 package gradingTools.interpreter.checkers;
 
-import grader.basics.util.DirectoryUtils;
-
 import java.io.File;
 import java.io.IOException;
 
+import grader.basics.util.DirectoryUtils;
 import util.misc.Common;
 
 public class AnExternalDiffChecker implements InterpretedChecker{

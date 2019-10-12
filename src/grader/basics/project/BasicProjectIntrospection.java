@@ -1,15 +1,5 @@
 package grader.basics.project;
 
-import grader.basics.config.BasicConfigurationManagerSelector;
-import grader.basics.config.BasicExecutionSpecification;
-import grader.basics.config.BasicExecutionSpecificationSelector;
-import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.execution.BasicProjectExecution;
-import grader.basics.junit.BasicJUnitUtils;
-//import framework.grading.testing.TestCase;
-import grader.basics.junit.GradableJUnitSuite;
-import grader.basics.util.Permutations;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -30,9 +20,14 @@ import java.util.Vector;
 
 import org.junit.Assert;
 
-//import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-import util.annotations.IsRestriction;
+import grader.basics.config.BasicConfigurationManagerSelector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.execution.BasicProjectExecution;
+import grader.basics.junit.BasicJUnitUtils;
+//import framework.grading.testing.TestCase;
+import grader.basics.junit.GradableJUnitSuite;
+import grader.basics.util.Permutations;
 import util.annotations.Tags;
 import util.introspect.JavaIntrospectUtility;
 import util.models.Hashcodetable;

@@ -1,9 +1,9 @@
 package grader.basics.execution;
 
-import grader.basics.project.Project;
-
 import java.util.List;
 import java.util.Map;
+
+import grader.basics.project.Project;
 
 public interface MainClassFinder {
 //	public Class mainClass(RootCodeFolder aRootCodeFolder, ProxyClassLoader aProxyClassLoader, String expectedName, Project aProject);

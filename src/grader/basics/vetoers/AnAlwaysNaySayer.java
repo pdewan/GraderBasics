@@ -4,9 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
-import org.junit.runner.Description;
-import org.junit.runner.notification.RunListener;
-
 
 public class AnAlwaysNaySayer implements VetoableChangeListener{
 	@Override

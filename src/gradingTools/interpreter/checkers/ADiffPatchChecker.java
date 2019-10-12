@@ -1,13 +1,8 @@
 package gradingTools.interpreter.checkers;
 
-import grader.basics.util.DirectoryUtils;
-import name.fraser.neil.plaintext.diff_match_patch;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 
-import util.misc.Common;
+import name.fraser.neil.plaintext.diff_match_patch;
 
 public class ADiffPatchChecker implements InterpretedChecker{
 	

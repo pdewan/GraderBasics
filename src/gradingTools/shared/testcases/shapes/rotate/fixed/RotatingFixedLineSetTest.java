@@ -1,9 +1,5 @@
 package gradingTools.shared.testcases.shapes.rotate.fixed;
 
-import util.assertions.Asserter;
-import gradingTools.shared.testcases.shapes.interfaces.TestLocatable;
-import gradingTools.shared.testcases.shapes.interfaces.TestRotatingLine;
-
 public class RotatingFixedLineSetTest extends RotatingLineTest{
 	protected Integer inputStudentX = 0;
 	protected Integer inputStudentY = 0;

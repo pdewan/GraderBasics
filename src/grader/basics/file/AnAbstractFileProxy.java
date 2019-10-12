@@ -1,12 +1,11 @@
 package grader.basics.file;
 
-import grader.basics.util.GraderFileUtils;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import grader.basics.util.GraderFileUtils;
 import util.misc.Common;
 
 public abstract class AnAbstractFileProxy extends AnAbstractProxy implements FileProxy {

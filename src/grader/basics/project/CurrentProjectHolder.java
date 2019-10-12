@@ -3,7 +3,6 @@ package grader.basics.project;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import grader.basics.config.BasicExecutionSpecification;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.GradingMode;
 

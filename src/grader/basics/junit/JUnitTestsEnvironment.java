@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import grader.basics.testcase.PassFailJUnitTestCase;
-import util.trace.Tracer;
 
 public class JUnitTestsEnvironment {
 //	static GradableJUnitSuite

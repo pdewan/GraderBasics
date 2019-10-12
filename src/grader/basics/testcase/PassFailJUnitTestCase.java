@@ -1,5 +1,7 @@
 package grader.basics.testcase;
 
+import org.junit.Test;
+
 import grader.basics.execution.RunningProject;
 //import grader.basics.execution.RunningProject;
 import grader.basics.junit.BasicJUnitUtils;
@@ -10,8 +12,7 @@ import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.shared.testcases.utils.ABufferingTestInputGenerator;
-
-import org.junit.Test;
+import junit.framework.TestCase;
 
 
 /**

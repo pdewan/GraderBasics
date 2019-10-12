@@ -1,13 +1,11 @@
 package grader.basics.execution;
 
-import grader.basics.util.TimedProcess;
-import gradingTools.shared.testcases.utils.LinesMatcher;
-import util.pipe.InputGenerator;
-
 import java.io.Closeable;
-import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import grader.basics.util.TimedProcess;
+import gradingTools.shared.testcases.utils.LinesMatcher;
 
 
 public interface RunningProject {

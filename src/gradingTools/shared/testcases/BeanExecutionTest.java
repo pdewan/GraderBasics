@@ -1,12 +1,5 @@
 package gradingTools.shared.testcases;
 
-import grader.basics.execution.BasicProjectExecution;
-import grader.basics.execution.GradingMode;
-import grader.basics.junit.NotesAndScore;
-import grader.basics.project.BasicProjectIntrospection;
-import grader.basics.project.Project;
-import gradingTools.shared.testcases.shapes.LocatableTest;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -19,7 +12,12 @@ import java.util.Set;
 
 import org.junit.Assert;
 
-import bus.uigen.visitors.HasUncreatedChildrenVisitor;
+import grader.basics.execution.BasicProjectExecution;
+import grader.basics.execution.GradingMode;
+import grader.basics.junit.NotesAndScore;
+import grader.basics.project.BasicProjectIntrospection;
+import grader.basics.project.Project;
+import gradingTools.shared.testcases.shapes.LocatableTest;
 
 //import com.sun.org.apache.xpath.internal.FoundIndex;
 

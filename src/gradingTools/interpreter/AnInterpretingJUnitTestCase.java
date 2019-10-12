@@ -1,7 +1,5 @@
 package gradingTools.interpreter;
 
-import static org.junit.Assert.assertTrue;
-
 import grader.basics.execution.RunningProject;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -10,10 +8,9 @@ import grader.basics.project.Project;
 import grader.basics.requirements.interpreter.BasicInterpretedVariablesSubstituter;
 import grader.basics.requirements.interpreter.specification.CSVRequirementsSpecification;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import gradingTools.interpreter.checkers.CheckerResult;
 import gradingTools.interpreter.checkers.InterpretedChecker;
 import gradingTools.interpreter.checkers.InterpretedCheckerRegistry;
-import gradingTools.interpreter.checkers.CheckerResult;
-import gradingTools.utils.RunningProjectUtils;
 
 public class AnInterpretingJUnitTestCase extends PassFailJUnitTestCase {
 	CSVRequirementsSpecification csvRequirementsSpecification;

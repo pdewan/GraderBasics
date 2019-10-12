@@ -1,12 +1,5 @@
 package grader.basics.execution;
 
-import grader.basics.config.BasicExecutionSpecification;
-import grader.basics.config.BasicExecutionSpecificationSelector;
-//import framework.execution.ARunningProject;
-import grader.basics.project.BasicProjectIntrospection;
-import grader.basics.project.CurrentProjectHolder;
-import grader.basics.settings.BasicGradingEnvironment;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,9 +26,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.junit.Assert;
-
-import util.annotations.IsRestriction;
+import grader.basics.config.BasicExecutionSpecification;
+import grader.basics.config.BasicExecutionSpecificationSelector;
+//import framework.execution.ARunningProject;
+import grader.basics.project.BasicProjectIntrospection;
+import grader.basics.project.CurrentProjectHolder;
+import grader.basics.settings.BasicGradingEnvironment;
 import util.misc.Common;
 import util.misc.TeePrintStream;
 import util.trace.Tracer;

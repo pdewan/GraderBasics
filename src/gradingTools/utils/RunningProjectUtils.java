@@ -1,13 +1,12 @@
 package gradingTools.utils;
 
+import java.util.Map;
+
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
 import grader.basics.project.Project;
-
-import java.util.Map;
-
 import util.pipe.InputGenerator;
 
 /*
