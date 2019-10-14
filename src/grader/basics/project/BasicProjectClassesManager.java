@@ -117,14 +117,16 @@ public class BasicProjectClassesManager implements ClassesManager {
         // Set the build and source folders for the project
         this.buildFolder = buildFolder;
         this.sourceFolder = sourceFolder;
-
-
+        if (BasicLanguageDependencyManager.getLanguage().equals(BasicLanguageDependencyManager.JAVA_LANGUAGE)) {
         initializeClassLoaders();
         classDescriptions = new HashSet<ClassDescription>();
         tagsToClasses.clear();
 
         loadClasses(sourceFolder);
         maybeCheckStyle();
+        } else {
+        	classDescriptions = null;
+        }
     }
     
 
