@@ -19,7 +19,7 @@ public class AnInterpretingGradableJUnitTest extends AGradableJUnitTest {
 		simpleName = aSimpleName;
 		csvRequirementsSpecification = aCSVRequirementsSpecification;
 		requirementNumber = aRequirementNumber;
-		maxScore = csvRequirementsSpecification.getMaxScore(requirementNumber);
+		setMaxScore(csvRequirementsSpecification.getMaxScore(requirementNumber));
 		
 	}
 	@Override

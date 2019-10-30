@@ -108,15 +108,16 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		}
 		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {
 			MaxValue aMaxValue =  (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
-			maxScore = (double) aMaxValue.value();
+			setMaxScore(aMaxValue.value());
 			definesMaxScore = true;
 		} else {
-			maxScore = null;
+			definesMaxScore = false;
+			setMaxScore((Double)null);
 			maybeSetDefaultMaxScore();
 		}
 	}
 	protected void maybeSetDefaultMaxScore() {
-		maxScore = (double) DEFAULT_SCORE;
+		setMaxScore(DEFAULT_SCORE);
 	}
 	@Visible(false)
 	public void setIsRestriction (Class aJUnitClass) {
@@ -193,6 +194,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public Double getMaxScore() {
 		return maxScore;
 	}
+	
 	@Visible(false)
 	public String getExplanation() {
 		return explanation;
@@ -344,11 +346,17 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	protected boolean isUntested() {
 		return  numTests == 0;
 	}
+
+	protected void setMaxScore(Double aMaxScore) {
+		maxScore = aMaxScore;
+//		maybeSetChildrenMaxScores();
+	}
 	
 	@Visible(false)
 	@Override
 	public void setMaxScore(double aMaxScore) {
-		maxScore = aMaxScore;
+		setMaxScore((Double)aMaxScore);
+//		definesMaxScore = true;
 //		maybeSetChildrenMaxScores();
 	}
 //	protected void maybeSetChildrenMaxScores() {
@@ -464,7 +472,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Visible(false)
 	@Override
 	public double getUnroundedScore() {
-		return maxScore*fractionComplete;
+		return getMaxScore()*fractionComplete;
 	}
 	@Position(0)
 	@Override
@@ -482,7 +490,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Visible(false)
 	@Override
 	public double getComputedMaxScore() {
-		return maxScore;
+		return getMaxScore();
 	}
 	@Override
 	public int numLeafNodeDescendents() {
@@ -612,9 +620,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Visible(false)
 	public MaxScoreAssignmentResult assignMaxScores() {
 		MaxScoreAssignmentResult aMaxScoreAssignmentResult = new MaxScoreAssignmentResult();
-		aMaxScoreAssignmentResult.assignedScores = maxScore;
-//		if (!isDefinesMaxScore()) {
-		if (maxScore == DEFAULT_SCORE) { // may not define score and yet be 
+		aMaxScoreAssignmentResult.assignedScores = getMaxScore();
+		if (!isDefinesMaxScore()) {
+//		if (maxScore == DEFAULT_SCORE) { // may not define score and yet be 
 			aMaxScoreAssignmentResult.unassignedLeafNodes.add(this);
 		}
 		return aMaxScoreAssignmentResult;

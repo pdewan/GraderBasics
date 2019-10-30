@@ -17,5 +17,5 @@ public interface GradableJUnitSuite extends GradableJUnitTest{
 	void test(Class aJUnitClass);
 	GradableJUnitTest findTest(Class aJUnitClass);
 	List<GradableJUnitTest> children();
-
+	public boolean isImplicit();
 }

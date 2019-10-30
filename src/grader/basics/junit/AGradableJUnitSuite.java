@@ -29,11 +29,16 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	Set<Class> previousPassClasses, previousFailClasses, previousPartialPassClasses;
 	double previousScore;
 	List<GradableJUnitTest> children = new ArrayList();
+	boolean implicit;
 	
-
 	public AGradableJUnitSuite(Class aJUnitClass) {
+		this(aJUnitClass, false);
+	}
+
+	public AGradableJUnitSuite(Class aJUnitClass, boolean implicit) {
 		super(aJUnitClass);
 		topLevelSuite = this; // will be overridden by parent if they exist
+		this.implicit = implicit;
 	}
 	
 
@@ -181,14 +186,14 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 			aMaxScoreAssignmentResult.unassignedLeafNodes.addAll(aChildResult.unassignedLeafNodes);	
 			
 		}
-//		if (!isDefinesMaxScore()) { // no maxScore annotation
-
-		if (maxScore == DEFAULT_SCORE) { // no maxScore annotation
+		
+		if (!isDefinesMaxScore()) { // no maxScore annotation
+//		if (maxScore == DEFAULT_SCORE) { // no maxScore annotation
 			return aMaxScoreAssignmentResult;
 		}
-		double anUnassignedMaxScore = maxScore - aMaxScoreAssignmentResult.assignedScores;
+		double anUnassignedMaxScore = getMaxScore() - aMaxScoreAssignmentResult.assignedScores;
 		if (anUnassignedMaxScore < 0) {
-			Tracer.info(this, "Ignoring MaxScore:" + maxScore + " of " + jUnitClass.getSimpleName() + " as it is less than sum total of Max Scorse of descendents:" + aMaxScoreAssignmentResult.assignedScores );
+			Tracer.info(this, "Ignoring MaxScore:" + getMaxScore() + " of " + jUnitClass.getSimpleName() + " as it is less than sum total of Max Scorse of descendents:" + aMaxScoreAssignmentResult.assignedScores );
 			return aMaxScoreAssignmentResult;
 		}
 		double aDistributedScore = anUnassignedMaxScore/aMaxScoreAssignmentResult.unassignedLeafNodes.size();
@@ -196,7 +201,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 			anUnassignedLeafNode.setMaxScore(aDistributedScore);
 		}
 		aMaxScoreAssignmentResult.unassignedLeafNodes.clear();
-		aMaxScoreAssignmentResult.assignedScores = maxScore;
+		aMaxScoreAssignmentResult.assignedScores = getMaxScore();
 		return aMaxScoreAssignmentResult;
 		
 		
@@ -279,12 +284,12 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		}
 		return retVal;
 	}
-
-	@Visible(false)
-	public Double getMaxScore() {
-		
-		return maxScore;
-	}
+//
+//	@Visible(false)
+//	public Double getMaxScore() {
+//		
+//		return maxScore;
+//	}
 
 	@Visible(false)
 	public double getComputedMaxScore() {
@@ -471,6 +476,11 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isImplicit() {
+		return implicit;
 	}
 
 }

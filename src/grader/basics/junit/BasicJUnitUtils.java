@@ -131,7 +131,9 @@ public class BasicJUnitUtils {
 		aResult.groupedGradables = aGradableJUnitTestCaseMap;
 		for (String aGroup:aGradableJUnitTestCaseMap.keySet()) {
 			List<GradableJUnitTest> aGradables = aGradableJUnitTestCaseMap.get(aGroup);
-			if (aGradables.size() == 2) { // an ungrouped test
+			if (aGradables.size() == 2
+					&& aGradables.get(0) instanceof GradableJUnitSuite
+					&& ((GradableJUnitSuite)aGradables.get(0)).isImplicit()) { // an ungrouped test
 				rootNode.add(aGradables.get(1));
 			} else {
 				rootNode.add(aGradables.get(0)); // will also have the children
@@ -265,6 +267,7 @@ public class BasicJUnitUtils {
 //		}
 //		return aResult;
 //	}
+	
 	public static Map<String,List<GradableJUnitTest>> toGroupedGradables(GradableJUnitTest aTopLevelSuite, Class<?> aJUnitSuiteClass) {
 		List<Class> aJUnitOrSuiteClasses = BasicJUnitUtils.getComponentTestsAndSuites(aJUnitSuiteClass);
 		List<Class> aSuiteClasses = BasicJUnitUtils.selectJUnitSuites(aJUnitOrSuiteClasses);
@@ -308,7 +311,7 @@ public class BasicJUnitUtils {
 			if (aClasses == null) { // looks as if we create a Suite node even for ;leaf nodes, why?
 				aClasses = new ArrayList();
 				aResult.put(aGroup, aClasses);
-				aSuite = new AGradableJUnitSuite(aJUnitClass);// we already created AGradableJUnitTest earlier
+				aSuite = new AGradableJUnitSuite(aJUnitClass, true);// we already created AGradableJUnitTest earlier
 				aSuite.setExplanation(aGroup);
 				aClasses.add(aSuite);
 			}
