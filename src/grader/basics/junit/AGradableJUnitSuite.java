@@ -479,6 +479,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	}
 
 	@Override
+	@Visible(false)
 	public boolean isImplicit() {
 		return implicit;
 	}
