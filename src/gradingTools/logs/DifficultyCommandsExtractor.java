@@ -33,7 +33,7 @@ public class DifficultyCommandsExtractor {
 
 //	static List<String> difficultyCommands = new ArrayList();
 //	static List<Date> difficultyDates = new ArrayList();
-	static List<DatedDifficultyContext> difficultyContext = new ArrayList();
+	static List<DifficultyContext> difficultyContexts = new ArrayList();
 	static Date firstDate = null;
 	static Date lastDate = null;
 
@@ -50,8 +50,8 @@ public class DifficultyCommandsExtractor {
 	static final String LOCAL_CHECKS_LOGS = "LocalChecks";
 	static final String DIFFICULTY_FILE_NAME = "DifficultiesOnly.txt";
 	static final String DIFFICULTY_CONTEXT_FILE_NAME = "DifficultiesWithContext.txt";
-	static final int DIFFICULTY_CONTEXT_MINUTES = 5;
-	static final int DIFFICULTY_CONTEXT_MS = DIFFICULTY_CONTEXT_MINUTES*60*1000;
+	static final int DIFFICULTY_CONTEXT_WINDOW_MINUTES = 5;
+	static final int DIFFICULTY_CONTEXT_WINDOW_MS = DIFFICULTY_CONTEXT_WINDOW_MINUTES*60*1000;
 
 
 	
@@ -61,12 +61,42 @@ public class DifficultyCommandsExtractor {
 		metricsFilesProcessed.clear();
 		localChecksFilesProcessed.clear();
 //		difficultyCommands.clear();
-		difficultyContext.clear();
+		difficultyContexts.clear();
 
 		numDifficultyCommands = 0;
 		numCommands = 0;
 		numFilledDifficultyCommands = 0;
 //		difficultyDates.clear();
+	}
+	/**
+	 * null if context date not in window
+	 * -1 if context date < aDifficultyDate;
+	 * 0 if two dates are the same
+	 * +1 if context date > aDifficultyDate
+	 * @param aDifficultyDate
+	 * @param aContextDate
+	 * @return
+	 */
+	public static Integer compareWindow(Date aContextDate, Date aDifficultyDate) {
+		if (Math.abs(aDifficultyDate.getTime() - aContextDate.getTime()) > DIFFICULTY_CONTEXT_WINDOW_MS)
+			return null;
+		return aContextDate.compareTo(aDifficultyDate);
+	}
+	/**
+	 * @param aDate
+	 * @return
+	 * return difficultyContexts in the window around aDate  
+	 */
+	public static List<DifficultyContext> findNearbyDifficultyContexts(Date aContextDate) {
+		if (aContextDate.getTime() < firstDate.getTime() || aContextDate.getTime() > lastDate.getTime())
+			return null;
+		List<DifficultyContext> retVal = new ArrayList<>();
+		for (DifficultyContext aContext:difficultyContexts) {
+			 if (compareWindow(aContextDate, aContext.date ) != null) {
+				 retVal.add(aContext);
+			 }
+		}
+		return retVal;
 	}
 
 	public static boolean hasDifficultyCommandStart(String aLine) {
@@ -152,23 +182,36 @@ public static boolean  processLogsInProjectFolder (File aFolder) {
 			 processLogsInLogDirectory(aChild); 			
 		}	
 	}
+    writeDiffficultyContextFile(aFolder);
 	return aFilled;
 }
+public static void writeDiffficultyContextFile(File aFolder) {
+	try {
+		FileWriter writer = new FileWriter(aFolder+"/" + DIFFICULTY_CONTEXT_FILE_NAME); 
+		for(DifficultyContext aContext: difficultyContexts) {
+		  writer.write(aContext.toString() );
+		}
+		writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-public static boolean  fillDifficultyCommandsInProjectDirectory (File aFolder) {
-	Tracer.info(DifficultyCommandsExtractor.class, "Project Directory:" + aFolder);
-	File[] aChildren = aFolder.listFiles();
-	boolean found = false;
-	for (File aChild:aChildren) {
-		if (aChild.getName().contains(LOG_DIRECTORY)) {
-			 found = fillDifficultyCommandsInLogDirectory(aChild); 			
-		}	
-	}
-	if (found) {
-		Collections.sort(difficultyContext);
-		try {
+	
+//		Path out = Paths.get(aFolder+"/" + DIFFICULTY_CONTEXT_FILE_NAME);
+//		try {
+////			Files.write(out, difficultyCommands);
+//			Files.wr
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	
+}
+public static void writeDiffficultyFile(File aFolder) {
+	try {
 		FileWriter writer = new FileWriter(aFolder+"/" + DIFFICULTY_FILE_NAME); 
-		for(DatedDifficultyContext aContext: difficultyContext) {
+		for(DifficultyContext aContext: difficultyContexts) {
 		  writer.write(aContext.difficultyContext );
 		}
 		writer.close();
@@ -184,6 +227,38 @@ public static boolean  fillDifficultyCommandsInProjectDirectory (File aFolder) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+	
+}
+public static boolean  fillDifficultyCommandsInProjectDirectory (File aFolder) {
+	Tracer.info(DifficultyCommandsExtractor.class, "Project Directory:" + aFolder);
+	File[] aChildren = aFolder.listFiles();
+	boolean found = false;
+	for (File aChild:aChildren) {
+		if (aChild.getName().contains(LOG_DIRECTORY)) {
+			 found = fillDifficultyCommandsInLogDirectory(aChild); 			
+		}	
+	}
+	if (found) {
+		Collections.sort(difficultyContexts);
+		writeDiffficultyFile(aFolder);
+//		try {
+//		FileWriter writer = new FileWriter(aFolder+"/" + DIFFICULTY_FILE_NAME); 
+//		for(DifficultyContext aContext: difficultyContexts) {
+//		  writer.write(aContext.difficultyContext );
+//		}
+//		writer.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+////		Path out = Paths.get(aFolder+"/" + DIFFICULTY_FILE_NAME);
+////		try {
+//////			Files.write(out, difficultyCommands);
+////			Files.write(out, difficultyCommands);
+////
+////		} catch (IOException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
 	}
 	return found;
 }
@@ -282,7 +357,18 @@ public static void fillDificultyCommands (String aFileName) {
 					String aDateString = aComponents[2];
 					try {
 					Date aDate = new Date(aDateString);
-					System.out.println("metrics date" + aDate);
+					Tracer.info(DifficultyCommandsExtractor.class, "Processed metrics at date:" + aDate);
+					List<DifficultyContext> aNearbyContexts = findNearbyDifficultyContexts(aDate);
+					if (aNearbyContexts == null)
+						continue;
+					for (DifficultyContext aContext: aNearbyContexts) {
+						if (aDate.getTime() <= aContext.date.getTime()) {
+							aContext.preMetricsContext.append("\n" + aLine);
+						} else {
+							aContext.postMetricsContext.append("\n" + aLine);
+
+						}
+					}
 
 					} catch (Exception e) {
 						
@@ -316,7 +402,17 @@ public static void fillDificultyCommands (String aFileName) {
 					String aDateString = aComponents[1];
 					try {
 					Date aDate = new Date(aDateString);
-					System.out.println("local checks date" + aDate);
+					Tracer.info(DifficultyCommandsExtractor.class, "Processed localchecks at date:" + aDate);
+					List<DifficultyContext> aNearbyContexts = findNearbyDifficultyContexts(aDate);
+					if (aNearbyContexts == null)
+						continue;
+					for (DifficultyContext aContext: aNearbyContexts) {
+						if (aDate.getTime() <= aContext.date.getTime()) {
+							aContext.preLocalChecksContext.append("\n" + aLine);
+						} else {
+							aContext.postLocalChecksContext.append("\n" + aLine);
+						}
+					}
 
 					} catch (Exception e) {
 						
@@ -376,8 +472,8 @@ public static void fillDificultyCommands (String aFileName) {
 				
 				stringBuffer.setLength(0);
 				String aTypeString = getDifficultyTypeFromEclipseCommand(aLine);
-				DatedDifficultyContext aDatedContext = new DatedDifficultyContext();
-				difficultyContext.add(aDatedContext);
+				DifficultyContext aDatedContext = new DifficultyContext();
+				difficultyContexts.add(aDatedContext);
 				aDatedContext.date = aDate;
 //				difficultyDates.add(aDate);
 				stringBuffer.append(aDate + "(" + aTypeString + ")" + "\n");
@@ -422,8 +518,8 @@ public static void fillDificultyCommands (String aFileName) {
 		}
 		
 	}
-	public static List<DatedDifficultyContext> getDifficultyContext() {
-		return difficultyContext;
+	public static List<DifficultyContext> getDifficultyContext() {
+		return difficultyContexts;
 	}
 	public static Date getFirstDate() {
 		return firstDate;
