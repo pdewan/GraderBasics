@@ -126,12 +126,22 @@ public static boolean  fillDifficultyCommandsInEclipseDirectory (File aFolder) {
 		if (!aFolder.exists())
 			return false;		
 		File[] aChildren = aFolder.listFiles();
+		try {
 		for (File aFile:aChildren) {
+			try {
 			String aFileName = aFile.getName();
 			if (aFileName.startsWith("Log") && (aFileName.endsWith(".xml"))) {
 				fillDificultyCommands(aFile);
 			}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 		return numCommands > 0;
 		
