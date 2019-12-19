@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.trace.source.SourceFileComputed;
@@ -67,13 +69,67 @@ public class ABasicTextManager implements BasicTextManager{
     	
     	
     }
+    public static Map<String, StringBuffer> extractFileContents(String anAllSourcesText) {
+    	String[] anAllSourcesLines = anAllSourcesText.split("\n");
+    	return extractFileContents(anAllSourcesLines);
+    	
+    }
+    public static Map<String, StringBuffer> extractFileContents(String[] anAllSourcesLines) {
+    	Map<String, StringBuffer> aFileNameToContentsMap = new HashMap();
+    	int aNextFileIndex = 0;
+    	while (true) {
+    		int size = fillNextFileContents(anAllSourcesLines, aNextFileIndex, aFileNameToContentsMap);
+    		if (size <= 0) {
+    			break;
+    		}
+    		aNextFileIndex += size + 2;
+    		
+    	}
+    	return aFileNameToContentsMap;
+    }
+    protected static int fillNextFileContents (String[] anAllSourcesLines, int aStartIndex, Map<String, StringBuffer> aFileNameToContentsMap ) {
+    	int aContentsIndex = aStartIndex;
+    	int aContentsStartIndex = 0;
+    	int aContentsEndIndex = 0;
+    	String aFileName = null;
+    	StringBuffer aContentsBuffer = new StringBuffer();
+    	while (true) {
+    		if (aContentsIndex == anAllSourcesLines.length) {
+    			break;
+    		}
+    		String aNextLine = anAllSourcesLines[aContentsIndex];
+    		aContentsIndex++;
+    		if (!aNextLine.startsWith(BasicTextManager.SOURCE_PREFIX)) {
+    			continue;
+    		}
+    		aFileName = aNextLine.substring(BasicTextManager.SOURCE_PREFIX.length(), aNextLine.length() -1 );
+    		aFileNameToContentsMap.put(aFileName, aContentsBuffer);
+    		aContentsStartIndex = aContentsIndex;
+    		break;
+    	}
+    	while (true) {
+    		if (aContentsIndex == anAllSourcesLines.length) {
+    			break;
+    		}
+    		String aNextLine = anAllSourcesLines[aContentsIndex];
+    		if (BasicTextManager.SOURCE_SUFFIX.equals(aNextLine)) {
+    			aContentsEndIndex = aContentsIndex;
+    			break;
+    		}
+    		aContentsBuffer.append(aNextLine + "\n");  
+    		aContentsIndex++;
+    		
+    	}
+    	return aContentsEndIndex - aContentsStartIndex;
+    }
+    
     protected void addSourceFile(File aFile) {
     	try {
 			String contents = new String(Files.readAllBytes(aFile.toPath()));
 			String prefix = BasicTextManager.SOURCE_PREFIX + aFile.getName() + "\n";
 			allSourcesText.append(prefix);			
 			allSourcesText.append(contents);        
-			allSourcesText.append(BasicTextManager.SOURCE_SUFFIX);
+			allSourcesText.append(BasicTextManager.SOURCE_SUFFIX + "\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
