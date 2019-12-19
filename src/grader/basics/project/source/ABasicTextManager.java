@@ -13,6 +13,7 @@ public class ABasicTextManager implements BasicTextManager{
     protected StringBuffer allSourcesText;
 	protected String sourceSuffix;
 	protected File sourceFolder;
+	protected boolean initializedSourceText = false;
 
     
     public ABasicTextManager(File aSourceFolder) {
@@ -37,7 +38,9 @@ public class ABasicTextManager implements BasicTextManager{
     }
     @Override
     public StringBuffer getAllSourcesText() {
-        if (allSourcesText == null)
+        if (!initializedSourceText)
+
+//        if (allSourcesText == null)
             initializeAllSourcesText();
         return allSourcesText;
     }
@@ -48,6 +51,7 @@ public class ABasicTextManager implements BasicTextManager{
     		return;
     	}
     	addFolder(sourceFolder);
+    	initializedSourceText = true;
 //        Collection<ViewableClassDescription> filteredClasses = classesManager.getViewableClassDescriptions();
 //        allSourcesText = toStringBuffer(filteredClasses);
     }

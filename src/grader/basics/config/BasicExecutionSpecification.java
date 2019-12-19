@@ -87,6 +87,7 @@ public interface BasicExecutionSpecification {
 	String getEntryPoint();
 	void setEntryPoint(String anEntryPoint);
 	String getRequirementsLocation();
+	void setLanguage(String aValue);
 	
 	
 

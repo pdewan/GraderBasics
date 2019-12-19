@@ -30,6 +30,8 @@ public class BasicLanguageDependencyManager {
 		
 		public static String JAVA_LANGUAGE = "Java";
 		public static String C_LANGUAGE = "C";
+		public static String CPlusPlus_LANGUAGE = "C++";
+
 		public static String PYTHON_LANGUAGE = "Python";
 		 static String DEFAULT_LANGUAGE =JAVA_LANGUAGE ;
 
@@ -129,6 +131,8 @@ public class BasicLanguageDependencyManager {
 		if (aCObj != null)
 	
 		languageToBinaryFileSuffix.put(C_LANGUAGE, "." + aCObj);
+		languageToBinaryFileSuffix.put(CPlusPlus_LANGUAGE, "." + aCObj);
+
 
 	
 }
@@ -152,12 +156,15 @@ public class BasicLanguageDependencyManager {
 		languageToSourceFileSuffix.put(JAVA_LANGUAGE, ".java");
 		languageToBinaryFileSuffix.put(JAVA_LANGUAGE, ".class");
 		languageToSourceFileSuffix.put(C_LANGUAGE, ".c");
+		languageToSourceFileSuffix.put(CPlusPlus_LANGUAGE, ".cpp");
 		languageToBinaryFileSuffix.put(C_LANGUAGE, ".o");
+		languageToBinaryFileSuffix.put(CPlusPlus_LANGUAGE, ".o");
 		languageToSourceFileSuffix.put(PYTHON_LANGUAGE, ".py");
 		languageToBinaryFileSuffix.put(PYTHON_LANGUAGE, ".py"); // does it have a compiled class
 		
 		languageToMainClassFinder.put(JAVA_LANGUAGE, JavaMainClassFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(C_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
+		languageToMainClassFinder.put(CPlusPlus_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
 
 		
 //		

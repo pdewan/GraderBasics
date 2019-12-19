@@ -361,8 +361,16 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         return processToProcessedOutputLines;
     }
     public static final String ALL_PROCESSES = "All";
+	public LinesMatcher getLinesMatcher() {
+		Map<String, LinesMatcher> aProcessLinesMatcher = getProcessLinesMatcher();
+		if (aProcessLinesMatcher == null) {
+			return null;
+		}
+		return aProcessLinesMatcher.get(BasicProcessRunner.MAIN_ENTRY_POINT);
+	}
+
     @Override
-	public Map<String, LinesMatcher> getProcessLineMatcher() {
+	public Map<String, LinesMatcher> getProcessLinesMatcher() {
     	if (processToProcessedLineMatcher == null) {
 //    		List<String> anAllLines = new ArrayList();
     		processToProcessedLineMatcher = new HashMap<>();

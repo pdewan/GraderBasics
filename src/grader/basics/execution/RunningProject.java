@@ -126,7 +126,9 @@ public interface RunningProject {
 
 	Map<String, StringBuffer> getProcessError();
 
-	Map<String, LinesMatcher> getProcessLineMatcher();
+	Map<String, LinesMatcher> getProcessLinesMatcher();
+	LinesMatcher getLinesMatcher();
+
 	
 
 }

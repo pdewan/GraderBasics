@@ -890,7 +890,7 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		linesMatcher = interactiveInputProject.getProcessLineMatcher().get(processName);
+		linesMatcher = interactiveInputProject.getProcessLinesMatcher().get(processName);
 		if (linesMatcher == null) {
 			if (outputLines == null || outputLines.length == 0) {
 			this.outputLines = output.split("\n");

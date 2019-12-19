@@ -43,23 +43,7 @@ import util.trace.Tracer;
  */
 public class ABasicExecutionSpecification implements BasicExecutionSpecification {
 	protected List<String> emptyList = new ArrayList();
-//	protected List<String> processTeams = new ArrayList<>();
-//	protected List<String> processTeams = new ArrayList<>();
 
-//	protected Map<String, List<String>> graderProcessTeamToProcesses = new HashMap<>();
-//	protected Map<String, List<String>> graderProcessTeamToTerminatingProcesses = new HashMap<>();
-//	protected Map<String, Integer> graderProcessToSleepTime = new HashMap<>();
-//	protected Map<String, Integer> studentProcessToSleepTime = new HashMap<>();
-//	protected Map<String, String> graderProcessToEntryTag = new HashMap<>();
-//	protected Map<String, String> studentProcessToEntryTag = new HashMap<>();
-//	protected Map<String, List<String>> graderProcessToEntryTags = new HashMap<>();
-//	protected Map<String, List<String>> studentProcessToEntryTags = new HashMap<>();
-//	protected Map<String, String> graderProcessToEntryPoint = new HashMap<>();
-//	protected Map<String, String> studentProcessToEntryPoint = new HashMap<>();
-//	protected Map<String, List<String>> graderProcessToArgs = new HashMap<>();
-//	protected Map<String, List<String>> studentProcessToArgs = new HashMap<>();
-//	protected Map<String, List<String>> graderProcessToStartTags = new HashMap<>();
-//	protected Map<String, List<String>> studentProcessToStartTags = new HashMap<>();
 
 	protected Map<String, String> runtimeGraderStringProperties = new HashMap<>();
 	protected Map<String, String> runtimeStudentStringProperties = new HashMap<>();
@@ -523,7 +507,19 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     public boolean getWaitForResortProperty() {
     	return getBooleanProperty(BasicStaticConfigurationUtils.WAIT_FOR_RESORT, WAIT_FOR_RESORT);
     }
-    
+    protected String language = null;
+    @Override
+    public String getLanguage() {
+    	if (language == null) {
+    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
+    	}
+    	return language;
+//    	return getStringProperty(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, ".");
+    }
+    @Override
+    public void setLanguage(String aValue) {
+    	runtimeStudentStringProperties.put(BasicStaticConfigurationUtils.LANGUAGE, aValue);
+    }
  
     protected String gradableProjectLocation = null;
     @Override
@@ -583,16 +579,16 @@ protected String requirementsLocation = null;
     }
     // should we cache these values?
 //    protected String language;
-    @Override
+//    @Override
     // no caching as each project can have different language
-    public String getLanguage() {
-    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
-//    	if (language == null) {
-//    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
-//    	}
-//    	return language;
+//    public String getLanguage() {
 //    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
-    }
+////    	if (language == null) {
+////    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
+////    	}
+////    	return language;
+////    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE,BasicLanguageDependencyManager.JAVA_LANGUAGE);
+//    }
 //    // no caching as 
 //    @Override
 //    public List<String> getBasicCommand() {
