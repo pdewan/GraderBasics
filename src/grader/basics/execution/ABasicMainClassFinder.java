@@ -145,7 +145,7 @@ public class ABasicMainClassFinder implements MainClassFinder {
     @Override
     public Map<String, String> getEntryPoints(grader.basics.project.Project project, String[] aSpecifiedMainClasses) throws NotRunnableException {
         if (project.getClassesManager().isEmpty())
-            throw new NotRunnableException();
+            throw new NotRunnableException("Empty Classes Manager");
 //        ProjectWrapper projectWrapper = (ProjectWrapper) project;
 		Map<String, String> entryPoints = new HashMap();
 
@@ -181,7 +181,7 @@ public class ABasicMainClassFinder implements MainClassFinder {
             } catch (NoSuchMethodException e) {
             }
         }
-        throw new NotRunnableException();
+        throw new NotRunnableException("Could not find Java main method");
     }
     protected List<String> defaultCommand;
 	@Override

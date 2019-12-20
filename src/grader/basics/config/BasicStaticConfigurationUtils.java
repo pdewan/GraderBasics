@@ -91,6 +91,8 @@ public class BasicStaticConfigurationUtils {
 	public static final String USE_PROJECT_CONFIGURATION = "useProjectConfiguration";
 	public static final boolean DEFAULT_USE_PROJECT_CONFIGURATION = false;
 	public static final String DEFAULT_REQUIREMENTS_LOCATION = null;
+	public static final String DEFAULT_COURSE = "SampleCourse";
+	public static final String DEFAULT_PROBLEM = "SampleAssignent";
 
 
 //	private static  List<String> basicCommand;
@@ -1113,6 +1115,9 @@ public class BasicStaticConfigurationUtils {
 	}
 
 	public static void setModuleProblemAndSuite(Class aSuiteClass) {
+		if (module != DEFAULT_MODULE && problem != DEFAULT_PROBLEM) {
+			return; // we have set the module and problem explicitly
+		}
 		testSuite = aSuiteClass.getSimpleName();
 		Package aPackage = aSuiteClass.getPackage();
 		String aPackageName = aPackage.getName();

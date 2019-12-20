@@ -86,8 +86,7 @@ public class BasicJUnitUtils {
 	}
 	
 	
-	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
-		//  the suite class will
+	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {		
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);
 		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
