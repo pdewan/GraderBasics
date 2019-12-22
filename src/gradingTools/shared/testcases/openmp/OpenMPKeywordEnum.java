@@ -1,6 +1,6 @@
 package gradingTools.shared.testcases.openmp;
 
-public enum OpenMPKeywords {
+public enum OpenMPKeywordEnum {
 	FOR,
 	PARALLEL,
 	REDUCE,
