@@ -109,11 +109,36 @@ public class OpenMPUtils {
 		if (!aTokens[1].equals("omp")) {
 			return null;
 		}
+		OpenMPPragma retVal = new AnOpenMPPragma(aLineIndex);
+
 		for (int i = 2; i < aTokens.length; i ++) {
 			String aStoredToken = aTokens[i].trim().toLowerCase();
-			aTokens[i] = aStoredToken;
+			if (aStoredToken.isEmpty()) {
+				continue;
+			}
+			if (aStoredToken.startsWith("reduction")) {
+				while (!aStoredToken.endsWith(")")) {
+					i++;
+					if (i >= aTokens.length) {
+						break;
+					}
+					String aNewToken = aTokens[i].trim().toLowerCase();
+					aStoredToken += aNewToken; 					
+				}
+				int aLeftParenIndex = aStoredToken.indexOf("(");
+				int aRightParenIndex = aStoredToken.indexOf(")");
+				int aColonIndex = aStoredToken.indexOf(":");
+				if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
+					String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
+					String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
+					retVal.setReductionVariable(aVariableString);
+					retVal.setReductionOperation(anOperationString);
+				}
+				
+			}
+//			aTokens[i] = aStoredToken;
+			retVal.getOpenMPTokens().add(aStoredToken);
 		}
-		OpenMPPragma retVal = new AnOpenMPPragma(aTokens, aLineIndex);
 		return retVal;
 		
 		

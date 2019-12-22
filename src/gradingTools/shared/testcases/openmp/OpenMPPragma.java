@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface OpenMPPragma {
 
-	String[] getOpenMPTokens();
+	List<String> getOpenMPTokens();
 
 	int getLineNumber();
 
@@ -19,5 +19,13 @@ public interface OpenMPPragma {
 	int getAnnotatedTextEndLineNumber();
 
 	void setAnnotatedTextEndLineNumber(int annotatedTextEndLineNumber);
+
+	String getReductionVariable();
+
+	void setReductionVariable(String reductionVariable);
+
+	String getReductionOperation();
+
+	void setReductionOperation(String reductionOperation);
 
 }

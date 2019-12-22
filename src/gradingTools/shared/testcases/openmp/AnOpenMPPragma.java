@@ -6,26 +6,32 @@ import java.util.List;
 
 public class AnOpenMPPragma implements OpenMPPragma {
 //	protected List<OpenMPKeywordEnum> openMPKeywords = new ArrayList();
-	protected String[] openMPTokens;
+	protected List<String> openMPTokens = new ArrayList();
 
 	protected int lineNumber;
 	protected List<String> annotatedText = new ArrayList();
 	protected int annotatedTextStartLineNumber;
 	protected int annotatedTextEndLineNumber;
+	protected OpenMPPragma parent;
+	protected List<OpenMPPragma> children = new ArrayList();
+	protected List<String[]> variableDeclarations = new ArrayList();
+	protected String reductionVariable;
+	
 
-
+	protected String reductionOperation;
 	
 	
 	
-	public AnOpenMPPragma(String[] openMPTokens, int lineNumber) {
+	
+	public AnOpenMPPragma(int lineNumber) {
 		super();
-		this.openMPTokens = openMPTokens;
+//		this.openMPTokens = openMPTokens;
 		this.lineNumber = lineNumber;
 		
 //		this.nextNonEmptyString = nextNonEmptyString;
 	}
 	@Override
-	public String[] getOpenMPTokens() {
+	public List<String> getOpenMPTokens() {
 		return openMPTokens;
 	}
 	@Override
@@ -57,9 +63,25 @@ public class AnOpenMPPragma implements OpenMPPragma {
 	public void setAnnotatedTextEndLineNumber(int annotatedTextEndLineNumber) {
 		this.annotatedTextEndLineNumber = annotatedTextEndLineNumber;
 	}
+	@Override
+	public String getReductionVariable() {
+		return reductionVariable;
+	}
+	@Override
+	public void setReductionVariable(String reductionVariable) {
+		this.reductionVariable = reductionVariable;
+	}
+	@Override
+	public String getReductionOperation() {
+		return reductionOperation;
+	}
+	@Override
+	public void setReductionOperation(String reductionOperation) {
+		this.reductionOperation = reductionOperation;
+	}
 	
 	public String toString() {
-		return lineNumber + ":" + Arrays.toString(openMPTokens) +
+		return lineNumber + ":" + openMPTokens +
 				"--> (" + annotatedTextStartLineNumber + "," + annotatedTextEndLineNumber + "):" + annotatedText;
 	}
 
