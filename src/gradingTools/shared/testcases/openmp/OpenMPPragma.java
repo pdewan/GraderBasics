@@ -28,4 +28,18 @@ public interface OpenMPPragma {
 
 	void setReductionOperation(String reductionOperation);
 
+	List<String> getReductionVariableAssignments();
+
+	List<String> getReductionOperationUses();
+
+	OpenMPKeywordEnum getFirstOpenMPKeyword();
+
+	void setFirstOpenMPKeyword(OpenMPKeywordEnum firstOpenMPKeyword);
+
+	String getAssignedVariableInCritical();
+
+	void setAssignedVariableInCritical(String assignedVariableInCritical);
+
+	List<String> getVariableDeclarationsInParallel();
+
 }

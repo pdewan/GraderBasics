@@ -5,6 +5,7 @@ public enum OpenMPKeywordEnum {
 	PARALLEL,
 	REDUCE,
 	SHARED,
-	PRIVATE
+	PRIVATE,
+	CRITICAL
 
 }

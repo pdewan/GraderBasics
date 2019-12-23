@@ -7,7 +7,12 @@ import java.util.List;
 public class AnOpenMPPragma implements OpenMPPragma {
 //	protected List<OpenMPKeywordEnum> openMPKeywords = new ArrayList();
 	protected List<String> openMPTokens = new ArrayList();
-
+	protected OpenMPKeywordEnum firstOpenMPKeyword;
+	
+	protected List<String> variableDeclarationsInParallel = new ArrayList();//separate subclass for this variable?
+	
+	protected String assignedVariableInCritical;// separate subclass for this variable?
+	
 	protected int lineNumber;
 	protected List<String> annotatedText = new ArrayList();
 	protected int annotatedTextStartLineNumber;
@@ -16,12 +21,9 @@ public class AnOpenMPPragma implements OpenMPPragma {
 	protected List<OpenMPPragma> children = new ArrayList();
 	protected List<String[]> variableDeclarations = new ArrayList();
 	protected String reductionVariable;
-	
-
 	protected String reductionOperation;
-	
-	
-	
+	protected List<String> reductionVariableAssignments = new ArrayList();
+	protected List<String> reductionOperationUses = new ArrayList();
 	
 	public AnOpenMPPragma(int lineNumber) {
 		super();
@@ -79,10 +81,36 @@ public class AnOpenMPPragma implements OpenMPPragma {
 	public void setReductionOperation(String reductionOperation) {
 		this.reductionOperation = reductionOperation;
 	}
-	
+	@Override
+	public List<String> getReductionVariableAssignments() {
+		return reductionVariableAssignments;
+	}
+	@Override
+	public List<String> getReductionOperationUses() {
+		return reductionOperationUses;
+	}
+	@Override
+	public OpenMPKeywordEnum getFirstOpenMPKeyword() {
+		return firstOpenMPKeyword;
+	}
+	@Override
+	public void setFirstOpenMPKeyword(OpenMPKeywordEnum firstOpenMPKeyword) {
+		this.firstOpenMPKeyword = firstOpenMPKeyword;
+	}
+	@Override
+	public String getAssignedVariableInCritical() {
+		return assignedVariableInCritical;
+	}
+	@Override
+	public void setAssignedVariableInCritical(String assignedVariableInCritical) {
+		this.assignedVariableInCritical = assignedVariableInCritical;
+	}
+	@Override
+	public List<String> getVariableDeclarationsInParallel() {
+		return variableDeclarationsInParallel;
+	}
 	public String toString() {
 		return lineNumber + ":" + openMPTokens +
 				"--> (" + annotatedTextStartLineNumber + "," + annotatedTextEndLineNumber + "):" + annotatedText;
 	}
-
 }
