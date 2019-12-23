@@ -20,26 +20,38 @@ public interface OpenMPPragma {
 
 	void setAnnotatedTextEndLineNumber(int annotatedTextEndLineNumber);
 
-	String getReductionVariable();
+//	String getReductionVariable();
 
-	void setReductionVariable(String reductionVariable);
+//	void setReductionVariable(String reductionVariable);
+//
+//	String getReductionOperation();
+//
+//	void setReductionOperation(String reductionOperation);
+//
+//	List<String> getReductionVariableAssignments();
+//
+//	List<String> getReductionOperationUses();
 
-	String getReductionOperation();
+//	OpenMPKeywordEnum getFirstOpenMPKeyword();
+//
+//	void setFirstOpenMPKeyword(OpenMPKeywordEnum firstOpenMPKeyword);
 
-	void setReductionOperation(String reductionOperation);
+//	String getAssignedVariableInCritical();
+//
+//	void setAssignedVariableInCritical(String assignedVariableInCritical);
 
-	List<String> getReductionVariableAssignments();
+	void addToAnnotatedText(String aString);
 
-	List<String> getReductionOperationUses();
+	OpenMPPragma getParent();
 
-	OpenMPKeywordEnum getFirstOpenMPKeyword();
+	void setParent(OpenMPPragma parent);
 
-	void setFirstOpenMPKeyword(OpenMPKeywordEnum firstOpenMPKeyword);
+	List<OpenMPPragma> getChildren();
 
-	String getAssignedVariableInCritical();
+	List<String> getOpenMPCalls();
 
-	void setAssignedVariableInCritical(String assignedVariableInCritical);
+	void addOpenMPCall(String aFileLine);
 
-	List<String> getVariableDeclarationsInParallel();
+//	List<String> getVariableDeclarationsInParallel();
 
 }

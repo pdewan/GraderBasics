@@ -11,6 +11,7 @@ public class OpenMPUtils {
 	
 	protected static Map<String, OpenMPKeywordEnum> stringToOpenMPKeyword = new HashMap();
 	protected static String[] typeNames = {"double", "float", "int", "short", "long"};
+	protected static String[] openMPCalls = {"omp_get_thread_num()", "omp_get_num_threads()"};
 	public static List<OpenMPPragma> getOpemMPPragmas(StringBuffer aFileBuffer) {
 		String[] aFileLines = aFileBuffer.toString().split("\n");
 		return getOpenMPPragmas(aFileLines);
@@ -35,9 +36,22 @@ public class OpenMPUtils {
 		return aLine.startsWith("#pragma");
 	}
 	public static void addToStack(Stack<OpenMPPragma> anOpenMPPragmas, String aFileLine) {
+		List<String> anOpenMPCalls = getOMPCalls(aFileLine);
 		for (OpenMPPragma anOpenMPPragma:anOpenMPPragmas) {
-			anOpenMPPragma.getAnnotatedText().add(aFileLine);
+			anOpenMPPragma.addToAnnotatedText(aFileLine);
+			for (String anOpenMPCall:anOpenMPCalls) {
+				anOpenMPPragma.addOpenMPCall(anOpenMPCall);
+			}		
 		}
+	}
+	public static List<String> getOMPCalls(String aFileLine) {
+		List<String> retVal = new ArrayList();
+		for (String anOpenMPCall:openMPCalls) {
+			if (aFileLine.contains(anOpenMPCall)) {
+				retVal.add(anOpenMPCall);
+			}
+		}
+		return retVal;
 	}
 	
 	public static void incrementStackTop (Stack<Integer> aNumOpenBracesStack) {
@@ -64,45 +78,56 @@ public class OpenMPUtils {
 		List<OpenMPPragma> retVal = new ArrayList();
 		Stack<OpenMPPragma> anOpenMPPragmas = new Stack();
 		Stack<Integer> aNumOpenBracesStack = new Stack();
-		OpenMPPragma lastOpenMPPragma = null;
-		String lastReductionVariable = null;
-		String lastReductionOperation = null;
+//		OpenMPPragma lastOpenMPPragma = null;
+//		String lastReductionVariable = null;
+//		String lastReductionOperation = null;
 //		int aNumOpenBraces = 0;
 		boolean aNextCodeLineIsAPragmaBlock = false;
+		List<OpenMPPragma> newOpenMPPragmas = null;
 		for (int i = 0; i < aFileLines.length; i++) {
 			String aFileLine = aFileLines[i].trim();
 			if (!isCodeLine(aFileLine)) {
 				continue;
 			}
 			addToStack(anOpenMPPragmas, aFileLine); // if it is empty add to none
-			if (lastReductionVariable != null) {
-				if (aFileLine.startsWith(lastReductionVariable)) {
-					lastOpenMPPragma.getReductionVariableAssignments().add(aFileLine);
-					if (lastReductionOperation != null) { // can it ever be not null
-						if (aFileLine.contains(lastReductionOperation)) {
-							lastOpenMPPragma.getReductionOperationUses().add(aFileLine);
-						}
-					}
-				}			
-			}
-			if (lastOpenMPPragma != null && lastOpenMPPragma.getFirstOpenMPKeyword() == OpenMPKeywordEnum.PARALLEL) {
-				if (startsWithTypeName(aFileLine)) {
-					lastOpenMPPragma.getVariableDeclarationsInParallel().add(aFileLine);
-				}
-			} else if (lastOpenMPPragma != null && lastOpenMPPragma.getFirstOpenMPKeyword() == OpenMPKeywordEnum.CRITICAL) {
-				String[] aTokens = aFileLine.split("\\s+");
-				lastOpenMPPragma.setAssignedVariableInCritical(aTokens[0]);				
-			}
+//			if (lastReductionVariable != null) {
+//				if (aFileLine.startsWith(lastReductionVariable)) {
+//					lastOpenMPPragma.getReductionVariableAssignments().add(aFileLine);
+//					if (lastReductionOperation != null) { // can it ever be not null
+//						if (aFileLine.contains(lastReductionOperation)) {
+//							lastOpenMPPragma.getReductionOperationUses().add(aFileLine);
+//						}
+//					}
+//				}			
+//			}
+//			if (lastOpenMPPragma != null && lastOpenMPPragma.getFirstOpenMPKeyword() == OpenMPKeywordEnum.PARALLEL) {
+//				if (startsWithTypeName(aFileLine)) {
+//					lastOpenMPPragma.getVariableDeclarationsInParallel().add(aFileLine);
+//				}
+//			} 
+//			else if (lastOpenMPPragma != null && lastOpenMPPragma.getFirstOpenMPKeyword() == OpenMPKeywordEnum.CRITICAL) {
+//				String[] aTokens = aFileLine.split("\\s+");
+//				lastOpenMPPragma.setAssignedVariableInCritical(aTokens[0]);				
+//			}
 			if (isPragmaStart(aFileLine)) {
 				
-				lastOpenMPPragma = getOpemMPPragma(aFileLine, i);
-				if (lastOpenMPPragma != null) {
-					anOpenMPPragmas.add(lastOpenMPPragma);
+				newOpenMPPragmas = getOpenMPPragmas(aFileLine, i);
+				if (newOpenMPPragmas.size() != 0) {
+					for (OpenMPPragma anOpenMPPragma:newOpenMPPragmas) {
+						if (anOpenMPPragmas.size() > 0) {
+						    anOpenMPPragma.setParent(anOpenMPPragmas.peek());
+						}
+						anOpenMPPragmas.push(anOpenMPPragma);
+						aNumOpenBracesStack.push(0);
+						retVal.add(anOpenMPPragma);
+
+					}
+//					anOpenMPPragmas.addAll(newOpenMPPragmas);
 					aNumOpenBracesStack.add(0);
-					retVal.add(lastOpenMPPragma);					
+//					retVal.add(lastOpenMPPragma);					
 					aNextCodeLineIsAPragmaBlock = true;
-					lastReductionOperation = lastOpenMPPragma.getReductionOperation();
-					lastReductionVariable = lastOpenMPPragma.getReductionVariable();
+//					String lastReductionOperation = lastOpenMPPragma.getReductionOperation();
+//					String lastReductionVariable = lastOpenMPPragma.getReductionVariable();
 					continue;
 				} 
 			}
@@ -128,17 +153,19 @@ public class OpenMPUtils {
 			if (aNumOpenBracesStack.peek() == 0) {
 				
 				anOpenMPPragmas.peek().setAnnotatedTextEndLineNumber(i);
-				anOpenMPPragmas.pop();
-				aNumOpenBracesStack.pop();
-				lastOpenMPPragma = null;
-				lastReductionVariable = null;
-				lastReductionOperation = null;
+				for (int j = 0; j < newOpenMPPragmas.size(); j++) {
+					anOpenMPPragmas.pop();
+					aNumOpenBracesStack.pop();
+				}
+//				lastOpenMPPragma = null;
+//				lastReductionVariable = null;
+//				lastReductionOperation = null;
 				continue;
 			}					
 		}
 		return retVal;
 	}
-	public static OpenMPPragma getOpemMPPragma(String aFileLine, int aLineIndex) {
+	public static List<OpenMPPragma> getOpenMPPragmas(String aFileLine, int aLineIndex) {
 		String[] aTokens = aFileLine.split("\\s+");
 		if (aTokens.length <= 2) {
 			return null;
@@ -146,9 +173,46 @@ public class OpenMPUtils {
 		if (!aTokens[1].equals("omp")) {
 			return null;
 		}
-		OpenMPPragma retVal = new AnOpenMPPragma(aLineIndex);
+		if (aTokens.length < 3) {
+			return null;
+		}
+		String aFirstToken = aTokens[2];
+		OpenMPKeywordEnum anOpenMPKeyword = stringToOpenMPKeyword.get(aFirstToken);
+		List<OpenMPPragma> retVal = new ArrayList();
+		OpenMPPragma lastChild;
+		int aStartIndex = 2;
+		switch (anOpenMPKeyword) {
+		case PARALLEL:
+			lastChild = new AnOpenMPParallelPragma(aLineIndex);
+			
+//			lastChild.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));	
 
-		for (int i = 2; i < aTokens.length; i ++) {
+			retVal.add(lastChild);
+			if (aTokens.length > 3 && aTokens[3].equals("for")) {
+				OpenMPPragma aForChild = new AnOpenMPForPragma(aLineIndex);
+				retVal.add(aForChild);
+				lastChild = aForChild;
+				aStartIndex++;
+			}
+			break;
+		case FOR:
+			lastChild = new AnOpenMPForPragma(aLineIndex);
+			retVal.add (lastChild);
+			break;
+		case CRITICAL:
+			lastChild = new AnOpenMPCriticalPragma(aLineIndex);
+			retVal.add (lastChild);
+			break;
+			default: 
+				lastChild = new AnOpenMPPragma(aLineIndex);
+				retVal.add(lastChild);
+			
+		}
+//		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));	
+//		OpenMPPragma retVal = new AnOpenMPPragma(aLineIndex);
+
+
+		for (int i = aStartIndex; i < aTokens.length; i ++) {
 			String aStoredToken = aTokens[i].trim();
 			if (aStoredToken.isEmpty()) {
 				continue;
@@ -168,16 +232,16 @@ public class OpenMPUtils {
 				if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
 					String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
 					String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
-					retVal.setReductionVariable(aVariableString);
-					retVal.setReductionOperation(anOperationString);
+					((OpenMPForPragma) lastChild).setReductionVariable(aVariableString);
+					((OpenMPForPragma) lastChild).setReductionOperation(anOperationString);
 				}
 				
 			}
 //			aTokens[i] = aStoredToken;
-			retVal.getOpenMPTokens().add(aStoredToken);
+			lastChild.getOpenMPTokens().add(aStoredToken);
 		}
-		String aFirstToken = retVal.getOpenMPTokens().get(0);
-		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));		
+//		String aFirstToken = retVal.getOpenMPTokens().get(0);
+//		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));		
 		return retVal;
 		
 		
