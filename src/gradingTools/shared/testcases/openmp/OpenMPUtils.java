@@ -35,14 +35,26 @@ public class OpenMPUtils {
 	public static boolean isPragmaStart(String aLine) {
 		return aLine.startsWith("#pragma");
 	}
-	public static void addToStack(Stack<OpenMPPragma> anOpenMPPragmas, String aFileLine) {
-		List<String> anOpenMPCalls = getOMPCalls(aFileLine);
-		for (OpenMPPragma anOpenMPPragma:anOpenMPPragmas) {
-			anOpenMPPragma.addToAnnotatedText(aFileLine);
-			for (String anOpenMPCall:anOpenMPCalls) {
-				anOpenMPPragma.addOpenMPCall(anOpenMPCall);
-			}		
+	public static void addToStack(Stack<OpenMPPragma> anOpenMPPragmas, String aFileLine, int aLineNumber) {
+		if (anOpenMPPragmas.size() > 0) {
+			anOpenMPPragmas.peek().addToAnnotatedText(aFileLine, aLineNumber);
 		}
+//		for (OpenMPPragma anOpenMPPragma:anOpenMPPragmas) {
+//			anOpenMPPragma.addToAnnotatedText(aFileLine, aLineNumber);				
+//		}
+		
+	}
+	public static ForHeader getForHeader(String aFileLine, int aLineNumber) {
+		if (!aFileLine.startsWith("for"))
+			return null;
+		int aLeftParenIndex = aFileLine.indexOf("(");
+		int aRightParenIndex = aFileLine.indexOf(")");
+		if (aLeftParenIndex < 0 || aRightParenIndex < 0) {
+			return null;
+		}
+		String aHeaderString = aFileLine.substring(aLeftParenIndex + 1, aRightParenIndex);
+		String[] aForComponents = aHeaderString.split(";");
+		return new AForHeader(aForComponents[0], aForComponents[1], aForComponents[2], aLineNumber);
 	}
 	public static List<String> getOMPCalls(String aFileLine) {
 		List<String> retVal = new ArrayList();
@@ -53,6 +65,8 @@ public class OpenMPUtils {
 		}
 		return retVal;
 	}
+	
+	
 	
 	public static void incrementStackTop (Stack<Integer> aNumOpenBracesStack) {
 		int aTopIndex = aNumOpenBracesStack.size() - 1;
@@ -89,7 +103,7 @@ public class OpenMPUtils {
 			if (!isCodeLine(aFileLine)) {
 				continue;
 			}
-			addToStack(anOpenMPPragmas, aFileLine); // if it is empty add to none
+			addToStack(anOpenMPPragmas, aFileLine, i); // if it is empty add to none
 //			if (lastReductionVariable != null) {
 //				if (aFileLine.startsWith(lastReductionVariable)) {
 //					lastOpenMPPragma.getReductionVariableAssignments().add(aFileLine);
@@ -116,14 +130,17 @@ public class OpenMPUtils {
 					for (OpenMPPragma anOpenMPPragma:newOpenMPPragmas) {
 						if (anOpenMPPragmas.size() > 0) {
 						    anOpenMPPragma.setParent(anOpenMPPragmas.peek());
+						} else {
+							retVal.add(anOpenMPPragma); // add only top level prgamas
+
 						}
 						anOpenMPPragmas.push(anOpenMPPragma);
 						aNumOpenBracesStack.push(0);
-						retVal.add(anOpenMPPragma);
+//						retVal.add(anOpenMPPragma);
 
 					}
 //					anOpenMPPragmas.addAll(newOpenMPPragmas);
-					aNumOpenBracesStack.add(0);
+//					aNumOpenBracesStack.add(0);
 //					retVal.add(lastOpenMPPragma);					
 					aNextCodeLineIsAPragmaBlock = true;
 //					String lastReductionOperation = lastOpenMPPragma.getReductionOperation();
@@ -164,6 +181,27 @@ public class OpenMPUtils {
 			}					
 		}
 		return retVal;
+	}
+	public static void setReductionData (OpenMPPragma lastChild, String aStoredToken, int aLeftParenIndex, int aRightParenIndex) {
+		int aColonIndex = aStoredToken.indexOf(":");
+		if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
+			String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
+			String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
+			((OpenMPForPragma) lastChild).setReductionVariable(aVariableString);
+			((OpenMPForPragma) lastChild).setReductionOperation(anOperationString);
+		}
+	}
+	public static void setSharedOrPrivateData (OpenMPPragma lastChild, String aStoredToken, int aLeftParenIndex, int aRightParenIndex, boolean isShared) {
+//		int aColonIndex = aStoredToken.indexOf(":");
+		if (aLeftParenIndex != -1 && aRightParenIndex != -1 ) {
+			String aVariableDeclarations = aStoredToken.substring(aLeftParenIndex + 1, aRightParenIndex);
+			String[] aVariables = aVariableDeclarations.split(",");
+			if (isShared) {
+				lastChild.setSharedVariables(aVariables);
+			} else {
+				lastChild.setPrivateVariables(aVariables);
+			}			
+		}
 	}
 	public static List<OpenMPPragma> getOpenMPPragmas(String aFileLine, int aLineIndex) {
 		String[] aTokens = aFileLine.split("\\s+");
@@ -217,7 +255,8 @@ public class OpenMPUtils {
 			if (aStoredToken.isEmpty()) {
 				continue;
 			}
-			if (aStoredToken.startsWith("reduction")) {
+			if (aStoredToken.startsWith("reduction") || aStoredToken.startsWith("shared") || aStoredToken.startsWith("private")) {
+				//combine all tokens until ")" into one for normalization
 				while (!aStoredToken.endsWith(")")) {
 					i++;
 					if (i >= aTokens.length) {
@@ -228,15 +267,25 @@ public class OpenMPUtils {
 				}
 				int aLeftParenIndex = aStoredToken.indexOf("(");
 				int aRightParenIndex = aStoredToken.indexOf(")");
-				int aColonIndex = aStoredToken.indexOf(":");
-				if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
-					String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
-					String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
-					((OpenMPForPragma) lastChild).setReductionVariable(aVariableString);
-					((OpenMPForPragma) lastChild).setReductionOperation(anOperationString);
+				if (aStoredToken.startsWith("reduction")) {
+					setReductionData(lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex);
+				} else if (aStoredToken.startsWith("private")) {
+					setSharedOrPrivateData(lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex, false);
+
+				} else if (aStoredToken.startsWith("shared")) {
+					setSharedOrPrivateData(lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex, true);
+
 				}
+//				int aColonIndex = aStoredToken.indexOf(":");
+//				if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
+//					String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
+//					String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
+//					((OpenMPForPragma) lastChild).setReductionVariable(aVariableString);
+//					((OpenMPForPragma) lastChild).setReductionOperation(anOperationString);
+//				}
 				
 			}
+			
 //			aTokens[i] = aStoredToken;
 			lastChild.getOpenMPTokens().add(aStoredToken);
 		}
