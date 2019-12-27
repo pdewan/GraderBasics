@@ -22,12 +22,9 @@ public class AnSNode implements SNode {
 	protected List<OMPSNode> ompSNodes = new ArrayList();
 	protected Set<OpenMPPragmaAttribute> attributes = new HashSet();
 	protected SNode parent;
-	
+	boolean inParallel = false;
+	int numberOfNestingFors;
 
-
-	
-
-	
 	public AnSNode(int lineNumber) {
 		super();
 		this.lineNumber = lineNumber;		
@@ -55,6 +52,10 @@ public class AnSNode implements SNode {
 	public void setParent(SNode parent) {
 		this.parent = parent;
 		parent.getChildren().add(this);
+		inParallel = OMPSNodeUtils.hasParallelAncestor(this);
+		numberOfNestingFors = OMPSNodeUtils.numberOfNestingFors(parent);
+
+
 	}
 	@Override
 	public List<SNode> getChildren() {
@@ -87,6 +88,13 @@ public class AnSNode implements SNode {
 	public Set<OpenMPPragmaAttribute> getAttributes() {
 		return attributes;
 	}
-
+	@Override
+	public boolean isInParallel() {
+		return inParallel;
+	}
+	@Override
+	public boolean isLeaf() {
+		return getChildren().isEmpty();
+	}
 
 }

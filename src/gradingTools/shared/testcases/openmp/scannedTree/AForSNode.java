@@ -3,8 +3,8 @@ package gradingTools.shared.testcases.openmp.scannedTree;
 public class AForSNode extends AnSNode implements ForSNode {
 	AssignmentSNode initalization;
 	String condition;	
-	String increment;
-	public AForSNode(int lineNumber, AssignmentSNode initalization, String condition, String increment) {
+	AssignmentSNode increment;
+	public AForSNode(int lineNumber, AssignmentSNode initalization, String condition, AssignmentSNode increment) {
 		super(lineNumber);
 		this.initalization = initalization;
 		this.condition = condition;
@@ -19,10 +19,14 @@ public class AForSNode extends AnSNode implements ForSNode {
 		return condition;
 	}
 	@Override
-	public String getIncrement() {
+	public AssignmentSNode getIncrement() {
 		return increment;
 	}
+	@Override
+	public void setParent(SNode parent) {
+		super.setParent(parent);
 
+	}
 	
 
 }

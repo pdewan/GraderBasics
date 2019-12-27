@@ -34,10 +34,10 @@ public class OpenMPUtils {
 		String[] aFileLines = aFileBuffer.toString().split("\n");
 		return getOpenMPPragmas(aFileLines);
 	}
-	public static SNode getSNode(StringBuffer aFileBuffer) {
-		String[] aFileLines = aFileBuffer.toString().split("\n");
-		return getSNode(aFileLines);
-	}
+//	public static SNode getSNode(StringBuffer aFileBuffer) {
+//		String[] aFileLines = aFileBuffer.toString().split("\n");
+//		return getSNode(aFileLines);
+//	}
 	public static boolean isCodeLine(String aLine) {
 		return !aLine.isEmpty() && !aLine.startsWith("//");
 	}
@@ -85,59 +85,59 @@ public class OpenMPUtils {
 		return new AForHeader(aForComponents[0], aForComponents[1], aForComponents[2], aLineNumber);
 	}
 
-	public static AssignmentSNode getAssignmentSNode(int aLineNumber, String aString) {
-		String[] aTokens = aString.split("=");
-		return new AnAssignmentSNode(aLineNumber, aTokens[0], aTokens[1]);
-	}
-	public static DeclarationSNode getDeclarationSNode(int aLineNumber, String aString) {
-		String[] aTokens = aString.split(" ");
-		return new ADeclarationSNode(aLineNumber, aTokens[0], aTokens[1]);
-	}
-
-	public static DeclaringAssignmentSNode getDeclaringAssignmentSNode(int aLineNumber, String aString) {
-		String[] anLHSAndRHS = aString.split("=");
-		String[] aTypeAndVariable = anLHSAndRHS[0].split(" ");
-		return new ADeclaringAssignmentSNode(aLineNumber, aTypeAndVariable[0], aTypeAndVariable[1], anLHSAndRHS[1]);
-	}
-
-	public static boolean isDeclaringAssignment(String aFileLine) {
-		return startsWithTypeName(aFileLine) && aFileLine.contains("=");
-	}
-	public static boolean isVariableDeclaration(String aFileLine) {
-		
-		return startsWithTypeName(aFileLine) && !aFileLine.contains("(") ;
-	}
-	
-	public static boolean isAssignment(String aFileLine) {
-		return aFileLine.contains("=");
-	}
-
-
-	public static boolean isForNode(String aFileLine) {
-		return aFileLine.startsWith("for");
-	}
-
-	public static ForSNode getForSNode(int aLineNumber, String aFileLine) {
-
-		int aLeftParenIndex = aFileLine.indexOf("(");
-		int aRightParenIndex = aFileLine.indexOf(")");
-		if (aLeftParenIndex < 0 || aRightParenIndex < 0) {
-			return null;
-		}
-		String aHeaderString = aFileLine.substring(aLeftParenIndex + 1, aRightParenIndex);
-		String[] aForComponents = aHeaderString.split(";");
-		AssignmentSNode anAssignmentSNode = null;
-		String aForInitializaton = aForComponents[0];
-		if (!aForInitializaton.isEmpty() && aForInitializaton.contains("=")) {
-			if (isDeclaringAssignment(aForInitializaton)) {
-				anAssignmentSNode = getDeclaringAssignmentSNode(aLineNumber, aForInitializaton);
-			} else {
-				anAssignmentSNode = getAssignmentSNode(aLineNumber, aForInitializaton);
-			}
-
-		}
-		return new AForSNode(aLineNumber, anAssignmentSNode, aForComponents[1], aForComponents[2]);
-	}
+//	public static AssignmentSNode getAssignmentSNode(int aLineNumber, String aString) {
+//		String[] aTokens = aString.split("=");
+//		return new AnAssignmentSNode(aLineNumber, aTokens[0], aTokens[1]);
+//	}
+//	public static DeclarationSNode getDeclarationSNode(int aLineNumber, String aString) {
+//		String[] aTokens = aString.split(" ");
+//		return new ADeclarationSNode(aLineNumber, aTokens[0], aTokens[1]);
+//	}
+//
+//	public static DeclaringAssignmentSNode getDeclaringAssignmentSNode(int aLineNumber, String aString) {
+//		String[] anLHSAndRHS = aString.split("=");
+//		String[] aTypeAndVariable = anLHSAndRHS[0].split(" ");
+//		return new ADeclaringAssignmentSNode(aLineNumber, aTypeAndVariable[0], aTypeAndVariable[1], anLHSAndRHS[1]);
+//	}
+//
+//	public static boolean isDeclaringAssignment(String aFileLine) {
+//		return startsWithTypeName(aFileLine) && aFileLine.contains("=");
+//	}
+//	public static boolean isVariableDeclaration(String aFileLine) {
+//		
+//		return startsWithTypeName(aFileLine) && !aFileLine.contains("(") ;
+//	}
+//	
+//	public static boolean isAssignment(String aFileLine) {
+//		return aFileLine.contains("=");
+//	}
+//
+//
+//	public static boolean isForNode(String aFileLine) {
+//		return aFileLine.startsWith("for");
+//	}
+//
+//	public static ForSNode getForSNode(int aLineNumber, String aFileLine) {
+//
+//		int aLeftParenIndex = aFileLine.indexOf("(");
+//		int aRightParenIndex = aFileLine.indexOf(")");
+//		if (aLeftParenIndex < 0 || aRightParenIndex < 0) {
+//			return null;
+//		}
+//		String aHeaderString = aFileLine.substring(aLeftParenIndex + 1, aRightParenIndex);
+//		String[] aForComponents = aHeaderString.split(";");
+//		AssignmentSNode anAssignmentSNode = null;
+//		String aForInitializaton = aForComponents[0];
+//		if (!aForInitializaton.isEmpty() && aForInitializaton.contains("=")) {
+//			if (isDeclaringAssignment(aForInitializaton)) {
+//				anAssignmentSNode = getDeclaringAssignmentSNode(aLineNumber, aForInitializaton);
+//			} else {
+//				anAssignmentSNode = getAssignmentSNode(aLineNumber, aForInitializaton);
+//			}
+//
+//		}
+//		return new AForSNode(aLineNumber, anAssignmentSNode, aForComponents[1], aForComponents[2]);
+//	}
 
 	public static List<String> getOMPCalls(String aFileLine) {
 		List<String> retVal = new ArrayList();
@@ -407,182 +407,182 @@ public class OpenMPUtils {
 
 	}
 
-	public static SNode getSNode(String[] aFileLines) {
-		Stack<SNode> anSNodes = new Stack();
-//		Stack<Integer> aNumOpenBracesStack = new Stack();
-//		OpenMPPragma lastOpenMPPragma = null;
-//		String lastReductionVariable = null;
-//		String lastReductionOperation = null;
-//		int aNumOpenBraces = 0;
-//		boolean aNextCodeLineIsAPragmaBlock = false;
-//		List<OpenMPPragma> newOpenMPPragmas = null;
-		SNode retVal = new AnSNode(0);
-		anSNodes.add(retVal);
-		SNode previousHeaderNode = null;
-		for (int i = 0; i < aFileLines.length; i++) {
-			String aFileLine = aFileLines[i].trim();
-			if (!isCodeLine(aFileLine)) {
-				continue;
-			}
-			if (isForNode(aFileLine)) {
-				ForSNode aForSNode = getForSNode(i, aFileLine);
-				aForSNode.setParent(anSNodes.peek());
-//				anSNodes.push(aForSNode);
-				previousHeaderNode = aForSNode;
-				if (aFileLine.endsWith(")")) {
-				continue;
-				}
-			}
-			if (isPragmaStart(aFileLine)) {
-				OMPSNode anOMPSNode = getOpenMPSNode(i, anSNodes.peek(), aFileLine);
-//				anSNodes.push(anOMPSNode);
-				previousHeaderNode = anOMPSNode;
-				continue;
-			}
-			if (isBlockStart(aFileLine)) {
-				SNode aBlockSNode = new AnSNode(i);
-				if (previousHeaderNode != null) {
-					aBlockSNode.setParent(previousHeaderNode);
-				} else {
-					aBlockSNode.setParent(anSNodes.peek());
-				}
-				anSNodes.push(aBlockSNode);
-				previousHeaderNode = null;
-				continue;
-			}
-//			} else 
-			if (isBlockEnd(aFileLine)) {
-				anSNodes.pop();
-				continue;
-			}
-			SNode aNewLeafNode = null;
-			if (isDeclaringAssignment(aFileLine)) {
-				aNewLeafNode = getDeclaringAssignmentSNode(i, aFileLine);
-
-			} else if (isAssignment(aFileLine)) {
-				aNewLeafNode = getAssignmentSNode(i, aFileLine);
-			} else if (isVariableDeclaration(aFileLine)) {
-				aNewLeafNode = getDeclarationSNode(i, aFileLine);
-			} else {
-				aNewLeafNode = new ATextSNode(i, aFileLine);
-			}
-			if (previousHeaderNode != null) {
-				aNewLeafNode.setParent(previousHeaderNode);
-			} else {
-				aNewLeafNode.setParent(anSNodes.peek());
-			}
-
-		}
-
-		return retVal;
-	}
-
-	public static OMPSNode getOpenMPSNode(int aLineIndex, SNode aParentNode, String aFileLine) {
-		String[] aTokens = aFileLine.split("\\s+");
-		if (aTokens.length <= 2) {
-			return null;
-		}
-		if (!aTokens[1].equals("omp")) {
-			return null;
-		}
-		if (aTokens.length < 3) {
-			return null;
-		}
-		String aFirstToken = aTokens[2];
-		OpenMPKeywordEnum anOpenMPKeyword = stringToOpenMPKeyword.get(aFirstToken);
-//		List<OpenMPPragma> retVal = new ArrayList();
-		OMPSNode lastChild = null;
-		int aStartIndex = 2;
-		OMPSNode aNewNode = null;
-		OMPForSNode aForChild = null;
-		switch (anOpenMPKeyword) {
-		case PARALLEL:
-			aNewNode = new AnOMPParallelSNode(aLineIndex);
-//			if (lastChild != null) {
-//				aNewNode.setParent(lastChild);
-//			} else {
-//				aNewNode.setParent(aParentNode);
+//	public static SNode getSNode(String[] aFileLines) {
+//		Stack<SNode> anSNodes = new Stack();
+////		Stack<Integer> aNumOpenBracesStack = new Stack();
+////		OpenMPPragma lastOpenMPPragma = null;
+////		String lastReductionVariable = null;
+////		String lastReductionOperation = null;
+////		int aNumOpenBraces = 0;
+////		boolean aNextCodeLineIsAPragmaBlock = false;
+////		List<OpenMPPragma> newOpenMPPragmas = null;
+//		SNode retVal = new AnSNode(0);
+//		anSNodes.add(retVal);
+//		SNode previousHeaderNode = null;
+//		for (int i = 0; i < aFileLines.length; i++) {
+//			String aFileLine = aFileLines[i].trim();
+//			if (!isCodeLine(aFileLine)) {
+//				continue;
 //			}
-//			lastChild = aNewNode;
-
-//			lastChild.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));	
-
-//			retVal.add(lastChild);
-			if (aTokens.length > 3 && aTokens[3].equals("for")) {
-				aForChild = new AnOMPForSNode(aLineIndex);
-				aForChild.setParent(aNewNode);
-//				retVal.add(aForChild);
-//				lastChild = aForChild;
-				aStartIndex++;
-			}
-			break;
-		case FOR:
-			aNewNode = new AnOMPForSNode(aLineIndex);
-			;
-			break;
-		case CRITICAL:
-			aNewNode = new AnOMPCriticalSNode(aLineIndex);
-//			retVal.add (lastChild);
-			break;
-		default:
-			aNewNode = new AnOMPSNode(aLineIndex);
-
-		}
-//		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));	
-//		OpenMPPragma retVal = new AnOpenMPPragma(aLineIndex);
-		if (lastChild != null) {
-			aNewNode.setParent(lastChild);
-		} else {
-			aNewNode.setParent(aParentNode);
-		}
-		lastChild = aForChild == null ? aNewNode : aForChild;
-
-		for (int i = aStartIndex; i < aTokens.length; i++) {
-			String aStoredToken = aTokens[i].trim();
-			if (aStoredToken.isEmpty()) {
-				continue;
-			}
-			if (aStoredToken.startsWith("reduction") || aStoredToken.startsWith("shared")
-					|| aStoredToken.startsWith("private")) {
-				// combine all tokens until ")" into one for normalization
-				while (!aStoredToken.endsWith(")")) {
-					i++;
-					if (i >= aTokens.length) {
-						break;
-					}
-					String aNewToken = aTokens[i].trim();
-					aStoredToken += aNewToken;
-				}
-				int aLeftParenIndex = aStoredToken.indexOf("(");
-				int aRightParenIndex = aStoredToken.indexOf(")");
-				if (aStoredToken.startsWith("reduction")) {
-					setReductionData((OMPForSNode) lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex);
-				} else if (aStoredToken.startsWith("private")) {
-					setSharedOrPrivateData((OMPSNode) lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex,
-							false);
-
-				} else if (aStoredToken.startsWith("shared")) {
-					setSharedOrPrivateData(lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex, true);
-
-				}
-//				int aColonIndex = aStoredToken.indexOf(":");
-//				if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
-//					String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
-//					String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
-//					((OpenMPForPragma) lastChild).setReductionVariable(aVariableString);
-//					((OpenMPForPragma) lastChild).setReductionOperation(anOperationString);
+//			if (isForNode(aFileLine)) {
+//				ForSNode aForSNode = getForSNode(i, aFileLine);
+//				aForSNode.setParent(anSNodes.peek());
+////				anSNodes.push(aForSNode);
+//				previousHeaderNode = aForSNode;
+//				if (aFileLine.endsWith(")")) {
+//				continue;
 //				}
-
-			}
-
-//			aTokens[i] = aStoredToken;
-			lastChild.getOpenMPTokens().add(aStoredToken);
-		}
-//		String aFirstToken = retVal.getOpenMPTokens().get(0);
-//		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));		
-		return lastChild;
-
-	}
+//			}
+//			if (isPragmaStart(aFileLine)) {
+//				OMPSNode anOMPSNode = getOpenMPSNode(i, anSNodes.peek(), aFileLine);
+////				anSNodes.push(anOMPSNode);
+//				previousHeaderNode = anOMPSNode;
+//				continue;
+//			}
+//			if (isBlockStart(aFileLine)) {
+//				SNode aBlockSNode = new AnSNode(i);
+//				if (previousHeaderNode != null) {
+//					aBlockSNode.setParent(previousHeaderNode);
+//				} else {
+//					aBlockSNode.setParent(anSNodes.peek());
+//				}
+//				anSNodes.push(aBlockSNode);
+//				previousHeaderNode = null;
+//				continue;
+//			}
+////			} else 
+//			if (isBlockEnd(aFileLine)) {
+//				anSNodes.pop();
+//				continue;
+//			}
+//			SNode aNewLeafNode = null;
+//			if (isDeclaringAssignment(aFileLine)) {
+//				aNewLeafNode = getDeclaringAssignmentSNode(i, aFileLine);
+//
+//			} else if (isAssignment(aFileLine)) {
+//				aNewLeafNode = getAssignmentSNode(i, aFileLine);
+//			} else if (isVariableDeclaration(aFileLine)) {
+//				aNewLeafNode = getDeclarationSNode(i, aFileLine);
+//			} else {
+//				aNewLeafNode = new ATextSNode(i, aFileLine);
+//			}
+//			if (previousHeaderNode != null) {
+//				aNewLeafNode.setParent(previousHeaderNode);
+//			} else {
+//				aNewLeafNode.setParent(anSNodes.peek());
+//			}
+//
+//		}
+//
+//		return retVal;
+//	}
+//
+//	public static OMPSNode getOpenMPSNode(int aLineIndex, SNode aParentNode, String aFileLine) {
+//		String[] aTokens = aFileLine.split("\\s+");
+//		if (aTokens.length <= 2) {
+//			return null;
+//		}
+//		if (!aTokens[1].equals("omp")) {
+//			return null;
+//		}
+//		if (aTokens.length < 3) {
+//			return null;
+//		}
+//		String aFirstToken = aTokens[2];
+//		OpenMPKeywordEnum anOpenMPKeyword = stringToOpenMPKeyword.get(aFirstToken);
+////		List<OpenMPPragma> retVal = new ArrayList();
+//		OMPSNode lastChild = null;
+//		int aStartIndex = 2;
+//		OMPSNode aNewNode = null;
+//		OMPForSNode aForChild = null;
+//		switch (anOpenMPKeyword) {
+//		case PARALLEL:
+//			aNewNode = new AnOMPParallelSNode(aLineIndex);
+////			if (lastChild != null) {
+////				aNewNode.setParent(lastChild);
+////			} else {
+////				aNewNode.setParent(aParentNode);
+////			}
+////			lastChild = aNewNode;
+//
+////			lastChild.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));	
+//
+////			retVal.add(lastChild);
+//			if (aTokens.length > 3 && aTokens[3].equals("for")) {
+//				aForChild = new AnOMPForSNode(aLineIndex);
+//				aForChild.setParent(aNewNode);
+////				retVal.add(aForChild);
+////				lastChild = aForChild;
+//				aStartIndex++;
+//			}
+//			break;
+//		case FOR:
+//			aNewNode = new AnOMPForSNode(aLineIndex);
+//			;
+//			break;
+//		case CRITICAL:
+//			aNewNode = new AnOMPCriticalSNode(aLineIndex);
+////			retVal.add (lastChild);
+//			break;
+//		default:
+//			aNewNode = new AnOMPSNode(aLineIndex);
+//
+//		}
+////		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));	
+////		OpenMPPragma retVal = new AnOpenMPPragma(aLineIndex);
+//		if (lastChild != null) {
+//			aNewNode.setParent(lastChild);
+//		} else {
+//			aNewNode.setParent(aParentNode);
+//		}
+//		lastChild = aForChild == null ? aNewNode : aForChild;
+//
+//		for (int i = aStartIndex; i < aTokens.length; i++) {
+//			String aStoredToken = aTokens[i].trim();
+//			if (aStoredToken.isEmpty()) {
+//				continue;
+//			}
+//			if (aStoredToken.startsWith("reduction") || aStoredToken.startsWith("shared")
+//					|| aStoredToken.startsWith("private")) {
+//				// combine all tokens until ")" into one for normalization
+//				while (!aStoredToken.endsWith(")")) {
+//					i++;
+//					if (i >= aTokens.length) {
+//						break;
+//					}
+//					String aNewToken = aTokens[i].trim();
+//					aStoredToken += aNewToken;
+//				}
+//				int aLeftParenIndex = aStoredToken.indexOf("(");
+//				int aRightParenIndex = aStoredToken.indexOf(")");
+//				if (aStoredToken.startsWith("reduction")) {
+//					setReductionData((OMPForSNode) lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex);
+//				} else if (aStoredToken.startsWith("private")) {
+//					setSharedOrPrivateData((OMPSNode) lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex,
+//							false);
+//
+//				} else if (aStoredToken.startsWith("shared")) {
+//					setSharedOrPrivateData(lastChild, aStoredToken, aLeftParenIndex, aRightParenIndex, true);
+//
+//				}
+////				int aColonIndex = aStoredToken.indexOf(":");
+////				if (aLeftParenIndex != -1 && aRightParenIndex != -1 && aColonIndex != -1) {
+////					String anOperationString = aStoredToken.substring(aLeftParenIndex + 1, aColonIndex).trim();
+////					String aVariableString = aStoredToken.substring(aColonIndex + 1, aRightParenIndex).trim();
+////					((OpenMPForPragma) lastChild).setReductionVariable(aVariableString);
+////					((OpenMPForPragma) lastChild).setReductionOperation(anOperationString);
+////				}
+//
+//			}
+//
+////			aTokens[i] = aStoredToken;
+//			lastChild.getOpenMPTokens().add(aStoredToken);
+//		}
+////		String aFirstToken = retVal.getOpenMPTokens().get(0);
+////		retVal.setFirstOpenMPKeyword(stringToOpenMPKeyword.get(aFirstToken));		
+//		return lastChild;
+//
+//	}
 
 	static {
 		stringToOpenMPKeyword.put("for", OpenMPKeywordEnum.FOR);

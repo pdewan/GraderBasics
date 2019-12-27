@@ -6,7 +6,7 @@ public interface ForSNode extends SNode{
 
 	String getCondition();
 
-	String getIncrement();
+	AssignmentSNode getIncrement();
 
 //	SNode getBody();
 

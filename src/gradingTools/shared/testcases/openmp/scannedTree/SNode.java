@@ -30,4 +30,8 @@ public interface SNode {
 
 	Set<OpenMPPragmaAttribute> getAttributes();
 
+	boolean isInParallel();
+
+	boolean isLeaf();
+
 }
