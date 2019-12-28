@@ -575,21 +575,45 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return dependsOn(anSNodeParent, anSNodeLineNumber, aVariable, aCallIdentifier);
 		
 	}
+	public static SNode getRootNode(SNode aCurrentSNode ) {
+		SNode aParentSNode = aCurrentSNode.getParent() ;
+		if (aParentSNode == null) {
+			return aCurrentSNode;
+		}
+		return getRootNode(aParentSNode);
+		
+	}
+	public static boolean match (MethodSNode aMethodSNode, MethodCall aMethodCall) {
+		return aMethodSNode.getMethodName().equals(aMethodCall.getMethodName()) && aMethodSNode.getLocalVariables().size() == aMethodCall.getMethodActuals().size();
+	}
+	
+	public static MethodSNode getDeclarationOfCalledMethod(SNode aCurrentSNode, MethodCall aMethodCall ) {
+		SNode aRootNode = getRootNode(aCurrentSNode);
+		for (SNode aChild:aRootNode.getChildren()) {
+			if (aChild instanceof MethodSNode) {
+				MethodSNode aMethodSNode = (MethodSNode) aChild;
+				if (match (aMethodSNode, aMethodCall)) {
+					return aMethodSNode;
+				}
+			}
+		}
+		return null; // this should never happen;
+	}
 	
 
-	public static void main(String[] args) {
-		List<MethodCall> aTokens = callsIn("foo(bar, hgf)/foo2()*foo3(b, a c,)");
-		System.out.println(aTokens);
-		
-		
-//		List<String> aTokens = identifiersIn("a[i] + b*2/3");
+//	public static void main(String[] args) {
+//		List<MethodCall> aTokens = callsIn("foo(bar, hgf)/foo2()*foo3(b, a c,)");
 //		System.out.println(aTokens);
-//		aTokens = numbersIn("a[i] + b*2/3");
-//		System.out.println(aTokens);
-//		aTokens = operatorsIn("a[i] + b*2/3");
-//		System.out.println(aTokens);
-//
-//		System.out.println(StringUtils.substringBetween("a", "[", "]"));
-	}
+//		
+//		
+////		List<String> aTokens = identifiersIn("a[i] + b*2/3");
+////		System.out.println(aTokens);
+////		aTokens = numbersIn("a[i] + b*2/3");
+////		System.out.println(aTokens);
+////		aTokens = operatorsIn("a[i] + b*2/3");
+////		System.out.println(aTokens);
+////
+////		System.out.println(StringUtils.substringBetween("a", "[", "]"));
+//	}
 
 }
