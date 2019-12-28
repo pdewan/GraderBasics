@@ -66,7 +66,9 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return startsWithTypeName(aFileLine) && aFileLine.contains("=");
 	}
 	public static boolean isMethodDeclaration(String aFileLine) {
-		return startsWithTypeName(aFileLine) && aFileLine.contains("(");
+		return startsWithTypeName(aFileLine) && 
+				aFileLine.contains("(") &&
+				!aFileLine.contains("=");
 	}
 
 	public static boolean isVariableDeclaration(String aFileLine) {
@@ -123,6 +125,9 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		List<DeclarationSNode> aDeclarationSNodeList = new ArrayList();
 		for (int i = 0; i < aMethodParameterTokens.length; i++ ) {
 			String[] aTypeAndName = aMethodParameterTokens[i].trim().split("\\s+");
+			if (aTypeAndName.length < 2) {
+				continue;
+			}
 			aDeclarationSNodeList.add(new ADeclarationSNode(aLineNumber, aTypeAndName[0].trim(), aTypeAndName[1].trim()));
 //			aMethodParameterTypes[i] = aTypeAndName[0].trim();
 //			aMethodParameterNames[i] = aTypeAndName[1].trim();
@@ -188,7 +193,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 				}
 			}
 			if (isPragmaStart(aFileLine)) {
-				OMPSNode anOMPSNode = getOpenMPSNode(i, anSNodes.peek(), aFileLine);
+				OMPSNode anOMPSNode = getOMPSNode(i, anSNodes.peek(), aFileLine);
 //				anSNodes.push(anOMPSNode);
 				previousHeaderNode = anOMPSNode;
 				continue;
@@ -231,7 +236,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return retVal;
 	}
 
-	public static OMPSNode getOpenMPSNode(int aLineIndex, SNode aParentNode, String aFileLine) {
+	public static OMPSNode getOMPSNode(int aLineIndex, SNode aParentNode, String aFileLine) {
 		String[] aTokens = aFileLine.split("\\s+");
 		if (aTokens.length <= 2) {
 			return null;
@@ -397,6 +402,9 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			}
 		}
 	}
+	static String callRegex = "([a-zA-Z_$][a-zA-Z_$0-9]*)\\(.*?\\)";
+	static Pattern callPattern = Pattern.compile(callRegex);
+
 	static String identifierRegex = "[a-zA-Z_$][a-zA-Z_$0-9]*";
 	static Pattern identifierPattern = Pattern.compile(identifierRegex);
 	public static List<String> identifiersIn(String aString) {
@@ -409,6 +417,30 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		while (mymatcher.find()) {
 			String find = mymatcher.group(0);
 			retVal.add(find);
+		}
+		return retVal;
+	}
+	public static List<MethodCall> callsIn(String aString) {
+		if (aString == null)
+			return null;
+//		Pattern mypattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
+//		Matcher mymatcher = mypattern.matcher(aString);
+		Matcher mymatcher = callPattern.matcher(aString);
+		List<MethodCall> retVal = new ArrayList();
+		while (mymatcher.find()) {
+			String find = mymatcher.group(0);
+			int aLeftParenIndex = find.indexOf("(");
+			int aRightParenIndex = find.indexOf(")");
+			String aMethodName = find.substring(0, aLeftParenIndex).trim();
+			String aParameters = find.substring(aLeftParenIndex + 1, aRightParenIndex);
+			List<String> aParameterList = new ArrayList();
+			String[] aParameterTokens = aParameters.split(",");
+			for (String aParameter:aParameterTokens) {
+				aParameterList.add(aParameter.trim());
+			}
+			retVal.add(new AMethodCall(aMethodName, aParameterList));
+
+//			aCallStrings.add(find);
 		}
 		return retVal;
 	}
@@ -473,17 +505,91 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 		return retVal;
 	}
+	public static boolean dependsOn (AssignmentSNode anAssignmentSNode, String aVariable, String aCallIdentifier) {
+		// This assignment does not change aVariable
+		if (!aVariable.equals(anAssignmentSNode.getLhsVariable())) {
+			return false;
+		}
+		List<String> aCallIdentifiers = anAssignmentSNode.getRhsCallIdentifiers();
+		boolean retVal = false;
+		if (aCallIdentifiers != null && aCallIdentifiers.contains(aCallIdentifier)) {
+			return true; // this assignment has aCallIdentifier in the rhs
+		}
+		// check if some referenced rhs variable depends on aCallIdentifier
+		List<String> aReferencedVariableIdentifiers = anAssignmentSNode.getRhsVariableIdentifiers();
+		SNode anAssignmentParent = anAssignmentSNode.getParent();
+		if (anAssignmentParent == null) { // should never be trye
+			return false;
+		}
+		int aLineNumber = anAssignmentSNode.getLineNumber();
+		for (String aReferencedVariableIdentifier:aReferencedVariableIdentifiers ) {
+			if (dependsOn (anAssignmentParent, aLineNumber, aReferencedVariableIdentifier, aCallIdentifier)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean dependsOn (SNode anSNode, int aVariableLineNumber, String aVariable, String aCallIdentifier) {
+		List<SNode> aListSNodes = anSNode.getChildren();
+		boolean retVal = false;
+		for (int i = aVariableLineNumber; i >= 0; i--) {
+			SNode anSNodeChild = aListSNodes.get(i);
+			if (anSNodeChild instanceof AssignmentSNode) {
+				// does this statement in anSNode directly invoke aCallIdentifier 
+				if (dependsOn((AssignmentSNode) anSNodeChild, aVariable, aCallIdentifier))
+					return true;
+			} else if (!anSNode.isLeaf()) {
+					// child is overriding the variable so forget checking its assignment statements
+					if (anSNodeChild.getLocalVariables().contains(aVariable)) {
+						continue;
+					}
+					// some subblock of anSNode that has access to aVariable changes variable
+
+					if (dependsOn(anSNodeChild, anSNodeChild.getChildren().size() - 1, aVariable, aCallIdentifier)) {
+						return true;
+					}
+			}
+			
+		}
+		// none of the statements in anSNode or its descendents  have the required call
+		// is the variable a  method parameter 
+		if (anSNode instanceof MethodSNode) {
+			MethodSNode aMethodSNode = (MethodSNode) anSNode;
+			int aParameterNumber = aMethodSNode.getLocalVariables().indexOf(aVariable);
+			if (aParameterNumber != -1) {
+				// need to find all callers of method and see if any of the aliases for the variable in these
+				// calls depend on aCallIndentifier
+			}			
+			
+		} else if (anSNode.getLocalVariables().contains(aVariable)) {
+			// before going to the parent node, let us see if aVariable is declared here as a non  parameter 
+
+			return false; // no point going to parent
+		}
+		// not a local variable (parameter or declarated variable)
+		SNode anSNodeParent = anSNode.getParent() ;
+		if (anSNodeParent == null)  {
+			return false;
+		}
+		int anSNodeLineNumber = anSNodeParent.getChildren().indexOf(anSNode);
+		return dependsOn(anSNodeParent, anSNodeLineNumber, aVariable, aCallIdentifier);
+		
+	}
 	
 
 	public static void main(String[] args) {
-		List<String> aTokens = identifiersIn("a[i] + b*2/3");
+		List<MethodCall> aTokens = callsIn("foo(bar, hgf)/foo2()*foo3(b, a c,)");
 		System.out.println(aTokens);
-		aTokens = numbersIn("a[i] + b*2/3");
-		System.out.println(aTokens);
-		aTokens = operatorsIn("a[i] + b*2/3");
-		System.out.println(aTokens);
-
-		System.out.println(StringUtils.substringBetween("a", "[", "]"));
+		
+		
+//		List<String> aTokens = identifiersIn("a[i] + b*2/3");
+//		System.out.println(aTokens);
+//		aTokens = numbersIn("a[i] + b*2/3");
+//		System.out.println(aTokens);
+//		aTokens = operatorsIn("a[i] + b*2/3");
+//		System.out.println(aTokens);
+//
+//		System.out.println(StringUtils.substringBetween("a", "[", "]"));
 	}
 
 }

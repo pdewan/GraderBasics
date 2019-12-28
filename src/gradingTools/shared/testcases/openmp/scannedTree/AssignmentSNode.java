@@ -13,4 +13,12 @@ public interface AssignmentSNode extends SNode {
 	public List<String> getRhsIdentifiers() ;
 	public List<String> getRhsOperators() ;
 	public List<String> getRhsNumbers() ;
+
+	List<String> getRhsVariableIdentifiers();
+
+	List<MethodCall> getRhsCalls();
+
+	List<String> getRhsCallIdentifiers();
+
+	String getLhsVariable();
 }

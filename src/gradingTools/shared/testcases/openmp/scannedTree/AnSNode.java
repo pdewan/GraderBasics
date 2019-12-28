@@ -16,7 +16,6 @@ public class AnSNode implements SNode {
 	protected List<DeclarationSNode> variableDeclarations = new ArrayList();//separate subclass for this variable?
 //	protected List<String> localVariables = new ArrayList();//separate subclass for this variable?
 	protected List<String> localVariables = new ArrayList();//separate subclass for this variable?
-
 	protected int lineNumber;
 	protected List<SNode> children = new ArrayList();
 	protected List<Assignment> assignments = new ArrayList();

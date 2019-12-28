@@ -1,6 +1,8 @@
 package gradingTools.shared.testcases.openmp.scannedTree;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	String lhs;
@@ -8,9 +10,14 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	String lhsVariable;
 	List<String> lhsOperators;
 	String operationAndRHS;
-	List<String> rhsIdentifiers;
+	List<String> rhsVariableIdentifiers;
 	List<String> rhsOperators;
 	List<String> rhsNumbers;
+	List<MethodCall> rhsCalls;
+	
+	List<String> rhsCallIdentifiers;
+	
+	
 	public AnAssignmentSNode(int aLineNumber, String lhs, String operationAndRHS) {
 		super(aLineNumber);
 		this.lhs = lhs;
@@ -18,9 +25,22 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		lhsVariable = OMPSNodeUtils.identifiersIn(lhs).get(0);
 		lhsOperators =  OMPSNodeUtils.operatorsIn(lhs);		
 		lhsSubscripts = OMPSNodeUtils.subscriptsIn(lhs);
-		rhsIdentifiers = OMPSNodeUtils.identifiersIn(operationAndRHS);
+		rhsVariableIdentifiers = OMPSNodeUtils.identifiersIn(operationAndRHS);
 		rhsNumbers = OMPSNodeUtils.numbersIn(operationAndRHS);
-		rhsOperators = OMPSNodeUtils.operatorsIn(operationAndRHS);		
+		rhsOperators = OMPSNodeUtils.operatorsIn(operationAndRHS);	
+		rhsCalls = OMPSNodeUtils.callsIn(operationAndRHS);
+		if (rhsCalls == null) {
+			return;
+		}
+		rhsCallIdentifiers = new ArrayList();
+		for (MethodCall aMethodCall:rhsCalls) {
+			String aMethodName = aMethodCall.getMethodName();
+			rhsCallIdentifiers.add(aMethodName);
+			if (rhsVariableIdentifiers.contains(aMethodName)) {
+				rhsVariableIdentifiers.remove(aMethodName);
+			}
+		}
+		
 	}
 	@Override
 	public String getLHS() {
@@ -40,7 +60,7 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		return lhsOperators;
 	}
 	public List<String> getRhsIdentifiers() {
-		return rhsIdentifiers;
+		return rhsVariableIdentifiers;
 	}
 	public List<String> getRhsOperators() {
 		return rhsOperators;
@@ -48,6 +68,21 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	public List<String> getRhsNumbers() {
 		return rhsNumbers;
 	}
-	
+	@Override
+	public List<String> getRhsVariableIdentifiers() {
+		return rhsVariableIdentifiers;
+	}
+	@Override
+	public List<MethodCall> getRhsCalls() {
+		return rhsCalls;
+	}
+	@Override
+	public List<String> getRhsCallIdentifiers() {
+		return rhsCallIdentifiers;
+	}
+	@Override
+	public String getLhsVariable() {
+		return lhsVariable;
+	}
 
 }
