@@ -8,7 +8,7 @@ public interface AssignmentSNode extends SNode {
 
 	String getOperationAndRHS();
 	public String[] getLhsSubscripts();
-	public String getLhsVariable() ;
+	public String getVariableName() ;
 	public List<String> getLhsOperators() ;
 	public List<String> getRhsIdentifiers() ;
 	public List<String> getRhsOperators() ;

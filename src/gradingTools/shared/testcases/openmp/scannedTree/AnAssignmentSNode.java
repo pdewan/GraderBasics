@@ -33,7 +33,7 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	public String[] getLhsSubscripts() {
 		return lhsSubscripts;
 	}
-	public String getLhsVariable() {
+	public String getVariableName() {
 		return lhsVariable;
 	}
 	public List<String> getLhsOperators() {

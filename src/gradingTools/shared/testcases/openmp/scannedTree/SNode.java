@@ -16,7 +16,7 @@ public interface SNode {
 
 	List<Assignment> getAssignments();
 
-	List<String> getVariableDeclarations();
+	List<DeclarationSNode> getVariableDeclarations();
 
 	List<String> getLocalVariables();
 

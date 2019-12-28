@@ -27,7 +27,7 @@ import gradingTools.shared.testcases.openmp.scannedTree.SNode;
 public class OpenMPUtils {
 
 	protected static Map<String, OpenMPKeywordEnum> stringToOpenMPKeyword = new HashMap();
-	protected static String[] typeNames = { "double", "float", "int", "short", "long" };
+	protected static String[] typeNames = {"void", "double", "float", "int", "short", "long" };
 	protected static String[] openMPCalls = { "omp_get_thread_num()", "omp_get_num_threads()" };
 
 	public static List<OpenMPPragma> getOpemMPPragmas(StringBuffer aFileBuffer) {

@@ -9,6 +9,10 @@ public class AForSNode extends AnSNode implements ForSNode {
 		this.initalization = initalization;
 		this.condition = condition;
 		this.increment = increment;
+		if (initalization instanceof DeclarationSNode) {
+			variableDeclarations.add((DeclarationSNode) initalization);
+			localVariables.add(initalization.getVariableName());
+		}
 	}
 	@Override
 	public AssignmentSNode getInitalization() {
@@ -25,8 +29,5 @@ public class AForSNode extends AnSNode implements ForSNode {
 	@Override
 	public void setParent(SNode parent) {
 		super.setParent(parent);
-
 	}
-	
-
 }

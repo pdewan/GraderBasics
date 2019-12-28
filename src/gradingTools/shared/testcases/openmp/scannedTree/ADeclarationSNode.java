@@ -22,8 +22,14 @@ public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 		return variableName;
 	}
 	@Override
-
-	public void setVariableName(String variableName) {
-		this.variableName = variableName;
+	public void setParent(SNode anSNode) {
+		super.setParent(anSNode);
+		anSNode.getVariableDeclarations().add(this);
+		anSNode.getLocalVariables().add(variableName);
 	}
+//	@Override
+//
+//	public void setVariableName(String variableName) {
+//		this.variableName = variableName;
+//	}
 }

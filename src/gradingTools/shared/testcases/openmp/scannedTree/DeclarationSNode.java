@@ -8,6 +8,6 @@ public interface DeclarationSNode extends SNode{
 
 	String getVariableName();
 
-	void setVariableName(String variableName);
+//	void setVariableName(String variableName);
 
 }

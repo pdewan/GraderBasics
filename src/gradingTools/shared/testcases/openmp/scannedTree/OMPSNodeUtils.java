@@ -65,6 +65,9 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	public static boolean isDeclaringAssignment(String aFileLine) {
 		return startsWithTypeName(aFileLine) && aFileLine.contains("=");
 	}
+	public static boolean isMethodDeclaration(String aFileLine) {
+		return startsWithTypeName(aFileLine) && aFileLine.contains("(");
+	}
 
 	public static boolean isVariableDeclaration(String aFileLine) {
 
@@ -97,9 +100,37 @@ public class OMPSNodeUtils extends OpenMPUtils {
 				anAssignmentSNode = getAssignmentSNode(aLineNumber, aForInitializaton);
 			}
 
+		}		
+		return new AForSNode(aLineNumber, anAssignmentSNode, aForComponents[1], getAssignmentSNode(aLineNumber, aForComponents[2]));
+	}
+	static String[] emptyArray = {};
+	public static MethodSNode getMethodSNode(int aLineNumber, String aFileLine) {
+
+		int aLeftParenIndex = aFileLine.indexOf("(");
+		int aRightParenIndex = aFileLine.indexOf(")");
+		if (aLeftParenIndex < 0 || aRightParenIndex < 0) {
+			return null;
+		}
+		String aMethodNameAndType = aFileLine.substring(0, aLeftParenIndex);
+		String[] aMethodNameAndTypeTokens = aMethodNameAndType.split("\\s+"); 
+		
+		String aMethodParameters = aFileLine.substring(aLeftParenIndex +1 , aRightParenIndex);
+		String[] aMethodParameterTokens = aMethodParameters.isEmpty()?emptyArray:
+		 aMethodParameters.split(",");
+		
+//		String[] aMethodParameterTypes = new String[aMethodParameterTokens.length];
+//		String[] aMethodParameterNames = new String[aMethodParameterTokens.length];
+		List<DeclarationSNode> aDeclarationSNodeList = new ArrayList();
+		for (int i = 0; i < aMethodParameterTokens.length; i++ ) {
+			String[] aTypeAndName = aMethodParameterTokens[i].trim().split("\\s+");
+			aDeclarationSNodeList.add(new ADeclarationSNode(aLineNumber, aTypeAndName[0].trim(), aTypeAndName[1].trim()));
+//			aMethodParameterTypes[i] = aTypeAndName[0].trim();
+//			aMethodParameterNames[i] = aTypeAndName[1].trim();
 		}
 		
-		return new AForSNode(aLineNumber, anAssignmentSNode, aForComponents[1], getAssignmentSNode(aLineNumber, aForComponents[2]));
+//		return new AMethodSNode(aLineNumber, aMethodNameAndTypeTokens[0], aMethodNameAndTypeTokens[1], aMethodParameterTypes,aMethodParameterNames );
+		return new AMethodSNode(aLineNumber, aMethodNameAndTypeTokens[0], aMethodNameAndTypeTokens[1], aDeclarationSNodeList );
+	
 	}
 
 	public static void setReductionData(OMPForSNode lastChild, String aStoredToken, int aLeftParenIndex,
@@ -143,6 +174,15 @@ public class OMPSNodeUtils extends OpenMPUtils {
 				aForSNode.setParent(anSNodes.peek());
 //				anSNodes.push(aForSNode);
 				previousHeaderNode = aForSNode;
+				if (aFileLine.endsWith(")")) {
+					continue;
+				}
+			}
+			if (isMethodDeclaration(aFileLine)) {
+				MethodSNode aMethodSNode = getMethodSNode(i, aFileLine);
+				aMethodSNode.setParent(anSNodes.peek());
+//				anSNodes.push(aForSNode);
+				previousHeaderNode = aMethodSNode;
 				if (aFileLine.endsWith(")")) {
 					continue;
 				}

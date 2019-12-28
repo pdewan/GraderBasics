@@ -13,8 +13,10 @@ import gradingTools.shared.testcases.openmp.OpenMPUtils;
 import gradingTools.shared.testcases.openmp.checks.OpenMPPragmaAttribute;
 
 public class AnSNode implements SNode {
-	protected List<String> variableDeclarations = new ArrayList();//separate subclass for this variable?
+	protected List<DeclarationSNode> variableDeclarations = new ArrayList();//separate subclass for this variable?
+//	protected List<String> localVariables = new ArrayList();//separate subclass for this variable?
 	protected List<String> localVariables = new ArrayList();//separate subclass for this variable?
+
 	protected int lineNumber;
 	protected List<SNode> children = new ArrayList();
 	protected List<Assignment> assignments = new ArrayList();
@@ -67,8 +69,9 @@ public class AnSNode implements SNode {
 	public List<Assignment> getAssignments() {
 		return assignments;
 	}
+	// are the two method below the same? Or is a local variable something that is declared and not shared?
 	@Override
-	public List<String> getVariableDeclarations() {
+	public List<DeclarationSNode> getVariableDeclarations() {
 		return variableDeclarations;
 	}
 	@Override
@@ -83,6 +86,9 @@ public class AnSNode implements SNode {
 	@Override
 	public void addChild(SNode aChild) {
 		this.getChildren().add(aChild);
+//		if (aChild instanceof DeclaringAssignmentSNode) {
+//			localVariables.add(((DeclaringAssignmentSNode) aChild).getLhsVariable());
+//		}
 	}
 	@Override
 	public Set<OpenMPPragmaAttribute> getAttributes() {

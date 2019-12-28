@@ -14,4 +14,11 @@ public class ADeclaringAssignmentSNode extends AnAssignmentSNode implements Decl
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
 	}
+	@Override
+	public void setParent(SNode anSNode) {
+		super.setParent(anSNode);
+		anSNode.getVariableDeclarations().add(this);
+		anSNode.getLocalVariables().add(lhsVariable);
+	}
+	
 }

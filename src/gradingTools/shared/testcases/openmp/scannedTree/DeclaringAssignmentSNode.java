@@ -1,6 +1,6 @@
 package gradingTools.shared.testcases.openmp.scannedTree;
 
-public interface DeclaringAssignmentSNode extends AssignmentSNode{
+public interface DeclaringAssignmentSNode extends AssignmentSNode, DeclarationSNode{
 
 	String getTypeName();
 
