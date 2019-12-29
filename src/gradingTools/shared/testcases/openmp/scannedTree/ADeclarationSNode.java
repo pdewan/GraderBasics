@@ -27,6 +27,9 @@ public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 		anSNode.getVariableDeclarations().add(this);
 		anSNode.getLocalVariables().add(variableName);
 	}
+	public String toString() {
+		return typeName + " " + variableName;
+	}
 //	@Override
 //
 //	public void setVariableName(String variableName) {

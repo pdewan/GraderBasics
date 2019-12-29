@@ -28,19 +28,40 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		rhsVariableIdentifiers = OMPSNodeUtils.identifiersIn(operationAndRHS);
 		rhsNumbers = OMPSNodeUtils.numbersIn(operationAndRHS);
 		rhsOperators = OMPSNodeUtils.operatorsIn(operationAndRHS);	
-		rhsCalls = OMPSNodeUtils.callsIn(operationAndRHS);
+		rhsCalls = OMPSNodeUtils.callsIn(aLineNumber, operationAndRHS);
+//		if (rhsCalls == null) {
+//			return;
+//		}
+//		rhsCallIdentifiers = new ArrayList();
+//		for (MethodCall aMethodCall:rhsCalls) {
+//			MethodSNode aMethodSNode = OMPSNodeUtils.getDeclarationOfCalledMethod(this, aMethodCall);
+//			if (aMethodSNode != null) {
+//				aMethodSNode.getCallsToMe().add(aMethodCall);
+//			}
+//			String aMethodName = aMethodCall.getMethodName();
+//			rhsCallIdentifiers.add(aMethodName);
+//			if (rhsVariableIdentifiers.contains(aMethodName)) {
+//				rhsVariableIdentifiers.remove(aMethodName);
+//			}
+//		}
+		
+	}
+	protected void setCalledMethodData() {
 		if (rhsCalls == null) {
 			return;
 		}
 		rhsCallIdentifiers = new ArrayList();
 		for (MethodCall aMethodCall:rhsCalls) {
+			MethodSNode aMethodSNode = OMPSNodeUtils.getDeclarationOfCalledMethod(this, aMethodCall);
+			if (aMethodSNode != null) {
+				aMethodSNode.getCallsToMe().add(aMethodCall);
+			}
 			String aMethodName = aMethodCall.getMethodName();
 			rhsCallIdentifiers.add(aMethodName);
 			if (rhsVariableIdentifiers.contains(aMethodName)) {
 				rhsVariableIdentifiers.remove(aMethodName);
 			}
 		}
-		
 	}
 	@Override
 	public String getLHS() {
@@ -83,6 +104,11 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	@Override
 	public String getLhsVariable() {
 		return lhsVariable;
+	}
+	@Override
+	public void setParent (SNode aParent) {
+		super.setParent(aParent);
+		setCalledMethodData();
 	}
 
 }

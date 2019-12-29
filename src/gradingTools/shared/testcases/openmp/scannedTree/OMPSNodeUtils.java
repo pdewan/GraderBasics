@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
+import grader.basics.project.source.ABasicTextManager;
 import gradingTools.shared.testcases.openmp.OpenMPKeywordEnum;
 import gradingTools.shared.testcases.openmp.OpenMPParallelPragma;
 import gradingTools.shared.testcases.openmp.OpenMPUtils;
@@ -34,9 +35,9 @@ import gradingTools.shared.testcases.openmp.scannedTree.SNode;
 
 public class OMPSNodeUtils extends OpenMPUtils {
 
-	public static SNode getSNode(StringBuffer aFileBuffer) {
+	public static RootOfFileSNode getSNode(String aFileName, StringBuffer aFileBuffer) {
 		String[] aFileLines = aFileBuffer.toString().split("\n");
-		return getSNode(aFileLines);
+		return getSNode(aFileName, aFileLines);
 	}
 
 	public static AssignmentSNode getAssignmentSNode(int aLineNumber, String aString) {
@@ -70,6 +71,10 @@ public class OMPSNodeUtils extends OpenMPUtils {
 				aFileLine.contains("(") &&
 				!aFileLine.contains("=");
 	}
+	public static boolean isExternalMethodDeclaration(String aFileLine) {
+		return isMethodDeclaration(aFileLine) && aFileLine.endsWith(";");
+	}
+
 
 	public static boolean isVariableDeclaration(String aFileLine) {
 
@@ -106,7 +111,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return new AForSNode(aLineNumber, anAssignmentSNode, aForComponents[1], getAssignmentSNode(aLineNumber, aForComponents[2]));
 	}
 	static String[] emptyArray = {};
-	public static MethodSNode getMethodSNode(int aLineNumber, String aFileLine) {
+	public static MethodSNode getMethodSNode(int aLineNumber, String aFileLine, boolean isInternal) {
 
 		int aLeftParenIndex = aFileLine.indexOf("(");
 		int aRightParenIndex = aFileLine.indexOf(")");
@@ -132,10 +137,11 @@ public class OMPSNodeUtils extends OpenMPUtils {
 //			aMethodParameterTypes[i] = aTypeAndName[0].trim();
 //			aMethodParameterNames[i] = aTypeAndName[1].trim();
 		}
-		
+		if (isInternal)
 //		return new AMethodSNode(aLineNumber, aMethodNameAndTypeTokens[0], aMethodNameAndTypeTokens[1], aMethodParameterTypes,aMethodParameterNames );
-		return new AMethodSNode(aLineNumber, aMethodNameAndTypeTokens[0], aMethodNameAndTypeTokens[1], aDeclarationSNodeList );
-	
+			return new AMethodSNode(aLineNumber, aMethodNameAndTypeTokens[0], aMethodNameAndTypeTokens[1], aDeclarationSNodeList );
+		else
+			return new AnExternalMethodSNode(aLineNumber, aMethodNameAndTypeTokens[0], aMethodNameAndTypeTokens[1], aDeclarationSNodeList );
 	}
 
 	public static void setReductionData(OMPForSNode lastChild, String aStoredToken, int aLeftParenIndex,
@@ -163,10 +169,10 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 	}
 
-	public static SNode getSNode(String[] aFileLines) {
+	public static RootOfFileSNode getSNode(String aFileName, String[] aFileLines) {
 		Stack<SNode> anSNodes = new Stack();
 
-		SNode retVal = new AnSNode(0);
+		RootOfFileSNode retVal = new ARootOfFileSNode(aFileName);
 		anSNodes.add(retVal);
 		SNode previousHeaderNode = null;
 		for (int i = 0; i < aFileLines.length; i++) {
@@ -183,8 +189,17 @@ public class OMPSNodeUtils extends OpenMPUtils {
 					continue;
 				}
 			}
+			if (isExternalMethodDeclaration(aFileLine)) {
+				MethodSNode aMethodSNode = getMethodSNode(i, aFileLine, false);
+				aMethodSNode.setParent(anSNodes.peek());
+//				anSNodes.push(aForSNode);
+				previousHeaderNode = aMethodSNode;
+				if (aFileLine.endsWith(")")) {
+					continue;
+				}
+			}
 			if (isMethodDeclaration(aFileLine)) {
-				MethodSNode aMethodSNode = getMethodSNode(i, aFileLine);
+				MethodSNode aMethodSNode = getMethodSNode(i, aFileLine, true);
 				aMethodSNode.setParent(anSNodes.peek());
 //				anSNodes.push(aForSNode);
 				previousHeaderNode = aMethodSNode;
@@ -223,8 +238,16 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			} else if (isVariableDeclaration(aFileLine)) {
 				aNewLeafNode = getDeclarationSNode(i, aFileLine);
 			} else {
-				aNewLeafNode = new ATextSNode(i, aFileLine);
+				List<MethodCall> aCalls = callsIn(i, aFileLine);
+				if (aCalls != null && aCalls.size() == 1) {
+					aNewLeafNode = aCalls.get(0);
+				} else {
+					aNewLeafNode = new ATextSNode(i, aFileLine);
+				}
 			}
+//			else {
+//				aNewLeafNode = new ATextSNode(i, aFileLine);
+//			}
 			if (previousHeaderNode != null) {
 				aNewLeafNode.setParent(previousHeaderNode);
 			} else {
@@ -420,7 +443,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 		return retVal;
 	}
-	public static List<MethodCall> callsIn(String aString) {
+	public static List<MethodCall> callsIn(int aLineNumber, String aString) {
 		if (aString == null)
 			return null;
 //		Pattern mypattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
@@ -438,7 +461,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			for (String aParameter:aParameterTokens) {
 				aParameterList.add(aParameter.trim());
 			}
-			retVal.add(new AMethodCall(aMethodName, aParameterList));
+			retVal.add(new AMethodCall(aLineNumber, aMethodName, aParameterList));
 
 //			aCallStrings.add(find);
 		}
@@ -575,12 +598,17 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return dependsOn(anSNodeParent, anSNodeLineNumber, aVariable, aCallIdentifier);
 		
 	}
-	public static SNode getRootNode(SNode aCurrentSNode ) {
-		SNode aParentSNode = aCurrentSNode.getParent() ;
-		if (aParentSNode == null) {
-			return aCurrentSNode;
+	public static RootOfFileSNode getRootOfFileNode(SNode aCurrentSNode ) {
+		if (aCurrentSNode instanceof RootOfFileSNode) {
+			return (RootOfFileSNode) aCurrentSNode;
 		}
-		return getRootNode(aParentSNode);
+		SNode aParentSNode = aCurrentSNode.getParent() ;
+		
+		if (aParentSNode == null) {
+			return null;
+		}
+		
+		return getRootOfFileNode(aParentSNode);
 		
 	}
 	public static boolean match (MethodSNode aMethodSNode, MethodCall aMethodCall) {
@@ -588,7 +616,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
 	
 	public static MethodSNode getDeclarationOfCalledMethod(SNode aCurrentSNode, MethodCall aMethodCall ) {
-		SNode aRootNode = getRootNode(aCurrentSNode);
+		SNode aRootNode = getRootOfFileNode(aCurrentSNode);
 		for (SNode aChild:aRootNode.getChildren()) {
 			if (aChild instanceof MethodSNode) {
 				MethodSNode aMethodSNode = (MethodSNode) aChild;
@@ -598,6 +626,68 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			}
 		}
 		return null; // this should never happen;
+	}
+	
+	public static RootOfProgramSNode getRootOfProgramSNode(String aSource) {
+		RootOfProgramSNode retVal = new ARootOfProgramSNode();
+		Map<String, StringBuffer> aFileNameToContents = ABasicTextManager.extractFileContents(aSource);
+		for (String aFileName:aFileNameToContents.keySet()) {
+			StringBuffer aFileContents = aFileNameToContents.get(aFileName);
+//			List<OpenMPPragma> anOpenMPPragmas = OpenMPUtils.getOpemMPPragmas(aFileContents);
+			RootOfFileSNode anSNode = OMPSNodeUtils.getSNode(aFileName, aFileContents);
+			retVal.getFileNameToSNode().put(aFileName, anSNode);
+			anSNode.setParent(retVal);
+//			System.out.println("file name:" + aFileName);
+//			System.out.println("pragmas:" + anSNode);
+		}
+		processExternalMethodSNodes(retVal);
+		return retVal;
+	}
+	public static void processExternalMethodSNodes (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode) {
+		for (SNode anSNode:aRootOfFileSNode.getChildren()) {
+			if (anSNode instanceof ExternalMethodSNode) {
+				processExternalMethodSNode(aRootOfProgramSNode, aRootOfFileSNode, (ExternalMethodSNode) anSNode);
+			}
+		}
+	}
+	public static void processExternalMethodSNode (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode, ExternalMethodSNode anExternalMethodSNode) {
+		MethodSNode aMethodSNode = aRootOfProgramSNode.getExternalToInternalMethod().get(anExternalMethodSNode.toString());
+		if (aMethodSNode == null) {
+			aMethodSNode = findMethodSNode(aRootOfProgramSNode, aRootOfFileSNode, anExternalMethodSNode);
+			if (aMethodSNode != null) {
+				aRootOfProgramSNode.getExternalToInternalMethod().put(anExternalMethodSNode.toString(),aMethodSNode );
+			}
+		}
+		if (aMethodSNode != null) {
+			anExternalMethodSNode.setActualMethodSNode(aMethodSNode);
+		}
+	}
+	public static MethodSNode findMethodSNode (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode, ExternalMethodSNode anExternalMethodSNode) {
+//		MethodSNode foundMethodSNode = null;
+		for (String aFileName:aRootOfProgramSNode.getFileNameToSNode().keySet()) {
+			if (aFileName.equals(aRootOfFileSNode.getFileName()))
+				continue;
+			
+			RootOfFileSNode aSearchedRootOfFileSNode = aRootOfProgramSNode.getFileNameToSNode().get(aFileName);
+			 for (SNode anSNode:aSearchedRootOfFileSNode.getChildren()) {
+				if (anSNode instanceof MethodSNode && !(anSNode instanceof ExternalMethodSNode)) {
+					if (anSNode.toString().equals(anExternalMethodSNode.toString())) {
+						return (MethodSNode) anSNode;
+						
+					}
+//					processExternalMethodSNode(aRootOfProgramSNode, aRootOfFileSNode, (ExternalMethodSNode) anSNode);
+				}
+			}
+		}
+		return null;
+	}
+	public static void processExternalMethodSNodes (RootOfProgramSNode aRootOfProgramSNode) {
+		for (String aFileName:aRootOfProgramSNode.getFileNameToSNode().keySet()) {
+			RootOfFileSNode aRootOfFileSNode = aRootOfProgramSNode.getFileNameToSNode().get(aFileName);
+			processExternalMethodSNodes(aRootOfProgramSNode, aRootOfFileSNode);
+			
+		}
+
 	}
 	
 
