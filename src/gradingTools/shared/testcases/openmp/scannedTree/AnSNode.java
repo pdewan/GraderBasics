@@ -24,6 +24,8 @@ public class AnSNode implements SNode {
 	protected Set<OpenMPPragmaAttribute> attributes = new HashSet();
 	protected SNode parent;
 	boolean inParallel = false;
+	boolean inCritical = false;
+
 	int numberOfNestingFors;
 
 	public AnSNode(int lineNumber) {
@@ -53,7 +55,8 @@ public class AnSNode implements SNode {
 	public void setParent(SNode parent) {
 		this.parent = parent;
 		parent.getChildren().add(this);
-		inParallel = OMPSNodeUtils.hasParallelAncestor(this);
+		inParallel = OMPSNodeUtils.hasParallelAncestor(this);		
+		inCritical = OMPSNodeUtils.hasCriticalAncestor(this);	
 		numberOfNestingFors = OMPSNodeUtils.numberOfNestingFors(parent);
 
 
@@ -96,6 +99,10 @@ public class AnSNode implements SNode {
 	@Override
 	public boolean isInParallel() {
 		return inParallel;
+	}
+	@Override
+	public boolean isInCritical() {
+		return inCritical;
 	}
 	@Override
 	public boolean isLeaf() {

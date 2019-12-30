@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
+	static String[] emptyStringArray = {};
 	String lhs;
-	String[] lhsSubscripts;
+	String[] lhsSubscripts = emptyStringArray;
 	String lhsVariable;
 	List<String> lhsOperators;
 	String operationAndRHS;
@@ -26,6 +27,9 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		lhsVariable = OMPSNodeUtils.identifiersIn(lhs).get(0);
 		lhsOperators =  OMPSNodeUtils.operatorsIn(lhs);		
 		lhsSubscripts = OMPSNodeUtils.subscriptsIn(lhs);
+		if (lhsSubscripts == null) {
+			lhsSubscripts = emptyStringArray;
+		}
 		expressionSNode = new AnExpressionSNode(aLineNumber, operationAndRHS);
 //		expressionSNode.setParent(this);
 //		rhsVariableIdentifiers = OMPSNodeUtils.identifiersIn(operationAndRHS);
@@ -123,6 +127,9 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	@Override
 	public ExpressionSNode getExpressionSNode() {
 		return expressionSNode;
+	}
+	public String toString() {
+		return lhs + "=" + operationAndRHS;
 	}
 
 }

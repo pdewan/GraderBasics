@@ -3,8 +3,10 @@ package gradingTools.shared.testcases.openmp.scannedTree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -355,6 +357,16 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 		return hasParallelAncestor(anSNode.getParent());
 	}
+	public static boolean hasCriticalAncestor(SNode anSNode) {
+		if (anSNode == null) {
+			return false;
+		}
+		if (anSNode instanceof OMPCriticalSNode) {
+			return true;
+		}
+		return hasCriticalAncestor(anSNode.getParent());
+	}
+
 
 	public static Boolean isDeclaredShared(OMPSNode anOMPSNode, String anLHS) {
 		if (Arrays.asList(anOMPSNode.getSharedVariables()).contains(anLHS)) {
@@ -493,9 +505,10 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			return null;
 		return StringUtils.substringBetween(aString, "[", "]");
 	}
+	static String[] emptyStringArray = {};
 	public static String[] subscriptsIn(String aString) {
 		if (aString == null)
-			return null;
+			return emptyStringArray;
 		return StringUtils.substringsBetween(aString, "[", "]");
 	}
 	static  String operatorRegex = "([+-/*///^])|([/(/)])";
@@ -604,24 +617,114 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		if (!aVariable.equals(anAssignmentSNode.getLhsVariable())) {
 			return false;
 		}
-		List<String> aCallIdentifiers = anAssignmentSNode.getRhsCallIdentifiers();
+		return dependsOn(anAssignmentSNode.getExpressionSNode(), aCallIdentifier);
+//		List<String> aCallIdentifiers = anAssignmentSNode.getRhsCallIdentifiers();
+//		boolean retVal = false;
+//		if (aCallIdentifiers != null && aCallIdentifiers.contains(aCallIdentifier)) {
+//			return true; // this assignment has aCallIdentifier in the rhs
+//		}
+//		// check if some referenced rhs variable depends on aCallIdentifier
+//		List<String> aReferencedVariableIdentifiers = anAssignmentSNode.getRhsVariableIdentifiers();
+//		SNode anAssignmentParent = anAssignmentSNode.getParent();
+//		if (anAssignmentParent == null) { // should never be trye
+//			return false;
+//		}
+//		int aLineNumber = anAssignmentSNode.getLineNumber();
+//		for (String aReferencedVariableIdentifier:aReferencedVariableIdentifiers ) {
+//			if (dependsOn (anAssignmentParent, aLineNumber, aReferencedVariableIdentifier, aCallIdentifier)) {
+//				return true;
+//			}
+//		}
+//		return false;
+	}
+	public static boolean dependsOn (ExpressionSNode anExpressionSNode, String aCallIdentifier) {
+		// This assignment does not change aVariable
+		
+		List<String> aCallIdentifiers = anExpressionSNode.getRhsCallIdentifiers();
 		boolean retVal = false;
 		if (aCallIdentifiers != null && aCallIdentifiers.contains(aCallIdentifier)) {
 			return true; // this assignment has aCallIdentifier in the rhs
 		}
 		// check if some referenced rhs variable depends on aCallIdentifier
-		List<String> aReferencedVariableIdentifiers = anAssignmentSNode.getRhsVariableIdentifiers();
-		SNode anAssignmentParent = anAssignmentSNode.getParent();
+		List<String> aReferencedVariableIdentifiers = anExpressionSNode.getRhsVariableIdentifiers();
+		SNode anAssignmentParent = anExpressionSNode.getParent().getParent();
 		if (anAssignmentParent == null) { // should never be trye
 			return false;
 		}
-		int aLineNumber = anAssignmentSNode.getLineNumber();
+		int aLineNumber = anExpressionSNode.getLineNumber();
 		for (String aReferencedVariableIdentifier:aReferencedVariableIdentifiers ) {
 			if (dependsOn (anAssignmentParent, aLineNumber, aReferencedVariableIdentifier, aCallIdentifier)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	public static Set<AssignmentSNode> assignmentsToSharedVariables(SNode anSNode) {
+		Set<AssignmentSNode> retVal =  new HashSet();
+		fillAssignmentsToShared(anSNode, retVal);
+		return retVal;
+		
+	}
+	public static Set<AssignmentSNode> assignmentsToSharedArrays(SNode anSNode) {
+		Set<AssignmentSNode> anAllSharedAssignments =  assignmentsToSharedVariables(anSNode);
+		Set<AssignmentSNode> aRetVal = new HashSet();
+		for (AssignmentSNode anAssignmentSNode:anAllSharedAssignments) {
+			if (anAssignmentSNode.getLhsSubscripts().length > 0) {
+				aRetVal.add(anAssignmentSNode);
+			}
+		}
+		return aRetVal;
+		
+	}
+	public static Set<AssignmentSNode> assignmentsToParallelCriticalSharedVariables(SNode anSNode) {
+		Set<AssignmentSNode> anAllSharedAssignments =  assignmentsToSharedVariables(anSNode);
+		Set<AssignmentSNode> aRetVal = new HashSet();
+		for (AssignmentSNode anAssignmentSNode:anAllSharedAssignments) {
+			if (anAssignmentSNode.isInParallel() &&
+					anAssignmentSNode.isInCritical()) {
+				aRetVal.add(anAssignmentSNode);
+			}
+		}
+		return aRetVal;
+		
+	}
+	public static Set<AssignmentSNode> assignmentsToNonParallelCriticalSharedVariables(SNode anSNode) {
+		Set<AssignmentSNode> anAllSharedAssignments =  assignmentsToSharedVariables(anSNode);
+		Set<AssignmentSNode> aRetVal = new HashSet();
+		for (AssignmentSNode anAssignmentSNode:anAllSharedAssignments) {
+			if (!anAssignmentSNode.isInParallel() &&
+					anAssignmentSNode.isInCritical()) {
+				aRetVal.add(anAssignmentSNode);
+			}
+		}
+		return aRetVal;
+		
+	}
+	public static Set<AssignmentSNode> assignmentsToParallelNonCriticalSharedVariables(SNode anSNode) {
+		Set<AssignmentSNode> anAllSharedAssignments =  assignmentsToSharedVariables(anSNode);
+		Set<AssignmentSNode> aRetVal = new HashSet();
+		for (AssignmentSNode anAssignmentSNode:anAllSharedAssignments) {
+			if (anAssignmentSNode.isInParallel() &&
+					!anAssignmentSNode.isInCritical()) {
+				aRetVal.add(anAssignmentSNode);
+			}
+		}
+		return aRetVal;
+		
+	}
+    public static void fillAssignmentsToShared(SNode anSNode, Set<AssignmentSNode> retVal) {
+    	if (anSNode instanceof AssignmentSNode) {
+			AssignmentSNode anAssignmentSNode = (AssignmentSNode) anSNode;
+			String anLHS = anAssignmentSNode.getLhsVariable();
+			if (isSharedVariable(anSNode, anLHS)) {
+				retVal.add(anAssignmentSNode);
+				return;
+			}
+		}
+    	for (SNode aChild:anSNode.getChildren()) {
+    		fillAssignmentsToShared(aChild, retVal);
+    	}
+		
 	}
 	public static boolean dependsOn (SNode anSNode, int aVariableLineNumber, String aVariable, String aCallIdentifier) {
 		List<SNode> aListSNodes = anSNode.getChildren();

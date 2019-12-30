@@ -8,6 +8,7 @@ import gradingTools.shared.testcases.openmp.ForHeader;
 import gradingTools.shared.testcases.openmp.OpenMPPragma;
 
 public class AnOMPSNode extends AnSNode implements OMPSNode {
+	protected static String[] emptyStringArray = {};
 	protected List<String> openMPTokens = new ArrayList();
 
 	protected List<String> linesWithOpenMPCalls = new ArrayList();
@@ -17,10 +18,10 @@ public class AnOMPSNode extends AnSNode implements OMPSNode {
 
 
 	
-	protected String[] privateVariables ; // can occur in for and parallel
+	protected String[] privateVariables = emptyStringArray; // can occur in for and parallel
 	
 	
-	protected String[]  sharedVariables ; // can occur only in parallel, but let us keep them here
+	protected String[]  sharedVariables = emptyStringArray ; // can occur only in parallel, but let us keep them here
 	
 	public AnOMPSNode(int lineNumber) {
 		super(lineNumber);

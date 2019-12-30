@@ -2,7 +2,7 @@ package gradingTools.shared.testcases.openmp.scannedTree;
 
 import java.util.List;
 
-public interface ExpressionSNode {
+public interface ExpressionSNode extends SNode {
 
 	List<String> getRhsIdentifiers();
 

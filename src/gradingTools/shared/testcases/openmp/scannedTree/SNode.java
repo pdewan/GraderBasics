@@ -34,4 +34,6 @@ public interface SNode {
 
 	boolean isLeaf();
 
+	boolean isInCritical();
+
 }
