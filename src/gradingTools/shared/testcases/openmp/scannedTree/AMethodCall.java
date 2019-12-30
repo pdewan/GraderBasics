@@ -9,10 +9,12 @@ public class AMethodCall extends AnSNode implements MethodCall {
 	
 	
 
-	public AMethodCall (int aLineNumber, String aMethodName, List<String> aMethodActuals) {
+	public AMethodCall (int aLineNumber, String aMethodName, List<String> aMethodActuals, SNode aParent) {
 		super(aLineNumber);;
 		methodName = aMethodName;
 		methodActuals = aMethodActuals;
+		parent = aParent; // not calling setParent, because we may not be child of assignment node, considered a leaf, probably a mistake.
+
 	}
 	
 	@Override
@@ -32,8 +34,10 @@ public class AMethodCall extends AnSNode implements MethodCall {
 	public void setParent(SNode parent) {
 		super.setParent(parent);
 		MethodSNode aMethodSNode = OMPSNodeUtils.getDeclarationOfCalledMethod(this, this);
-		if (aMethodSNode != null) {
-			aMethodSNode.getCallsToMe().add(this);
+		if (aMethodSNode != null && !(aMethodSNode instanceof ExternalMethodSNode)) {
+			aMethodSNode.getCalls().add(this);
+		} else if (aMethodSNode != null ) {
+			((ExternalMethodSNode) aMethodSNode).getLocalCalls().add(this);
 		}
 
 

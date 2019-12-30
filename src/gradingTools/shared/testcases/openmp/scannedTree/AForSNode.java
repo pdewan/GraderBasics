@@ -3,6 +3,7 @@ package gradingTools.shared.testcases.openmp.scannedTree;
 public class AForSNode extends AnSNode implements ForSNode {
 	AssignmentSNode initalization;
 	String condition;	
+	ExpressionSNode conditionSNode;
 	AssignmentSNode increment;
 	public AForSNode(int lineNumber, AssignmentSNode initalization, String condition, AssignmentSNode increment) {
 		super(lineNumber);
@@ -13,6 +14,7 @@ public class AForSNode extends AnSNode implements ForSNode {
 			variableDeclarations.add((DeclarationSNode) initalization);
 			localVariables.add(initalization.getVariableName());
 		}
+		conditionSNode = new AnExpressionSNode(lineNumber, condition);
 	}
 	@Override
 	public AssignmentSNode getInitalization() {
@@ -29,5 +31,10 @@ public class AForSNode extends AnSNode implements ForSNode {
 	@Override
 	public void setParent(SNode parent) {
 		super.setParent(parent);
+		conditionSNode.setParent(this);
+	}
+	@Override
+	public ExpressionSNode getConditionSNode() {
+		return conditionSNode;
 	}
 }

@@ -7,6 +7,7 @@ public class AMethodSNode extends AnSNode implements MethodSNode {
 	String methodType;
 	String methodName;
 	List<MethodCall> callsToMe = new ArrayList();
+	StringBuffer signature = new StringBuffer();
 //	String[] methodParameterTypes;
 //	String[] methodParameterNames;
 	
@@ -19,8 +20,14 @@ public class AMethodSNode extends AnSNode implements MethodSNode {
 //		methodParameterTypes = aMethodParameterTypes;
 //		methodParameterNames = aMethodParameterNames;
 		variableDeclarations = aLocalVariableDeclarations;
-		for (DeclarationSNode aDeclarationSNode:variableDeclarations) {
+		signature.append(methodName + "(");
+		for (int i = 0; i < variableDeclarations.size(); i++) {
+			DeclarationSNode aDeclarationSNode = variableDeclarations.get(i);					
 			localVariables.add(aDeclarationSNode.getVariableName());
+			signature.append(aDeclarationSNode.getTypeName());
+			if (i < variableDeclarations.size() -1) {
+				signature.append(", ");
+			}
 		}
 	}
 	@Override
@@ -32,11 +39,11 @@ public class AMethodSNode extends AnSNode implements MethodSNode {
 		return methodName;
 	}
 	@Override
-	public List<MethodCall> getCallsToMe() {
+	public List<MethodCall> getCalls() {
 		return callsToMe;
 	}
 	public String toString() {
-		return methodName + " " + variableDeclarations;
+		return signature.toString();
 	}
 //	@Override
 //	public String[] getMethodParameterNames() {

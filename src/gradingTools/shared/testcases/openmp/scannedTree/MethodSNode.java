@@ -10,7 +10,7 @@ public interface MethodSNode extends SNode{
 	String getMethodType();
 
 
-	List<MethodCall> getCallsToMe();
+	List<MethodCall> getCalls();
 
 //	String[] getMethodParameterNames();
 //

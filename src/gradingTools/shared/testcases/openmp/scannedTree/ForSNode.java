@@ -8,6 +8,8 @@ public interface ForSNode extends SNode{
 
 	AssignmentSNode getIncrement();
 
+	ExpressionSNode getConditionSNode();
+
 //	SNode getBody();
 
 }

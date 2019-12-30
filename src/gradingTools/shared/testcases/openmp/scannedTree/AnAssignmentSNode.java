@@ -10,12 +10,13 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	String lhsVariable;
 	List<String> lhsOperators;
 	String operationAndRHS;
-	List<String> rhsVariableIdentifiers;
-	List<String> rhsOperators;
-	List<String> rhsNumbers;
-	List<MethodCall> rhsCalls;
+	ExpressionSNode expressionSNode;
+//	List<String> rhsVariableIdentifiers;
+//	List<String> rhsOperators;
+//	List<String> rhsNumbers;
+//	List<MethodCall> rhsCalls;
 	
-	List<String> rhsCallIdentifiers;
+//	List<String> rhsCallIdentifiers;
 	
 	
 	public AnAssignmentSNode(int aLineNumber, String lhs, String operationAndRHS) {
@@ -25,10 +26,12 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		lhsVariable = OMPSNodeUtils.identifiersIn(lhs).get(0);
 		lhsOperators =  OMPSNodeUtils.operatorsIn(lhs);		
 		lhsSubscripts = OMPSNodeUtils.subscriptsIn(lhs);
-		rhsVariableIdentifiers = OMPSNodeUtils.identifiersIn(operationAndRHS);
-		rhsNumbers = OMPSNodeUtils.numbersIn(operationAndRHS);
-		rhsOperators = OMPSNodeUtils.operatorsIn(operationAndRHS);	
-		rhsCalls = OMPSNodeUtils.callsIn(aLineNumber, operationAndRHS);
+		expressionSNode = new AnExpressionSNode(aLineNumber, operationAndRHS);
+//		expressionSNode.setParent(this);
+//		rhsVariableIdentifiers = OMPSNodeUtils.identifiersIn(operationAndRHS);
+//		rhsNumbers = OMPSNodeUtils.numbersIn(operationAndRHS);
+//		rhsOperators = OMPSNodeUtils.operatorsIn(operationAndRHS);	
+//		rhsCalls = OMPSNodeUtils.callsIn(aLineNumber, operationAndRHS, this);
 //		if (rhsCalls == null) {
 //			return;
 //		}
@@ -46,23 +49,23 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 //		}
 		
 	}
-	protected void setCalledMethodData() {
-		if (rhsCalls == null) {
-			return;
-		}
-		rhsCallIdentifiers = new ArrayList();
-		for (MethodCall aMethodCall:rhsCalls) {
-			MethodSNode aMethodSNode = OMPSNodeUtils.getDeclarationOfCalledMethod(this, aMethodCall);
-			if (aMethodSNode != null) {
-				aMethodSNode.getCallsToMe().add(aMethodCall);
-			}
-			String aMethodName = aMethodCall.getMethodName();
-			rhsCallIdentifiers.add(aMethodName);
-			if (rhsVariableIdentifiers.contains(aMethodName)) {
-				rhsVariableIdentifiers.remove(aMethodName);
-			}
-		}
-	}
+//	protected void setCalledMethodData() {
+//		if (rhsCalls == null) {
+//			return;
+//		}
+//		rhsCallIdentifiers = new ArrayList();
+//		for (MethodCall aMethodCall:rhsCalls) {
+//			MethodSNode aMethodSNode = OMPSNodeUtils.getDeclarationOfCalledMethod(this, aMethodCall);
+//			if (aMethodSNode != null) {
+//				aMethodSNode.getCalls().add(aMethodCall);
+//			}
+//			String aMethodName = aMethodCall.getMethodName();
+//			rhsCallIdentifiers.add(aMethodName);
+//			if (rhsVariableIdentifiers.contains(aMethodName)) {
+//				rhsVariableIdentifiers.remove(aMethodName);
+//			}
+//		}
+//	}
 	@Override
 	public String getLHS() {
 		return lhs;
@@ -81,25 +84,31 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		return lhsOperators;
 	}
 	public List<String> getRhsIdentifiers() {
-		return rhsVariableIdentifiers;
+//		return rhsVariableIdentifiers;
+		return expressionSNode.getRhsIdentifiers();
 	}
 	public List<String> getRhsOperators() {
-		return rhsOperators;
+//		return rhsOperators;
+		return expressionSNode.getRhsOperators();
 	}
 	public List<String> getRhsNumbers() {
-		return rhsNumbers;
+//		return rhsNumbers;
+		return expressionSNode.getRhsNumbers();
 	}
 	@Override
 	public List<String> getRhsVariableIdentifiers() {
-		return rhsVariableIdentifiers;
+		return expressionSNode.getRhsVariableIdentifiers();
+//		return rhsVariableIdentifiers;
 	}
 	@Override
 	public List<MethodCall> getRhsCalls() {
-		return rhsCalls;
+//		return rhsCalls;
+		return expressionSNode.getRhsCalls();
 	}
 	@Override
 	public List<String> getRhsCallIdentifiers() {
-		return rhsCallIdentifiers;
+//		return rhsCallIdentifiers;
+		return expressionSNode.getRhsCallIdentifiers();
 	}
 	@Override
 	public String getLhsVariable() {
@@ -108,7 +117,12 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	@Override
 	public void setParent (SNode aParent) {
 		super.setParent(aParent);
-		setCalledMethodData();
+		expressionSNode.setParent(this);
+//		setCalledMethodData();
+	}
+	@Override
+	public ExpressionSNode getExpressionSNode() {
+		return expressionSNode;
 	}
 
 }

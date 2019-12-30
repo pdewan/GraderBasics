@@ -21,4 +21,6 @@ public interface AssignmentSNode extends SNode {
 	List<String> getRhsCallIdentifiers();
 
 	String getLhsVariable();
+
+	ExpressionSNode getExpressionSNode();
 }
