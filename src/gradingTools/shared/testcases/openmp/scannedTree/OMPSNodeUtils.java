@@ -184,7 +184,10 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			}
 			if (isForNode(aFileLine)) {
 				ForSNode aForSNode = getForSNode(i, aFileLine);
+				SNode aParent = previousHeaderNode != null?previousHeaderNode:anSNodes.peek();
 				aForSNode.setParent(anSNodes.peek());
+				aForSNode.setParent(aParent);
+
 //				anSNodes.push(aForSNode);
 				previousHeaderNode = aForSNode;
 				if (aFileLine.endsWith(")")) {
@@ -725,6 +728,55 @@ public class OMPSNodeUtils extends OpenMPUtils {
     		fillAssignmentsToShared(aChild, retVal);
     	}
 		
+	}
+    public static Set<OMPParallelSNode>  ompParallelSNodes(SNode anSNode) {
+    	Set<OMPParallelSNode> retVal = new HashSet();    	
+    	fillOMPParallelSNodes(anSNode, retVal );
+    	return retVal;
+	}
+    public static void fillOMPParallelSNodes(SNode anSNode, Set<OMPParallelSNode> retVal) {
+    	if (anSNode instanceof OMPParallelSNode) {
+    		retVal.add((OMPParallelSNode) anSNode);
+		}
+    	for (SNode aChild:anSNode.getChildren()) {
+    		fillOMPParallelSNodes(aChild, retVal);
+    	}		
+	}
+    public static Set<ForSNode>  forSNodes(SNode anSNode) {
+    	Set<ForSNode> retVal = new HashSet();    	
+    	fillForSNodes(anSNode, retVal );
+    	return retVal;
+	}
+    public static void fillForSNodes(SNode anSNode, Set<ForSNode> retVal) {
+    	if (anSNode instanceof ForSNode) {
+    		retVal.add((ForSNode) anSNode);
+		}
+    	for (SNode aChild:anSNode.getChildren()) {
+    		fillForSNodes(aChild, retVal);
+    	}		
+	}
+    public static Set<OMPForSNode>  ompForSNodes(SNode anSNode) {
+    	Set<OMPForSNode> retVal = new HashSet();    	
+    	fillOMPForSNodes(anSNode, retVal );
+    	return retVal;
+	}
+    public static void fillOMPForSNodes(SNode anSNode, Set<OMPForSNode> retVal) {
+    	if (anSNode instanceof OMPForSNode) {
+    		retVal.add((OMPForSNode) anSNode);
+		}
+    	for (SNode aChild:anSNode.getChildren()) {
+    		fillOMPForSNodes(aChild, retVal);
+    	}		
+	}
+    public static Set<OMPForSNode> ompReducingForNodes(SNode anSNode) {
+		Set<OMPForSNode> anAllOMPForSNodes =  ompForSNodes(anSNode);
+		Set<OMPForSNode> aRetVal = new HashSet();
+		for (OMPForSNode anOMPForSNode:anAllOMPForSNodes) {
+			if (anOMPForSNode.getReductionOperation() != null) {
+				aRetVal.add(anOMPForSNode);
+			}
+		}
+		return aRetVal;		
 	}
 	public static boolean dependsOn (SNode anSNode, int aVariableLineNumber, String aVariable, String aCallIdentifier) {
 		List<SNode> aListSNodes = anSNode.getChildren();
