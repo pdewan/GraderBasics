@@ -8,4 +8,6 @@ public interface MethodCall extends SNode{
 
 	List<String> getMethodActuals();
 
+	List<String> getMethodActualIdentifiers();
+
 }

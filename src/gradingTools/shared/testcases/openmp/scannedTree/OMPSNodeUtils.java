@@ -386,7 +386,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		if (anSNode == null) {
 			return false;
 		}
-		if (anSNode.getLocalVariables().contains(anLHS)) {
+		if (anSNode.getLocalVariableIdentifiers().contains(anLHS)) {
 			if (!(anSNode instanceof OMPSNode)) { // no shared and private declarations
 				return !hasParallelAncestor(anSNode); // shared if not inParallel
 			}
@@ -460,7 +460,10 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
 	public static List<MethodCall> callsIn(int aLineNumber, String aString, SNode aParent) {
 		if (aString == null)
-			return null;
+			return emptyList;
+		if (isMethodDeclaration(aString)) {
+			return emptyList;
+		}
 //		Pattern mypattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
 //		Matcher mymatcher = mypattern.matcher(aString);
 		Matcher mymatcher = callPattern.matcher(aString);
@@ -509,6 +512,8 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return StringUtils.substringBetween(aString, "[", "]");
 	}
 	static String[] emptyStringArray = {};
+	static List emptyList = new ArrayList();
+
 	public static String[] subscriptsIn(String aString) {
 		if (aString == null)
 			return emptyStringArray;
@@ -617,7 +622,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
 	public static boolean dependsOn (AssignmentSNode anAssignmentSNode, String aVariable, String aCallIdentifier) {
 		// This assignment does not change aVariable
-		if (!aVariable.equals(anAssignmentSNode.getLhsVariable())) {
+		if (!aVariable.equals(anAssignmentSNode.getLhsFirstIdentifier())) {
 			return false;
 		}
 		return dependsOn(anAssignmentSNode.getExpressionSNode(), aCallIdentifier);
@@ -718,7 +723,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
     public static void fillAssignmentsToShared(SNode anSNode, Set<AssignmentSNode> retVal) {
     	if (anSNode instanceof AssignmentSNode) {
 			AssignmentSNode anAssignmentSNode = (AssignmentSNode) anSNode;
-			String anLHS = anAssignmentSNode.getLhsVariable();
+			String anLHS = anAssignmentSNode.getLhsFirstIdentifier();
 			if (isSharedVariable(anSNode, anLHS)) {
 				retVal.add(anAssignmentSNode);
 				return;
@@ -729,45 +734,64 @@ public class OMPSNodeUtils extends OpenMPUtils {
     	}
 		
 	}
+    public static void fillInstancesOfNodeType(Class<? extends SNode> aNodeType, SNode anSNode, Set<SNode> retVal) {
+    	if (aNodeType.isAssignableFrom(anSNode.getClass())) {
+			
+				retVal.add(anSNode);
+				return;
+			}
+		
+    	for (SNode aChild:anSNode.getChildren()) {
+    		fillInstancesOfNodeType(aNodeType, aChild, retVal);
+    	}
+		
+	}
+    public static Set<AssignmentSNode>  assignmentSNodes(SNode anSNode) {
+    	Set retVal = new HashSet();    	
+    	fillInstancesOfNodeType(AssignmentSNode.class, anSNode, retVal );
+    	return retVal;
+	}
+   
+    
     public static Set<OMPParallelSNode>  ompParallelSNodes(SNode anSNode) {
-    	Set<OMPParallelSNode> retVal = new HashSet();    	
-    	fillOMPParallelSNodes(anSNode, retVal );
+    	Set retVal = new HashSet();    	
+    	fillInstancesOfNodeType(OMPParallelSNode.class, anSNode, retVal );
     	return retVal;
 	}
-    public static void fillOMPParallelSNodes(SNode anSNode, Set<OMPParallelSNode> retVal) {
-    	if (anSNode instanceof OMPParallelSNode) {
-    		retVal.add((OMPParallelSNode) anSNode);
-		}
-    	for (SNode aChild:anSNode.getChildren()) {
-    		fillOMPParallelSNodes(aChild, retVal);
-    	}		
-	}
+//    public static void fillOMPParallelSNodes(SNode anSNode, Set<OMPParallelSNode> retVal) {
+//    	if (anSNode instanceof OMPParallelSNode) {
+//    		retVal.add((OMPParallelSNode) anSNode);
+//		}
+//    	for (SNode aChild:anSNode.getChildren()) {
+//    		fillOMPParallelSNodes(aChild, retVal);
+//    	}		
+//	}
     public static Set<ForSNode>  forSNodes(SNode anSNode) {
-    	Set<ForSNode> retVal = new HashSet();    	
-    	fillForSNodes(anSNode, retVal );
+    	Set retVal = new HashSet();    	
+    	fillInstancesOfNodeType(ForSNode.class, anSNode, retVal );
     	return retVal;
 	}
-    public static void fillForSNodes(SNode anSNode, Set<ForSNode> retVal) {
-    	if (anSNode instanceof ForSNode) {
-    		retVal.add((ForSNode) anSNode);
-		}
-    	for (SNode aChild:anSNode.getChildren()) {
-    		fillForSNodes(aChild, retVal);
-    	}		
-	}
+//    public static void fillForSNodes(SNode anSNode, Set<ForSNode> retVal) {
+//    	if (anSNode instanceof ForSNode) {
+//    		retVal.add((ForSNode) anSNode);
+//		}
+//    	for (SNode aChild:anSNode.getChildren()) {
+//    		fillForSNodes(aChild, retVal);
+//    	}		
+//	}
     public static Set<OMPForSNode>  ompForSNodes(SNode anSNode) {
-    	Set<OMPForSNode> retVal = new HashSet();    	
-    	fillOMPForSNodes(anSNode, retVal );
+    	Set retVal = new HashSet();    	
+    	fillInstancesOfNodeType(OMPForSNode.class, anSNode, retVal );
     	return retVal;
 	}
-    public static void fillOMPForSNodes(SNode anSNode, Set<OMPForSNode> retVal) {
-    	if (anSNode instanceof OMPForSNode) {
-    		retVal.add((OMPForSNode) anSNode);
-		}
-    	for (SNode aChild:anSNode.getChildren()) {
-    		fillOMPForSNodes(aChild, retVal);
-    	}		
-	}
+//    public static void fillOMPForSNodes(SNode anSNode, Set<OMPForSNode> retVal) {
+//    	if (anSNode instanceof OMPForSNode) {
+//    		retVal.add((OMPForSNode) anSNode);
+//		}
+//    	for (SNode aChild:anSNode.getChildren()) {
+//    		fillOMPForSNodes(aChild, retVal);
+//    	}		
+//	}
     public static Set<OMPForSNode> ompReducingForNodes(SNode anSNode) {
 		Set<OMPForSNode> anAllOMPForSNodes =  ompForSNodes(anSNode);
 		Set<OMPForSNode> aRetVal = new HashSet();
@@ -778,6 +802,11 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 		return aRetVal;		
 	}
+    public static Set<AssignmentSNode> assignmentsToOMPReducingForNode(OMPForSNode anOMPForSNode) {
+    	String aReductionVariable = anOMPForSNode.getReductionVariable();
+    	return assignmentsOfVariable(anOMPForSNode, aReductionVariable)	;
+    	
+    }
 	public static boolean dependsOn (SNode anSNode, int aVariableLineNumber, String aVariable, String aCallIdentifier) {
 		List<SNode> aListSNodes = anSNode.getChildren();
 		boolean retVal = false;
@@ -792,7 +821,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 					return true;
 			} else if (!anSNode.isLeaf()) {
 					// child is overriding the variable so forget checking its assignment statements
-					if (anSNodeChild.getLocalVariables().contains(aVariable)) {
+					if (anSNodeChild.getLocalVariableIdentifiers().contains(aVariable)) {
 						continue;
 					}
 					// some subblock of anSNode that has access to aVariable changes variable
@@ -808,22 +837,25 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		if (anSNode instanceof MethodSNode) {
 			MethodSNode aMethodSNode = (MethodSNode) anSNode;
 			
-			int aParameterNumber = aMethodSNode.getLocalVariables().indexOf(aVariable);
+			int aParameterNumber = aMethodSNode.getLocalVariableIdentifiers().indexOf(aVariable);
 			if (aParameterNumber != -1) {
 				List <MethodCall> aCalls = aMethodSNode.getCalls();
 				for (MethodCall aCall:aCalls) {
+//					if (!aCall.getMethodActuals().contains(aVariable))
+//						continue;
+//					
 					MethodSNode aCallerSNode = getDeclarationOfCalledMethod(aMethodSNode, aCall);
-					boolean aCallerDepends = dependsOn(aMethodSNode, aCallerSNode.getLineNumber(), aVariable, aCallIdentifier);
-				    if (aCallerDepends) {
+					if (dependsOn(aMethodSNode, aCallerSNode.getLineNumber(), aCallerSNode.getLocalVariableIdentifiers().get(aParameterNumber), aCallIdentifier));
+//				    if (aCallerDepends) {
 				    	return true;
-				    }
+//				    }
 				}
 				return false;
 				// need to find all callers of method and see if any of the aliases for the variable in these
 				// calls depend on aCallIndentifier
 			}			
 			
-		} else if (anSNode.getLocalVariables().contains(aVariable)) {
+		} else if (anSNode.getLocalVariableIdentifiers().contains(aVariable)) {
 			// before going to the parent node, let us see if aVariable is declared here as a non  parameter 
 
 			return false; // no point going to parent
@@ -835,6 +867,37 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 		int anSNodeLineNumber = anSNodeParent.getChildren().indexOf(anSNode);
 		return dependsOn(anSNodeParent, anSNodeLineNumber, aVariable, aCallIdentifier);
+		
+	}
+	public static Set<AssignmentSNode> assignmentsOfVariable (SNode anSNode,  String aVariable) {
+		Set<AssignmentSNode> retVal = new HashSet();
+		fillAssignmentsOfVariable(anSNode, aVariable, retVal);
+		return retVal;
+	}
+	public static void fillAssignmentsOfVariable (SNode anSNode,  String aVariable, Set<AssignmentSNode> retVal) {
+		if (anSNode instanceof AssignmentSNode) {
+			AssignmentSNode anAssignmentSNode = (AssignmentSNode) anSNode;
+			if (anAssignmentSNode.getLhsFirstIdentifier().equals(aVariable)) {
+				retVal.add(anAssignmentSNode);
+			}
+		}
+		
+		else if (anSNode instanceof MethodCall) {
+			MethodCall aMethodCall = (MethodCall) anSNode;
+			int aParameterNumber = aMethodCall.getMethodActualIdentifiers().indexOf(aVariable);
+			if (aParameterNumber < 0) {
+				return;
+			}
+			MethodSNode aDeclaringMethodSNode = getDeclarationOfCalledMethod(anSNode, aMethodCall);
+			String aFormalParameter = aDeclaringMethodSNode.getLocalVariableIdentifiers().get(aParameterNumber);
+//			Set<AssignmentSNode> aCallAssignments = ;
+			fillAssignmentsOfVariable(aDeclaringMethodSNode, aFormalParameter, retVal);
+		} else {
+			List<SNode> aChildren = anSNode.getChildren();
+			for (SNode aChild:aChildren) {
+				fillAssignmentsOfVariable(aChild, aVariable, retVal);
+			}
+		}		
 		
 	}
 	public static RootOfFileSNode getRootOfFileNode(SNode aCurrentSNode ) {
@@ -852,7 +915,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
 	public static boolean match (MethodSNode aMethodSNode, MethodCall aMethodCall) {
 		return aMethodSNode.getMethodName().equals(aMethodCall.getMethodName()) 
-				&& aMethodSNode.getLocalVariables().size() == aMethodCall.getMethodActuals().size();
+				&& aMethodSNode.getLocalVariableIdentifiers().size() == aMethodCall.getMethodActuals().size();
 	}
 	
 	public static MethodSNode getDeclarationOfCalledMethod(SNode aCurrentSNode, MethodCall aMethodCall ) {

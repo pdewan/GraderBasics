@@ -77,7 +77,7 @@ public class AnSNode implements SNode {
 		return variableDeclarations;
 	}
 	@Override
-	public List<String> getLocalVariables() {
+	public List<String> getLocalVariableIdentifiers() {
 		return localVariables;
 	}
 	@Override

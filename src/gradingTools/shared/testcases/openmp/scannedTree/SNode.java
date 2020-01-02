@@ -18,7 +18,7 @@ public interface SNode {
 
 	List<DeclarationSNode> getVariableDeclarations();
 
-	List<String> getLocalVariables();
+	List<String> getLocalVariableIdentifiers();
 
 	List<ForSNode> getForNodes();
 

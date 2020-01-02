@@ -115,7 +115,7 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		return expressionSNode.getRhsCallIdentifiers();
 	}
 	@Override
-	public String getLhsVariable() {
+	public String getLhsFirstIdentifier() {
 		return lhsVariable;
 	}
 	@Override
