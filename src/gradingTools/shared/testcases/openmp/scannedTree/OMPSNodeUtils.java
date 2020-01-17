@@ -64,9 +64,18 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		String[] aTypeAndVariable = anLHSAndRHS[0].split(" ");
 		return new ADeclaringAssignmentSNode(aLineNumber, aTypeAndVariable[0], aTypeAndVariable[1], anLHSAndRHS[1]);
 	}
+	public static ConstDeclarationSNode getConstDeclarationSNode(int aLineNumber, String aString) {
+		String anAssignmentString = aString.substring(CONST.length()).trim();
+		String[] anLHSAndRHS = anAssignmentString.split("=");
+		String[] aTypeAndVariable = anLHSAndRHS[0].split(" ");
+		return new AConstDeclarationSNode(aLineNumber, aTypeAndVariable[0], aTypeAndVariable[1], anLHSAndRHS[1]);
+	}
 
 	public static boolean isDeclaringAssignment(String aFileLine) {
 		return startsWithTypeName(aFileLine) && aFileLine.contains("=");
+	}
+	public static boolean isConstDeclaration(String aFileLine) {
+		return aFileLine.startsWith(CONST);
 	}
 	public static boolean isMethodDeclaration(String aFileLine) {
 		return startsWithTypeName(aFileLine) && 
@@ -84,7 +93,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
 
 	public static boolean isAssignment(String aFileLine) {
-		return aFileLine.contains("=");
+		return aFileLine.contains("=") && !aFileLine.contains("==");
 	}
 
 	public static boolean isForNode(String aFileLine) {
@@ -219,7 +228,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 				continue;
 			}
 			if (isBlockStart(aFileLine)) {
-				SNode aBlockSNode = new AnSNode(i);
+				SNode aBlockSNode = new ABlockSNode(i);
 				if (previousHeaderNode != null) {
 					aBlockSNode.setParent(previousHeaderNode);
 				} else {
@@ -235,7 +244,10 @@ public class OMPSNodeUtils extends OpenMPUtils {
 				continue;
 			}
 			SNode aNewLeafNode = null;
-			if (isDeclaringAssignment(aFileLine)) {
+			if (isConstDeclaration(aFileLine)) {
+				aNewLeafNode = getConstDeclarationSNode(i, aFileLine);
+
+			} else if (isDeclaringAssignment(aFileLine)) {
 				aNewLeafNode = getDeclaringAssignmentSNode(i, aFileLine);
 
 			} else if (isAssignment(aFileLine)) {
@@ -544,7 +556,11 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		if (anSNode == null) {
 			return 0;
 		}
-		int retVal = numberOfNestingFors (anSNode.getParent()) ;
+		int retVal = anSNode.getNumberOfNestingFors();
+		if ( retVal >= 0) {
+			return retVal;
+		}
+		retVal = numberOfNestingFors (anSNode.getParent()) ;
 
 		if (anSNode instanceof ForSNode) {
 			retVal++;
@@ -804,7 +820,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
     public static Set<AssignmentSNode> assignmentsToOMPReducingForNode(OMPForSNode anOMPForSNode) {
     	String aReductionVariable = anOMPForSNode.getReductionVariable();
-    	return assignmentsOfVariable(anOMPForSNode, aReductionVariable)	;
+    	return directAssignmentsOfVariableAndItsAliases(anOMPForSNode, aReductionVariable)	;
     	
     }
 	public static boolean dependsOn (SNode anSNode, int aVariableLineNumber, String aVariable, String aCallIdentifier) {
@@ -869,12 +885,62 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		return dependsOn(anSNodeParent, anSNodeLineNumber, aVariable, aCallIdentifier);
 		
 	}
-	public static Set<AssignmentSNode> assignmentsOfVariable (SNode anSNode,  String aVariable) {
+	public static Set<AssignmentSNode> assignmentsOfVariableAliases (SNode anSNode,  String aVariable) {
 		Set<AssignmentSNode> retVal = new HashSet();
-		fillAssignmentsOfVariable(anSNode, aVariable, retVal);
+		fillDirectAssignmentsOfVariableAliases(anSNode, aVariable, retVal);
 		return retVal;
 	}
-	public static void fillAssignmentsOfVariable (SNode anSNode,  String aVariable, Set<AssignmentSNode> retVal) {
+	public static void fillDirectAssignmentsOfVariableAliases (SNode anSNode,  String aVariable, Set<AssignmentSNode> retVal) {
+		if (anSNode instanceof MethodCall) {
+			MethodCall aMethodCall = (MethodCall) anSNode;
+			int aParameterNumber = aMethodCall.getMethodActualIdentifiers().indexOf(aVariable);
+			if (aParameterNumber < 0) {
+				return;
+			}
+			MethodSNode aDeclaringMethodSNode = getDeclarationOfCalledMethod(anSNode, aMethodCall);
+			String aFormalParameter = aDeclaringMethodSNode.getLocalVariableIdentifiers().get(aParameterNumber);
+//			Set<AssignmentSNode> aCallAssignments = ;
+			fillDirectAssignmentsOfVariableAliases(aDeclaringMethodSNode, aFormalParameter, retVal);
+		} else if (anSNode instanceof MethodSNode)	{
+			MethodSNode aMethodSNode = (MethodSNode) anSNode;
+			int aParameterNumber = aMethodSNode.getLocalVariableIdentifiers().indexOf(aVariable);
+			if (aParameterNumber < 0)
+				return;
+			List<MethodCall> aCalls = aMethodSNode.getCalls();
+			for (MethodCall aMethodCall:aCalls) {
+				MethodSNode aCallerMethodSNode = getDeclarationOfCalledMethod(anSNode, aMethodCall);
+				if (aCallerMethodSNode != null) {
+					String anAlias = aCallerMethodSNode.getLocalVariableIdentifiers().get(aParameterNumber);
+					fillDirectAssignmentsOfVariableAliases(aCallerMethodSNode, anAlias, retVal);
+
+				}
+
+			}
+		}
+		
+		else {
+			List<SNode> aChildren = anSNode.getChildren();
+			for (SNode aChild:aChildren) {
+				fillDirectAssignmentsOfVariableAliases(aChild, aVariable, retVal);
+			}
+		} 	
+		
+	}
+	
+	/*
+	 * will not consider assignments to variables in the RHS of these assignments
+	 */
+	public static Set<AssignmentSNode> directAssignmentsOfVariableAndItsAliases (SNode anSNode,  String aVariable) {
+		Set<AssignmentSNode> retVal = new HashSet();
+		fillDirectAssignmentsOfVariableAndItsAliases(anSNode, aVariable, retVal);
+		return retVal;
+	}
+	
+//	public static Set<AssignmentSNode> assignmentsEffectingVariableAndItsAliases (SNode anSNode,  String aVariable) {
+//		Set<AssignmentSNode> retVal = directAssignmentsOfVariableAndItsAliases(anSNode, aVariable);
+//		
+//	}
+	public static void fillDirectAssignmentsOfVariableAndItsAliases (SNode anSNode,  String aVariable, Set<AssignmentSNode> retVal) {
 		if (anSNode instanceof AssignmentSNode) {
 			AssignmentSNode anAssignmentSNode = (AssignmentSNode) anSNode;
 			if (anAssignmentSNode.getLhsFirstIdentifier().equals(aVariable)) {
@@ -891,15 +957,16 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			MethodSNode aDeclaringMethodSNode = getDeclarationOfCalledMethod(anSNode, aMethodCall);
 			String aFormalParameter = aDeclaringMethodSNode.getLocalVariableIdentifiers().get(aParameterNumber);
 //			Set<AssignmentSNode> aCallAssignments = ;
-			fillAssignmentsOfVariable(aDeclaringMethodSNode, aFormalParameter, retVal);
+			fillDirectAssignmentsOfVariableAndItsAliases(aDeclaringMethodSNode, aFormalParameter, retVal);
 		} else {
 			List<SNode> aChildren = anSNode.getChildren();
 			for (SNode aChild:aChildren) {
-				fillAssignmentsOfVariable(aChild, aVariable, retVal);
+				fillDirectAssignmentsOfVariableAndItsAliases(aChild, aVariable, retVal);
 			}
 		}		
 		
 	}
+	
 	public static RootOfFileSNode getRootOfFileNode(SNode aCurrentSNode ) {
 		if (aCurrentSNode instanceof RootOfFileSNode) {
 			return (RootOfFileSNode) aCurrentSNode;
@@ -916,6 +983,38 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	public static boolean match (MethodSNode aMethodSNode, MethodCall aMethodCall) {
 		return aMethodSNode.getMethodName().equals(aMethodCall.getMethodName()) 
 				&& aMethodSNode.getLocalVariableIdentifiers().size() == aMethodCall.getMethodActuals().size();
+	}
+	public static DeclarationSNode getDeclarationOfVariableIdentifier(SNode aCurrentSNode, String anIdentifier) {
+		if (aCurrentSNode == null) {
+			return null;
+		}
+		
+		
+		int anIndex = aCurrentSNode.getLocalVariableIdentifiers().indexOf(anIdentifier);
+		if (anIndex < 0) {
+			return getDeclarationOfVariableIdentifier(aCurrentSNode.getParent(), anIdentifier);
+		}
+		DeclarationSNode retVal = aCurrentSNode.getVariableDeclarations().get(anIndex);
+//		retVal.getAssignmentsToDeclaredVariable().add(anAssignmentSNode);
+//		anAssignmentSNode.setLhsFirstIdentifierDeclaration(retVal);
+		return retVal;
+	}
+	
+	public static DeclarationSNode getDeclarationOfAssignedVariable(SNode aCurrentSNode, AssignmentSNode anAssignmentSNode) {
+		if (aCurrentSNode == null) {
+			return null;
+		}
+		if (anAssignmentSNode instanceof ADeclaringAssignmentSNode) {
+			return (ADeclaringAssignmentSNode) anAssignmentSNode;
+		}
+		int anIndex = aCurrentSNode.getLocalVariableIdentifiers().indexOf(anAssignmentSNode.getLhsFirstIdentifier());
+		if (anIndex < 0) {
+			return getDeclarationOfAssignedVariable(aCurrentSNode.getParent(), anAssignmentSNode);
+		}
+		DeclarationSNode retVal = aCurrentSNode.getVariableDeclarations().get(anIndex);
+//		retVal.getAssignmentsToDeclaredVariable().add(anAssignmentSNode);
+//		anAssignmentSNode.setLhsFirstIdentifierDeclaration(retVal);
+		return retVal;
 	}
 	
 	public static MethodSNode getDeclarationOfCalledMethod(SNode aCurrentSNode, MethodCall aMethodCall ) {
@@ -944,7 +1043,37 @@ public class OMPSNodeUtils extends OpenMPUtils {
 //			System.out.println("pragmas:" + anSNode);
 		}
 		processExternalMethodSNodes(retVal);
+		setParentOfParameterDeclarations(retVal);
+		processIndirectAssignments(retVal);
 		return retVal;
+	}
+//	public static void processIndirectAssignments (S aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode) {
+//		for (SNode anSNode:aRootOfFileSNode.getChildren()) {
+//			-----
+//		}
+//	}
+	public static void setParentOfParameterDeclarations(RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode) {
+		for (SNode anSNode:aRootOfFileSNode.getChildren()) {
+			if (anSNode instanceof MethodSNode) {
+				setParentOfParameterDeclarations(aRootOfProgramSNode, aRootOfFileSNode, (MethodSNode) anSNode);
+			}
+		}
+	}
+	public static void setParentOfParameterDeclarations (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode, MethodSNode aMethodSNode) {
+		List<DeclarationSNode> aDeclarations = aMethodSNode.getVariableDeclarations();
+		for (DeclarationSNode aDeclaration:aDeclarations) {
+			if (aDeclaration.getParent() == null) {
+				aDeclaration.setParent(aMethodSNode);
+			}
+		}
+	}
+	public static void setParentOfParameterDeclarations (RootOfProgramSNode aRootOfProgramSNode) {
+		for (String aFileName:aRootOfProgramSNode.getFileNameToSNode().keySet()) {
+			RootOfFileSNode aRootOfFileSNode = aRootOfProgramSNode.getFileNameToSNode().get(aFileName);
+			setParentOfParameterDeclarations(aRootOfProgramSNode, aRootOfFileSNode);
+			
+		}
+
 	}
 	public static void processExternalMethodSNodes (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode) {
 		for (SNode anSNode:aRootOfFileSNode.getChildren()) {
@@ -953,6 +1082,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			}
 		}
 	}
+
 	public static void processExternalMethodSNode (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode, ExternalMethodSNode anExternalMethodSNode) {
 		MethodSNode aMethodSNode = aRootOfProgramSNode.getExternalToInternalMethod().get(anExternalMethodSNode.toString());
 		if (aMethodSNode == null) {
@@ -966,6 +1096,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			aMethodSNode.getCalls().addAll(anExternalMethodSNode.getLocalCalls());
 		}
 	}
+	
 	public static MethodSNode findMethodSNode (RootOfProgramSNode aRootOfProgramSNode, RootOfFileSNode aRootOfFileSNode, ExternalMethodSNode anExternalMethodSNode) {
 //		MethodSNode foundMethodSNode = null;
 		for (String aFileName:aRootOfProgramSNode.getFileNameToSNode().keySet()) {
@@ -998,6 +1129,48 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 
 	}
+	public static void processIndirectAssignments (SNode anSNode) {
+		if (anSNode instanceof ConstDeclarationSNode) {
+			return;
+		}
+		if (anSNode instanceof DeclarationSNode) {
+			DeclarationSNode aDeclarationSNode = (DeclarationSNode) anSNode;
+			Set<AssignmentSNode> anIndirectAssignments = aDeclarationSNode.getAssignmentsEffectingDeclaredIdentifier();
+			if (anIndirectAssignments != null) {
+				return; // already assigned
+			}
+			anIndirectAssignments = new HashSet<>();
+			aDeclarationSNode.setAssignmentsEffectingDeclaredIdentifier(anIndirectAssignments);
+			Set<AssignmentSNode> aDirectAssignments = aDeclarationSNode.getAssignmentsToDeclaredVariable();
+			anIndirectAssignments.addAll(aDirectAssignments);
+//			Set<AssignmentSNode> anAliasAssignments = assignmentsOfVariableAliases(aDeclarationSNode.getParent(), aDeclarationSNode.getVariableName());
+//			anIndirectAssignments.addAll(anAliasAssignments);
+			for (AssignmentSNode aDirectAssignment:aDirectAssignments) {
+				List<String> aVariableIdentifiers = aDirectAssignment.getRhsVariableIdentifiers();
+				
+				for (String aVariableIdentifier:aVariableIdentifiers) {
+					DeclarationSNode aDependeeDeclarationSNode = getDeclarationOfVariableIdentifier(aDirectAssignment, aVariableIdentifier);
+					if (aDependeeDeclarationSNode == null) {
+						System.err.println("Could not find declaration of:" + aVariableIdentifier + " referenced in:" + aDirectAssignment );
+						continue;
+					}
+					processIndirectAssignments(aDependeeDeclarationSNode);
+					Set<AssignmentSNode> aDependeeIndirectAssignments = aDeclarationSNode.getAssignmentsEffectingDeclaredIdentifier();
+					anIndirectAssignments.addAll(aDependeeIndirectAssignments);
+					
+				}
+			}
+		} else {
+			for (SNode aChild: anSNode.getChildren()) {
+				processIndirectAssignments(aChild);
+			}
+		}
+		
+	}
+	
+//	public static void fillIndirectAssignments (SNode anSNode, Set<AssignmentSNode> retVal ) {
+//		
+//	}
 	
 
 //	public static void main(String[] args) {

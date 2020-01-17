@@ -26,7 +26,11 @@ public class AnSNode implements SNode {
 	boolean inParallel = false;
 	boolean inCritical = false;
 
-	int numberOfNestingFors;
+	int numberOfNestingFors = -1;
+	@Override
+	public int getNumberOfNestingFors() {
+		return numberOfNestingFors;
+	}
 
 	public AnSNode(int lineNumber) {
 		super();

@@ -1,6 +1,9 @@
 package gradingTools.shared.testcases.openmp.scannedTree;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 	String variableName;
@@ -11,6 +14,11 @@ public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 
 	String variableIdentifier;
 	String typeIdentifier;
+	Set<AssignmentSNode> assignmentsToDeclaredVariable = new HashSet();
+	Set<AssignmentSNode> assignmentsEffectingDeclaredIdentifier;
+
+	
+	
 	public ADeclarationSNode(int aLineNumber, String aTypeName, String aVariableName) {
 		super(aLineNumber);
 		typeName = aTypeName;
@@ -35,9 +43,11 @@ public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 	@Override
 	public void setParent(SNode anSNode) {
 		super.setParent(anSNode);
+		if (!anSNode.getVariableDeclarations().contains(this)) {
 		anSNode.getVariableDeclarations().add(this);
 //		anSNode.getLocalVariables().add(variableName);
 		anSNode.getLocalVariableIdentifiers().add(variableIdentifier);
+		}
 
 	}
 	public String toString() {
@@ -56,10 +66,21 @@ public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 	public List<String> getOperators() {
 		return operators;
 	}
-	
+	@Override
+	public Set<AssignmentSNode> getAssignmentsToDeclaredVariable() {
+		return assignmentsToDeclaredVariable;
+	}
 //	@Override
 //
 //	public void setVariableName(String variableName) {
 //		this.variableName = variableName;
 //	}
+	@Override
+	public Set<AssignmentSNode> getAssignmentsEffectingDeclaredIdentifier() {
+		return assignmentsEffectingDeclaredIdentifier;
+	}
+	@Override
+	public void setAssignmentsEffectingDeclaredIdentifier(Set<AssignmentSNode> assignmentsEffectingDeclaredIdentifier) {
+		this.assignmentsEffectingDeclaredIdentifier = assignmentsEffectingDeclaredIdentifier;
+	}
 }

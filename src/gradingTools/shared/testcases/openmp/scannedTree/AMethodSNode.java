@@ -22,7 +22,8 @@ public class AMethodSNode extends AnSNode implements MethodSNode {
 		variableDeclarations = aLocalVariableDeclarations;
 		signature.append(methodName + "(");
 		for (int i = 0; i < variableDeclarations.size(); i++) {
-			DeclarationSNode aDeclarationSNode = variableDeclarations.get(i);					
+			DeclarationSNode aDeclarationSNode = variableDeclarations.get(i);	
+//			aDeclarationSNode.setParent(this);
 			localVariables.add(aDeclarationSNode.getVariableIdentifier());
 			signature.append(aDeclarationSNode.getTypeName());
 			if (i < variableDeclarations.size() -1) {

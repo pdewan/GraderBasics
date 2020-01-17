@@ -8,10 +8,11 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	static String[] emptyStringArray = {};
 	String lhs;
 	String[] lhsSubscripts = emptyStringArray;
-	String lhsVariable;
+	String lhsFirstIdentifier;
 	List<String> lhsOperators;
 	String operationAndRHS;
 	ExpressionSNode expressionSNode;
+	DeclarationSNode lhsFirstIdentifierDeclaration;
 //	List<String> rhsVariableIdentifiers;
 //	List<String> rhsOperators;
 //	List<String> rhsNumbers;
@@ -20,11 +21,12 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 //	List<String> rhsCallIdentifiers;
 	
 	
+
 	public AnAssignmentSNode(int aLineNumber, String lhs, String operationAndRHS) {
 		super(aLineNumber);
 		this.lhs = lhs;
 		this.operationAndRHS = operationAndRHS;
-		lhsVariable = OMPSNodeUtils.identifiersIn(lhs).get(0);
+		lhsFirstIdentifier = OMPSNodeUtils.identifiersIn(lhs).get(0);
 		lhsOperators =  OMPSNodeUtils.operatorsIn(lhs);		
 		lhsSubscripts = OMPSNodeUtils.subscriptsIn(lhs);
 		if (lhsSubscripts == null) {
@@ -82,7 +84,7 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		return lhsSubscripts;
 	}
 	public String getVariableName() {
-		return lhsVariable;
+		return lhsFirstIdentifier;
 	}
 	public List<String> getLhsOperators() {
 		return lhsOperators;
@@ -116,12 +118,18 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	}
 	@Override
 	public String getLhsFirstIdentifier() {
-		return lhsVariable;
+		return lhsFirstIdentifier;
 	}
 	@Override
 	public void setParent (SNode aParent) {
 		super.setParent(aParent);
 		expressionSNode.setParent(this);
+		DeclarationSNode aDeclarationSNode = OMPSNodeUtils.getDeclarationOfAssignedVariable(this, this);
+		if (aDeclarationSNode == null) {
+			System.err.println("Null declaration node for assignment:" + this);
+		}
+		aDeclarationSNode.getAssignmentsToDeclaredVariable().add(this);
+		setLhsFirstIdentifierDeclaration(aDeclarationSNode);
 //		setCalledMethodData();
 	}
 	@Override
@@ -131,5 +139,13 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 	public String toString() {
 		return lhs + "=" + operationAndRHS;
 	}
-
+	@Override
+	public DeclarationSNode getLhsFirstIdentifierDeclaration() {
+		return lhsFirstIdentifierDeclaration;
+	}
+	@Override
+	public void setLhsFirstIdentifierDeclaration(DeclarationSNode lhsFirstIdentifierDeclaration) {
+		this.lhsFirstIdentifierDeclaration = lhsFirstIdentifierDeclaration;
+	}
+	
 }

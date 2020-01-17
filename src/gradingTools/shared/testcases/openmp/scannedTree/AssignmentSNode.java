@@ -23,4 +23,8 @@ public interface AssignmentSNode extends SNode {
 	String getLhsFirstIdentifier();
 
 	ExpressionSNode getExpressionSNode();
+
+	DeclarationSNode getLhsFirstIdentifierDeclaration();
+
+	void setLhsFirstIdentifierDeclaration(DeclarationSNode lhsFirstIdentifierDeclaration);
 }

@@ -36,4 +36,6 @@ public interface SNode {
 
 	boolean isInCritical();
 
+	int getNumberOfNestingFors();
+
 }
