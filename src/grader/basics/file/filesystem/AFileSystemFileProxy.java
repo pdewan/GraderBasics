@@ -114,5 +114,10 @@ public class AFileSystemFileProxy extends AnAbstractFileProxy implements FilePro
     public File getFile() {
 		return file;
 	}
+    
+    @Override
+    public boolean isDirectory() {
+    	return file.isDirectory();
+    }
 	
 }
