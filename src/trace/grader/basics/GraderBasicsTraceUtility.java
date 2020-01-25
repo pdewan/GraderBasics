@@ -5,6 +5,8 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
 import gradingTools.shared.testcases.MethodExecutionTest;
+import gradingTools.shared.testcases.concurrency.AbstractBarrier;
+import gradingTools.shared.testcases.concurrency.AbstractEarlyJoinBasicJoiner;
 import gradingTools.shared.testcases.shapes.LocatableTest;
 import gradingTools.shared.testcases.shapes.interfaces.TestBoundedShape;
 import gradingTools.shared.testcases.shapes.rotate.detached.DetachedRotatingLineFortyFiveDegreeTest;
@@ -49,6 +51,9 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(BasicProjectExecution.class, true);
 			Tracer.setKeywordPrintStatus(DirectoryUtils.class, true);
 			Tracer.setKeywordPrintStatus(TestCaseResult.class, true);
+			Tracer.setKeywordPrintStatus(AbstractEarlyJoinBasicJoiner.class, true);
+			Tracer.setKeywordPrintStatus(AbstractBarrier.class, true);
+
 //		}
 
 	}
