@@ -27,6 +27,8 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 
 		try {
 		testRunStarted(this);
+		JUnitTestsEnvironment.clearCachedJUnitTestCases();
+
 		super.testAll();
 		testRunFinished(this);
 		} catch (PropertyVetoException e) {

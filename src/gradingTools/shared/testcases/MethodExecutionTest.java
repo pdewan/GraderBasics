@@ -37,7 +37,7 @@ import util.trace.Tracer;
 public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	public static String MATCH_ANY = "(.*)";
 	protected Object lastTargetObject;
-	protected double fractionComplete;
+//	protected double fractionComplete;
 	protected Object returnValue; 
 //		expectedReturnValue, 
 //		studentExpectedReturnValue, graderExpectedReturnValue;
@@ -271,12 +271,12 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 		}
 		return OutputErrorStatus.INCORRECT_OUTPUT_ERRORS;
 	}
-	protected void assertTrue(String aMessage, boolean aCheck) {
-//		testing = false;
-		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
-//		testing = true;
+//	protected void assertTrue(String aMessage, boolean aCheck) {
+////		testing = false;
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
-	}
+////		testing = true;
+////		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
+//	}
 	protected void assertNotExpected(Object anActual, Object anExpected) {
 		assertTrue ("Actual value: " + anActual + " not expected value: " + anExpected, anExpected.equals(anActual));
 

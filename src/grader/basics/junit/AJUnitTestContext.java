@@ -29,7 +29,7 @@ public class AJUnitTestContext implements JUnitTestContext {
 		this.gradableJUnitTest = gradableJUnitTest;
 	}
 	@Override
-	public PassFailJUnitTestCase getJUnitPassFailTest() {
+	public PassFailJUnitTestCase getJUnitPassFailTestCase() {
 //		if (junitTestCase == null) {
 //			gradableJUnitTest.test();
 //		}
@@ -39,19 +39,23 @@ public class AJUnitTestContext implements JUnitTestContext {
 	/**
 	 * Called when an instance of the test is created
 	 */
-	public void setJUnitPassFailTest(PassFailJUnitTestCase junitTestCase) {
+	public void setJUnitPassFailTestCase(PassFailJUnitTestCase junitTestCase) {
 		this.junitTestCase = junitTestCase;
 	}
 	@Override
 	/**
 	 * Called explictly by the application programmer through JUNitTestEnvirobment
 	 */
-	public PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTest() {
+	public PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTestCase() {
 		if (junitTestCase == null) { 
 //			System.err.println("Unepected null test in context");
 			gradableJUnitTest.test();
 		}
 		return junitTestCase;
+	}
+	@Override
+	public void clearJUnitTest() {
+		junitTestCase = null;
 	}
 
 }

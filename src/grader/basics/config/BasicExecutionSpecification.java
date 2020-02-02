@@ -88,6 +88,8 @@ public interface BasicExecutionSpecification {
 	void setEntryPoint(String anEntryPoint);
 	String getRequirementsLocation();
 	void setLanguage(String aValue);
+	boolean isReRunTests();
+	void setReRunTests(boolean newVal);
 	
 	
 

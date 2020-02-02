@@ -5,13 +5,14 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 public interface JUnitTestContext {
 
 	GradableJUnitTest getGradableJUnitTest();
+	void clearJUnitTest();
 
 	void setGradableJUnitTest(GradableJUnitTest gradableJUnitTest);
 
-	PassFailJUnitTestCase getJUnitPassFailTest();
-	PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTest();
+	PassFailJUnitTestCase getJUnitPassFailTestCase();
+	PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTestCase();
 
 
-	void setJUnitPassFailTest(PassFailJUnitTestCase junitTestCase);
+	void setJUnitPassFailTestCase(PassFailJUnitTestCase junitTestCase);
 
 }

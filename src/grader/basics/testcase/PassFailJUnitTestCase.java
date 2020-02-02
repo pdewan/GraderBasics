@@ -1,5 +1,6 @@
 package grader.basics.testcase;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import grader.basics.execution.RunningProject;
@@ -7,6 +8,7 @@ import grader.basics.execution.RunningProject;
 import grader.basics.junit.BasicJUnitUtils;
 import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
+import grader.basics.junit.NotesAndScore;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
@@ -31,22 +33,28 @@ import junit.framework.TestCase;
 public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected String name = "anonymous";
 	protected TestCaseResult lastResult; // last run, for depndent tests
-	
+	protected double fractionComplete;
+
 	protected ABufferingTestInputGenerator outputBasedInputGenerator ;
 	protected RunningProject interactiveInputProject;
     /**
      * This is where we add an instance of the test case.
      * This means only subclasses of PassFailJUnitTestCase can
-     * be made dependent.This makese sense since they have 
+     * be made dependent.This makes sense since they have 
      * results etc.
      * 
      * This is also the superclass of a gradet testcase, and the clases
      * of these have not been regustered.
      */
     public PassFailJUnitTestCase() {
-    	JUnitTestsEnvironment.addPassFailJUnitTestInstance(this);
+    	addPassFailJUnitTestInstance() ;
+//    	JUnitTestsEnvironment.addPassFailJUnitTestInstance(this);
     }
    
+    protected void addPassFailJUnitTestInstance() {
+    	JUnitTestsEnvironment.addPassFailJUnitTestInstance(this);
+
+    }
    
 
     protected TestCaseResult partialPass(double percentage, boolean autograded) {
@@ -146,6 +154,12 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	@Override
 	public void setInteractiveInputProject(RunningProject aProject) {
 		 interactiveInputProject = aProject;
+	}
+	protected void assertTrue(String aMessage, boolean aCheck) {
+//		testing = false;
+		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
+//		testing = true;
+//		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
 	}
 }
 	

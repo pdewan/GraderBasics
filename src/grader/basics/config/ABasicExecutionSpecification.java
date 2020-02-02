@@ -788,5 +788,13 @@ protected String requirementsLocation = null;
 		return getDirectListProperty(BasicStaticConfigurationUtils.MODULES, null);
 	}
 
-    
+	@Override
+	public  boolean isReRunTests() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.RE_RUN_TESTS, BasicStaticConfigurationUtils.DEFAULT_RE_RUN_TESTS);
+	}
+	@Override
+	public  void setReRunTests(
+			boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.RE_RUN_TESTS, newVal);
+	}
 }

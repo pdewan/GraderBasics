@@ -8,7 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import grader.basics.config.BasicConfigurationManagerSelector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.project.NotGradableException;
+import grader.basics.testcase.JUnitTestCase;
 
 //import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 
@@ -120,6 +123,21 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	// }
 	@Visible(false)
 	public void open(GradableJUnitTest aTest) {
+		JUnitTestCase aJUnitTestCase = aTest.getJUnitTestCase();
+		if (aJUnitTestCase != null && !BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isReRunTests()) {
+//			System.err.println("Not automatically rerunning:" + jUnitClass);
+			
+				System.err.println ("Not rerunning test " + aJUnitTestCase  + " again. + For rerun, please exit from local checks and start them again.");
+				return;
+		
+		} 
+		if (aJUnitTestCase != null) {
+			System.out.println ("Re-running test " + aJUnitTestCase + " . Results may change.");
+		}
+//		if (aTest.getJUnitTestCase() != null) {
+//			System.err.println ("Not rerunning test " + aTest.getJUnitTestCase() + " For rerunning it, please exit fron local checks and start them again.");
+//			return;
+//		}
 		// System.out.println ("opened: " + aTest);
 //		Description aDescription = Description.createSuiteDescription(aTest
 //				.getJUnitClass());
@@ -239,12 +257,25 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	@Visible(false)
 	public TestCaseResult test() throws NotAutomatableException,
 			NotGradableException {
+//		JUnitTestsEnvironment.clearCachedJUnitTestCases();
 		for (GradableJUnitTest aTest : children) {
-			if (aTest.getJUnitTestCase() != null) {
-				System.out.println("Not automatically rerunning:" + jUnitClass + ".  Please run it individually");
-			} else {
-			TestCaseResult aChildResult = aTest.test();
+			JUnitTestCase aJUnitTestCase = aTest.getJUnitTestCase();
+			if (aJUnitTestCase != null) {
+				continue;
 			}
+			TestCaseResult aChildResult = aTest.test();
+
+//			if (aJUnitTestCase != null && !BasicExecutionSpecificationSelector.getBasicExecutionSpecification().isReRunTests()) {
+////				System.err.println("Not automatically rerunning:" + jUnitClass);
+//				
+//					System.out.println ("Not rerunning test " + aTest.getJUnitTestCase()  + " again. + For rerun, please exit fron local checks and start them again.");
+//			
+//			} else {
+//				if (aJUnitTestCase != null) {
+//					System.out.println ("Re-running test " + aJUnitTestCase + " . Results may change.");
+//				}
+//			TestCaseResult aChildResult = aTest.test();
+//			}
 		}
 		int aNumSuccesses = numTestsSuceeded();
 		if (aNumSuccesses == children.size()) {

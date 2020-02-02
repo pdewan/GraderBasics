@@ -438,7 +438,19 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		return rootProxy;
 	}	
 	protected Object createUsingFactoryClassAndMethodName() {
-		rootProxy = getObjectFromFactory(factoryMethodName(), getFactoryClass(), getFactoryMethod(), proxyClass());
+		String aFactoryMethodName = factoryMethodName();
+		Class aFactoryClass = getFactoryClass();
+		if (aFactoryClass == null) {
+			assertTrue("No factory class for method:" + aFactoryMethodName, false) ;
+		}
+		Method aFactoryMethod = getFactoryMethod();
+		if (aFactoryMethod == null) {
+			assertTrue("No factory method for method name:" + aFactoryMethodName, false) ;
+		}
+		Class aProxyClass = proxyClass();
+		rootProxy = getObjectFromFactory(aFactoryMethodName, aFactoryClass, aFactoryMethod, aProxyClass);
+
+//		rootProxy = getObjectFromFactory(factoryMethodName(), getFactoryClass(), getFactoryMethod(), proxyClass());
 		return rootProxy;
 	}
 	@Override

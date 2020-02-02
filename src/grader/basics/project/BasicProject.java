@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
@@ -117,6 +118,106 @@ public class BasicProject implements Project {
         }
         textManager = new ABasicTextManager(sourceFolder);
     }
+//    public static File getLeafBuildFolder (File aRootBuildFolder, String a) {
+//    	if (aRootBuildFolder == null || !aRootBuildFolder.isDirectory()) {
+//    		return null;
+//    	}
+//    	for (File aFile:aRootBuildFolder.listFiles()) {
+//    		if (aFile.getName().startsWith(aRelativeFileName) {
+//    			return aFile;
+//    		}    		
+//    	}
+//    	
+//    }
+    public static File getASourceFile(File aSourceFolder) {
+    	return getAFileWithSuffix(aSourceFolder, BasicLanguageDependencyManager.getSourceFileSuffix());
+//    	if (aSourceFolder == null || !aSourceFolder.isDirectory()) {
+//    		return null;
+//    	}
+//    	for (File aFile:aSourceFolder.listFiles()) {
+//    		if (aFile.getName().endsWith(BasicLanguageDependencyManager.getSourceFileSuffix())) {
+//    			return aFile;
+//    		}    		
+//    	}
+//    	for (File aFile:aSourceFolder.listFiles()) {
+//    		if (aFile.isDirectory()) {
+//    			File retVal = getASourceFile(aFile);
+//    			if (retVal != null) {
+//    				return retVal;
+//    			}
+//    		}    		   		
+//    	}
+//    	return null;
+    }
+    public static File getAFileWithSuffix(File aSourceFolder, String aSuffix) {
+    	if (aSourceFolder == null || !aSourceFolder.isDirectory()) {
+    		return null;
+    	}
+    	for (File aFile:aSourceFolder.listFiles()) {
+    		if (aFile.getName().endsWith(aSuffix)) {
+    			return aFile;
+    		}    		
+    	}
+    	for (File aFile:aSourceFolder.listFiles()) {
+    		if (aFile.isDirectory()) {
+    			File retVal = getAFileWithSuffix(aFile, aSuffix);
+    			if (retVal != null) {
+    				return retVal;
+    			}
+    		}    		   		
+    	}
+    	return null;
+    }
+    public static String getRelativeFolderName (File aFile, String aRelativeFileName) {
+    	int anEndIndex = aRelativeFileName.indexOf(File.separator + aFile.getName());
+    	return aRelativeFileName.substring(0, anEndIndex);
+    }
+    public static String getRelativeFileNameWithoutSourceSuffix (String aRelativeFileName) {
+    	if (aRelativeFileName == null) {
+    		return null;
+    	}
+    	return aRelativeFileName.replace(BasicLanguageDependencyManager.getSourceFileSuffix(), "");
+    	
+    	
+    	
+    }
+    public static String getRelativeFileName (File aSourceFolder, File aSourceFile) {
+    	try {
+			int aRelativeFileStart = aSourceFolder.getCanonicalPath().length() + 1;
+			String aRelativeFileName = aSourceFile.getCanonicalPath().substring(aRelativeFileStart);
+			return aRelativeFileName;
+
+		} catch (IOException e) {
+		
+			e.printStackTrace();
+			return null;
+		}
+    	
+    	
+    }
+    
+    public static String getClassName (File aSourceFolder, File aSourceFile) {
+    	try {
+    		String aRelativeFileName = getRelativeFileName(aSourceFolder, aSourceFile);
+    		if (aRelativeFileName == null) {
+    			return null;
+    		}
+//			int aRelativeFileStart = aSourceFolder.getCanonicalPath().length() + 1;
+//			String aRelativeFileName = aSourceFile.getCanonicalPath().substring(aRelativeFileStart);
+			String aRelativeFileNameWithoutSourceSuffix = getRelativeFileNameWithoutSourceSuffix(aRelativeFileName);
+			//aRelativeFileName.replace(BasicLanguageDependencyManager.getSourceFileSuffix(), "");
+			String aClassName = aRelativeFileNameWithoutSourceSuffix.replace(
+					File.separator, ".");
+			return aClassName;
+
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+			return null;
+		}
+    	
+    	
+    }
     // rewriting Josh's code
     // going back to Josh';s code
     public BasicProject(Object aProject, File aDirectory, String name, String aSourceFilePattern) throws FileNotFoundException {
@@ -177,8 +278,19 @@ public class BasicProject implements Project {
         			 buildFolder = anOption.get();
         		 }
         	 } 
+        	 String aSourceClassName = "main." + name;
+        	 File aSourceFile = getASourceFile(sourceFolder);
+        	 if (aSourceFile != null) {
+        		 String aClassName = getClassName(sourceFolder, aSourceFile);
+        		 if (aClassName != null) {
+        			 aSourceClassName = aClassName;
+        		 }
+        	 }
+
         	 if (buildFolder == null) {
-        		 buildFolder = getBuildFolder("main." + name);
+//        		 buildFolder = getBuildFolder("main." + name);
+        		 buildFolder = getBuildFolder(aSourceClassName);
+
         	 }
         	 String anObjectFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getObjectFolderLocation();
         	 if (anObjectFolderLocation != null) {

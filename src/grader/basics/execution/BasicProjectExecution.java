@@ -1020,7 +1020,11 @@ public class BasicProjectExecution {
 			String[] args, int timeout, String... input)
 			throws NotRunnableException {
 
-		Runner aProcessRunner = RunnerSelector.getOrCreateProcessRunner(
+//		Runner aProcessRunner = RunnerSelector.getOrCreateProcessRunner(
+//				CurrentProjectHolder.getOrCreateCurrentProject(),
+//				aMainClassName);
+
+		Runner aProcessRunner = RunnerSelector.createProcessRunner(
 				CurrentProjectHolder.getOrCreateCurrentProject(),
 				aMainClassName);
 

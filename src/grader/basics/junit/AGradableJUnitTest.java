@@ -177,7 +177,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		setIsRestriction(aJUnitClass);
 		setIsExtra(aJUnitClass);
 		setGroup(aJUnitClass);
-		JUnitTestsEnvironment.addPassFailJUnitTestClass(aJUnitClass, this);
+		JUnitTestsEnvironment.addPassFailJUnitTestCaseClass(aJUnitClass, this);
 
 
 		

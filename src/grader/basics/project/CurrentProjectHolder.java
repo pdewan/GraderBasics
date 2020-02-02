@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.GradingMode;
+import grader.basics.execution.RunnerSelector;
+import grader.basics.junit.JUnitTestsEnvironment;
 
 public class CurrentProjectHolder {
 	static Project currentProject;
@@ -31,6 +33,8 @@ public class CurrentProjectHolder {
 	public static void setProject(Project aProject) {
 		currentProject = aProject;
 		BasicProjectIntrospection.clearProjectCaches();// avoid having to make an extra call for this
+		JUnitTestsEnvironment.clearCachedJUnitTestCases();
+		RunnerSelector.resetProcessRunner();// in case we use a single runner for a project
 	}
 	public static void setProject(String aSourceFilePattern){
 		try {

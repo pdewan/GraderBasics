@@ -13,7 +13,18 @@ public class JUnitTestsEnvironment {
 	 * This adds the class of the JUnit class
 	 *
 	 */
-	public static void addPassFailJUnitTestClass(Class<? extends PassFailJUnitTestCase> aClass, GradableJUnitTest aTest) {
+	public static void clearCachedJUnitTestCases() {
+		for (Class aClass:history.keySet()) {
+			JUnitTestContext aContext = history.get(aClass);
+			if (aContext != null) {
+				aContext.clearJUnitTest();
+			}
+		}
+	}
+	/*
+	 * Called by the tree node created for a test case
+	 */
+	public static void addPassFailJUnitTestCaseClass(Class<? extends PassFailJUnitTestCase> aClass, GradableJUnitTest aTest) {
 		JUnitTestContext aContext = history.get(aClass);
 		if (aContext == null) {
 //			System.out.println("Creating context for " + aClass);
@@ -32,7 +43,7 @@ public class JUnitTestsEnvironment {
 //			System.err.println("No context found for " + aClass);
 			return;
 		}
-		aContext.setJUnitPassFailTest(aTestCase);
+		aContext.setJUnitPassFailTestCase(aTestCase);
 	}
 	public static GradableJUnitTest getGradableJUnitTest(Class<? extends PassFailJUnitTestCase> aClass) {
 		JUnitTestContext aContext = history.get(aClass);
@@ -44,11 +55,11 @@ public class JUnitTestsEnvironment {
 	 */
 	public static PassFailJUnitTestCase getAndPossiblyRunGradableJUnitTest(Class aClass) {
 		JUnitTestContext aContext = history.get(aClass);
-		return aContext.getAndPossiblyRunJUnitPassFailTest();
+		return aContext.getAndPossiblyRunJUnitPassFailTestCase();
 	}
 	public static PassFailJUnitTestCase getPassFailJUnitTest(Class aClass) {
 		JUnitTestContext aContext = history.get(aClass);
-		return aContext.getJUnitPassFailTest();
+		return aContext.getJUnitPassFailTestCase();
 	}
 
 }
