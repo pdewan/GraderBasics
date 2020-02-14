@@ -55,7 +55,11 @@ public abstract class AbstractEarlyJoinBasicJoiner extends PassFailJUnitTestCase
 		taskCount++;
 		ThreadSupport.sleep(slaveTimeout);
 		Tracer.info(this, Thread.currentThread() + "before finished");
-		timingOutJoiner.finished();
+		try {			
+			timingOutJoiner.finished();
+		} catch (Throwable e) {
+			timingOutJoiner.finish();
+		}
 		Tracer.info(this, Thread.currentThread() + "after finished, taskCount=" + taskCount);
 
 	}
