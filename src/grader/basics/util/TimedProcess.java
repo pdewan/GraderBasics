@@ -67,7 +67,7 @@ public class TimedProcess {
     	}
         if (timeout == -1 || !BasicProjectExecution.isUseMethodAndConstructorTimeOut())
             return process.waitFor();
-        Tracer.info(this, "Making times call with seconds timeout:" + timeout);
+        Tracer.info(this, "Making timed call with seconds timeout:" + timeout);
 
         return timedCall(new Callable<Integer>() {
             @Override
