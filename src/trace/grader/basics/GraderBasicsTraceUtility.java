@@ -4,6 +4,7 @@ import grader.basics.execution.BasicProjectExecution;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
+import grader.basics.util.TimedProcess;
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.concurrency.AbstractBarrier;
 import gradingTools.shared.testcases.concurrency.AbstractEarlyJoinBasicJoiner;
@@ -53,6 +54,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(TestCaseResult.class, true);
 			Tracer.setKeywordPrintStatus(AbstractEarlyJoinBasicJoiner.class, true);
 			Tracer.setKeywordPrintStatus(AbstractBarrier.class, true);
+			Tracer.setKeywordPrintStatus(TimedProcess.class, true);
+
 
 //		}
 

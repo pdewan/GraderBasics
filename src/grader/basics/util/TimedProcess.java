@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import grader.basics.execution.BasicProjectExecution;
+import util.trace.Tracer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,6 +67,7 @@ public class TimedProcess {
     	}
         if (timeout == -1 || !BasicProjectExecution.isUseMethodAndConstructorTimeOut())
             return process.waitFor();
+        Tracer.info(this, "Making times call with seconds timeout:" + timeout);
 
         return timedCall(new Callable<Integer>() {
             @Override
