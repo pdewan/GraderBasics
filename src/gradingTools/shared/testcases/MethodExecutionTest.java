@@ -313,13 +313,9 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	}
 	
 	
-	public  boolean invokeMethod(
-			Object aTargetObject,  
-			Method aMethod, 
-			Object[] anArgs)
-			throws Throwable {
+	public boolean invokeMethod(Object aTargetObject, Method aMethod, Object[] anArgs) throws Throwable {
 		resetIO();
-		lastTargetObject =aTargetObject;
+		lastTargetObject = aTargetObject;
 		if (isInteractive()) {
 //			resultWithOutput = BasicProjectExecution.
 //					proxyAwareGeneralizedInteractiveTimedInvoke(
@@ -328,19 +324,10 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 //							getArgs(),
 //							getInput(),
 //							getTimeOut());
-			Tracer.info (this, "Calling  interactive method:" + 
-					aMethod.getName() + 
-					" with args " +
-					Arrays.toString(anArgs) +
-					" and input " +
-					getInput()); 
-			resultWithOutput = BasicProjectExecution.
-					proxyAwareGeneralizedInteractiveTimedInvoke(
-							aTargetObject,
-							aMethod,
-							anArgs,
-							getInput(),
-							getTimeOut());
+			Tracer.info(this, "Calling  interactive method:" + aMethod.getName() + " with args "
+					+ Arrays.toString(anArgs) + " and input " + getInput());
+			resultWithOutput = BasicProjectExecution.proxyAwareGeneralizedInteractiveTimedInvoke(aTargetObject, aMethod,
+					anArgs, getInput(), getTimeOut());
 			if (resultWithOutput == null) {
 				returnValue = null;
 				resultingOutError = null;
@@ -352,10 +339,8 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 //					resultWithOutput.getError());
 			error += resultWithOutput.getError();
 			output += resultWithOutput.getOutput();
-			//should define seters in this class
-			resultingOutError = new ResultingOutErr(
-					output, 
-					error);
+			// should define seters in this class
+			resultingOutError = new ResultingOutErr(output, error);
 			setOutputErrorStatus();
 			processOutputErrorStatus();
 		} else {
@@ -363,25 +348,20 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 //					aMethod.getName() + 
 //					" with args " +
 //					Arrays.toString(anArgs));
-			Tracer.info (this, "Calling on object " + aTargetObject + "  method:" + 
-					aMethod.getName() + 
-					" with args " +
-					Arrays.toString(anArgs) ); 
-			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(
-					aTargetObject,
-					aMethod,
-					anArgs,
-					getTimeOut());
+			Tracer.info(this, "Calling on object " + aTargetObject + "  method:" + aMethod.getName() + " with args "
+					+ Arrays.toString(anArgs));
+			returnValue = BasicProjectExecution.proxyAwareTimedInvoke(aTargetObject, aMethod, anArgs, getTimeOut());
 			if (returnValue == null) {
 				return false;
 			}
-			String aReturnString = 
-					(returnValue != null && returnValue.getClass().isArray())?
-							Arrays.toString((Object[]) returnValue):
-							returnValue.toString();
-						
+//			String aReturnString = (returnValue != null && returnValue.getClass().isArray())
+//					? Arrays.toString((Object[]) returnValue)
+//					: returnValue.toString();
+			
+			String aReturnString = objectToStringOrNull(returnValue);
+
 //			Tracer.info (this, "Return value =" + returnValue);
-			Tracer.info (this, "Return value:" + aReturnString);
+			Tracer.info(this, "Return value: " + aReturnString);
 
 		}
 //		if (returnValueIsExpected()) {
@@ -394,8 +374,34 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 //		}
 //		return true;
 		return true;
-		
 	}
+	
+	private String objectToStringOrNull(Object obj) {
+		if (obj == null) {
+			return null;
+		} else if (obj instanceof boolean[]) {
+			return Arrays.toString((boolean[])obj);
+		} else if (obj instanceof byte[]) {
+			return Arrays.toString((byte[])obj);
+		} else if (obj instanceof short[]) {
+			return Arrays.toString((short[])obj);
+		} else if (obj instanceof char[]) {
+			return Arrays.toString((char[])obj);
+		} else if (obj instanceof int[]) {
+			return Arrays.toString((int[])obj);
+		} else if (obj instanceof long[]) {
+			return Arrays.toString((long[])obj);
+		} else if (obj instanceof float[]) {
+			return Arrays.toString((float[])obj);
+		} else if (obj instanceof double[]) {
+			return Arrays.toString((double[])obj);
+		} else if (obj instanceof Object[]) {
+			return Arrays.toString((Object[])obj);
+		} else {
+			return obj.toString();
+		}
+	}
+	
 	protected void resetIO() {
 		error = "";
 		output = "";

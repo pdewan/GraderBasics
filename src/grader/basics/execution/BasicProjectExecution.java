@@ -1418,7 +1418,9 @@ public class BasicProjectExecution {
 			Object aProxy = BasicProjectIntrospection.getProxyObject(aRetVal);
 			if (aProxy != null)
 				return aProxy;
-			if (aReturnType.isArray()) {
+//	      The array check isn't needed since it is implied by the next
+//			if (aReturnType.isArray() && Object[].class.isAssignableFrom(aReturnType.getClass())) {
+			if (Object[].class.isAssignableFrom(aReturnType.getClass())) {
 				return returnArrayOfProxies(aRetVal, aReturnType);
 			}
 			aProxy = BasicProjectIntrospection
