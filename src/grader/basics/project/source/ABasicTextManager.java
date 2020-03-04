@@ -124,6 +124,9 @@ public class ABasicTextManager implements BasicTextManager{
     }
     
     protected void addSourceFile(File aFile) {
+    	if (!aFile.getName().endsWith(BasicLanguageDependencyManager.getSourceFileSuffix())) {
+    		return;
+    	}
     	try {
 			String contents = new String(Files.readAllBytes(aFile.toPath()));
 			String prefix = BasicTextManager.SOURCE_PREFIX + aFile.getName() + "\n";
