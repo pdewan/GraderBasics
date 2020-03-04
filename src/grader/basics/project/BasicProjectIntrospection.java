@@ -2452,8 +2452,12 @@ public class BasicProjectIntrospection {
 	public static boolean hasProxyElement(Object aProxy) { // expecting aProxy
 															// to be an array of
 															// proxies.
-		if (!aProxy.getClass().isArray())
+//      This check isn't needed since it is implied by the next
+//		if (!aProxy.getClass().isArray())
+//			return false;
+		if (!(aProxy instanceof Object[])) {
 			return false;
+		}
 		Object[] aProxyArray = (Object[]) aProxy;
 		return aProxyArray.length > 0 && isProxy(aProxyArray[0]);
 	}
