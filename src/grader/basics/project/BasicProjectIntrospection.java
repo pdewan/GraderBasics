@@ -2251,6 +2251,36 @@ public class BasicProjectIntrospection {
 		return anInterfaces;
 	}
 	
+	public static void removeProxy(Class<?> clazz, Object object) {
+		if (object instanceof Proxy) {
+			Object realObject = getRealObject(object);
+			if (proxyToObject.containsKey(object)) {
+				proxyToObject.remove(object);
+			}
+			if (objectToProxy.containsKey(realObject)) {
+				objectToProxy.remove(realObject);
+			}
+			if (classToProxy.containsKey(clazz)) {
+				Object proxy = classToProxy.get(clazz);
+				if (classToProxy.get(clazz) == object) {
+					classToProxy.remove(clazz);
+				}
+			}
+		} else {
+			if (objectToProxy.containsKey(object)) {
+				Object realProxy = objectToProxy.get(object);
+				objectToProxy.remove(object);
+				if (proxyToObject.containsKey(realProxy)) {
+					proxyToObject.remove(realProxy);
+				}
+				if (classToProxy.get(object.getClass()) == realProxy) {
+					classToProxy.remove(object.getClass());
+				}
+			}
+			
+		}
+	}
+	
 	public static Object createTimingOutProxy(Class aProxyClass, Object anActualObject) {
 		Object aCachedValue = objectToProxy.get(anActualObject);
 		if (aCachedValue != null) {

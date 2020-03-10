@@ -637,13 +637,15 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	protected String wrongReturnValueMessage() {
 		Object anExpectedValue = getExpectedReturnValue();
 		Object anActualValue = getReturnValue();
-		String anExpectedString = anExpectedValue.toString();
-		String anActualString = anActualValue.toString();
-		if (anExpectedValue.getClass().isArray() && anActualValue.getClass().isArray()) {
-			anExpectedString = Arrays.toString((Object[]) anExpectedValue);
-			anActualString = Arrays.toString((Object[]) anActualValue);
-
-		}
+		String anExpectedString = objectToStringOrNull(anExpectedValue);
+		String anActualString = objectToStringOrNull(anActualValue);
+//		String anExpectedString = anExpectedValue.toString();
+//		String anActualString = anActualValue.toString();
+//		if (anExpectedValue.getClass().isArray() && anActualValue.getClass().isArray()) {
+//			anExpectedString = Arrays.toString((Object[]) anExpectedValue);
+//			anActualString = Arrays.toString((Object[]) anActualValue);
+//
+//		}
 //		return "Expected value" + getExpectedReturnValue() + 
 //				" is not same as return value " + getReturnValue();
 		return "Expected value" + anExpectedString + 
