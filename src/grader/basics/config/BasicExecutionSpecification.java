@@ -90,6 +90,7 @@ public interface BasicExecutionSpecification {
 	void setLanguage(String aValue);
 	boolean isReRunTests();
 	void setReRunTests(boolean newVal);
+	boolean isSubDocuments();
 	
 	
 

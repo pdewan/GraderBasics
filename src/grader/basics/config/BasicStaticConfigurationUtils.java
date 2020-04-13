@@ -90,6 +90,7 @@ public class BasicStaticConfigurationUtils {
 	public static final String WAIT_FOR_METHOD_CONSTRUCTOR_AND_PROCESSES = "waitFotMethodConstructorAndProcesses";
 	public static final String USE_PROJECT_CONFIGURATION = "useProjectConfiguration";
 	public static final String RE_RUN_TESTS = "Rerun tests";
+	public static final String SUB_DOCUMENTS = "Sub Documents";
 
 	
 	public static final boolean DEFAULT_USE_PROJECT_CONFIGURATION = false;
@@ -98,6 +99,8 @@ public class BasicStaticConfigurationUtils {
 	public static final String DEFAULT_PROBLEM = "SampleAssignent";
 	
 	public static final boolean DEFAULT_RE_RUN_TESTS = true;
+	public static final boolean DEFAULT_SUB_DOCUMENTS= true;
+
 
 	
 
