@@ -91,6 +91,7 @@ public interface BasicExecutionSpecification {
 	boolean isReRunTests();
 	void setReRunTests(boolean newVal);
 	boolean isSubDocuments();
+	void setSubDocuments(Boolean newVal);
 	
 	
 

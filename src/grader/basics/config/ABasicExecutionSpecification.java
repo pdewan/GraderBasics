@@ -797,6 +797,10 @@ protected String requirementsLocation = null;
 		return getBooleanProperty(BasicStaticConfigurationUtils.SUB_DOCUMENTS, BasicStaticConfigurationUtils.DEFAULT_SUB_DOCUMENTS);
 	}
 	@Override
+	public  void setSubDocuments(Boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.SUB_DOCUMENTS, newVal);
+	}
+	@Override
 	public  void setReRunTests(
 			boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.RE_RUN_TESTS, newVal);
