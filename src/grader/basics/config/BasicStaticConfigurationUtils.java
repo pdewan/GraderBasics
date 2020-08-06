@@ -9,6 +9,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.execution.GradingMode;
+import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 import grader.basics.settings.BasicGradingEnvironment;
 import util.trace.Tracer;
@@ -28,6 +29,8 @@ public class BasicStaticConfigurationUtils {
 	public static final String LANGUAGE = "language";
 
 	public static final String ENTRY_POINT = "entryPoint";
+	public static final String SOURCE_FILES = "sourceFiles";
+
 	public static final String BUILD_FOLDER = "buildFolder";
 	public static final String PERMISSIONS = "permissions";
 
@@ -125,10 +128,14 @@ public class BasicStaticConfigurationUtils {
 //	};
 	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = { "java", "-cp",
 			".{:}..{:}{classPath}{:}{:}{junitPath}{:}{localGraderPath}", "{entryPoint}", "{args}" };
+	public static final String[] DEFAULT_LISP_BASIC_COMMAND_ARRAY = { "clisp", "-i",
+			toVariable(SOURCE_FILES), toVariable(ENTRY_POINT), "{args}" };
 	public static final String[] DEFAULT_OE_BASIC_COMMAND_ARRAY = { "java", "-cp",
 			".{:}..{:}{classPath}{:}{oePath}{:}{junitPath}{:}{localGraderPath}", "{entryTags}", "{args}" };
 
 	public static final List<String> DEFAULT_JAVA_BASIC_COMMAND = Arrays.asList(DEFAULT_JAVA_BASIC_COMMAND_ARRAY);
+	public static final List<String> DEFAULT_BASIC_LISP_COMMAND = Arrays.asList(DEFAULT_LISP_BASIC_COMMAND_ARRAY);
+
 	public static final List<String> DEFAULT_OE_BASIC_COMMAND = Arrays.asList(DEFAULT_OE_BASIC_COMMAND_ARRAY);
 	public static final int DEFAULT_RESOURCE_RELEASE_TIME = 2000;
 	public static final int DEFAULT_CONSTRUCTOR_TIME_OUT = 2000;// in
@@ -493,8 +500,14 @@ public class BasicStaticConfigurationUtils {
 //			}
 //		}
 //	}
-
+	static final String emptyString = "";
 	public static void replaceEntryPoint(List<String> basicCommand, String anEntryPoint, String anEntryTagTarget) {
+		if (anEntryPoint == null) {
+			anEntryPoint = emptyString;
+		}
+		if (anEntryTagTarget == null) {
+			anEntryTagTarget = emptyString;
+		}
 		for (int aCommandIndex = 0; aCommandIndex < basicCommand.size(); aCommandIndex++) {
 
 			String command = basicCommand.get(aCommandIndex);
@@ -502,7 +515,7 @@ public class BasicStaticConfigurationUtils {
 				command = command.replace(toVariable(ENTRY_POINT), anEntryPoint);
 
 			}
-			if (anEntryTagTarget != null) {
+			if (anEntryTagTarget != null ) {
 				command = command.replace(toVariable(ENTRY_TAGS), anEntryTagTarget);
 				command = command.replace(toVariable(ENTRY_TAG), anEntryTagTarget); // will match tags also
 
@@ -510,6 +523,44 @@ public class BasicStaticConfigurationUtils {
 			// check if entryTagTarget is empty and replace it with entry point
 			basicCommand.set(aCommandIndex, command);
 		}
+	}
+	static StringBuffer filesToString = new StringBuffer();
+	public static String toString(List<File> aFiles) {
+		filesToString.setLength(0);
+		for (File aFile:aFiles) {
+			filesToString.append(" " + aFile.getAbsolutePath());
+		}
+		return filesToString.toString();
+	}
+	public static void replaceSourceFiles(List<String> basicCommand ) {
+		String aSourceFiles = toString(CurrentProjectHolder.getCurrentProject().getSourceFiles());
+		int anIndex = basicCommand.indexOf(toVariable(SOURCE_FILES));
+		if (anIndex < 0) {
+			return;
+		}
+		basicCommand.remove(anIndex);
+		List<File> aFiles = CurrentProjectHolder.getCurrentProject().getSourceFiles();
+		for (File aFile:aFiles) {
+			String aFilePath = aFile.getAbsolutePath();
+			if (!basicCommand.contains(aFilePath)) {
+				basicCommand.add(anIndex, aFilePath);
+			}
+//			basicCommand.add(anIndex, aFile.getAbsolutePath());
+		}
+		
+//				
+//		for (int aCommandIndex = 0; aCommandIndex < basicCommand.size(); aCommandIndex++) {
+//
+//			String command = basicCommand.get(aCommandIndex);
+//			
+//				command = command.replace(toVariable(SOURCE_FILES), aSourceFiles);
+//				basicCommand.set(aCommandIndex, command);
+//
+//
+//			}
+			
+		
+		
 	}
 
 	public static void replaceBuildFolder(List<String> basicCommand, File aBuildFolder) {
@@ -763,6 +814,7 @@ public class BasicStaticConfigurationUtils {
 //		replacePermissionVariables(retVal, aProject);
 		replaceEntryPoint(retVal, anEntryPoint, anEntryTagTarget);
 		replaceBuildFolder(retVal, aBuildFolder);
+		replaceSourceFiles(retVal);
 		replaceArgs(retVal, anArgs);
 		return retVal.toArray(new String[0]);
 

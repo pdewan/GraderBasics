@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/diff_match_patch-current.jar"/>
 	<classpathentry kind="lib" path="lib/opencsv-2.3.jar"/>
-	<classpathentry kind="lib" path="lib/oeall22.jar"/>
+	<classpathentry kind="lib" path="lib/oeall22.jar" sourcepath="/util/src"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

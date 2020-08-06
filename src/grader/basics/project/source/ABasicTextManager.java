@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import grader.basics.BasicLanguageDependencyManager;
@@ -15,6 +17,8 @@ public class ABasicTextManager implements BasicTextManager{
     protected StringBuffer allSourcesText;
 	protected String sourceSuffix;
 	protected File sourceFolder;
+	protected List<File> sourceFiles = new ArrayList();
+	
 	protected boolean initializedSourceText = false;
 
     
@@ -133,6 +137,7 @@ public class ABasicTextManager implements BasicTextManager{
 			allSourcesText.append(prefix);			
 			allSourcesText.append(contents);        
 			allSourcesText.append(BasicTextManager.SOURCE_SUFFIX + "\n");
+			sourceFiles.add(aFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,4 +162,16 @@ public class ABasicTextManager implements BasicTextManager{
     public void setAllSourcesText(StringBuffer anAllSourcesText) {
         allSourcesText = anAllSourcesText;
     }
+    @Override
+    public List<File> getSourceFiles() {
+    	if (!initializedSourceText)
+
+//          if (allSourcesText == null)
+              initializeAllSourcesText();
+		return sourceFiles;
+	}
+    @Override
+	public void setSourceFiles(List<File> sourceFiles) {
+		this.sourceFiles = sourceFiles;
+	}
 }

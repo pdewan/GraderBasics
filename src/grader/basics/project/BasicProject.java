@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,29 +31,28 @@ import util.trace.TraceableLogFactory;
  * A "standard" project. That is, an IDE-based java project.
  */
 public class BasicProject implements Project {
-    
+	public static final String EMPTY_STRING = "";
 	protected boolean isInfinite;
-    protected File projectFolder;
-    protected File sourceFolder;
-    protected Option<ClassesManager> classesManager;
-    protected TraceableLog traceableLog;
-    protected boolean noSrc;
-    protected String sourceFilePattern = null;
-    protected File buildFolder;
-    protected File objectFolder;
-    protected BasicTextManager textManager;
-    protected String input = "";
-    protected StringBuffer output;
+	protected File projectFolder;
+	protected File sourceFolder;
+	protected Option<ClassesManager> classesManager;
+	protected TraceableLog traceableLog;
+	protected boolean noSrc;
+	protected String sourceFilePattern = null;
+	protected File buildFolder;
+	protected File objectFolder;
+	protected BasicTextManager textManager;
+	protected String input = "";
+	protected StringBuffer output;
 //    protected SakaiProject project;
 
-    
 	/**
-     * Basic constructor
-     *
-     * @param aDirectory The location of the project
-     * @param name      The name of the project, such as "Assignment1"
-     * @throws FileNotFoundException
-     */
+	 * Basic constructor
+	 *
+	 * @param aDirectory The location of the project
+	 * @param name       The name of the project, such as "Assignment1"
+	 * @throws FileNotFoundException
+	 */
 //    public StandardProject(File directory, String name) throws FileNotFoundException {
 //        // Find the folder. We could be there or it could be in a different folder
 //    	if (directory == null) return;
@@ -83,41 +83,43 @@ public class BasicProject implements Project {
 //	public StandardProject(SakaiProject project, File aDirectory, String name) throws FileNotFoundException {
 //		
 //	}
-    protected void setProject (Object aProject) {
-    	
-    }
-    public BasicProject(String aSourceFilePattern) throws FileNotFoundException {
-    	this (null,  new File("."), null, aSourceFilePattern);
-    }
-    protected void searchForSourceAndProjectFolder() throws FileNotFoundException {
-    	
+	protected void setProject(Object aProject) {
+
+	}
+
+	public BasicProject(String aSourceFilePattern) throws FileNotFoundException {
+		this(null, new File("."), null, aSourceFilePattern);
+	}
+
+	protected void searchForSourceAndProjectFolder() throws FileNotFoundException {
 
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
-        Option<File> src = DirectoryUtils.locateFolder(projectFolder, Project.SOURCE);
+		Option<File> src = DirectoryUtils.locateFolder(projectFolder, Project.SOURCE);
 
-        if (src.isEmpty()) {
-        	SourceFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
+		if (src.isEmpty()) {
+			SourceFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
 
-        	Set<File> sourceFiles = DirectoryUtils.getSourceFiles(projectFolder, sourceFilePattern);
-        	if (!sourceFiles.isEmpty()) {
-                    File aSourceFile = sourceFiles.iterator().next();
-                    sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
-                    this.projectFolder = sourceFolder.getParentFile();
-                    SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
-        	} else {
-                    ProjectFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
-                    throw new FileNotFoundException("No source files found");
-        	}
-        	noSrc = true;
+			Set<File> sourceFiles = DirectoryUtils.getSourceFiles(projectFolder, sourceFilePattern);
+			if (!sourceFiles.isEmpty()) {
+				File aSourceFile = sourceFiles.iterator().next();
+				sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
+				this.projectFolder = sourceFolder.getParentFile();
+				SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
+			} else {
+				ProjectFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
+				throw new FileNotFoundException("No source files found");
+			}
+			noSrc = true;
 //                throw new FileNotFoundException("No src folder");
 //        	sourceFolder = aDirectory;
 //        	this.directory = sourceFolder;
-        } else {
-            sourceFolder = src.get();
-            this.projectFolder = src.get().getParentFile();
-        }
-        textManager = new ABasicTextManager(sourceFolder);
-    }
+		} else {
+			sourceFolder = src.get();
+			this.projectFolder = src.get().getParentFile();
+		}
+		textManager = new ABasicTextManager(sourceFolder);
+	}
+
 //    public static File getLeafBuildFolder (File aRootBuildFolder, String a) {
 //    	if (aRootBuildFolder == null || !aRootBuildFolder.isDirectory()) {
 //    		return null;
@@ -129,8 +131,8 @@ public class BasicProject implements Project {
 //    	}
 //    	
 //    }
-    public static File getASourceFile(File aSourceFolder) {
-    	return getAFileWithSuffix(aSourceFolder, BasicLanguageDependencyManager.getSourceFileSuffix());
+	public static File getASourceFile(File aSourceFolder) {
+		return getAFileWithSuffix(aSourceFolder, BasicLanguageDependencyManager.getSourceFileSuffix());
 //    	if (aSourceFolder == null || !aSourceFolder.isDirectory()) {
 //    		return null;
 //    	}
@@ -148,83 +150,85 @@ public class BasicProject implements Project {
 //    		}    		   		
 //    	}
 //    	return null;
-    }
-    public static File getAFileWithSuffix(File aSourceFolder, String aSuffix) {
-    	if (aSourceFolder == null || !aSourceFolder.isDirectory()) {
-    		return null;
-    	}
-    	for (File aFile:aSourceFolder.listFiles()) {
-    		if (aFile.getName().endsWith(aSuffix)) {
-    			return aFile;
-    		}    		
-    	}
-    	for (File aFile:aSourceFolder.listFiles()) {
-    		if (aFile.isDirectory()) {
-    			File retVal = getAFileWithSuffix(aFile, aSuffix);
-    			if (retVal != null) {
-    				return retVal;
-    			}
-    		}    		   		
-    	}
-    	return null;
-    }
-    public static String getRelativeFolderName (File aFile, String aRelativeFileName) {
-    	int anEndIndex = aRelativeFileName.indexOf(File.separator + aFile.getName());
-    	return aRelativeFileName.substring(0, anEndIndex);
-    }
-    public static String getRelativeFileNameWithoutSourceSuffix (String aRelativeFileName) {
-    	if (aRelativeFileName == null) {
-    		return null;
-    	}
-    	return aRelativeFileName.replace(BasicLanguageDependencyManager.getSourceFileSuffix(), "");
-    	
-    	
-    	
-    }
-    public static String getRelativeFileName (File aSourceFolder, File aSourceFile) {
-    	try {
+	}
+
+	public static File getAFileWithSuffix(File aSourceFolder, String aSuffix) {
+		if (aSourceFolder == null || !aSourceFolder.isDirectory()) {
+			return null;
+		}
+		for (File aFile : aSourceFolder.listFiles()) {
+			if (aFile.getName().endsWith(aSuffix)) {
+				return aFile;
+			}
+		}
+		for (File aFile : aSourceFolder.listFiles()) {
+			if (aFile.isDirectory()) {
+				File retVal = getAFileWithSuffix(aFile, aSuffix);
+				if (retVal != null) {
+					return retVal;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static String getRelativeFolderName(File aFile, String aRelativeFileName) {
+		int anEndIndex = aRelativeFileName.indexOf(File.separator + aFile.getName());
+		return aRelativeFileName.substring(0, anEndIndex);
+	}
+
+	public static String getRelativeFileNameWithoutSourceSuffix(String aRelativeFileName) {
+		if (aRelativeFileName == null) {
+			return null;
+		}
+		return aRelativeFileName.replace(BasicLanguageDependencyManager.getSourceFileSuffix(), "");
+
+	}
+
+	public static String getRelativeFileName(File aSourceFolder, File aSourceFile) {
+		try {
 			int aRelativeFileStart = aSourceFolder.getCanonicalPath().length() + 1;
 			String aRelativeFileName = aSourceFile.getCanonicalPath().substring(aRelativeFileStart);
 			return aRelativeFileName;
 
 		} catch (IOException e) {
-		
+
 			e.printStackTrace();
 			return null;
 		}
-    	
-    	
-    }
-    
-    public static String getClassName (File aSourceFolder, File aSourceFile) {
-    	try {
-    		String aRelativeFileName = getRelativeFileName(aSourceFolder, aSourceFile);
-    		if (aRelativeFileName == null) {
-    			return null;
-    		}
+
+	}
+
+	public static String getClassName(File aSourceFolder, File aSourceFile) {
+		try {
+			String aRelativeFileName = getRelativeFileName(aSourceFolder, aSourceFile);
+			if (aRelativeFileName == null) {
+				return null;
+			}
 //			int aRelativeFileStart = aSourceFolder.getCanonicalPath().length() + 1;
 //			String aRelativeFileName = aSourceFile.getCanonicalPath().substring(aRelativeFileStart);
 			String aRelativeFileNameWithoutSourceSuffix = getRelativeFileNameWithoutSourceSuffix(aRelativeFileName);
-			//aRelativeFileName.replace(BasicLanguageDependencyManager.getSourceFileSuffix(), "");
-			String aClassName = aRelativeFileNameWithoutSourceSuffix.replace(
-					File.separator, ".");
+			// aRelativeFileName.replace(BasicLanguageDependencyManager.getSourceFileSuffix(),
+			// "");
+			String aClassName = aRelativeFileNameWithoutSourceSuffix.replace(File.separator, ".");
 			return aClassName;
 
 		} catch (Exception e) {
-		
+
 			e.printStackTrace();
 			return null;
 		}
-    	
-    	
-    }
-    // rewriting Josh's code
-    // going back to Josh';s code
-    public BasicProject(Object aProject, File aDirectory, String name, String aSourceFilePattern) throws FileNotFoundException {
-        // Find the folder. We could be there or it could be in a different folder
+
+	}
+
+	// rewriting Josh's code
+	// going back to Josh';s code
+	public BasicProject(Object aProject, File aDirectory, String name, String aSourceFilePattern)
+			throws FileNotFoundException {
+		// Find the folder. We could be there or it could be in a different folder
 //    	File anActualDirectory = aDirectory;
 //    	boolean aNeedToSearchForProject = true;
-    	if (aDirectory == null) { 
+		if (aDirectory == null) {
 //    		String aLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
 //            if (aLocation != null) {
 //            	aNeedToSearchForProject = false;
@@ -232,17 +236,21 @@ public class BasicProject implements Project {
 //            	aLocation = ".";
 //            }
 //            aDirectory = new File(aLocation);
-    		throw new FileNotFoundException("No directory given");
-        }
-    	sourceFilePattern = aSourceFilePattern;
-    	setProject(aProject);
-    	
-    	// will do this in standardproject
+			throw new FileNotFoundException("No directory given");
+		}
+		if (aSourceFilePattern == null) {
+			sourceFilePattern = EMPTY_STRING;
+		} else {
+			sourceFilePattern = aSourceFilePattern;
+		}
+		setProject(aProject);
+
+		// will do this in standardproject
 //    	project = aProject;
 //    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
 //    	BasicConfigurationManagerSelector.getConfigurationManager().setProjectDirectory(aDirectory);
 
-    	projectFolder = aDirectory;
+		projectFolder = aDirectory;
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
 //
@@ -267,89 +275,96 @@ public class BasicProject implements Project {
 //            sourceFolder = src.get();
 //            this.directory = src.get().getParentFile();
 //        }
-        searchForSourceAndProjectFolder();
+		searchForSourceAndProjectFolder();
 
-        try {
+		try {
 //            File sourceFolder = new File(this.directory, "src");
-        	 String aBinaryFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getBinaryFolderLocation();
-        	 if (aBinaryFolderLocation != null) {
-        		 Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, aBinaryFolderLocation);
-        		 if (anOption != null && !anOption.isEmpty()) {
-        			 buildFolder = anOption.get();
-        		 }
-        	 } 
-        	 String aSourceClassName = "main." + name;
-        	 File aSourceFile = getASourceFile(sourceFolder);
-        	 if (aSourceFile != null) {
-        		 String aClassName = getClassName(sourceFolder, aSourceFile);
-        		 if (aClassName != null) {
-        			 aSourceClassName = aClassName;
-        		 }
-        	 }
+			String aBinaryFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+					.getBinaryFolderLocation();
+			if (aBinaryFolderLocation != null) {
+				Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, aBinaryFolderLocation);
+				if (anOption != null && !anOption.isEmpty()) {
+					buildFolder = anOption.get();
+				}
+			}
+			String aSourceClassName = "main." + name;
+			File aSourceFile = getASourceFile(sourceFolder);
+			if (aSourceFile != null) {
+				String aClassName = getClassName(sourceFolder, aSourceFile);
+				if (aClassName != null) {
+					aSourceClassName = aClassName;
+				}
+			}
 
-        	 if (buildFolder == null) {
+			if (buildFolder == null) {
 //        		 buildFolder = getBuildFolder("main." + name);
-        		 buildFolder = getBuildFolder(aSourceClassName);
+				buildFolder = getBuildFolder(aSourceClassName);
 
-        	 }
-        	 String anObjectFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getObjectFolderLocation();
-        	 if (anObjectFolderLocation != null) {
-        		 Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, anObjectFolderLocation);
-        		 if (anOption != null && !anOption.isEmpty()) {
-        			 objectFolder = anOption.get();
-        		 }
-        	 } 
-        	 if (objectFolder == null) {
-        		 objectFolder = buildFolder;
-        	 }
-        	
+			}
+			String anObjectFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+					.getObjectFolderLocation();
+			if (anObjectFolderLocation != null) {
+				Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, anObjectFolderLocation);
+				if (anOption != null && !anOption.isEmpty()) {
+					objectFolder = anOption.get();
+				}
+			}
+			if (objectFolder == null) {
+				objectFolder = buildFolder;
+			}
+
 //         	CurrentProjectHolder.setProject(this); // so that classesManager can find it
 
-             classesManager = createClassesManager(buildFolder);
+			classesManager = createClassesManager(buildFolder);
 
-        
-        } catch (Exception e) {
-        	e.printStackTrace();
-            classesManager = Option.empty();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			classesManager = Option.empty();
+		}
 
-        // Create the traceable log
-        traceableLog = TraceableLogFactory.getTraceableLog();
-    }
-    protected Option<ClassesManager> createClassesManager(File buildFolder) throws ClassNotFoundException, IOException {
+		// Create the traceable log
+		traceableLog = TraceableLogFactory.getTraceableLog();
+	}
+
+	protected Option<ClassesManager> createClassesManager(File buildFolder) throws ClassNotFoundException, IOException {
 //        classesManager = Option.apply((ClassesManager) new ProjectClassesManager(project, buildFolder, sourceFolder));
 
-       return Option.apply((ClassesManager) new BasicProjectClassesManager(this, null, buildFolder, sourceFolder, sourceFilePattern));
+		return Option.apply((ClassesManager) new BasicProjectClassesManager(this, null, buildFolder, sourceFolder,
+				sourceFilePattern));
 
-    }
-    protected Option<File> out;
-    protected Option<File> bin;
-    protected Map<String, File> preferredClassToBuildFolder = new HashMap(); // wonder if it will ever have more than one entry
-    /**
-     * Caching version of Josh's code
-     * This figures out where the build folder is, taking into account variations due to IDE
-     *
-     * @param preferredClass The name of the class that has the main method, such as "main.Assignment1"
-     * @return The build folder
-     * @throws FileNotFoundException
-     */
-    public File getBuildFolder(String preferredClass) throws FileNotFoundException {
-    	  File retVal = preferredClassToBuildFolder.get(preferredClass);
-    	  if (retVal == null) {
-    		  retVal = searchBuildFolder(preferredClass);
-    		  if (retVal == null)
-    			  return null;
-    		  preferredClassToBuildFolder.put(preferredClass, retVal);
-    	  }
-    	  return retVal;
-    }
-    
-    protected File searchBuildFolder(String preferredClass) throws FileNotFoundException {
-  	   for (String aBinary:Project.BINARIES) {
-  		   bin = DirectoryUtils.locateFolder(projectFolder, aBinary);
-  		   if (bin != null && !bin.isEmpty())
-  			   break;
-  	   }
+	}
+
+	protected Option<File> out;
+	protected Option<File> bin;
+	protected Map<String, File> preferredClassToBuildFolder = new HashMap(); // wonder if it will ever have more than
+																				// one entry
+
+	/**
+	 * Caching version of Josh's code This figures out where the build folder is,
+	 * taking into account variations due to IDE
+	 *
+	 * @param preferredClass The name of the class that has the main method, such as
+	 *                       "main.Assignment1"
+	 * @return The build folder
+	 * @throws FileNotFoundException
+	 */
+	public File getBuildFolder(String preferredClass) throws FileNotFoundException {
+		File retVal = preferredClassToBuildFolder.get(preferredClass);
+		if (retVal == null) {
+			retVal = searchBuildFolder(preferredClass);
+			if (retVal == null)
+				return null;
+			preferredClassToBuildFolder.put(preferredClass, retVal);
+		}
+		return retVal;
+	}
+
+	protected File searchBuildFolder(String preferredClass) throws FileNotFoundException {
+		for (String aBinary : Project.BINARIES) {
+			bin = DirectoryUtils.locateFolder(projectFolder, aBinary);
+			if (bin != null && !bin.isEmpty())
+				break;
+		}
 //        if (out == null)
 //  	  out = DirectoryUtils.locateFolder(directory, Project.BINARY_2);
 //
@@ -361,163 +376,164 @@ public class BasicProject implements Project {
 //      if (bin.isEmpty())
 //      	bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
 
-
-
-
-      // If there is no 'out' or 'bin' folder then give up
+		// If there is no 'out' or 'bin' folder then give up
 //      if (out.isEmpty() && bin.isEmpty()) {
-      if (bin == null || bin.isEmpty()) {
+		if (bin == null || bin.isEmpty()) {
 
-      	if (noSrc) {
-                  return sourceFolder;
-              } 
+			if (noSrc) {
+				return sourceFolder;
+			}
 //          throw new FileNotFoundException();
-      	BinaryFolderNotFound.newCase(projectFolder.getAbsolutePath(), this);
-      	File retVal = new File(projectFolder, Project.BINARY);
-      	retVal.mkdirs();
+			BinaryFolderNotFound.newCase(projectFolder.getAbsolutePath(), this);
+			File retVal = new File(projectFolder, Project.BINARY);
+			retVal.mkdirs();
 //      	project.getClassLoader().setBinaryFileSystemFolderName(retVal.getAbsolutePath());
-      	BinaryFolderMade.newCase(retVal.getAbsolutePath(), this);
-      	return retVal.getAbsoluteFile();
-      	
-      } else {
-          // There can be more folders under it, so look around some more
-          // But first check the class name to see what we are looking for
-          File dir = null;
+			BinaryFolderMade.newCase(retVal.getAbsolutePath(), this);
+			return retVal.getAbsoluteFile();
+
+		} else {
+			// There can be more folders under it, so look around some more
+			// But first check the class name to see what we are looking for
+			File dir = null;
 //          if (out.isDefined()) {
 //              dir = out.get();
 //          }
-          if (bin.isDefined()) {
-              dir = bin.get();
-          }
-          if (preferredClass == null || preferredClass.isEmpty()) {
-              return dir;
-          }
+			if (bin.isDefined()) {
+				dir = bin.get();
+			}
+			if (preferredClass == null || preferredClass.isEmpty()) {
+				return dir;
+			}
 
-          if (preferredClass.contains(".")) {
-              Option<File> packageDir = DirectoryUtils.locateFolder(dir, preferredClass.split("\\.")[0]);
-              if (packageDir.isDefined()) {
-                  return packageDir.get().getParentFile();
-              } else {
-                  return dir;
-              }
-          } else {
-              return dir;
-          }
-      }
-  }
-    
-    /**
-     * This figures out where the build folder is, taking into account variations due to IDE
-     *
-     * @param preferredClass The name of the class that has the main method, such as "main.Assignment1"
-     * @return The build folder
-     * @throws FileNotFoundException
-     */
-    @Deprecated
-    public File getNonCachingBuildFolder(String preferredClass) throws FileNotFoundException {
+			if (preferredClass.contains(".")) {
+				Option<File> packageDir = DirectoryUtils.locateFolder(dir, preferredClass.split("\\.")[0]);
+				if (packageDir.isDefined()) {
+					return packageDir.get().getParentFile();
+				} else {
+					return dir;
+				}
+			} else {
+				return dir;
+			}
+		}
+	}
+
+	/**
+	 * This figures out where the build folder is, taking into account variations
+	 * due to IDE
+	 *
+	 * @param preferredClass The name of the class that has the main method, such as
+	 *                       "main.Assignment1"
+	 * @return The build folder
+	 * @throws FileNotFoundException
+	 */
+	@Deprecated
+	public File getNonCachingBuildFolder(String preferredClass) throws FileNotFoundException {
 //        Option<File> out = DirectoryUtils.locateFolder(directory, "out");
-        Option<File> anOut = DirectoryUtils.locateFolder(projectFolder, Project.BINARY_2);
+		Option<File> anOut = DirectoryUtils.locateFolder(projectFolder, Project.BINARY_2);
 //        if (out.isEmpty())
 //        	out = DirectoryUtils.locateFolder(directory, Project.BINARY_0);
 
-        
-
 //        Option<File> bin = DirectoryUtils.locateFolder(directory, "bin");
-        Option<File> aBin = DirectoryUtils.locateFolder(projectFolder,  Project.BINARY_0); // just to handle grader itself, as it has execuot.c
-        if (aBin.isEmpty())
+		Option<File> aBin = DirectoryUtils.locateFolder(projectFolder, Project.BINARY_0); // just to handle grader
+																							// itself, as it has
+																							// execuot.c
+		if (aBin.isEmpty())
 //        Option<File> bin = DirectoryUtils.locateFolder(directory,  Project.BINARY);
-        	aBin = DirectoryUtils.locateFolder(projectFolder,  Project.BINARY);
+			aBin = DirectoryUtils.locateFolder(projectFolder, Project.BINARY);
 
-
-
-
-        // If there is no 'out' or 'bin' folder then give up
-        if (anOut.isEmpty() && aBin.isEmpty()) {
-        	if (noSrc) {
-                    return sourceFolder;
-                } 
+		// If there is no 'out' or 'bin' folder then give up
+		if (anOut.isEmpty() && aBin.isEmpty()) {
+			if (noSrc) {
+				return sourceFolder;
+			}
 //            throw new FileNotFoundException();
-        	BinaryFolderNotFound.newCase(projectFolder.getAbsolutePath(), this);
-        	File retVal = new File(projectFolder, Project.BINARY);
-        	retVal.mkdirs();
+			BinaryFolderNotFound.newCase(projectFolder.getAbsolutePath(), this);
+			File retVal = new File(projectFolder, Project.BINARY);
+			retVal.mkdirs();
 //        	project.getClassLoader().setBinaryFileSystemFolderName(retVal.getAbsolutePath());
-        	BinaryFolderMade.newCase(retVal.getAbsolutePath(), this);
-        	return retVal.getAbsoluteFile();
-        	
-        } else {
-            // There can be more folders under it, so look around some more
-            // But first check the class name to see what we are looking for
-            File dir = null;
-            if (anOut.isDefined()) {
-                dir = anOut.get();
-            }
-            if (aBin.isDefined()) {
-                dir = aBin.get();
-            }
-            if (preferredClass == null || preferredClass.isEmpty()) {
-                return dir;
-            }
+			BinaryFolderMade.newCase(retVal.getAbsolutePath(), this);
+			return retVal.getAbsoluteFile();
 
-            if (preferredClass.contains(".")) {
-                Option<File> packageDir = DirectoryUtils.locateFolder(dir, preferredClass.split("\\.")[0]);
-                if (packageDir.isDefined()) {
-                    return packageDir.get().getParentFile();
-                } else {
-                    return dir;
-                }
-            } else {
-                return dir;
-            }
-        }
-    }
+		} else {
+			// There can be more folders under it, so look around some more
+			// But first check the class name to see what we are looking for
+			File dir = null;
+			if (anOut.isDefined()) {
+				dir = anOut.get();
+			}
+			if (aBin.isDefined()) {
+				dir = aBin.get();
+			}
+			if (preferredClass == null || preferredClass.isEmpty()) {
+				return dir;
+			}
 
-    @Override
-    public TraceableLog getTraceableLog() {
-        return traceableLog;
-    }
+			if (preferredClass.contains(".")) {
+				Option<File> packageDir = DirectoryUtils.locateFolder(dir, preferredClass.split("\\.")[0]);
+				if (packageDir.isDefined()) {
+					return packageDir.get().getParentFile();
+				} else {
+					return dir;
+				}
+			} else {
+				return dir;
+			}
+		}
+	}
 
-    @Override
-    public RunningProject start(String input) throws NotRunnableException {
+	@Override
+	public TraceableLog getTraceableLog() {
+		return traceableLog;
+	}
+
+	@Override
+	public RunningProject start(String input) throws NotRunnableException {
 //        return new ReflectionRunner(this).run(input);
-    	return null; // should not be called
-    }
+		return null; // should not be called
+	}
 
-    @Override
-    public RunningProject launch(String input) throws NotRunnableException {
-        return new BasicProcessRunner(this).run(input);
-    }
+	@Override
+	public RunningProject launch(String input) throws NotRunnableException {
+		return new BasicProcessRunner(this).run(input);
+	}
 
 //    @Override
 //    public RunningProject start(String input, int timeout) throws NotRunnableException {
 //        return new ReflectionRunner(this).run(input, timeout);
 //    }
 
-    @Override
-    public RunningProject launch(InputGenerator anOutputBasedInputGenerator, String input, int timeout) throws NotRunnableException {
-        return new BasicProcessRunner(this).run(anOutputBasedInputGenerator, input, timeout);
-    }
-    @Override
-    public RunningProject launch(InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput, int timeout) throws NotRunnableException {
-        return new BasicProcessRunner(this).run(anOutputBasedInputGenerator, aProcessToInput, timeout);
-    }
-    
-    @Override
-    public RunningProject launch( String input, int timeout) throws NotRunnableException {
-        return new BasicProcessRunner(this).run(input, timeout);
-    }
-    @Override
-    public RunningProject launch( String input, String[] anArgs, int timeout) throws NotRunnableException {
-        return new BasicProcessRunner(this).run(input, anArgs, timeout);
-    }
+	@Override
+	public RunningProject launch(InputGenerator anOutputBasedInputGenerator, String input, int timeout)
+			throws NotRunnableException {
+		return new BasicProcessRunner(this).run(anOutputBasedInputGenerator, input, timeout);
+	}
+
+	@Override
+	public RunningProject launch(InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput,
+			int timeout) throws NotRunnableException {
+		return new BasicProcessRunner(this).run(anOutputBasedInputGenerator, aProcessToInput, timeout);
+	}
+
+	@Override
+	public RunningProject launch(String input, int timeout) throws NotRunnableException {
+		return new BasicProcessRunner(this).run(input, timeout);
+	}
+
+	@Override
+	public RunningProject launch(String input, String[] anArgs, int timeout) throws NotRunnableException {
+		return new BasicProcessRunner(this).run(input, anArgs, timeout);
+	}
+
 //
-    @Override
-    public RunningProject launchInteractive() throws NotRunnableException {
-    	return null; // should not be called
+	@Override
+	public RunningProject launchInteractive() throws NotRunnableException {
+		return null; // should not be called
 //    	ARunningProject retVal = new InteractiveConsoleProcessRunner(this).run("");
 ////    	retVal.createFeatureTranscript();
 //    	return retVal;
 ////        return new InteractiveConsoleProcessRunner(this).run("");
-    }
+	}
 //    @Override
 //    public RunningProject launchInteractive(String[] args) throws NotRunnableException {
 //    	ARunningProject retVal = new InteractiveConsoleProcessRunner(this).run("", args);
@@ -526,94 +542,112 @@ public class BasicProject implements Project {
 ////        return new InteractiveConsoleProcessRunner(this).run("");
 //    }
 
-    @Override
-    public Option<ClassesManager> getClassesManager() {
-        return classesManager;
-    }
+	@Override
+	public Option<ClassesManager> getClassesManager() {
+		return classesManager;
+	}
 
-    @Override
-    public File getSourceFolder() {
-        return sourceFolder;
-    }
-    public String toString() {
-    	return sourceFolder + " :" + sourceFilePattern;
-    }
-    public static void main (String[] args) {
-    	try {
+	@Override
+	public File getSourceFolder() {
+		return sourceFolder;
+	}
+
+	public String toString() {
+		return sourceFolder + " :" + sourceFilePattern;
+	}
+
+	public static void main(String[] args) {
+		try {
 			BasicGradingEnvironment.get().setLoadClasses(true);
 //			Project aProject = new BasicProject(null, new File("."), null);
 			Project anAllCorrectProject = new BasicProject(null, new File("."), null, "allcorrect");
 
 			Class anAllCorrectClass = BasicProjectIntrospection.findClass(anAllCorrectProject, "ACartesianPoint");
-			System.out.println ("An all correct" + anAllCorrectClass);
+			System.out.println("An all correct" + anAllCorrectClass);
 			Project aWrongAngleProject = new BasicProject(null, new File("."), null, "wrongangle");
 
 			Class aWrongAngleClass = BasicProjectIntrospection.findClass(anAllCorrectProject, "ACartesianPoint");
-			System.out.println ("A wrong" + aWrongAngleClass);
-			
-			
+			System.out.println("A wrong" + aWrongAngleClass);
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
-    @Override
-    public boolean isInfinite() {
-    	return isInfinite;
-    }
-    @Override
-    public void setInfinite(boolean newVal) {
-    	isInfinite = newVal;
-    }
-    @Override
-    public File getProjectFolder() {
-    	return projectFolder;
-    }
-    @Override
-    public File getBuildFolder() {
+	}
+
+	@Override
+	public boolean isInfinite() {
+		return isInfinite;
+	}
+
+	@Override
+	public void setInfinite(boolean newVal) {
+		isInfinite = newVal;
+	}
+
+	@Override
+	public File getProjectFolder() {
+		return projectFolder;
+	}
+
+	@Override
+	public File getBuildFolder() {
 		return buildFolder;
 	}
-    @Override
-    public File getObjectFolder() {
+
+	@Override
+	public File getObjectFolder() {
 		return objectFolder;
 	}
-    @Override
-    public  String getSource() {
-    	return getTextManager().getAllSourcesText().toString();
+	@Override
+	public List<File> getSourceFiles() {
+		return  getTextManager().getSourceFiles();
+	}
+	@Override
+	public String getSource() {
+		return getTextManager().getAllSourcesText().toString();
 //		return project.
 //				getClassesTextManager().getEditedAllSourcesText(project.getSourceFileName());
 //    	return null;
-		
+
 //		return Common.toText(aRunningProject.getProject().getSourceFileName()).toString();
 	}
+
 	@Override
 	public BasicTextManager getTextManager() {
 		return textManager;
 	}
+
 	public String getAssignmentDataFolderName() {
-		return BasicGradingEnvironment.get()
-				.getDefaultAssignmentsDataFolderName();
+		return BasicGradingEnvironment.get().getDefaultAssignmentsDataFolderName();
 	}
+
 	@Override
 	public String getCurrentInput() {
 		return input;
 	}
+
 	@Override
 	public void setCurrentInput(String currentInput) {
 		input = currentInput;
 	}
+
 	@Override
 	public StringBuffer getCurrentOutput() {
 		return output;
 	}
+
 	@Override
 	public void clearOutput() {
 		if (output != null) {
 			output.setLength(0);
 		}
 	}
+
 	@Override
 	public void setCurrentOutput(StringBuffer currentOutput) {
 		output = currentOutput;
 	}
+
+	
 }

@@ -1069,10 +1069,16 @@ public class BasicProcessRunner implements Runner {
 	}
 	public static String getMainEntryPoint(Project aProject, String specifiedMainClass) {
 		if (specifiedMainClass == null) {
-			specifiedMainClass = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
+			String anEntryPoint  = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
+			if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
+				return anEntryPoint;
+			}
 		}
 		Map<String, String> anEntryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(aProject, specifiedMainClass);
 //		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
+		if (anEntryPoints == null) {
+			return null;
+		}
 		String aRetVal = anEntryPoints.get(BasicProcessRunner.MAIN_ENTRY_POINT);
 //		String aRetVal = anEntryPoints.get(BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint());
 

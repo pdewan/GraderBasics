@@ -2,6 +2,7 @@ package grader.basics.project;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Map;
 
 import grader.basics.execution.NotRunnableException;
@@ -94,6 +95,7 @@ public interface Project {
 	File getObjectFolder();
 	BasicTextManager getTextManager();
 	String getSource();
+	List<File> getSourceFiles();
 	String getCurrentInput();
 
 	void setCurrentInput(String currentInput);

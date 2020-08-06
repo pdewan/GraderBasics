@@ -1,5 +1,8 @@
 package grader.basics.project.source;
 
+import java.io.File;
+import java.util.List;
+
 public interface BasicTextManager {
 
 	String DEFAULT_SOURCES_FILE_PREFIX = "sources";
@@ -16,6 +19,10 @@ public interface BasicTextManager {
 
     void writeAllSourcesText(String aFileName);
     public void initializeAllSourcesText();
+
+	List<File> getSourceFiles();
+
+	void setSourceFiles(List<File> sourceFiles);
 
 
 

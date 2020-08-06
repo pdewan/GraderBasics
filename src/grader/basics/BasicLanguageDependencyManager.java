@@ -6,6 +6,8 @@ import java.util.Map;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.ExecutableFinderSelector;
 import grader.basics.execution.JavaMainClassFinderSelector;
+import grader.basics.execution.LispMainClassFinder;
+import grader.basics.execution.LispMainClassFinderSelector;
 //import grader.checkStyle.CheckStyleInvoker;
 //import grader.checkStyle.JavaCheckStyleInvokerFactory;
 //import grader.compilation.ClassFilesCompiler;
@@ -30,6 +32,7 @@ public class BasicLanguageDependencyManager {
 		
 		public static String JAVA_LANGUAGE = "Java";
 		public static String C_LANGUAGE = "C";
+		public static String LISP_LANGUAGE = "Lisp";
 		public static String CPlusPlus_LANGUAGE = "C++";
 
 		public static String PYTHON_LANGUAGE = "Python";
@@ -162,9 +165,14 @@ public class BasicLanguageDependencyManager {
 		languageToSourceFileSuffix.put(PYTHON_LANGUAGE, ".py");
 		languageToBinaryFileSuffix.put(PYTHON_LANGUAGE, ".py"); // does it have a compiled class
 		
+		languageToSourceFileSuffix.put(LISP_LANGUAGE, ".lisp");
+		languageToBinaryFileSuffix.put(LISP_LANGUAGE, ".lisp"); // does it have a compiled class
+		
 		languageToMainClassFinder.put(JAVA_LANGUAGE, JavaMainClassFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(C_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(CPlusPlus_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
+		languageToMainClassFinder.put(LISP_LANGUAGE, LispMainClassFinderSelector.getMainClassFinder());
+
 
 		
 //		
