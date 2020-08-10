@@ -10,8 +10,39 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import bus.uigen.introspect.IntrospectUtility;
+import grader.basics.project.Project;
 
 public class ConfigurationWriter {
+	public static void writeConfiguration(Project aProject, Class aConfigurationClass, Object aConfiguration) {
+		File aProjectDirectory = aProject.getProjectFolder();
+		 String aConfigurationFileName;
+		try {
+			aConfigurationFileName = aProjectDirectory.getCanonicalPath() + "/" + 
+			aConfigurationClass.getSimpleName() + ".csv";
+			writeConfiguration(aConfigurationFileName, aConfiguration);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public static final String CLASS_REGISTRY_FILE = "ClassRegistry.csv";
+	public static void writeConfiguration(Project aProject,  Object aConfiguration) {
+		File aProjectDirectory = aProject.getProjectFolder();
+		 String aConfigurationFileName;
+		try {
+			aConfigurationFileName = aProjectDirectory.getCanonicalPath() + "/" + 
+					CLASS_REGISTRY_FILE;
+			writeConfiguration(aConfigurationFileName, aConfiguration);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public static void writeConfiguration(String aConfigurationFileName, Object aConfiguration) {
 		try {
 		

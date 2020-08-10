@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 
 
 public class AConsentFormVetoer implements VetoableChangeListener {
+	
 	boolean consentFormChecked = false;
 	public static final String CONSENT_INFO_FILE_NAME = "http://www.cs.unc.edu/~dewan/comp401/current/Downloads/Adult%20Consent%20Form.htm";
 	public static final String CONSENT_FILE_NAME = "Consent.txt";
@@ -89,6 +90,9 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 	@Override
 	public void vetoableChange(PropertyChangeEvent evt)
 			throws PropertyVetoException {
+		if (!isCheckConsentForm()) {
+			return;
+		}
 		if (consentFormChecked) {
 			return;
 		}
@@ -184,5 +188,11 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 		}
 		fos.close();
 	}
-
+	static boolean checkConsentForm = false;
+	public static void setCheckConsentForm(boolean newVal) {
+		checkConsentForm = newVal;
+	}
+	public static boolean isCheckConsentForm() {
+		return checkConsentForm;
+	}
 }
