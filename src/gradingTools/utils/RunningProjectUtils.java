@@ -1,5 +1,7 @@
 package gradingTools.utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
@@ -20,6 +22,21 @@ public class RunningProjectUtils extends BasicProjectExecution{
 	 */
 	public static RunningProject runProject(Project project, int timeout, String... inputs)
 			throws NotRunnableException {
+		return runProject(project, BasicProjectExecution.DEFAULT_INPUT_SEPARATOR, timeout, inputs);
+	}
+	public static RunningProject runProjectandWithMainFile(Project project, String aLoadFile, int timeout, String... inputs)
+			throws NotRunnableException {
+		String aSourceFolder = project.getSourceFolder().getAbsolutePath();
+
+		String aTestFile = aSourceFolder + "/" + aLoadFile;
+		File aFile = new File(aTestFile);
+		if (!aFile.exists()) {
+			FileNotFoundException aFileNotFoundException = new FileNotFoundException(aFile + " does not exist.");
+			aFileNotFoundException.printStackTrace();
+			return null;
+		}
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setEntryPoint(aTestFile);
+
 		return runProject(project, BasicProjectExecution.DEFAULT_INPUT_SEPARATOR, timeout, inputs);
 	}
 	

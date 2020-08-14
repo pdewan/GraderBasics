@@ -25,6 +25,8 @@ import static grader.basics.config.BasicStaticConfigurationUtils.USE_PROJECT_CON
 import static grader.basics.config.BasicStaticConfigurationUtils.WAIT_FOR_METHOD_CONSTRUCTOR_AND_PROCESSES;
 import static grader.basics.config.BasicStaticConfigurationUtils.toCompoundProperty;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -532,6 +534,12 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     }
     @Override
     public void setStudentGradableProjectLocation(String aValue) {
+    	File aFile = new File(aValue);
+    	if (!aFile.exists() || !aFile.isDirectory()) {
+    		FileNotFoundException anException = new FileNotFoundException("Did not find project directory:" + aValue);
+    		anException.printStackTrace();
+    	}
+    	
     	runtimeStudentStringProperties.put(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, aValue);
     }
 protected String requirementsLocation = null;
