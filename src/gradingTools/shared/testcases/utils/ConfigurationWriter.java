@@ -77,7 +77,7 @@ public class ConfigurationWriter {
 				return;
 			}
 			Class[] anInterfaces = aPropertyClass.getInterfaces();
-			String aPropertyClassName = aPropertyClass.getSimpleName();
+			String aPropertyClassName = aPropertyClass.getName();
 //			aPrintWriter.println(aClassName + "," + aPropertyClassName);
 			aPrintWriter.println(aPropertyClassName + "," + aClassName);
 			for (Class anInterface:anInterfaces) {

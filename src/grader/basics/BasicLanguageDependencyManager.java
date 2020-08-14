@@ -6,8 +6,6 @@ import java.util.Map;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.ExecutableFinderSelector;
 import grader.basics.execution.JavaMainClassFinderSelector;
-import grader.basics.execution.LispMainClassFinder;
-import grader.basics.execution.LispMainClassFinderSelector;
 //import grader.checkStyle.CheckStyleInvoker;
 //import grader.checkStyle.JavaCheckStyleInvokerFactory;
 //import grader.compilation.ClassFilesCompiler;
@@ -21,6 +19,10 @@ import grader.basics.execution.MainClassFinder;
 //import grader.permissions.PermissionsGenerator;
 //import grader.permissions.java.DefaultJavaPermissible;
 //import grader.permissions.java.JavaPermissionsGenerator;
+import grader.basics.execution.lisp.LispCommandFinder;
+import grader.basics.execution.lisp.LispCommandFinderSelector;
+import grader.basics.execution.prolog.PrologCommandFinderSelector;
+import grader.basics.execution.sml.SMLCommandFinderSelector;
 
 public class BasicLanguageDependencyManager {
 	static  String sourceFileSuffix;
@@ -33,6 +35,9 @@ public class BasicLanguageDependencyManager {
 		public static String JAVA_LANGUAGE = "Java";
 		public static String C_LANGUAGE = "C";
 		public static String LISP_LANGUAGE = "Lisp";
+		public static String PROLOG_LANGUAGE = "Prolog";
+		public static String SML_LANGUAGE = "SML";
+
 		public static String CPlusPlus_LANGUAGE = "C++";
 
 		public static String PYTHON_LANGUAGE = "Python";
@@ -168,10 +173,18 @@ public class BasicLanguageDependencyManager {
 		languageToSourceFileSuffix.put(LISP_LANGUAGE, ".lisp");
 		languageToBinaryFileSuffix.put(LISP_LANGUAGE, ".lisp"); // does it have a compiled class
 		
+		languageToSourceFileSuffix.put(PROLOG_LANGUAGE, ".pl");
+		languageToBinaryFileSuffix.put(PROLOG_LANGUAGE, ".pl"); // does it have a compiled class
+		
+		languageToSourceFileSuffix.put(SML_LANGUAGE, ".sml");
+		languageToBinaryFileSuffix.put(SML_LANGUAGE, ".sml"); // does it have a compiled class
+		
 		languageToMainClassFinder.put(JAVA_LANGUAGE, JavaMainClassFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(C_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(CPlusPlus_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
-		languageToMainClassFinder.put(LISP_LANGUAGE, LispMainClassFinderSelector.getMainClassFinder());
+		languageToMainClassFinder.put(LISP_LANGUAGE, LispCommandFinderSelector.getMainClassFinder());
+		languageToMainClassFinder.put(PROLOG_LANGUAGE, PrologCommandFinderSelector.getMainClassFinder());
+		languageToMainClassFinder.put(SML_LANGUAGE, SMLCommandFinderSelector.getMainClassFinder());
 
 
 		

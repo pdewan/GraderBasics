@@ -129,12 +129,25 @@ public class BasicStaticConfigurationUtils {
 	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = { "java", "-cp",
 			".{:}..{:}{classPath}{:}{:}{junitPath}{:}{localGraderPath}", "{entryPoint}", "{args}" };
 	public static final String[] DEFAULT_LISP_BASIC_COMMAND_ARRAY = { "clisp", "-i",
-			toVariable(SOURCE_FILES), toVariable(ENTRY_POINT), "{args}" };
+//			toVariable(SOURCE_FILES),
+			toVariable(ENTRY_POINT), "{args}" };
+	public static final String[] DEFAULT_PROLOG_BASIC_COMMAND_ARRAY = { "swipl",
+//			toVariable(SOURCE_FILES),
+			toVariable(ENTRY_POINT), "{args}" };
+	public static final String[] DEFAULT_SML_BAT_BASIC_COMMAND_ARRAY = { "sml.bat",
+//			toVariable(SOURCE_FILES),
+			toVariable(ENTRY_POINT), "{args}" };
+	public static final String[] DEFAULT_SML_BASIC_COMMAND_ARRAY = { "sml",
+//			toVariable(SOURCE_FILES),
+			toVariable(ENTRY_POINT), "{args}" };
 	public static final String[] DEFAULT_OE_BASIC_COMMAND_ARRAY = { "java", "-cp",
 			".{:}..{:}{classPath}{:}{oePath}{:}{junitPath}{:}{localGraderPath}", "{entryTags}", "{args}" };
 
 	public static final List<String> DEFAULT_JAVA_BASIC_COMMAND = Arrays.asList(DEFAULT_JAVA_BASIC_COMMAND_ARRAY);
 	public static final List<String> DEFAULT_BASIC_LISP_COMMAND = Arrays.asList(DEFAULT_LISP_BASIC_COMMAND_ARRAY);
+	public static final List<String> DEFAULT_BASIC_PROLOG_COMMAND = Arrays.asList(DEFAULT_PROLOG_BASIC_COMMAND_ARRAY);
+	public static final List<String> DEFAULT_BASIC_SML_BAT_COMMAND = Arrays.asList(DEFAULT_SML_BAT_BASIC_COMMAND_ARRAY);
+	public static final List<String> DEFAULT_BASIC_SML_COMMAND = Arrays.asList(DEFAULT_SML_BASIC_COMMAND_ARRAY);
 
 	public static final List<String> DEFAULT_OE_BASIC_COMMAND = Arrays.asList(DEFAULT_OE_BASIC_COMMAND_ARRAY);
 	public static final int DEFAULT_RESOURCE_RELEASE_TIME = 2000;

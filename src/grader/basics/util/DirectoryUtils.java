@@ -107,6 +107,10 @@ public class DirectoryUtils {
     }
 
 	public static Set<File> getSourceFiles(File sourceFolder, String aSourceFilePattern) {
+		if (!sourceFolder.exists()) {
+			System.err.println(sourceFolder + " does not exist");
+			System.exit(0);
+		}
 	Set<File> aSourceFiles = getFiles(sourceFolder, new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {

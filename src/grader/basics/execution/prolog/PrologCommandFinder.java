@@ -1,4 +1,4 @@
-package grader.basics.execution;
+package grader.basics.execution.prolog;
 
 import java.io.File;
 import java.util.HashMap;
@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.execution.MainClassFinder;
+import grader.basics.execution.NotRunnableException;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 
-public class LispMainClassFinder implements MainClassFinder{
+public class PrologCommandFinder implements MainClassFinder{
 	protected static Map emptyMap = new HashMap();
 	protected List<String> defaultCommand;
 	@Override
@@ -24,15 +26,14 @@ public class LispMainClassFinder implements MainClassFinder{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	protected StringBuffer command = new StringBuffer();
-	public static final String CLISP = "clisp";
-	public static final String FILE_FLAG = "-i";
-	@Override
+//	protected StringBuffer command = new StringBuffer();
+//	public static final String PROLOG = "swipl";
+     @Override
 	public List<String> getDefaultCommand() {
 		if (defaultCommand != null) {
 			return defaultCommand;
 		}
-		return  BasicStaticConfigurationUtils.DEFAULT_BASIC_LISP_COMMAND;
+		return  BasicStaticConfigurationUtils.DEFAULT_BASIC_PROLOG_COMMAND;
 	}
 
 	@Override
