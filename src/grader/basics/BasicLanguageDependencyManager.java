@@ -14,22 +14,22 @@ import grader.basics.execution.JavaMainClassFinderSelector;
 //import grader.config.ConfigurationManager;
 //import grader.config.StaticConfigurationUtils;
 //import grader.execution.ExecutableFinderSelector;
-import grader.basics.execution.MainClassFinder;
+import grader.basics.execution.CommandGenerator;
 //import grader.permissions.Permissible;
 //import grader.permissions.PermissionsGenerator;
 //import grader.permissions.java.DefaultJavaPermissible;
 //import grader.permissions.java.JavaPermissionsGenerator;
-import grader.basics.execution.lisp.LispCommandFinder;
-import grader.basics.execution.lisp.LispCommandFinderSelector;
-import grader.basics.execution.prolog.PrologCommandFinderSelector;
-import grader.basics.execution.sml.SMLCommandFinderSelector;
+import grader.basics.execution.lisp.CLispCommandGenerator;
+import grader.basics.execution.lisp.LispCommandGeneratorSelector;
+import grader.basics.execution.prolog.PrologCommandGeneratorSelector;
+import grader.basics.execution.sml.SMLCommandGeneratorSelector;
 
 public class BasicLanguageDependencyManager {
 	static  String sourceFileSuffix;
 
 	 static Map<String, String> languageToSourceFileSuffix = new HashMap<>();
 	 protected static Map<String, String> languageToBinaryFileSuffix = new HashMap<>();
-	 protected static Map<String, MainClassFinder> languageToMainClassFinder = new HashMap();
+	 protected static Map<String, CommandGenerator> languageToMainClassFinder = new HashMap();
 
 		
 		public static String JAVA_LANGUAGE = "Java";
@@ -116,7 +116,7 @@ public class BasicLanguageDependencyManager {
 		return languageToBinaryFileSuffix.get(aLanguage);
 //		return binaryFileSuffix;
 	}
-	public static MainClassFinder getMainClassFinder() {
+	public static CommandGenerator getMainClassFinder() {
 		return languageToMainClassFinder.get(getLanguage());
 	}
 	
@@ -144,6 +144,9 @@ public class BasicLanguageDependencyManager {
 
 	
 }
+	public static boolean hasBinaryFolder() {
+		return languageToMainClassFinder.get(getLanguage()).hasBinaryFolder();
+	}
 //	public static void setCOBj(ConfigurationManager aConfigurationManager) {
 //		String cObj = aConfigurationManager.getCourseConfiguration().getString(StaticConfigurationUtils.C_OBJ);
 //		if (cObj == null)
@@ -182,9 +185,9 @@ public class BasicLanguageDependencyManager {
 		languageToMainClassFinder.put(JAVA_LANGUAGE, JavaMainClassFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(C_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
 		languageToMainClassFinder.put(CPlusPlus_LANGUAGE, ExecutableFinderSelector.getMainClassFinder());
-		languageToMainClassFinder.put(LISP_LANGUAGE, LispCommandFinderSelector.getMainClassFinder());
-		languageToMainClassFinder.put(PROLOG_LANGUAGE, PrologCommandFinderSelector.getMainClassFinder());
-		languageToMainClassFinder.put(SML_LANGUAGE, SMLCommandFinderSelector.getMainClassFinder());
+		languageToMainClassFinder.put(LISP_LANGUAGE, LispCommandGeneratorSelector.getCommandGenerator());
+		languageToMainClassFinder.put(PROLOG_LANGUAGE, PrologCommandGeneratorSelector.getCommandGenerator());
+		languageToMainClassFinder.put(SML_LANGUAGE, SMLCommandGeneratorSelector.getCommandGenerator());
 
 
 		

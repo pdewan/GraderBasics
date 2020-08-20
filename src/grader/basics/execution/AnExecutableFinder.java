@@ -10,7 +10,7 @@ import java.util.List;
 //import framework.project.Project;
 import java.util.Map;
 
-public class AnExecutableFinder implements MainClassFinder {
+public class AnExecutableFinder extends ACommandGenerator implements CommandGenerator {
 	public static final String EXECUTABLE_SUFFIX = ".exe";
 	public static final String[] DEFAULT_EXECUTABLE_COMMAND_ARRAY = {
 			"{buildFolder}\\{entryPoint}", "{args}"

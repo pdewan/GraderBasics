@@ -832,6 +832,7 @@ public class BasicProcessRunner implements Runner {
 			
 	
 			ProcessBuilder builder;
+//			String builderPath;
 			if (aCommand.length == 0) { // this part should not execute, onlyif
 										// command is null
 
@@ -864,7 +865,7 @@ public class BasicProcessRunner implements Runner {
 							));
 				}
 				
-				
+				  
 				Tracer.info(this,"Running process: java -cp \"" + classPath
 						+ "\" "
 						+ entryPoints.get(
@@ -884,14 +885,44 @@ public class BasicProcessRunner implements Runner {
 			}
 		
 			builder.directory(folder);
+			 Map<String, String> envs = builder.environment();
+//				envs.put("Path", "/usr/bin");
+
+			String builderPath =  envs.get("Path");
+			String systemPath = System.getenv("PATH");
+			String userPath = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+					getUserPath();
+		
+		
 			
-			if (folder != null)
+			
+			if (folder != null) {
 				Tracer.info(this,"Running in folder: "
 						+ folder.getAbsolutePath());
+			
+			}
+			if (userPath != null) {
+				Tracer.info(this, "Setting path to non null user path:" + userPath);
+				envs.put("Path", userPath);
 
+			} else if (builderPath == null) {
+				Tracer.info(this, "Setting null builder path to system path:" + systemPath );
+				envs.put("Path", systemPath);
+
+			}
+			
+			if (!systemPath.equals(builderPath)) {
+				Tracer.info(this, "System path is different:" + systemPath);
+//				if (builderPath == null) {
+//					envs.put("Path", systemPath);
+//				}
+			}
+			Tracer.info(this,"Running with Path: "
+					+ envs.get("Path"));
 		
 			process = new TimedProcess(builder, timeout);
 			runner.setCurrentTimeProcess(process);
+			
 
 			 processObj = process.start();
 			if (folder != null)

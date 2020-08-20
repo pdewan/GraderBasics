@@ -9,6 +9,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.execution.GradingMode;
+import grader.basics.execution.lisp.CLispCommandGenerator;
+import grader.basics.execution.prolog.SwiplCommandGenerator;
+import grader.basics.execution.sml.SMLCommandGenerator;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 import grader.basics.settings.BasicGradingEnvironment;
@@ -94,6 +97,7 @@ public class BasicStaticConfigurationUtils {
 	public static final String USE_PROJECT_CONFIGURATION = "useProjectConfiguration";
 	public static final String RE_RUN_TESTS = "Rerun tests";
 	public static final String SUB_DOCUMENTS = "Sub Documents";
+	public static final String USER_PATH = "USER_PATH";
 
 	
 	public static final boolean DEFAULT_USE_PROJECT_CONFIGURATION = false;
@@ -128,16 +132,16 @@ public class BasicStaticConfigurationUtils {
 //	};
 	public static final String[] DEFAULT_JAVA_BASIC_COMMAND_ARRAY = { "java", "-cp",
 			".{:}..{:}{classPath}{:}{:}{junitPath}{:}{localGraderPath}", "{entryPoint}", "{args}" };
-	public static final String[] DEFAULT_LISP_BASIC_COMMAND_ARRAY = { "clisp", "-i",
+	public static final String[] DEFAULT_LISP_BASIC_COMMAND_ARRAY = { CLispCommandGenerator.CLISP, "-i",
 //			toVariable(SOURCE_FILES),
 			toVariable(ENTRY_POINT), "{args}" };
-	public static final String[] DEFAULT_PROLOG_BASIC_COMMAND_ARRAY = { "swipl",
+	public static final String[] DEFAULT_PROLOG_BASIC_COMMAND_ARRAY = { SwiplCommandGenerator.SWIPL,
 //			toVariable(SOURCE_FILES),
 			toVariable(ENTRY_POINT), "{args}" };
-	public static final String[] DEFAULT_SML_BAT_BASIC_COMMAND_ARRAY = { "sml.bat",
+	public static final String[] DEFAULT_SML_BAT_BASIC_COMMAND_ARRAY = { SMLCommandGenerator.SML_BAT,
 //			toVariable(SOURCE_FILES),
 			toVariable(ENTRY_POINT), "{args}" };
-	public static final String[] DEFAULT_SML_BASIC_COMMAND_ARRAY = { "sml",
+	public static final String[] DEFAULT_SML_BASIC_COMMAND_ARRAY = { SMLCommandGenerator.SML,
 //			toVariable(SOURCE_FILES),
 			toVariable(ENTRY_POINT), "{args}" };
 	public static final String[] DEFAULT_OE_BASIC_COMMAND_ARRAY = { "java", "-cp",

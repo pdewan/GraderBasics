@@ -2,13 +2,13 @@ package grader.basics.execution;
 
 
 public class JavaMainClassFinderSelector {
-	static MainClassFinder mainClassFinder = new ABasicMainClassFinder();
+	static CommandGenerator mainClassFinder = new ABasicMainClassFinder();
 
-	public static MainClassFinder getMainClassFinder() {
+	public static CommandGenerator getMainClassFinder() {
 		return mainClassFinder;
 	}
 
-	public static void setMainClassFinder(MainClassFinder mainClassFinder) {
+	public static void setMainClassFinder(CommandGenerator mainClassFinder) {
 		JavaMainClassFinderSelector.mainClassFinder = mainClassFinder;
 	}
 

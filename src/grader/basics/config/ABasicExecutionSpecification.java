@@ -813,4 +813,14 @@ protected String requirementsLocation = null;
 			boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.RE_RUN_TESTS, newVal);
 	}
+	@Override
+	public void setUserPath(String newValue) {
+		System.setProperty(BasicStaticConfigurationUtils.USER_PATH, newValue);
+		
+	}
+	@Override
+	public String getUserPath() {
+		return System.getProperty(BasicStaticConfigurationUtils.USER_PATH);
+		
+	}
 }

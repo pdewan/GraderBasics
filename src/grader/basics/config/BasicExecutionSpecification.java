@@ -92,6 +92,8 @@ public interface BasicExecutionSpecification {
 	void setReRunTests(boolean newVal);
 	boolean isSubDocuments();
 	void setSubDocuments(Boolean newVal);
+	void setUserPath(String newValue);
+	String getUserPath();
 	
 	
 

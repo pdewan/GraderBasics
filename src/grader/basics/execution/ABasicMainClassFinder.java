@@ -13,7 +13,7 @@ import java.util.Map;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.BasicProjectIntrospection;
 
-public class ABasicMainClassFinder implements MainClassFinder {
+public class ABasicMainClassFinder extends ACommandGenerator implements CommandGenerator {
     public static final String DEFAULT_MAIN_PACKAGE_NAME = "main";
     
     protected boolean isEntryPoint (String aCandidate,

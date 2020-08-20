@@ -287,20 +287,38 @@ public class BasicProject implements Project {
 					buildFolder = anOption.get();
 				}
 			}
-			String aSourceClassName = "main." + name;
-			File aSourceFile = getASourceFile(sourceFolder);
-			if (aSourceFile != null) {
-				String aClassName = getClassName(sourceFolder, aSourceFile);
-				if (aClassName != null) {
-					aSourceClassName = aClassName;
-				}
-			}
-
 			if (buildFolder == null) {
-//        		 buildFolder = getBuildFolder("main." + name);
-				buildFolder = getBuildFolder(aSourceClassName);
-
+				if (!BasicLanguageDependencyManager.hasBinaryFolder()) {
+					buildFolder = sourceFolder;
+				} else {
+					String aSourceClassName = "main." + name;
+					File aSourceFile = getASourceFile(sourceFolder);
+					if (aSourceFile != null) {
+						String aClassName = getClassName(sourceFolder, aSourceFile);
+						if (aClassName != null) {
+							aSourceClassName = aClassName;
+						}
+					}
+					buildFolder = getBuildFolder(aSourceClassName);
+				}
+				
 			}
+			
+			
+//			String aSourceClassName = "main." + name;
+//			File aSourceFile = getASourceFile(sourceFolder);
+//			if (aSourceFile != null) {
+//				String aClassName = getClassName(sourceFolder, aSourceFile);
+//				if (aClassName != null) {
+//					aSourceClassName = aClassName;
+//				}
+//			}
+//
+//			if (buildFolder == null) {
+////        		 buildFolder = getBuildFolder("main." + name);
+//				buildFolder = getBuildFolder(aSourceClassName);
+//
+//			}
 			String anObjectFolderLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
 					.getObjectFolderLocation();
 			if (anObjectFolderLocation != null) {

@@ -1,13 +1,13 @@
 package grader.basics.execution;
 
 public class ExecutableFinderSelector {
-	static MainClassFinder mainClassFinder = new AnExecutableFinder();
+	static CommandGenerator mainClassFinder = new AnExecutableFinder();
 
-	public static MainClassFinder getMainClassFinder() {
+	public static CommandGenerator getMainClassFinder() {
 		return mainClassFinder;
 	}
 
-	public static void setMainClassFinder(MainClassFinder mainClassFinder) {
+	public static void setMainClassFinder(CommandGenerator mainClassFinder) {
 		ExecutableFinderSelector.mainClassFinder = mainClassFinder;
 	}
 

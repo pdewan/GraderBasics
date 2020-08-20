@@ -5,7 +5,7 @@ import java.util.Map;
 
 import grader.basics.project.Project;
 
-public interface MainClassFinder {
+public interface CommandGenerator {
 //	public Class mainClass(RootCodeFolder aRootCodeFolder, ProxyClassLoader aProxyClassLoader, String expectedName, Project aProject);
     public Map<String, String> getEntryPoints(grader.basics.project.Project project, String aSpecifiedMainClass) throws NotRunnableException;
 
@@ -13,6 +13,12 @@ public interface MainClassFinder {
 			String[] aSpecifiedMainClasses) throws NotRunnableException;
 	public List<String> getDefaultCommand();
 	public void setDefaultCommand(List<String> aCommand);
+	default public boolean hasBinaryFolder() {
+		return true;
+	}
+	 public  String getUserBinary() ;
+	public void setUserBinary(String newVal) ;
+	
 
 
 }

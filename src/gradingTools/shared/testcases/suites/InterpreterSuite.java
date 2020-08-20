@@ -8,9 +8,13 @@ public static void setProjectLocation(String aFile) {
 	BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
 	setStudentGradableProjectLocation(aFile);
 }
-public static void smlIsBatFile(boolean newValue) {
-	if (!newValue) {
-		
-	}
+public static void setUserPath(String newValue) {
+	BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+	setUserPath(newValue);
 }
+//public static void smlIsBatFile(boolean newValue) {
+//	if (!newValue) {
+//		
+//	}
+//}
 }
