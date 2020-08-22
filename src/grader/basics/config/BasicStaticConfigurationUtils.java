@@ -98,6 +98,7 @@ public class BasicStaticConfigurationUtils {
 	public static final String RE_RUN_TESTS = "Rerun tests";
 	public static final String SUB_DOCUMENTS = "Sub Documents";
 	public static final String USER_PATH = "USER_PATH";
+	public static final String HEADLESS_PATH = "grader.headless.path";
 
 	
 	public static final boolean DEFAULT_USE_PROJECT_CONFIGURATION = false;
@@ -107,6 +108,8 @@ public class BasicStaticConfigurationUtils {
 	
 	public static final boolean DEFAULT_RE_RUN_TESTS = true;
 	public static final boolean DEFAULT_SUB_DOCUMENTS= true;
+	public static final String DEFAULT_HEADLESS_PATH = "./Test Data/Data";
+	public static final boolean DEFAULT_PRIVACY = false;
 
 
 	

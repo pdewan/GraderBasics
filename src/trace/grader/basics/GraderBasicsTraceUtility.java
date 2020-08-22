@@ -13,6 +13,7 @@ import gradingTools.shared.testcases.shapes.interfaces.TestBoundedShape;
 import gradingTools.shared.testcases.shapes.rotate.detached.DetachedRotatingLineFortyFiveDegreeTest;
 import gradingTools.shared.testcases.shapes.rotate.fixed.RotatingFixedLineRotateTest;
 import gradingTools.shared.testcases.shapes.rotate.moving.MovingRotatingLineFortyFiveDegreeTest;
+import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.MethodPropertyChecker;
 import util.trace.ImplicitKeywordKind;
 import util.trace.Tracer;
@@ -55,6 +56,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(AbstractEarlyJoinBasicJoiner.class, true);
 			Tracer.setKeywordPrintStatus(AbstractBarrier.class, true);
 			Tracer.setKeywordPrintStatus(TimedProcess.class, true);
+			Tracer.setKeywordPrintStatus(ALinesMatcher.class, true);
+
 
 
 //		}

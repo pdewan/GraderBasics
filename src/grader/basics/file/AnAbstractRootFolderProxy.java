@@ -10,6 +10,7 @@ import java.util.Set;
 
 import grader.basics.trace.file.load.RootFolderProxyLoaded;
 import util.misc.Common;
+import util.trace.Tracer;
 
 public abstract class AnAbstractRootFolderProxy extends AnAbstractProxy implements RootFolderProxy {
     protected Map<String, FileProxy> nameToFileProxy = new HashMap();
@@ -60,7 +61,9 @@ public abstract class AnAbstractRootFolderProxy extends AnAbstractProxy implemen
     @Override
     public void clear() {
     	super.clear();
-    	System.out.println (this + " clearing entries");
+    	Tracer.info (this, this + " clearing entries");
+
+//    	System.out.println (this + " clearing entries");
     	entries.clear();
     	nameToFileProxy.clear();
     }

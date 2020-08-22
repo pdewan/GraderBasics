@@ -69,7 +69,7 @@ public class ABasicConfigurationManager implements BasicConfigurationManager{
         		if (!aFile.exists()) {
 //        		Tracer.warning (ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
 //        		Tracer.info (this, ABasicConfigurationManager.COURSE_CONFIGURATION_FILE_NAME + " does not exist, using defaults");
-                Tracer.info (this, "course configuration" + " does not exist, using defaults");
+                Tracer.info (this, "Course configuration" + " does not exist, using defaults");
 
         		return null;
         		}

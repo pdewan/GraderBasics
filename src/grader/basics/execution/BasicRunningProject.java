@@ -387,7 +387,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     			return processToProcessedLineMatcher;
     		}
     		for (String aKey:aKeys) {
-    			System.out.println("line matcher for key:" + aKey);
+//    			System.out.println("line matcher for key:" + aKey);
     			List<String> aList = processToProcessedOutputLines.get(aKey);
 //    			anAllLines.addAll(aList);
     			String[] anArray = new String[aList.size()];
