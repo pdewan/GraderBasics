@@ -110,6 +110,18 @@ public class BasicStaticConfigurationUtils {
 	public static final boolean DEFAULT_SUB_DOCUMENTS= true;
 	public static final String DEFAULT_HEADLESS_PATH = "./Test Data/Data";
 	public static final boolean DEFAULT_PRIVACY = false;
+	public static final String CHECK_STYLE = "checkStyle";
+	public static final boolean DEFAULT_CHECK_STYLE = false;
+
+	public static final String CHECK_STYLE_FILE = "checkStyleFile";
+	public static final String DEFAULT_CONFIGURATION_FILE = "checks.xml";
+	
+	public static final String CHECK_STYLE_CONFIGURATION_DIRECTORY = "checkStyleDirectory";
+	public static final String DEFAULT_CONFIGURATION_DIRECTORY = null;
+	
+	public static final String CHECK_STYLE_OUTPUT_DIRECTORY = "checkStyleOutputDirectory";
+	public static final String DEFAULT_CHECKSTYLE_OUTPUT_DIRECTORY = null;
+
 
 
 	
@@ -1252,4 +1264,11 @@ public class BasicStaticConfigurationUtils {
 	public static String toCompoundProperty(String aParent, String aChild) {
 		return aParent + "." + aChild;
 	}
+//	public static String getCheckStyleFile() {
+//
+//		return getInheritedStringModuleProblemProperty(
+//				 CHECK_STYLE_FILE, BasicStaticConfigurationUtils.DEFAULT_CONFIGURATION_FILE);
+//
+//	}
+
 }

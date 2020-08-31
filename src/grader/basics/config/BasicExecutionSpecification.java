@@ -94,6 +94,15 @@ public interface BasicExecutionSpecification {
 	void setSubDocuments(Boolean newVal);
 	void setUserPath(String newValue);
 	String getUserPath();
+	boolean isCheckStyle();
+	void setCheckStyle(boolean newVal);
+	String getCheckStyleConfiguration();
+	void setCheckStyleConfiguration(String newVal);
+	String getCheckStyleConfigurationDirectory();
+	void setCheckStyleConfigurationDirectory(String newVal);
+	String getCheckStyleOutputDirectory();
+	void setCheckStyleOutputDirectory(String newVal);
+	
 	
 	
 

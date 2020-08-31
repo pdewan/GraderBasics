@@ -823,4 +823,44 @@ protected String requirementsLocation = null;
 		return System.getProperty(BasicStaticConfigurationUtils.USER_PATH);
 		
 	}
+	@Override
+	public boolean isCheckStyle() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.CHECK_STYLE, BasicStaticConfigurationUtils.DEFAULT_CHECK_STYLE);
+	}
+	@Override
+	public void setCheckStyle(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.CHECK_STYLE, newVal);
+	}
+	@Override
+	public String getCheckStyleConfiguration() {
+		return getStringProperty(BasicStaticConfigurationUtils.CHECK_STYLE_FILE, BasicStaticConfigurationUtils.DEFAULT_CONFIGURATION_FILE);
+
+	}
+	@Override
+	public void setCheckStyleConfiguration(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.CHECK_STYLE_FILE, newVal);
+	}
+	@Override
+	public String getCheckStyleConfigurationDirectory() {
+		return getStringProperty(BasicStaticConfigurationUtils.CHECK_STYLE_CONFIGURATION_DIRECTORY, BasicStaticConfigurationUtils.DEFAULT_CONFIGURATION_DIRECTORY);
+
+	}
+	@Override
+	public void setCheckStyleConfigurationDirectory(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.CHECK_STYLE_CONFIGURATION_DIRECTORY, newVal);
+
+		
+	}
+	@Override
+	public String getCheckStyleOutputDirectory() {
+		return getStringProperty(BasicStaticConfigurationUtils.CHECK_STYLE_OUTPUT_DIRECTORY, BasicStaticConfigurationUtils.DEFAULT_CHECKSTYLE_OUTPUT_DIRECTORY);
+
+	}
+	@Override
+	public void setCheckStyleOutputDirectory(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.CHECK_STYLE_OUTPUT_DIRECTORY, newVal);
+
+		
+	}
+	
 }

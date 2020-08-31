@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="lib/opencsv-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/oeall22.jar" sourcepath="/util/src"/>
 	<classpathentry kind="lib" path="lib/checkstyle-8.33-all.jar"/>
-	<classpathentry kind="lib" path="lib/UNCChecks.jar" sourcepath="/UNC_Checkstyle_8"/>
+	<classpathentry kind="lib" path="lib/UNCChecks-8.jar" sourcepath="/UNC_Checkstyle_8"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

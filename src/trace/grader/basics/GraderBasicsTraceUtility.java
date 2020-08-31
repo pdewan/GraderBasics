@@ -1,6 +1,7 @@
 package trace.grader.basics;
 
 import grader.basics.execution.BasicProjectExecution;
+import grader.basics.file.zipfile.AZippedRootFolderProxy;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
@@ -57,6 +58,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(AbstractBarrier.class, true);
 			Tracer.setKeywordPrintStatus(TimedProcess.class, true);
 			Tracer.setKeywordPrintStatus(ALinesMatcher.class, true);
+			Tracer.setKeywordPrintStatus(AZippedRootFolderProxy.class, true);
+
 
 
 

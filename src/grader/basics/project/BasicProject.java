@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.sun.corba.se.impl.ior.GenericTaggedComponent;
+
 import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.checkstyle.CheckStyleInvoker;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
 import grader.basics.execution.NotRunnableException;
@@ -23,9 +26,12 @@ import grader.basics.trace.SourceFolderAssumed;
 import grader.basics.trace.SourceFolderNotFound;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.Option;
+import unc.symbolTable.SymbolTable;
+import util.misc.Common;
 import util.pipe.InputGenerator;
 import util.trace.TraceableLog;
 import util.trace.TraceableLogFactory;
+import util.trace.Tracer;
 
 /**
  * A "standard" project. That is, an IDE-based java project.
@@ -95,14 +101,18 @@ public class BasicProject implements Project {
 
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
 		Option<File> src = DirectoryUtils.locateFolder(projectFolder, Project.SOURCE);
+		Tracer.info(this, "located src folder:" + src.get());
 
 		if (src.isEmpty()) {
+			Tracer.info(this,  "src folder is empty:" + src);
+
 			SourceFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
 
 			Set<File> sourceFiles = DirectoryUtils.getSourceFiles(projectFolder, sourceFilePattern);
 			if (!sourceFiles.isEmpty()) {
 				File aSourceFile = sourceFiles.iterator().next();
 				sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
+				Tracer.info(this, "assuming src folder is:" + sourceFolder);
 				this.projectFolder = sourceFolder.getParentFile();
 				SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
 			} else {
@@ -117,6 +127,7 @@ public class BasicProject implements Project {
 			sourceFolder = src.get();
 			this.projectFolder = src.get().getParentFile();
 		}
+		Tracer.info(this, "passing to text manager, folder:" + sourceFolder);
 		textManager = new ABasicTextManager(sourceFolder);
 	}
 
@@ -285,11 +296,14 @@ public class BasicProject implements Project {
 				Option<File> anOption = DirectoryUtils.locateFolder(projectFolder, aBinaryFolderLocation);
 				if (anOption != null && !anOption.isEmpty()) {
 					buildFolder = anOption.get();
+					Tracer.info(this, "Found build folder:" + buildFolder);
 				}
 			}
 			if (buildFolder == null) {
 				if (!BasicLanguageDependencyManager.hasBinaryFolder()) {
 					buildFolder = sourceFolder;
+					Tracer.info(this, "assuming build folder is source folder:");
+
 				} else {
 					String aSourceClassName = "main." + name;
 					File aSourceFile = getASourceFile(sourceFolder);
@@ -300,11 +314,12 @@ public class BasicProject implements Project {
 						}
 					}
 					buildFolder = getBuildFolder(aSourceClassName);
+					Tracer.info(this, "Assuming build folder is:" +buildFolder );
+					
 				}
-				
+
 			}
-			
-			
+
 //			String aSourceClassName = "main." + name;
 //			File aSourceFile = getASourceFile(sourceFolder);
 //			if (aSourceFile != null) {
@@ -617,10 +632,12 @@ public class BasicProject implements Project {
 	public File getObjectFolder() {
 		return objectFolder;
 	}
+
 	@Override
 	public List<File> getSourceFiles() {
-		return  getTextManager().getSourceFiles();
+		return getTextManager().getSourceFiles();
 	}
+
 	@Override
 	public String getSource() {
 		return getTextManager().getAllSourcesText().toString();
@@ -667,5 +684,212 @@ public class BasicProject implements Project {
 		output = currentOutput;
 	}
 
-	
+	protected boolean cannotInitializeCheckstyle = false;
+	File checkstyleOutFolder = null;
+
+	public File getCheckstyleOutFolder() {
+		if (checkstyleOutFolder == null) {
+			File anEclipseFolder = new File(getProjectFolder().getAbsoluteFile() + "/Logs/Eclipse");
+			File aCheckStyleAllFile = new File(
+					getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/CheckStyle_All.csv");
+			if (!anEclipseFolder.exists()) {
+				System.err.println("File does not exist:" + anEclipseFolder);
+				return null;
+//			checkstyleOutFolder null;
+			}
+			if (!aCheckStyleAllFile.exists()) {
+				System.err.println("File does not exist:" + aCheckStyleAllFile);
+				return null;
+
+//			return null;
+			}
+			checkstyleOutFolder = aCheckStyleAllFile.getParentFile();
+		}
+		return checkstyleOutFolder;
+
+	}
+
+	public static final String DEFAULT_CHECK_STYLE_FILE_PREFIX = "checks";
+
+	public static final String DEFAULT_CHECK_STYLE_FILE_SUFFIX = ".txt";
+
+	public static String getCheckstyleConfigurationPrefix() {
+		String retVal = EMPTY_STRING;
+		String aCheckstyleConfigurationName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+				.getCheckStyleConfiguration();
+		if (aCheckstyleConfigurationName != null) {
+			String[] aPair = aCheckstyleConfigurationName.split("\\.");
+			retVal = aPair[0] + "_";
+		}
+		return retVal;
+	}
+
+	public String createLocalCheckStyleOutputFileName() {
+
+		return getCheckstyleConfigurationPrefix() + DEFAULT_CHECK_STYLE_FILE_PREFIX + DEFAULT_CHECK_STYLE_FILE_SUFFIX;
+	}
+
+	protected boolean checkForDefaultFolder() {
+		return true;
+	}
+
+	protected String getDefaultFolder() {
+		File aParentFolder = getCheckstyleOutFolder();
+		if (aParentFolder == null) {
+			return null;
+		}
+		return aParentFolder.getAbsolutePath();
+	}
+
+	public String createFullCheckStyleOutputFileName() {
+
+		String aParentFolder = findCheckstyleOutputParentFolder();
+		if (aParentFolder == null) {
+			return null;
+		}
+
+//		return createLocalCheckStyleFileName();
+
+		return aParentFolder + "/" + createLocalCheckStyleOutputFileName();
+	}
+
+	protected String checkStyleFileName = null;
+
+	public String getCheckStyleOutputFileName() {
+		if (cannotInitializeCheckstyle) {
+			return null;
+		}
+		if (checkStyleFileName == null) {
+			checkStyleFileName = createFullCheckStyleOutputFileName();
+			if (checkStyleFileName == null) {
+				cannotInitializeCheckstyle = true;
+			}
+		}
+		return checkStyleFileName;
+	}
+
+	////
+	public static final String DEFAULT_GENERATED_CHECK_STYLE_FILE_PREFIX = "generated_configuration";
+
+	public static final String DEFAULT_DEFAULT_CHECK_STYLE_FILE_SUFFIX = ".xml";
+
+	public String createGeneratedCheckStyleFileName() {
+		return getCheckstyleConfigurationPrefix() + DEFAULT_GENERATED_CHECK_STYLE_FILE_PREFIX + DEFAULT_DEFAULT_CHECK_STYLE_FILE_SUFFIX;
+	}
+	public  String findCheckstyleOutputParentFolder() {
+		String aDefaultFolder = getCheckstyleOutFolder().getAbsolutePath();
+		if (checkForDefaultFolder() && aDefaultFolder == null) {
+			return null;
+		}
+		String aParentFolder = aDefaultFolder;
+		String aSpecifiedFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+				.getCheckStyleOutputDirectory();
+		if (aSpecifiedFolder != null) {
+			aParentFolder = aSpecifiedFolder;
+		}
+
+		if (aParentFolder == null) {
+			return null;
+		}
+		return aParentFolder;
+	}
+	protected File getCheckStyleConfigurationDefaultFolder() {
+		return getCheckstyleOutFolder();
+	}
+	public  String findCheckstyleConfigurationParentFolder() {
+		String aDefaultFolder = getCheckStyleConfigurationDefaultFolder().getAbsolutePath();
+		
+		String aParentFolder = aDefaultFolder;
+		String aSpecifiedFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+				.getCheckStyleConfigurationDirectory();
+		if (aSpecifiedFolder != null) {
+			aParentFolder = aSpecifiedFolder;
+		}
+
+		if (aParentFolder == null) {
+			return null;
+		}
+		return aParentFolder;
+	}
+	public String createFullGeneratedCheckStyleFileName() {
+//		File aDefaultFolder = getCheckstyleOutFolder();
+//		if (checkForDefaultFolder() && aDefaultFolder == null) {
+//			return null;
+//		}
+//		File aParentFolder = aDefaultFolder;
+//		String aSpecifiedFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+//				.getCheckStyleConfigurationDirectory();
+//		if (aSpecifiedFolder != null) {
+//			aParentFolder = aDefaultFolder;
+//		}
+		String aParentFolder = findCheckstyleOutputParentFolder();
+		if (aParentFolder == null) {
+			return null;
+		}
+		return aParentFolder + "/" + createGeneratedCheckStyleFileName();
+
+	}
+
+	protected String generatedCheckStyleFileName = null;
+
+	public String getGenereatedCheckStyleFileName() {
+		if (cannotInitializeCheckstyle) {
+			return null;
+		}
+		if (generatedCheckStyleFileName == null) {
+			generatedCheckStyleFileName = createFullGeneratedCheckStyleFileName();
+			if (generatedCheckStyleFileName == null) {
+				cannotInitializeCheckstyle = true;
+			}
+//			generatedCheckStyleFileName = createGeneratedCheckStyleFileName();
+
+		}
+		return generatedCheckStyleFileName;
+	}
+
+	protected String checkStyleText = null;
+
+	protected SymbolTable symbolTable;
+	@Override
+	public String getStoredCheckstyleText() {
+		if (checkStyleText == null) {
+		String anOutFileName = getCheckStyleOutputFileName();
+		if (anOutFileName == null) {
+			return null;
+		}
+		try {
+			checkStyleText = Common.readFile(new File(anOutFileName)).toString();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		}
+		return checkStyleText;
+		
+	}
+
+	@Override
+	public String getCheckstyleText() {
+		if (checkStyleText == null) { // assume it will never change
+			String anOutFileName = getCheckStyleOutputFileName();
+			if (anOutFileName == null) {
+				return null;
+			}
+			String aCheckstyleGeneratedFileName = getGenereatedCheckStyleFileName();
+			if (aCheckstyleGeneratedFileName == null) {
+				return null;
+			}
+			String aConfigurationFileName = findCheckstyleConfigurationParentFolder()  + "/" + BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
+//			CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
+			CheckStyleInvoker.forkCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
+
+			try {
+				checkStyleText = Common.readFile(new File(anOutFileName)).toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+//			
+		}
+		return checkStyleText;
+	}
+
 }

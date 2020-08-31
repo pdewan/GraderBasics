@@ -10,9 +10,9 @@ public class GradingMode {
 	}
 	public static void setGraderRun(boolean newVal) {
 		graderRun = newVal;
-		if (newVal) {
-			Tracer.showInfo(true);
-		}
+//		if (newVal) {
+//			Tracer.showInfo(true);
+//		}
 	}
 
 }

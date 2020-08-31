@@ -21,7 +21,7 @@ public class AZippedRootFolderProxy extends AnAbstractRootFolderProxy implements
         super(aSubFolderName);
         try {
             this.zipFile = new ZipFile(aZipFileName);
-			System.out.println ("Opening zip file:" + zipFile);
+			Tracer.info (this, "Opening zip file:" + zipFile);
 
         } catch (IOException e) {
             System.out.println(aZipFileName + ":" + e);

@@ -105,6 +105,10 @@ public interface Project {
 
 	void setCurrentOutput(StringBuffer currentOutput);
 
+	String getCheckstyleText();
+
+	String getStoredCheckstyleText();
+
 
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }

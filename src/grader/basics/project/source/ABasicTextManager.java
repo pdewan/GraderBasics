@@ -63,6 +63,10 @@ public class ABasicTextManager implements BasicTextManager{
     }
     protected void addFolder(File aFolder) {
     	File[] aFiles = aFolder.listFiles();
+    	if (aFiles == null) {
+    		System.err.println ("No files in:" + aFolder);
+    		return;
+    	}
     	for (File aFile:aFiles) {
     		if (aFile.isDirectory()) {
     			addFolder(aFile);
