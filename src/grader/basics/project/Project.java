@@ -9,6 +9,7 @@ import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
 import grader.basics.project.source.BasicTextManager;
 import grader.basics.util.Option;
+import unc.symbolTable.SymbolTable;
 //import scala.Option;
 import util.pipe.InputGenerator;
 import util.trace.TraceableLog;
@@ -108,6 +109,8 @@ public interface Project {
 	String getCheckstyleText();
 
 	String getStoredCheckstyleText();
+
+	SymbolTable getSymbolTable();
 
 
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;

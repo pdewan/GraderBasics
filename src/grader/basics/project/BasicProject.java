@@ -851,6 +851,10 @@ public class BasicProject implements Project {
 
 	protected SymbolTable symbolTable;
 	@Override
+	public SymbolTable getSymbolTable() {
+		return symbolTable;
+	}
+	@Override
 	public String getStoredCheckstyleText() {
 		if (checkStyleText == null) {
 		String anOutFileName = getCheckStyleOutputFileName();
@@ -879,8 +883,8 @@ public class BasicProject implements Project {
 				return null;
 			}
 			String aConfigurationFileName = findCheckstyleConfigurationParentFolder()  + "/" + BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
-//			CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
-			CheckStyleInvoker.forkCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
+			symbolTable = CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
+//			CheckStyleInvoker.forkCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
 
 			try {
 				checkStyleText = Common.readFile(new File(anOutFileName)).toString();
