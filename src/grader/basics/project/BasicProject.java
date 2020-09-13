@@ -763,6 +763,8 @@ public class BasicProject implements Project {
 			checkStyleFileName = createFullCheckStyleOutputFileName();
 			if (checkStyleFileName == null) {
 				cannotInitializeCheckstyle = true;
+				System.err.println(
+						"Could not initialize checkstyle. Please make sure you have installed the plugin and run checkstyle on the project ");
 			}
 		}
 		return checkStyleFileName;
@@ -807,6 +809,7 @@ public class BasicProject implements Project {
 		}
 
 		if (aParentFolder == null) {
+			System.err.println("Please install plugin and run checkstyle on your prohect");
 			return null;
 		}
 		return aParentFolder;
@@ -883,6 +886,12 @@ public class BasicProject implements Project {
 				return null;
 			}
 			String aConfigurationFileName = findCheckstyleConfigurationParentFolder()  + "/" + BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
+			File aFile = new File(aConfigurationFileName);
+			if (!aFile.exists()) {
+				System.err.println("Did not find file:" + aFile.getAbsolutePath());
+				System.err.println("Download " + aFile.getName() + " and add it to directory " + aFile.getParent());
+				return null;
+			}
 			symbolTable = CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
 //			CheckStyleInvoker.forkCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);
 

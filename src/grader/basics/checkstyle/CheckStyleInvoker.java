@@ -91,6 +91,7 @@ public class CheckStyleInvoker {
 
 		ARGS[2] = aSourceFile.getAbsolutePath();
 		PostProcessingMain.main(ARGS);
+//		PostProcessingMain.restoreOut();
 		return SymbolTableFactory.getCurrentSymbolTable();
 		
 		
