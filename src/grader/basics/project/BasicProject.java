@@ -747,7 +747,11 @@ public class BasicProject implements Project {
 		if (aParentFolder == null) {
 			return null;
 		}
-
+		String aLogFileName = aParentFolder + "/" + "CheckStyle_All.csv";
+		File aLogFile = new File(aLogFileName);
+		if (!aLogFile.exists()) {
+			return null;
+		}
 //		return createLocalCheckStyleFileName();
 
 		return aParentFolder + "/" + createLocalCheckStyleOutputFileName();
