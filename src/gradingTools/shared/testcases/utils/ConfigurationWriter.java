@@ -81,7 +81,7 @@ public class ConfigurationWriter {
 //			aPrintWriter.println(aClassName + "," + aPropertyClassName);
 			aPrintWriter.println(aPropertyClassName + "," + aClassName);
 			for (Class anInterface:anInterfaces) {
-				aPrintWriter.println(anInterface.getSimpleName() + "," + aClassName);
+				aPrintWriter.println(anInterface.getName() + "," + aClassName);
 			}
 
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
