@@ -3,6 +3,8 @@ package gradingTools.shared.testcases;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.project.BasicProjectIntrospection;
 import util.trace.Tracer;
@@ -445,7 +447,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		}
 		Method aFactoryMethod = getFactoryMethod();
 		if (aFactoryMethod == null) {
-			assertTrue("No factory method for method name:" + aFactoryMethodName, false) ;
+			assertTrue("In factory class, " + aFactoryClass + " no public parameterless factory method with name:" + aFactoryMethodName + " public methods found: " + Arrays.toString(aFactoryClass.getMethods()), false) ;
 		}
 		Class aProxyClass = proxyClass();
 		rootProxy = getObjectFromFactory(aFactoryMethodName, aFactoryClass, aFactoryMethod, aProxyClass);

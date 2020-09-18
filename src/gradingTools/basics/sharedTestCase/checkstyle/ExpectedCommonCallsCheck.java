@@ -5,7 +5,7 @@ import java.util.Arrays;
 public abstract class ExpectedCommonCallsCheck extends ExpectedCallsCheck{
 	
 	protected void makeWarning() {
-		warningString = makeMethodAndTagRegex("multiple methods.*", ".*in class matching.*", ".*not made expected call", tagAndMethods());
+		warningString = makeMethodAndTagRegex("multiple methods.*", ".*in class matching.*", ".*not make expected call", tagAndMethods());
 		
 		
 	}

@@ -97,9 +97,9 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	List<String> result = new ArrayList();    
 //    	int aCount = 0;
     	for (String aLine:aLines) {
-//    		if (aLine.contains("Number")) {
-//    			System.out.println ("Found number");
-//    		}
+    		if (aLine.contains("not make")) {
+    			System.out.println ("Found not make");
+    		}
 //    		if (aLine.contains("JavaDoc")) {
 //    			int i = 0;
 //    		}
@@ -244,6 +244,10 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //        }
 //        SakaiProject aSakaiProject = ((ProjectWrapper) aProject).getProject();
         String aCheckStyleText = aProject.getCheckstyleText();
+        if (aCheckStyleText == null) {
+//          System.err.println("No checkstyle output, check console error messages");
+          return fail ("No checkstyle output, check console error messages");
+        }
 //        String aCheckStyleFileName = aProject.getCheckStyleFileName(); // can read lines from this, maybe more efficient
         String[] aCheckStyleLines = aCheckStyleText.split(System.getProperty("line.separator"));
         return test(aProject, aCheckStyleLines, autoGrade);
