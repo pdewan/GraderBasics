@@ -14,6 +14,7 @@ import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.checkstyle.CheckStyleInvoker;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProcessRunner;
+import grader.basics.execution.GradingMode;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.RunningProject;
 import grader.basics.project.source.ABasicTextManager;
@@ -685,7 +686,8 @@ public class BasicProject implements Project {
 	}
 
 	protected boolean cannotInitializeCheckstyle = false;
-	File checkstyleOutFolder = null;
+	protected File checkstyleOutFolder = null;
+	
 
 	public File getCheckstyleOutFolder() {
 		if (checkstyleOutFolder == null) {
@@ -740,18 +742,20 @@ public class BasicProject implements Project {
 		}
 		return aParentFolder.getAbsolutePath();
 	}
-
 	public String createFullCheckStyleOutputFileName() {
 
 		String aParentFolder = findCheckstyleOutputParentFolder();
 		if (aParentFolder == null) {
 			return null;
 		}
+		if (!GradingMode.getGraderRun()) {
 		String aLogFileName = aParentFolder + "/" + "CheckStyle_All.csv";
 		File aLogFile = new File(aLogFileName);
 		if (!aLogFile.exists()) {
 			return null;
 		}
+		}
+		
 //		return createLocalCheckStyleFileName();
 
 		return aParentFolder + "/" + createLocalCheckStyleOutputFileName();
@@ -782,12 +786,21 @@ public class BasicProject implements Project {
 	public String createGeneratedCheckStyleFileName() {
 		return getCheckstyleConfigurationPrefix() + DEFAULT_GENERATED_CHECK_STYLE_FILE_PREFIX + DEFAULT_DEFAULT_CHECK_STYLE_FILE_SUFFIX;
 	}
-	public  String findCheckstyleOutputParentFolder() {
+	protected String getCheckstyleDefaultFolder() {
 		String aDefaultFolder = getCheckstyleOutFolder().getAbsolutePath();
 		if (checkForDefaultFolder() && aDefaultFolder == null) {
 			return null;
 		}
-		String aParentFolder = aDefaultFolder;
+		return aDefaultFolder;
+	}
+	
+	public  String findCheckstyleOutputParentFolder() {
+//		String aDefaultFolder = getCheckstyleOutFolder().getAbsolutePath();
+//		if (checkForDefaultFolder() && aDefaultFolder == null) {
+//			return null;
+//		}
+//		String aParentFolder = aDefaultFolder;
+		String aParentFolder = getCheckstyleDefaultFolder();
 		String aSpecifiedFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
 				.getCheckStyleOutputDirectory();
 		if (aSpecifiedFolder != null) {
@@ -818,6 +831,7 @@ public class BasicProject implements Project {
 		}
 		return aParentFolder;
 	}
+	
 	public String createFullGeneratedCheckStyleFileName() {
 //		File aDefaultFolder = getCheckstyleOutFolder();
 //		if (checkForDefaultFolder() && aDefaultFolder == null) {

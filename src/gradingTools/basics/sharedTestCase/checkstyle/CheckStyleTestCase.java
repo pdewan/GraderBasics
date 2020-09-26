@@ -97,9 +97,9 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	List<String> result = new ArrayList();    
 //    	int aCount = 0;
     	for (String aLine:aLines) {
-    		if (aLine.contains("not make")) {
-    			System.out.println ("Found not make");
-    		}
+//    		if (aLine.contains("not make")) {
+//    			System.out.println ("Found not make");
+//    		}
 //    		if (aLine.contains("JavaDoc")) {
 //    			int i = 0;
 //    		}
