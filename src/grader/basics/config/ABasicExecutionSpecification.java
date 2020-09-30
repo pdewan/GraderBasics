@@ -512,10 +512,11 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     protected String language = null;
     @Override
     public String getLanguage() {
-    	if (language == null) {
-    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
-    	}
-    	return language;
+    	return getStringProperty(BasicStaticConfigurationUtils.LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
+//    	if (language == null) {
+//    		language = getStringProperty(BasicStaticConfigurationUtils.LANGUAGE, BasicLanguageDependencyManager.JAVA_LANGUAGE);
+//    	}
+//    	return language;
 //    	return getStringProperty(BasicStaticConfigurationUtils.GRADABLE_PROJECT_LOCATION, ".");
     }
     @Override

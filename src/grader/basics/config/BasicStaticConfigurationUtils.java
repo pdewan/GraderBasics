@@ -75,7 +75,9 @@ public class BasicStaticConfigurationUtils {
 	public static final String C_OBJ = "language.C.obj";
 	public static final String DEFAULT_C_OBJ = "o";
 	public static final String MODULES = "modules";
-	public static final String DEFAULT_MODULE = "Comp101";
+//	public static final String DEFAULT_MODULE = "Comp101";
+	public static final String DEFAULT_MODULE = "NoModule";
+
 	public static final String FORK_MAIN = "forkMain";
 	public static final Boolean DEFAULT_FORK_MAIN = true;
 	public static final String GRADABLE_PROJECT_LOCATION = "gradableProjectLocation";
