@@ -348,7 +348,7 @@ public class BasicProject implements Project {
 			}
 
 //         	CurrentProjectHolder.setProject(this); // so that classesManager can find it
-
+			Tracer.info(this, "Creating classes manager");
 			classesManager = createClassesManager(buildFolder);
 
 		} catch (Exception e) {

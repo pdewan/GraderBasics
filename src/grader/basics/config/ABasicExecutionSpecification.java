@@ -864,4 +864,39 @@ protected String requirementsLocation = null;
 		
 	}
 	
+	@Override
+	public boolean getTracing() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.TRACING, BasicStaticConfigurationUtils.DEFAULT_TRACING);
+
+	}
+	@Override
+	public void setTracing(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.TRACING, newVal);
+
+		
+	}
+	@Override
+	public boolean getBufferTracedMessages() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.BUFFER_TRACED_MESSAGES, BasicStaticConfigurationUtils.DEFAULT_BUFFER_TRACED_MESSAGES);
+
+	}
+	@Override
+	public void setBufferTracedMessages(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.BUFFER_TRACED_MESSAGES, newVal);
+
+		
+	}
+	
+	@Override
+	public boolean getShiftAssignmentDates() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.SHIFT_ASSIGNMENT_DATES, BasicStaticConfigurationUtils.DEFAULT_SHIFT_ASSIGNMENT_DATES);
+
+	}
+	@Override
+	public void setShiftAssignmentDates(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.SHIFT_ASSIGNMENT_DATES, newVal);
+
+		
+	}
+	
 }

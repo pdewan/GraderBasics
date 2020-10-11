@@ -33,6 +33,7 @@ import util.trace.Tracer;
  */
 public class BasicProcessRunner implements Runner {
 	public static final int PORT_RELEASE_TIME = 5000;
+	public static final int INPUT_DELAY_TIME = 500;
 	protected Map<String, String> entryPoints;
 	protected Map<String, RunnerErrorOrOutStreamProcessor> processToOut = new HashMap();
 	protected Map<String, RunnerErrorOrOutStreamProcessor> processToErr = new HashMap();
@@ -872,6 +873,12 @@ public class BasicProcessRunner implements Runner {
 //								MainClassFinder.MAIN_ENTRY_POINT
 								getMainEntryPoint()
 								));
+//				System.out.println("Running process: java -cp \"" + classPath
+//						+ "\" "
+//						+ entryPoints.get(
+////								MainClassFinder.MAIN_ENTRY_POINT
+//								getMainEntryPoint()
+//								));
 			} else {
 //				aCommand = ExecutorSelector.getExecutor().maybeToExecutorCommand(aCommand);
 				aCommand = maybeToExecutorCommand(aCommand);
@@ -879,6 +886,8 @@ public class BasicProcessRunner implements Runner {
 				builder = new ProcessBuilder(aCommand);
 				Tracer.info(this,"Running command:"
 						+ Common.toString(aCommand, " "));
+//				System.out.println("Running command:"
+//						+ Common.toString(aCommand, " "));
 				} else {
 					return null; // this should not happen
 				}
@@ -970,6 +979,7 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessIn(aProcessName, aProcessIn);
 			processToIn.put(aProcessName, aProcessIn);
 			if (anOutputBasedInputGenerator == null) {
+				Thread.sleep(INPUT_DELAY_TIME);
 				aProcessIn.newInput(input);
 				aProcessIn.terminateInput(); // for incremental input, allow it to be given afterwards and do not close
 			} else if (input != null && !input.isEmpty()) {

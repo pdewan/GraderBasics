@@ -124,9 +124,14 @@ public class BasicStaticConfigurationUtils {
 	public static final String CHECK_STYLE_OUTPUT_DIRECTORY = "checkStyleOutputDirectory";
 	public static final String DEFAULT_CHECKSTYLE_OUTPUT_DIRECTORY = null;
 
+	public static final String TRACING= "tracing";
+	public static final boolean DEFAULT_TRACING = true;
 
-
+	public static final String BUFFER_TRACED_MESSAGES = "bufferTracedMessages";
+	public static final boolean DEFAULT_BUFFER_TRACED_MESSAGES = true;
 	
+	public static final String SHIFT_ASSIGNMENT_DATES = "shiftAssignmentDates";
+	public static final boolean DEFAULT_SHIFT_ASSIGNMENT_DATES = false;
 
 
 //	private static  List<String> basicCommand;

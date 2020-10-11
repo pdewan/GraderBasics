@@ -110,6 +110,8 @@ public class BasicProjectClassesManager implements ClassesManager {
     		Object aProject, // do not want any dependencies on type
     		File buildFolder, File sourceFolder, String aSourceFilePattern) throws IOException,
             ClassNotFoundException {
+		Tracer.info(this, "BasicProjectClassesManager created");
+
     	basicProject = aBasicProject;
     	setProject(aProject);
     	sourceFilePattern = aSourceFilePattern;
@@ -258,17 +260,21 @@ public class BasicProjectClassesManager implements ClassesManager {
 //			return classLoader.loadClass(className);
 //		}
 //		return null;
-		
+    	Tracer.info(this, "Loading Class:" + className);
+
 		if (BasicLanguageDependencyManager.isJava() && BasicGradingEnvironment.get().isLoadClasses() ) {
 			Class retVal = classLoader.loadClass(className);
 			if (retVal == null) {
 				System.err.println("Could not load: " + className);
 			}
 			return retVal;
+		} else {
+			System.out.println("Is Java: +" + BasicLanguageDependencyManager.isJava() + " BasicGradingEnvironment.get().isLoadClasses() " + BasicGradingEnvironment.get().isLoadClasses() );
 		}
 		return null;
     }
     protected void loadCompiledClasses(Set<File> sourceFiles) throws ClassNotFoundException, IOException {
+    	Tracer.info(this, "Loading Classes");
     	for (File file : sourceFiles) {
 //    		if (file.getName().contains("Observable")) {
 //    			System.out.println ("processing file:" + file.getName());
@@ -297,7 +303,14 @@ public class BasicProjectClassesManager implements ClassesManager {
 					classDescriptions.add(createClassDescription(c, file));
 
 				} else {
-					Tracer.error("Couldn't load class: " + className);
+					
+					System.err.println("Class loader returned null class for: " + className);
+//					System.out.println("Trace of steps before this error");
+//					System.out.println(Tracer.getBufferedTracedMessages());
+//					Tracer.clearTracedMessages();
+					System.out.println("Trying to compile classes");
+
+					maybeCompileWrongVersion(className, file, sourceFiles);
 //					classDescriptions.add(createClassDescription(null, file));
 					
 //					System.err.println ("Could not load:" + className);
@@ -306,7 +319,9 @@ public class BasicProjectClassesManager implements ClassesManager {
 //					c = classLoader.loadClass(className);
 //				}
 			} catch (IncompatibleClassChangeError e) {
-				System.out.println("IncompatibleClassChangeError :" + file + " "+  e.getMessage());
+				System.err.println("IncompatibleClassChangeError :" + file + " "+  e.getMessage());
+				System.out.println("Trace of steps before this error");
+				System.out.println(Tracer.getBufferedTracedMessages());
 			} catch (UnsupportedClassVersionError e) {
 				maybeCompileWrongVersion(className, file, sourceFiles);
 ////

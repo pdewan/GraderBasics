@@ -106,7 +106,9 @@ public class TestCaseResult {
     public boolean isFail() {
     	return percentage == 0.0;
     }
-
+    public String toString() {
+    	return name + ":" + percentage + ":" + notes;
+    }
     /**
      * @return Any notes about the result
      */

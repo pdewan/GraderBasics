@@ -356,6 +356,7 @@ public class BasicGradingEnvironment {
 
     public  void setLoadClasses(boolean makeClassDescriptions) {
         loadClasses = makeClassDescriptions;
+        Tracer.info(this, "Load classes =" + makeClassDescriptions);
     }
 
     public  boolean isCompileMissingObjectCode() {

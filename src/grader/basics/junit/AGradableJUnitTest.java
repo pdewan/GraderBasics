@@ -276,9 +276,17 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 
 //			runListener.setJUnitName(aJUnitClass.getName());
 			runListener.setJUnitName(getSimpleName());
+			JUnitTestCase aJUnitTest = getJUnitTestCase();
+			if (aJUnitTest != null) {
+				testCaseResult = aJUnitTest.getLastResult();
+				return testCaseResult;
+			} 
+		
 			if (aJUnitClass != null) {
+				
 
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
+			System.out.println("Running junit test:" + aJUnitClass.getSimpleName());
 			aRunner.run(runNotifier);
 			testCaseResult = runListener.getTestCaseResult();
 			failure = runListener.getFailure();

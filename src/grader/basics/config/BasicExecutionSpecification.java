@@ -102,6 +102,12 @@ public interface BasicExecutionSpecification {
 	void setCheckStyleConfigurationDirectory(String newVal);
 	String getCheckStyleOutputDirectory();
 	void setCheckStyleOutputDirectory(String newVal);
+	boolean getTracing();
+	void setTracing(boolean newVal);
+	boolean getBufferTracedMessages();
+	void setBufferTracedMessages(boolean newVal);
+	boolean getShiftAssignmentDates();
+	void setShiftAssignmentDates(boolean newVal);
 	
 	
 	

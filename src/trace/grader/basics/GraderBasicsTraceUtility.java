@@ -1,8 +1,10 @@
 package trace.grader.basics;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.file.zipfile.AZippedRootFolderProxy;
 import grader.basics.junit.TestCaseResult;
+import grader.basics.project.BasicProjectClassesManager;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.TimedProcess;
@@ -21,17 +23,21 @@ import util.trace.Tracer;
 
 public class GraderBasicsTraceUtility {
 	static boolean turnOn = true;
-	static boolean bufferTracedMessages = true;
+//	static boolean bufferTracedMessages = true;
 	@Deprecated
 	public static boolean isTurnOn() {
 		return turnOn;
 	}
 	public static void setBufferTracedMessages(boolean newVal) {
-		bufferTracedMessages  = newVal;
+//		bufferTracedMessages  = newVal;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.setBufferTracedMessages(newVal);
 	}
 	
 	public static boolean getBufferTracedMessages() {
-		return bufferTracedMessages;
+//		return bufferTracedMessages;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.getBufferTracedMessages();
 	}
 
 	@Deprecated
@@ -39,7 +45,9 @@ public class GraderBasicsTraceUtility {
 		GraderBasicsTraceUtility.turnOn = turnOn;
 	}
 	public static void setTracing() {
-		Tracer.setBufferTracedMessages(bufferTracedMessages);
+//		Tracer.setBufferTracedMessages(bufferTracedMessages);
+		Tracer.setBufferTracedMessages(getBufferTracedMessages());
+
 
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
 //		if (isTurnOn()) {
@@ -59,6 +67,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(TimedProcess.class, true);
 			Tracer.setKeywordPrintStatus(ALinesMatcher.class, true);
 			Tracer.setKeywordPrintStatus(AZippedRootFolderProxy.class, true);
+			Tracer.setKeywordPrintStatus(BasicProjectClassesManager.class, true);
+
 
 
 
