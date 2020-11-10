@@ -33,7 +33,7 @@ import util.trace.Tracer;
  */
 public class BasicProcessRunner implements Runner {
 	public static final int PORT_RELEASE_TIME = 5000;
-	public static final int INPUT_DELAY_TIME = 1000;
+	public static final int INPUT_DELAY_TIME = 2000;
 	protected Map<String, String> entryPoints;
 	protected Map<String, RunnerErrorOrOutStreamProcessor> processToOut = new HashMap();
 	protected Map<String, RunnerErrorOrOutStreamProcessor> processToErr = new HashMap();
@@ -624,6 +624,10 @@ public class BasicProcessRunner implements Runner {
 		// some processes may be added dynamically on firing of events, will
 		// support them later
 	}
+	
+	public int numTeamMembers() {
+		return nameToProcess.size();
+	}
 
 	synchronized void waitForDynamicProcesses() {
 		while (pendingProcesses != null && !pendingProcesses.isEmpty())
@@ -979,8 +983,9 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessIn(aProcessName, aProcessIn);
 			processToIn.put(aProcessName, aProcessIn);
 			if (anOutputBasedInputGenerator == null) {
-				Tracer.info(this, "Delaying input feed for ms:" + INPUT_DELAY_TIME);
-				Thread.sleep(INPUT_DELAY_TIME);
+				int anInputDelay = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getInputDelayTime();
+				Tracer.info(this, "Delaying input feed for ms:" + anInputDelay);
+				Thread.sleep(anInputDelay);
 				aProcessIn.newInput(input);
 				aProcessIn.terminateInput(); // for incremental input, allow it to be given afterwards and do not close
 			} else if (input != null && !input.isEmpty()) {

@@ -48,8 +48,8 @@ public interface BasicExecutionSpecification {
 	Integer getProcessOutputSleepTime();
 	Integer getProcessTeamOutputSleepTime();
 	boolean getWaitForResortProperty();
-	void setGraderProcessOutputWaitTime(Integer newVal);
-	void setGraderProcessTeamOutputWaitTime(Integer newVal);
+	void setProcessOutputWaitTime(Integer newVal);
+	void setProcessTeamOutputWaitTime(Integer newVal);
 	void setGraderProcessTimeOut(int newVal);
 	int getProcessTimeOut();
 	void setMethodTimeOut(int methodTimeOut);
@@ -108,6 +108,7 @@ public interface BasicExecutionSpecification {
 	void setBufferTracedMessages(boolean newVal);
 	boolean getShiftAssignmentDates();
 	void setShiftAssignmentDates(boolean newVal);
+	Integer getInputDelayTime();
 	
 	
 	

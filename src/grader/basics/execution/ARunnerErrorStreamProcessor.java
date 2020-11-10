@@ -24,6 +24,12 @@ public void processLine(String s) {
 	}
 	
 }
+
+@Override
+protected void handleEndOfOutput() {
+	// TODO Auto-generated method stub
+	
+}
 		
 
 //			@Override

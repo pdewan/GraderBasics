@@ -77,6 +77,11 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 		// }
 	}
 
+	@Override
+	protected void handleEndOfOutput() {
+		processLine(END_OF_OUPUT);
+	}
+
 	// @Override
 	// public void run() {
 	// while (scanner.hasNextLine()) {

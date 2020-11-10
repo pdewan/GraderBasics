@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
+import util.trace.Tracer;
+
 public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrOutStreamProcessor {
 	protected Scanner scanner;
 	protected InputStream errorOrOut;
@@ -13,6 +15,8 @@ public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrO
 	protected Boolean onlyProcess;
 	protected String outPrefix = "";
 //	public static final String MAIN_PROCESS_NAME = "";
+	
+	abstract protected void handleEndOfOutput();
 
 	public ARunnerErrorOrOutStreamProcessor(InputStream aProcessErrorOrOut, RunningProject aRunner,
 			/* Semaphore aSemaphore, */ String aProcessName, Boolean anOnlyProcess) {
@@ -41,6 +45,9 @@ public abstract class ARunnerErrorOrOutStreamProcessor implements RunnerErrorOrO
 				// runner.appendErrorOutput(line + "\n");
 				processLine(line);
 			}
+//			Tracer.info (this, "No more output");
+//			processLine(END_OF_OUPUT);
+			handleEndOfOutput();
 			scanner.close();
 			semaphore.release();
 		} catch (Exception e) {

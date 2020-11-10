@@ -47,6 +47,7 @@ public class GraderBasicsTraceUtility {
 	public static void setTracing() {
 //		Tracer.setBufferTracedMessages(bufferTracedMessages);
 		Tracer.setBufferTracedMessages(getBufferTracedMessages());
+		Tracer.setDisplayThreadName(true);
 
 
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	

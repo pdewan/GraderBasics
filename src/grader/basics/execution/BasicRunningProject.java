@@ -92,11 +92,14 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     protected Map<String, RunnerErrorOrOutStreamProcessor> processToOut = new HashMap<>();
     protected Map<String, RunnerErrorOrOutStreamProcessor> processToErr = new HashMap<>();
     protected List<String> processes;
+    int numProcesses;
     public BasicRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, List<String> aProcesses, Map<String, String> aProcessToInput) {
         project = aProject;
     	exception = null;
 //        output = null;
         processes = aProcesses;
+    	numProcesses =  processes == null? 1:processes.size();
+
         maybeProcessProjectWrappper(aProject);
 
         outputBasedInputGenerator = anOutputBasedInputGenerator;
@@ -133,10 +136,11 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
         }
         maxNotificationTime = System.nanoTime();
-        Thread aThread = new Thread(this);
-        aThread.setName("Output Sorter");
-        aThread.start();
+        outputSorter = new Thread(this);
+        outputSorter.setName("Output Sorter");
+        outputSorter.start();
     }
+    Thread outputSorter;
     
     protected void maybeProcessProjectWrappper(Project aProject) {
 //    	if (aProject != null && aProject instanceof ProjectWrapper) {
@@ -212,7 +216,11 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 			e.printStackTrace();
 		}
     }
+    boolean sorterEchoOutput = false;
+    int numEndedProcesses;
+
     protected void normalOutputProcessing() {
+    	numEndedProcesses = 0;
     	try {
 			while (pendingOutput.isEmpty()) {
 //				System.out.println("waitimng for received output" );
@@ -225,19 +233,32 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 
 			while (!pendingOutput.isEmpty()) {
 				AProcessOutput aProcessOutput = pendingOutput.removeFirst();
-				
-					if (isEchoOutput())
-						Tracer.info(this, System.currentTimeMillis() + ":Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
-					doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
-				
+				if (aProcessOutput.output == RunnerErrorOrOutStreamProcessor.END_OF_OUPUT) {
+					Tracer.info(this, aProcessOutput.process + " ended output");
+					numEndedProcesses++;
+//					if (aNumEndedProcesses == aNumProcesses) {
+//						break;
+//					}
+					continue;
+				}
+
+				if (isEchoOutput()) {
+					Tracer.info(this, System.currentTimeMillis() + ": Accumulated received output");
+
+//						Tracer.info(this, System.currentTimeMillis() + "Sorter processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
+				}
+				doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
+
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
     }
-    
+//	boolean noResort;
+
     @Override
     public void run() {
+
     	while (true) {
     		synchronized(this) {
     			// not caching the resorting as we may want to change it dynamically
@@ -245,57 +266,15 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
     	    		resortingOutputProcessing();
     	    	} else {
     	    		normalOutputProcessing();
+    	    		if (numProcesses == numEndedProcesses) {
+    	    			break;
+    	    		}
     	    	}
 
-//	    		try {
-//	    			if (pendingOutput.isEmpty()) {
-////	    				System.out.println("waitimng for received output" );
-//	    	    		Tracer.info(this, "Waiting for received output");
-//
-//	    				wait();
-////	    				System.out.println("end wait 1");
-//	    			} else {
-////	    				System.out.println(Thread.currentThread() + " Waiting for resort time");
-////	    				wait(RESORT_TIME);
-//	    				maybeWaitForResort();
-////	    				wait((long)Math.ceil(maxDiff/1e6));
-////	    				System.out.println("end wait 2");
-//	    			}
-//					long aCurrentTime = System.nanoTime();
-//					Tracer.info(this, aCurrentTime + ":Finished waiting for input");
-//					List<AProcessOutput> copy = new LinkedList<>(pendingOutput);
-//					Collections.sort(pendingOutput);
-//					
-//					if (!pendingOutput.equals(copy)) {
-//						System.out.println("***** Input reordered");
-//					}
-//	
-//					while (!pendingOutput.isEmpty()) {
-//						AProcessOutput aProcessOutput = pendingOutput.peek();
-//						long aTime = aProcessOutput.time;
-//						if (aCurrentTime - aTime > timeToWaitForConcurrentOutput) {
-//							if (hasOutput && aTime < maxNotificationTime) {
-//								long diff = (maxNotificationTime - aTime);
-//								timeToWaitForConcurrentOutput = Math.max(diff, timeToWaitForConcurrentOutput);
-//								System.err.println("+++" + diff + " " + timeToWaitForConcurrentOutput);
-//							}
-//							hasOutput = true;
-//							maxNotificationTime = Math.max(maxNotificationTime, aTime);
-//							pendingOutput.removeFirst();
-//							if (isEchoOutput())
-//								Tracer.info(this, "Processing line from " + aProcessOutput.process + ": " + aProcessOutput.output);
-//							doAppendProcessProcessedOutput(aProcessOutput.process, aProcessOutput.output + "\n");
-//						} else {
-////							System.out.printf("***** Times:\nCur  %15d\nPend %15d\nDiff %15d\n", aCurrentTime, aTime, aCurrentTime - aTime);
-////							System.out.println("***** Pending: \n" + pendingOutput);
-//							break;
-//						}
-//					}
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
+
     		}
     	}
+    	Tracer.info (this, "Sorter exiting");
     }
 
     
@@ -690,7 +669,7 @@ public void appendCumulativeOutput() {
 
 	public static void setProcessOutputSleepTime(Integer processOutputSleepTime) {
 //		BasicRunningProject.processOutputSleepTime = processOutputSleepTime;
-		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderProcessOutputWaitTime(processOutputSleepTime);
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setProcessOutputWaitTime(processOutputSleepTime);
 
 	}
 
@@ -703,7 +682,7 @@ public void appendCumulativeOutput() {
 	}
 
 	public static void setProcessTeamOutputSleepTime(Integer newVal) {
-		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderProcessTeamOutputWaitTime(newVal);
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setProcessTeamOutputWaitTime(newVal);
 //		BasicRunningProject.processTeamOutputSleepTime = processTeamOutputSleepTime;
 	}
 	
@@ -717,6 +696,7 @@ public void appendCumulativeOutput() {
 
 	@Override
 	public String await() throws NotRunnableException {
+		Tracer.info(this, "Awaiting process terminarion");
         if (exception != null) {
             throw exception;
         }
@@ -728,10 +708,16 @@ public void appendCumulativeOutput() {
         appendCumulativeOutput();
         maybeSetCurrentProjectIO();
         try {
+            Tracer.info(this, Thread.currentThread() + " waiting for output sorter to exit");
+            if (numProcesses == 1) {
+        	outputSorter.join();
+            }
+            else {
         	int anOutputSleepTime = getOutputSleepTime();
             Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " waiting for pending output from threads ");
 
 			Thread.sleep(getOutputSleepTime()); // wait for output to be received
+            }
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

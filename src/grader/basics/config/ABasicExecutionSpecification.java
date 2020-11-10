@@ -469,13 +469,13 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	
     }
     @Override
-    public void setGraderProcessOutputWaitTime(Integer newVal) {
+    public void setProcessOutputWaitTime(Integer newVal) {
 //    	resortTime = aResortTime;
     	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, newVal);
     	
     }
     @Override
-    public void setGraderProcessTeamOutputWaitTime(Integer newVal) {
+    public void setProcessTeamOutputWaitTime(Integer newVal) {
 //    	resortTime = aResortTime;
     	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.TEAM_OUTPUT_WAIT_TIME, newVal);
     	
@@ -487,6 +487,17 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     @Override
     public  Integer getProcessOutputSleepTime() {
     	return getIntegerProperty(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, BasicRunningProject.PROCESS_OUTPUT_SLEEP_TIME);
+    }
+    @Override
+    public  Integer getInputDelayTime() {
+    	return getIntegerProperty(BasicStaticConfigurationUtils.INPUT_DELAY_TIME, BasicStaticConfigurationUtils.DEFAULT_INPUT_DELAY_TIME);
+    }
+    public void setInputDelayTime(int newValue) {
+    	Tracer.info(this, "Setting input resource delay time:" + newValue);
+//		 graderProcessToSleepTime.put(aProcess, aSleepTime);
+		runtimeGraderIntegerProperties.put(
+				BasicStaticConfigurationUtils.INPUT_DELAY_TIME,
+				newValue);
     }
     @Override
 	public  Integer getProcessTeamOutputSleepTime() {
