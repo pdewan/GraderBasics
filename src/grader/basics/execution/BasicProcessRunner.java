@@ -983,7 +983,7 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessIn(aProcessName, aProcessIn);
 			processToIn.put(aProcessName, aProcessIn);
 			if (anOutputBasedInputGenerator == null) {
-				int anInputDelay = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getInputDelayTime();
+				int anInputDelay = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getFirstInputDelay();
 				Tracer.info(this, "Delaying input feed for ms:" + anInputDelay);
 				Thread.sleep(anInputDelay);
 				aProcessIn.newInput(input);

@@ -86,8 +86,12 @@ public class BasicStaticConfigurationUtils {
 	public static final String SOURCE_LOCATION = "sourceLocation";
 	public static final String BINARY_LOCATION = "binaryLocation";
 	public static final String OBJECT_LOCATION = "objectLocation";
-	public static final String INPUT_DELAY_TIME = "inputDelayTime";
-	public static final int DEFAULT_INPUT_DELAY_TIME = 500;
+	public static final String FIRST_INPUT_DELAY = "firstInputDelay";
+	public static final String BETWEEN_INPUT_DELAY = "betweenInputDelay";
+
+	public static final int DEFAULT_FIRST_INPUT_DELAY = 500;
+	public static final int DEFAULT_BETWEEN_INPUT_DELAY = 20;
+
 
 	public static final String OUTPUT_WAIT_TIME = "outputWaitTime";
 	public static final String TEAM_OUTPUT_WAIT_TIME = "teamOutputWaitTime";

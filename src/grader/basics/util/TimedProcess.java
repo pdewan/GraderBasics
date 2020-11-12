@@ -67,15 +67,23 @@ public class TimedProcess {
     	}
         if (timeout == -1 || !BasicProjectExecution.isUseMethodAndConstructorTimeOut())
             return process.waitFor();
-        Tracer.info(this, "Making timed call with seconds timeout:" + timeout);
+        Tracer.info(this, "Finished providing input, waiting for termination with seconds timeout:" + timeout);
+        boolean success = process.waitFor(timeout, TimeUnit.SECONDS);
+        if (success) {
+        	Tracer.info(this, "Process terminated successfully");
+        	return 0;
+        } else {
+        	Tracer.info(this, "Process timedout ");
+        	return -1;
 
-        return timedCall(new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-//            	Tracer.info(this, "Waiting for process to finish within seconds:" + timeout);
-                return process.waitFor();
-            }
-        }, timeout, TimeUnit.SECONDS);
+        }
+//        return timedCall(new Callable<Integer>() {
+//            @Override
+//            public Integer call() throws Exception {
+////            	Tracer.info(this, "Waiting for process to finish within seconds:" + timeout);
+//                return process.waitFor();
+//            }
+//        }, timeout, TimeUnit.SECONDS);
     }
     private static <T> T timedCall(Callable<T> c, long timeout, TimeUnit timeUnit)
             throws InterruptedException, ExecutionException, TimeoutException {

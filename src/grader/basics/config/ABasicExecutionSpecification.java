@@ -489,14 +489,27 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	return getIntegerProperty(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, BasicRunningProject.PROCESS_OUTPUT_SLEEP_TIME);
     }
     @Override
-    public  Integer getInputDelayTime() {
-    	return getIntegerProperty(BasicStaticConfigurationUtils.INPUT_DELAY_TIME, BasicStaticConfigurationUtils.DEFAULT_INPUT_DELAY_TIME);
+    public  Integer getFirstInputDelay() {
+    	return getIntegerProperty(BasicStaticConfigurationUtils.FIRST_INPUT_DELAY, BasicStaticConfigurationUtils.DEFAULT_FIRST_INPUT_DELAY);
     }
-    public void setInputDelayTime(int newValue) {
-    	Tracer.info(this, "Setting input resource delay time:" + newValue);
+    @Override
+    public void setFirstInputDelay(int newValue) {
+    	Tracer.info(this, "Setting first input delay time:" + newValue);
 //		 graderProcessToSleepTime.put(aProcess, aSleepTime);
 		runtimeGraderIntegerProperties.put(
-				BasicStaticConfigurationUtils.INPUT_DELAY_TIME,
+				BasicStaticConfigurationUtils.FIRST_INPUT_DELAY,
+				newValue);
+    }
+    @Override
+    public  Integer getBetweenInputDelay() {
+    	return getIntegerProperty(BasicStaticConfigurationUtils.BETWEEN_INPUT_DELAY, BasicStaticConfigurationUtils.DEFAULT_BETWEEN_INPUT_DELAY);
+    }
+    @Override
+    public void setBetweenInputDelay(int newValue) {
+    	Tracer.info(this, "Setting between input delay time:" + newValue);
+//		 graderProcessToSleepTime.put(aProcess, aSleepTime);
+		runtimeGraderIntegerProperties.put(
+				BasicStaticConfigurationUtils.BETWEEN_INPUT_DELAY,
 				newValue);
     }
     @Override

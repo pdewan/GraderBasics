@@ -108,7 +108,10 @@ public interface BasicExecutionSpecification {
 	void setBufferTracedMessages(boolean newVal);
 	boolean getShiftAssignmentDates();
 	void setShiftAssignmentDates(boolean newVal);
-	Integer getInputDelayTime();
+	Integer getFirstInputDelay();
+	void setFirstInputDelay(int newValue);
+	Integer getBetweenInputDelay();
+	void setBetweenInputDelay(int newValue);
 	
 	
 	

@@ -696,32 +696,69 @@ public void appendCumulativeOutput() {
 
 	@Override
 	public String await() throws NotRunnableException {
-		Tracer.info(this, "Awaiting process terminarion");
-        if (exception != null) {
-            throw exception;
-        }
-        try {
-            runningState.acquire();
-        } catch (InterruptedException e) {
-            throw new NotRunnableException();
-        }
-        appendCumulativeOutput();
-        maybeSetCurrentProjectIO();
-        try {
-            Tracer.info(this, Thread.currentThread() + " waiting for output sorter to exit");
-            if (numProcesses == 1) {
-        	outputSorter.join();
-            }
-            else {
-        	int anOutputSleepTime = getOutputSleepTime();
-            Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " waiting for pending output from threads ");
+		 if (exception != null) {
+	            throw exception;
+	        }
+	        try {
+	            Tracer.info(this, Thread.currentThread() + " Acquring running state");
 
-			Thread.sleep(getOutputSleepTime()); // wait for output to be received
-            }
+	            runningState.acquire();
+	        } catch (InterruptedException e) {
+	            throw new NotRunnableException();
+	        }
+		try {
+            Tracer.info(this, Thread.currentThread() + " Waiting for output sorter to exit");
+        	int anOutputSleepTime = getOutputSleepTime();
+        	outputSorter.join(anOutputSleepTime);;
+
+//            if (numProcesses == 1) {
+//        	outputSorter.join(millis);;
+//            }
+//            else {
+//        	int anOutputSleepTime = getOutputSleepTime();
+//            Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " waiting for pending output from threads ");
+//
+//			Thread.sleep(getOutputSleepTime()); // wait for output to be received
+//            Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " wait ended ");
+//        	Tracer.info(this, Thread.currentThread() + " wait ended, returning output ");
+
+//            }
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Tracer.info(this, "Appending accumulated output");
+//        if (exception != null) {
+//            throw exception;
+//        }
+//        try {
+//            runningState.acquire();
+//        } catch (InterruptedException e) {
+//            throw new NotRunnableException();
+//        }
+        appendCumulativeOutput();
+        maybeSetCurrentProjectIO();
+//        try {
+//            Tracer.info(this, Thread.currentThread() + " waiting for output sorter to exit");
+//        	int anOutputSleepTime = getOutputSleepTime();
+//        	outputSorter.join(anOutputSleepTime);;
+//
+////            if (numProcesses == 1) {
+////        	outputSorter.join(millis);;
+////            }
+////            else {
+////        	int anOutputSleepTime = getOutputSleepTime();
+////            Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " waiting for pending output from threads ");
+////
+////			Thread.sleep(getOutputSleepTime()); // wait for output to be received
+////            Tracer.info(this, Thread.currentThread() + " sleeping for ms:" + anOutputSleepTime + " wait ended ");
+//        	Tracer.info(this, Thread.currentThread() + " wait ended, returning output ");
+//
+////            }
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //        if (project != null) {
 //            project.setCurrentOutput(new StringBuffer(output));
 //            project.setCurrentInput(input.toString());
