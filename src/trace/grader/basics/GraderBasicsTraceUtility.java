@@ -39,6 +39,16 @@ public class GraderBasicsTraceUtility {
 		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
 		.getBufferTracedMessages();
 	}
+	public static boolean getTracerShowInfo() {
+//		return bufferTracedMessages;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.getTracing();
+	}
+	public static void setTracerShowInfo(boolean newVal) {
+//		bufferTracedMessages  = newVal;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.setTracing(newVal);
+	}
 
 	@Deprecated
 	public static void setTurnOn(boolean turnOn) {

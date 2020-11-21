@@ -137,6 +137,9 @@ public class BasicStaticConfigurationUtils {
 	public static final String BUFFER_TRACED_MESSAGES = "bufferTracedMessages";
 	public static final boolean DEFAULT_BUFFER_TRACED_MESSAGES = true;
 	
+	public static final String SML_IS_BAT = "smlIsBat";
+	public static final boolean DEFAULT_SML_IS_BAT = true;
+	
 	public static final String SHIFT_ASSIGNMENT_DATES = "shiftAssignmentDates";
 	public static final boolean DEFAULT_SHIFT_ASSIGNMENT_DATES = false;
 

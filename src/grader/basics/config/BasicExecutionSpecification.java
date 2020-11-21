@@ -112,8 +112,8 @@ public interface BasicExecutionSpecification {
 	void setFirstInputDelay(int newValue);
 	Integer getBetweenInputDelay();
 	void setBetweenInputDelay(int newValue);
+	boolean getSMLIsBat();
+	void setSMLIsBat(boolean newVal);
 	
 	
-	
-
 }

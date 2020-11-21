@@ -47,6 +47,9 @@ public class ARunnerInputStreamProcessor implements RunnerInputStreamProcessor{
 			String[] inputLines = anInput.split("\n");
 			for (int anIndex = 0; anIndex < inputLines.length; anIndex++) {
 				String anInputLine = inputLines[anIndex];
+				if (anInputLine.isEmpty()) {
+					continue;
+				}
 				Tracer.info(this,inPrefix + anInputLine); // echo input for display
 				inputWriter.write(anInputLine + "\n");
 				if (anIndex % INPUT_INDEX_DIVISION == 0) {

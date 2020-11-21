@@ -16,7 +16,7 @@ public class SMLCommandGenerator extends ACommandGenerator implements CommandGen
 	public static final String SML = "sml";
 	public static final String SML_BAT = "sml.bat";
 	protected static Map emptyMap = new HashMap();
-	protected List<String> defaultCommand;
+//	protected List<String> defaultCommand;
 	@Override
 	public Map<String, String> getEntryPoints(Project project, String aSpecifiedMainClass) throws NotRunnableException {
 		// TODO Auto-generated method stub

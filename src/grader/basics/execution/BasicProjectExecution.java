@@ -1,11 +1,13 @@
 package grader.basics.execution;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Array;
@@ -28,6 +30,7 @@ import java.util.concurrent.TimeoutException;
 
 import grader.basics.config.BasicExecutionSpecification;
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicStaticConfigurationUtils;
 //import framework.execution.ARunningProject;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
@@ -118,9 +121,13 @@ public class BasicProjectExecution {
 				aMethod, anArgs));
 
 		try {
-			if (BasicProjectExecution.isWaitForMethodConstructorsAndProcesses())
-			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
-			else {
+			if (BasicProjectExecution.isWaitForMethodConstructorsAndProcesses()) {
+				Object retVal = future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+				Tracer.info(BasicProjectExecution.class,"Finshed calling on object " + anObject + " " + anObject.hashCode() + " method:"
+						+ aMethod + " args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
+				return retVal;
+//			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);
+			} else {
 				executor = Executors.newSingleThreadExecutor();
 				return future;
 			}
@@ -901,6 +908,110 @@ public class BasicProjectExecution {
 		}
 		return true;
 
+	}
+
+	public static void runProcess(Class aClass, String args[], boolean showOutput) {
+		;
+		
+		try {
+			String[] command = createCommand(aClass, args);
+			ProcessBuilder builder = new ProcessBuilder(command);
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+
+			InputStream is = process.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+			String line = null;
+			if (showOutput) {
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static String[] createCommand (Class aClass, String args[]) {
+		 String aClassPath = System.getProperty("java.class.path");
+	        
+
+			String[] command = {"java", "-cp", aClassPath, aClass.getCanonicalName()};
+			String[] commandWithArgs = new String[command.length + args.length];
+			for (int i = 0; i < command.length; i ++) {
+				commandWithArgs[i] = command[i];
+			}
+			for (int i = 0; i < args.length; i ++) {
+				commandWithArgs[i + command.length] = args[i];
+			}
+			return commandWithArgs;
+	}
+	public static RunningProject runProject (Class aClass, String args[], boolean showOutput) {
+//        String aClassPath = System.getProperty("java.class.path");
+//        
+//
+//		String[] command = {"java", "-cp", aClassPath, aClass.getCanonicalName()};
+//		String[] commandWithArgs = new String[command.length + args.length];
+//		for (int i = 0; i < command.length; i ++) {
+//			commandWithArgs[i] = command[i];
+//		}
+//		for (int i = 0; i < args.length; i ++) {
+//			commandWithArgs[i + command.length] = args[i];
+//		}
+		String[] commandWithArgs = createCommand(aClass, args);
+        Runner processRunner = new BasicProcessRunner(new File("."));
+//        RunningProject aReturnValue = processRunner.run(null, command, "", args, 2000);
+        RunningProject aReturnValue = processRunner.run(null, commandWithArgs, "", null, 20000);
+        if (showOutput) {
+        System.out.println(aReturnValue.getOutput());
+        }
+        return aReturnValue;
+	}
+	public static void exec (Class aClass, String args[], boolean aPrintOut) {
+		StringBuilder aCommand = new StringBuilder();
+        String aClassPath = System.getProperty("java.class.path");
+
+		aCommand.append("java");
+		aCommand.append(" -cp \"");
+		aCommand.append(aClassPath);
+		aCommand.append("\"");
+		aCommand.append(" ");
+		aCommand.append(aClass.getCanonicalName());
+		for (int index = 0; index < args.length; index++) {
+			aCommand.append(" \"");
+			aCommand.append(args[index]);
+			aCommand.append("\"");
+		}
+		try {
+			 String s = null;
+			Process p = Runtime.getRuntime().exec(aCommand.toString());
+			if (!aPrintOut) {
+				return;
+			}
+			BufferedReader stdInput = new BufferedReader(new 
+	                 InputStreamReader(p.getInputStream()));
+
+	            BufferedReader stdError = new BufferedReader(new 
+	                 InputStreamReader(p.getErrorStream()));
+
+	            // read the output from the command
+//	            System.out.println("Here is the standard output of the command:\n");
+	            while ((s = stdInput.readLine()) != null) {
+	                System.out.println(s);
+	            }
+	            
+	            // read any errors from the attempted command
+//	            System.out.println("Here is the standard error of the command (if any):\n");
+	            while ((s = stdError.readLine()) != null) {
+	                System.out.println(s);
+	            }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 	}
 
 	// public static Map<String, Object> testBeanWithStringConstructor (String

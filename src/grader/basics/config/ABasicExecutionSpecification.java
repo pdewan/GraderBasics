@@ -899,6 +899,18 @@ protected String requirementsLocation = null;
 
 		
 	}
+	
+	@Override
+	public boolean getSMLIsBat() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.SML_IS_BAT, BasicStaticConfigurationUtils.DEFAULT_SML_IS_BAT);
+
+	}
+	@Override
+	public void setSMLIsBat(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.SML_IS_BAT, newVal);
+
+		
+	}
 	@Override
 	public boolean getBufferTracedMessages() {
 		return getBooleanProperty(BasicStaticConfigurationUtils.BUFFER_TRACED_MESSAGES, BasicStaticConfigurationUtils.DEFAULT_BUFFER_TRACED_MESSAGES);
