@@ -114,6 +114,8 @@ public interface BasicExecutionSpecification {
 	void setBetweenInputDelay(int newValue);
 	boolean getSMLIsBat();
 	void setSMLIsBat(boolean newVal);
+	boolean getForkInProjectFolder();
+	void setForkInProjectFolder(boolean newVal);
 	
 	
 }

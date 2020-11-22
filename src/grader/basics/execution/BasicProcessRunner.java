@@ -896,8 +896,10 @@ public class BasicProcessRunner implements Runner {
 					return null; // this should not happen
 				}
 			}
-		
+			if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getForkInProjectFolder()) {
+				Tracer.info(this, "Running in project folder:" + folder);
 			builder.directory(folder);
+			}
 			 Map<String, String> envs = builder.environment();
 //				envs.put("Path", "/usr/bin");
 
@@ -909,11 +911,11 @@ public class BasicProcessRunner implements Runner {
 		
 			
 			
-			if (folder != null) {
-				Tracer.info(this,"Running in folder: "
-						+ folder.getAbsolutePath());
-			
-			}
+//			if (folder != null) {
+//				Tracer.info(this,"Running in folder: "
+//						+ folder.getAbsolutePath());
+//			
+//			}
 			if (userPath != null) {
 				Tracer.info(this, "Setting path to non null user path:" + userPath);
 				envs.put("Path", userPath);

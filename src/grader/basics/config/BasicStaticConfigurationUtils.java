@@ -140,6 +140,10 @@ public class BasicStaticConfigurationUtils {
 	public static final String SML_IS_BAT = "smlIsBat";
 	public static final boolean DEFAULT_SML_IS_BAT = true;
 	
+	public static final String FORK_IN_PROJECT_FOLDER = "forkInProjectFolder";
+	public static final boolean DEFAULT_FORK_IN_PROJECT_FOLDER = true;
+
+	
 	public static final String SHIFT_ASSIGNMENT_DATES = "shiftAssignmentDates";
 	public static final boolean DEFAULT_SHIFT_ASSIGNMENT_DATES = false;
 

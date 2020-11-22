@@ -912,6 +912,18 @@ protected String requirementsLocation = null;
 		
 	}
 	@Override
+	public boolean getForkInProjectFolder() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.FORK_IN_PROJECT_FOLDER, BasicStaticConfigurationUtils.DEFAULT_FORK_IN_PROJECT_FOLDER);
+
+	}
+	@Override
+	public void setForkInProjectFolder(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.FORK_IN_PROJECT_FOLDER, newVal);
+
+		
+	}
+	
+	@Override
 	public boolean getBufferTracedMessages() {
 		return getBooleanProperty(BasicStaticConfigurationUtils.BUFFER_TRACED_MESSAGES, BasicStaticConfigurationUtils.DEFAULT_BUFFER_TRACED_MESSAGES);
 
