@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.execution.ACommandGenerator;
 import grader.basics.execution.CommandGenerator;
@@ -48,7 +49,11 @@ public class SMLCommandGenerator extends ACommandGenerator implements CommandGen
 			return false;
 		}
 	 protected List<String> changeableCommand() {
+	 	 if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getSMLIsBat()) {
 			return BasicStaticConfigurationUtils.DEFAULT_BASIC_SML_BAT_COMMAND;
+		} else {
+			return BasicStaticConfigurationUtils.DEFAULT_BASIC_SML_COMMAND;
 		}
+	 }
 
 }
