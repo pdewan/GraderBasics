@@ -7,7 +7,9 @@ import java.util.Set;
 public abstract class AnAbstractProxy implements RootFolderProxy{
     Set<String> descendentNames;
     Set<String> childrenNames = new HashSet();
-
+    public String toString() {
+    	return getMixedCaseAbsoluteName();
+    }
     public Set<String> getChildrenNames() {
         return childrenNames;
     }

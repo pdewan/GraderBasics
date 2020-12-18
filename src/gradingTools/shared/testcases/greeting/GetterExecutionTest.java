@@ -1,9 +1,10 @@
-package gradingTools.shared.testcases;
+package gradingTools.shared.testcases.greeting;
 
 import org.junit.Assert;
 
 import grader.basics.junit.NotesAndScore;
 import grader.basics.project.BasicProjectIntrospection;
+import gradingTools.shared.testcases.BeanExecutionTest;
 import util.annotations.MaxValue;
 @MaxValue(5)
 public abstract class GetterExecutionTest extends BeanExecutionTest{

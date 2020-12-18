@@ -31,6 +31,14 @@ public class RunningProjectUtils extends BasicProjectExecution{
 		String aTestFile = aSourceFolder + "/" + aLoadFile;
 		File aFile = new File(aTestFile);
 		if (!aFile.exists()) {
+			System.out.println("Did not find file:" + aTestFile );
+
+			 aTestFile = aSourceFolder + "/" + aLoadFile.toLowerCase();
+				System.out.println("Trying to fine file:" + aTestFile );
+
+			 aFile = new File(aTestFile);
+		}
+		if (!aFile.exists()) {
 			FileNotFoundException aFileNotFoundException = new FileNotFoundException(aFile + " does not exist.");
 			aFileNotFoundException.printStackTrace();
 			return null;
