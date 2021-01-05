@@ -91,8 +91,24 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //		String aName = aTest.getExplanation();
 		
 	}
+	protected void notifyTestStarted(GradableJUnitTest aTest) {
+//		propertyChangeSupport.firePropertyChange(TEST_RUN_STARTED, aTest, null);
+		propertyChangeSupport.firePropertyChange(TEST_STARTED, null, aTest);
+
+//		
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aName = aTest.getExplanation();
+		
+	}
 	protected void notifyTestRunEnded(GradableJUnitTest aTest) {
-		propertyChangeSupport.firePropertyChange(TEST_RUN_FINISHED, aTest, null);
+		propertyChangeSupport.firePropertyChange(TEST_RUN_ENDED, aTest, null);
+//		
+//		String aClassName = aTest.getJUnitClass().getSimpleName();
+//		String aName = aTest.getExplanation();
+		
+	}
+	protected void notifyTestEnded(GradableJUnitTest aTest) {
+		propertyChangeSupport.firePropertyChange(TEST_ENDED, aTest, null);
 //		
 //		String aClassName = aTest.getJUnitClass().getSimpleName();
 //		String aName = aTest.getExplanation();
@@ -104,11 +120,25 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 		notifyTestRunStarted(aTest);
 	}
+	protected void testStarted(GradableJUnitTest aTest) throws PropertyVetoException {
+
+		RunVetoerFactory.getOrCreateRunVetoer().vetoableChange(new PropertyChangeEvent(this, TEST_STARTED, this, null));
+
+		notifyTestStarted(aTest);
+	}
 	
-	protected void testRunFinished(GradableJUnitTest aTest) {
+	protected void testRunEnded(GradableJUnitTest aTest) {
 //		Description aDescription = Description.createTestDescription(GradableJUnitTest.TEST_RUN_STARTED, "a test", 0);
 //		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);
-		notifyTestRunStarted(aTest);
+//		notifyTestRunStarted(aTest);
+		notifyTestRunEnded(aTest);
+
+	}
+	
+	protected void testEnded(GradableJUnitTest aTest) {
+//		Description aDescription = Description.createTestDescription(GradableJUnitTest.TEST_RUN_STARTED, "a test", 0);
+//		RunNotifierFactory.getRunNotifier().fireTestFinished(aDescription);
+		notifyTestEnded(aTest);
 
 	}
 	
@@ -144,11 +174,15 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //		RunNotifierFactory.getRunNotifier().fireTestRunStarted(aDescription);
 		try {
 		testRunStarted(aTest);
+		
+//		testStarted(aTest);
 		aTest.test();
-		testRunFinished(aTest);
+//		testEnded(aTest);
+		testRunEnded(aTest);
 		} catch (PropertyVetoException e) {
 			System.err.println(e.getMessage());
-		}
+		} 
+		
 //		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
 	}
 

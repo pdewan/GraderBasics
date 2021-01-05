@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -735,9 +736,16 @@ public class BasicProjectIntrospection {
 			if (aClass.isInterface()) {
 				continue;
 			}
+			String[] aClassTags = getTags(aClass);
+			if (aClassTags != null && aClassTags.length > 0) {
+			  continue; // class has its own tags, no need to derive them
+			}
 			if (implementsOneOf(aClass, aMatchedInterfaces)) {
 				result.add(aClassDescription.getJavaClass());
 			}
+		}
+		if (result.isEmpty()) {
+		  return aMatchedInterfaces; // maybe we are looking for interfaces also
 		}
 		return result;
 		// if (aClasses.size() != 1) {
@@ -1013,7 +1021,7 @@ public class BasicProjectIntrospection {
 			aCachedClass = findClassByTag(aProject, aKey); // tag or name match
 
 			if (aCachedClass == null) {
-				aCachedClass = findClassByName(aProject, aKey);
+				aCachedClass = findClassOrInterfaceByName(aProject, aKey);
 			}
 			if (aCachedClass == null) {
 				aCachedClass = findClassByTagMatch(aProject, aKey);
@@ -1064,10 +1072,10 @@ public class BasicProjectIntrospection {
 			String[] aTags = getTags(aProxyClass);
 			Class retVal = findClassByTags(aProject, aTags);
 			if (retVal == null)
-				retVal = findClassByName(aProject,
+				retVal = findClassOrInterfaceByName(aProject,
 						aProxyClass.getCanonicalName());
 			if (retVal == null)
-				retVal = findClassByName(aProject, aProxyClass.getSimpleName());
+				retVal = findClassOrInterfaceByName(aProject, aProxyClass.getSimpleName());
 			if (retVal == null && aTags.length == 1) {
 				retVal = findClassByTagMatch(aProject, aTags[0]);
 			}
@@ -1513,8 +1521,8 @@ public class BasicProjectIntrospection {
 
 	}
 
-	public static Class findClassByName(Project aProject, String aName) {
-		Set<Class> aClasses = findClassesByName(aProject, aName);
+	public static Class findClassOrInterfaceByName(Project aProject, String aName) {
+		Set<Class> aClasses = findClassesOrInterfacesByName(aProject, aName);
 		aClasses = removeSuperTypes(aClasses);
 		if (aClasses.size() != 1)
 			return null;
@@ -1563,15 +1571,16 @@ public class BasicProjectIntrospection {
 
 	}
 
-	public static Set<Class> findClassesByName(Project aProject, String aName) {
+	public static Set<Class> findClassesOrInterfacesByName(Project aProject, String aName) {
 		// List<String> aSortableTagList = new ArrayList(Arrays.asList(aTag));
 
 		Set<ClassDescription> aClassDescriptions = aProject.getClassesManager()
 				.get().findClassAndInterfaces(aName, null, null, null);
 		Set<Class> aResult = new HashSet();
 		for (ClassDescription aDescription : aClassDescriptions) {
-			if (aDescription.getJavaClass().isInterface())
-				continue;
+		  // if it is by name, an interface should be fine
+//			if (aDescription.getJavaClass().isInterface())
+//				continue;
 			aResult.add(aDescription.getJavaClass());
 		}
 		return aResult;
@@ -1582,6 +1591,7 @@ public class BasicProjectIntrospection {
 		// return aClasses.get(0).getJavaClass();
 
 	}
+	
 
 	// public static Class findInterface(Project aProject, String aName,
 	// String aTag, String aNameMatch, String aTagMatch) {
@@ -2241,6 +2251,13 @@ public class BasicProjectIntrospection {
 		}
 		return createInstance(aSuperType, anActualClass, aParameterTypes, anArgs);
 	}
+	
+	public static Object createInstanceAndProxy(Class anActualClass, Class aSuperType) {
+	  if (anActualClass == null) {
+	    return null;
+	  }
+	  return createInstance(aSuperType, anActualClass, emptyClassArray, emptyObjectArray);
+	}
 
 	public static Class[] getInterfaces(Class aClassOrInterface) {
 		Class[] anInterfaces = null;
@@ -2636,4 +2653,62 @@ public class BasicProjectIntrospection {
 			return null;
 		}
 	}
+	public static Set<String> findMissingClasses (Project aProject, Class aReferenceClass, Class anActualClass) {
+    Map<String, Class> aReferenceMapping = getPropertyClassMapping(aProject, aReferenceClass);
+    Map<String, Class> anActualMapping = getPropertyClassMapping(aProject, anActualClass);
+    return diff(aReferenceMapping, anActualMapping );
+  }
+  public static Set<String> diff (
+      Map<String, Class> aReferenceMapping, 
+      Map<String, Class> anActualMapping) {
+    Set<String> retVal = aReferenceMapping.keySet();
+    retVal.removeAll(anActualMapping.keySet());
+   return  retVal;
+    
+  }
+  public static Collection findDuplicateValues (Map aMap) {
+    List aValues =  new ArrayList (aMap.values());
+    Set aUniqueValues = new HashSet<>(aValues);
+    for (Object aValue:aUniqueValues) {
+      aValues.remove(aValue);
+    }
+    return aValues;
+  }
+  
+  public static Map<String, Class> getPropertyClassMapping(Project aProject, Class aConfigurationClass) {
+    Map<String, Class> retVal = new HashMap<String, Class>();
+    try {
+    BeanInfo aBeanInfo = Introspector.getBeanInfo(aConfigurationClass);
+    Object aConfiguration = aConfigurationClass.newInstance();
+    PropertyDescriptor[] aPropertyDescriptors = aBeanInfo.getPropertyDescriptors();
+    for (PropertyDescriptor aPropertyDescriptor : aPropertyDescriptors) {
+      Method aReadMethod = aPropertyDescriptor.getReadMethod();
+        if (aReadMethod == null) {
+          continue;
+        }
+        Object aPropertyObject = aReadMethod.invoke(aConfiguration);
+        if (aPropertyObject == null) {
+          continue;
+        }
+        if (!(aPropertyObject instanceof Class)) 
+          continue;
+        Class aPropertyClass = (Class) aPropertyObject;
+        if (aProject != null) {
+          Class aProjectClass = findClassOrInterfaceByName(aProject, aPropertyClass.getName());
+          if (aProjectClass == null) {
+            System.err.println("Configured class " + aProjectClass + " is not a project class");
+            continue;
+          }
+        }
+        
+        retVal.put(aPropertyDescriptor.getName(), aPropertyClass);
+
+    }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    return retVal;
+    
+  }
 }

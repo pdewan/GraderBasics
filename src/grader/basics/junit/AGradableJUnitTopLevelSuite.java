@@ -2,7 +2,10 @@ package grader.basics.junit;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
+import java.util.AbstractMap;
 
+import org.apache.commons.collections.keyvalue.AbstractKeyValue;
+import org.apache.commons.collections.map.AbstractHashedMap;
 import org.junit.runner.Description;
 
 import util.annotations.StructurePattern;
@@ -30,7 +33,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 		JUnitTestsEnvironment.clearCachedJUnitTestCases();
 
 		super.testAll();
-		testRunFinished(this);
+		testRunEnded(this);
 		} catch (PropertyVetoException e) {
 			System.err.println(e.getMessage());
 		}
@@ -86,14 +89,18 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 		String aName = aTest.getExplanation();
 //		String anId = aTest.getJUnitClass().getName();
 		// aClassName and aName not really needed, as aTest has that info.
-		Description aDescription = Description.createTestDescription(aClassName, aName, this);
+		AbstractMap.SimpleEntry<GradableJUnitSuite, GradableJUnitTest> anEntry = new AbstractMap.SimpleEntry(this, aTest);
+//		Description aDescription = Description.createTestDescription(aClassName, aName, this);
+		Description aDescription = Description.createTestDescription(aClassName, aName, anEntry);
+
 		RunVetoerFactory.getOrCreateRunVetoer().vetoableChange(new PropertyChangeEvent(this, TEST_RUN_STARTED, this, null));
 
 		refreshPreviousClasses();	
+	
 		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunStarted(aDescription);
 	}
 	
-	protected void testRunFinished(GradableJUnitTest aTest) {
+	protected void testRunEnded(GradableJUnitTest aTest) {
 		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(null);
 //		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(aTest);
 
@@ -105,11 +112,11 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 
 
     protected void maybeProcessTestRunFinished(PropertyChangeEvent evt) {
-    	if (!TEST_RUN_FINISHED.equals(evt.getPropertyName())) {
+    	if (!TEST_RUN_ENDED.equals(evt.getPropertyName())) {
 				return;
     	}
 //		RunNotifierFactory.getRunNotifier().fireTestRunFinished(null);
-    	testRunFinished((GradableJUnitTest) evt.getNewValue());
+    	testRunEnded((GradableJUnitTest) evt.getNewValue());
 
 	}
 	@Override

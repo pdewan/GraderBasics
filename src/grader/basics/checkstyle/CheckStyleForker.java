@@ -67,7 +67,9 @@ public static void main (String[] args) {
 		System.err.println("File does not exist:" + anEclipseFolder);
 	}
 	if (!aCheckStyleAllFile.exists()) {
-		System.err.println("File does not exist:" + aCheckStyleAllFile);
+//		System.err.println("File does not exist:" + aCheckStyleAllFile);
+		System.err.println("Please run the checkstle plugin on your project");
+
 	}
 	PostProcessingMain.setSecondPassFile(new File("mysecondpass.txt"));
 	PostProcessingMain.setGeneratedChecksFile(new File("mygenerated.xml"));

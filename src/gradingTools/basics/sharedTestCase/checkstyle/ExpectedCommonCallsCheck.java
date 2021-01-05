@@ -2,7 +2,7 @@ package gradingTools.basics.sharedTestCase.checkstyle;
 
 import java.util.Arrays;
 
-public abstract class ExpectedCommonCallsCheck extends ExpectedCallsCheck{
+public abstract class ExpectedCommonCallsCheck extends ExpectedCallsKnownMax{
 	
 	protected void makeWarning() {
 		warningString = makeMethodAndTagRegex("multiple methods.*", ".*in class matching.*", ".*not make expected call", tagAndMethods());

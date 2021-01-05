@@ -2,14 +2,14 @@ package gradingTools.basics.sharedTestCase.checkstyle;
 
 import java.util.Arrays;
 
-public abstract class ExpectedCallsCheck extends WarningsRatioKnownMax{
+public abstract class ExpectedCallsKnownMax extends WarningsRatioKnownMax{
 	protected abstract String[][] tagAndMethods();
 	protected String warningString;
 	protected String infoString;
 //	static StringBuilder stringBuilder = new StringBuilder();
 
 	
-	public ExpectedCallsCheck() {
+	public ExpectedCallsKnownMax() {
 		makeWarning();
 		makeInfo();
 		

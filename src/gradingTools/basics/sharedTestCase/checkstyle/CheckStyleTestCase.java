@@ -9,6 +9,7 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import util.trace.Tracer;
 
 
 public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
@@ -97,8 +98,8 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	List<String> result = new ArrayList();    
 //    	int aCount = 0;
     	for (String aLine:aLines) {
-//    		if (aLine.contains("not make")) {
-//    			System.out.println ("Found not make");
+//    		if (aLine.contains("expected")) {
+//    			System.out.println ("Found line");
 //    		}
 //    		if (aLine.contains("JavaDoc")) {
 //    			int i = 0;
@@ -244,6 +245,7 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //        }
 //        SakaiProject aSakaiProject = ((ProjectWrapper) aProject).getProject();
         String aCheckStyleText = aProject.getCheckstyleText();
+//        Tracer.info(CheckStyleTestCase.class, "Checkstyle output\n" + aCheckStyleText);
         if (aCheckStyleText == null) {
 //          System.err.println("No checkstyle output, check console error messages");
           return fail ("No checkstyle output, check console error messages");

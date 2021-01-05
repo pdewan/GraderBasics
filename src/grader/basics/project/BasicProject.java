@@ -27,6 +27,7 @@ import grader.basics.trace.SourceFolderAssumed;
 import grader.basics.trace.SourceFolderNotFound;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.Option;
+import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 import unc.symbolTable.SymbolTable;
 import util.misc.Common;
 import util.pipe.InputGenerator;
@@ -703,7 +704,9 @@ public class BasicProject implements Project {
 //			checkstyleOutFolder null;
 			}
 			if (!aCheckStyleAllFile.exists()) {
-				System.err.println("File does not exist:" + aCheckStyleAllFile);
+//				System.err.println("File does not exist:" + aCheckStyleAllFile);
+				System.err.println("Please run the checkstle plugin on your project");
+
 				return null;
 
 //			return null;
@@ -790,11 +793,15 @@ public class BasicProject implements Project {
 		return getCheckstyleConfigurationPrefix() + DEFAULT_GENERATED_CHECK_STYLE_FILE_PREFIX + DEFAULT_DEFAULT_CHECK_STYLE_FILE_SUFFIX;
 	}
 	protected String getCheckstyleDefaultFolder() {
-		String aDefaultFolder = getCheckstyleOutFolder().getAbsolutePath();
-		if (checkForDefaultFolder() && aDefaultFolder == null) {
+		File aDefaultFolder = getCheckstyleOutFolder();
+		if (aDefaultFolder == null) {
 			return null;
 		}
-		return aDefaultFolder;
+		String aDefaultFolderPath = aDefaultFolder.getAbsolutePath();
+		if (checkForDefaultFolder() && aDefaultFolderPath == null) {
+			return null;
+		}
+		return aDefaultFolderPath;
 	}
 	
 	public  String findCheckstyleOutputParentFolder() {
@@ -804,6 +811,9 @@ public class BasicProject implements Project {
 //		}
 //		String aParentFolder = aDefaultFolder;
 		String aParentFolder = getCheckstyleDefaultFolder();
+		if (aParentFolder == null) {
+			return null;
+		}
 		String aSpecifiedFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
 				.getCheckStyleOutputDirectory();
 		if (aSpecifiedFolder != null) {
@@ -918,6 +928,8 @@ public class BasicProject implements Project {
 
 			try {
 				checkStyleText = Common.readFile(new File(anOutFileName)).toString();
+		        Tracer.info(this, "Checkstyle output\n" + checkStyleText);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

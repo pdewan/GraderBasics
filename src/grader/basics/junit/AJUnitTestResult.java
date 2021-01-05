@@ -50,7 +50,10 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			failure = aFailure;
 			Throwable aThrowable = aFailure.getException();
 			String aMessage = aThrowable.getMessage();
-			System.err.println ("Test Failed:" + aMessage);
+			String aTestName = name != null? name:"Test";
+//			System.err.println ("Test Failed:" + aMessage);
+			System.err.println (name + " did not pass completely:" + aMessage);
+
 			System.out.println("Steps traced since last test:");
 			System.out.println(Tracer.getBufferedTracedMessages());
 			if (aMessage == null) { // some exception

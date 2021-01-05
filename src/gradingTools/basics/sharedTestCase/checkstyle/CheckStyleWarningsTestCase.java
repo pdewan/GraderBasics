@@ -69,7 +69,7 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 		}
 		printTrace(aScore, aProject, aCheckStyleLines, aFailedMatchedLines, aSucceededMatchedLines, autoGrade);
 		
-		return partialPass(aScore, "See console trace");
+		return partialPass(aScore, "See console trace about lines failing and passing this check");
 		
 
 
@@ -117,7 +117,7 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 //        	System.out.println(Arra(aFailedMatchedLines));
         	}
         	if (aSucceededMatchedLines != null) {
-        		System.out.println(aSucceededMatchedLines.size()  + " lines succeeding check");
+        		System.out.println(aSucceededMatchedLines.size()  + " lines passing check");
 //            	System.out.println(beautify(aSucceededMatchedLines));
         		for (String aLine:aSucceededMatchedLines) {
             		System.out.println(aLine);

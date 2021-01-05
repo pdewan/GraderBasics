@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -92,12 +93,20 @@ public class ATestLogFileWriter extends RunListener {
 		    idField = Description.class.getDeclaredField("fUniqueId"); // ugh but why not give us the id?
 			idField.setAccessible(true);
 			}
-			GradableJUnitSuite aSuite = (GradableJUnitSuite) idField.get(description);
+			AbstractMap.SimpleEntry<GradableJUnitSuite, GradableJUnitTest> anEntry = 
+				(AbstractMap.SimpleEntry<GradableJUnitSuite, GradableJUnitTest>) idField.get(description);
+				
+			GradableJUnitSuite aTopLevelSuite = anEntry.getKey();
+			Class aTopLevelSuiteClass = aTopLevelSuite.getJUnitClass();
+			GradableJUnitTest aTestOrSuiteSelected = anEntry.getValue();
+			Class aTestOrSuiteSelectedClass = aTestOrSuiteSelected.getJUnitClass();
+
+//			GradableJUnitSuite aSuite = (GradableJUnitSuite) idField.get(description);
 //			System.out.println (aSuite.getJUnitClass().getName());
 //			Class aJunitClass = aSuite.getJUnitClass();
 			if (numRuns == 0) {
-				totalTests = aSuite.getLeafClasses().size();				
-				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aSuite) + LOG_SUFFIX;
+				totalTests = aTopLevelSuite.getLeafClasses().size();				
+				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite) + LOG_SUFFIX;
 				
 //				if (!maybeReadLastLineOfLogFile(logFileName)) {
 //					return;
@@ -108,7 +117,7 @@ public class ATestLogFileWriter extends RunListener {
 				}
 
 			}
-			currentTopSuite = aSuite;
+			currentTopSuite = aTopLevelSuite;
 			currentTest = description.getClassName();
 			saveState();
 //			System.out.println (toFileName(aSuite));

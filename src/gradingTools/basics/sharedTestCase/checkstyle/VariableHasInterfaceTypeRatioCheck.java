@@ -1,20 +1,20 @@
 package gradingTools.basics.sharedTestCase.checkstyle;
 
 
-public class VariableHasInterfaceType extends CheckStyleWarningsRatioTestCase {
+public class VariableHasInterfaceTypeRatioCheck extends CheckStyleWarningsRatioTestCase {
 	public static final String WARNING_NAME = "rather than interface used as the type of variable";
-	public static final String MESSAGE = "Variable types using interface";
+	public static final String MESSAGE = "Variable Types Using Interface";
 	public static final String INFO_NAME = "used as the type of variable.* Good";
 
-	public VariableHasInterfaceType(String aMessage) {
+	public VariableHasInterfaceTypeRatioCheck(String aMessage) {
 		super(null, aMessage);
 	}
 
-	public VariableHasInterfaceType() {
+	public VariableHasInterfaceTypeRatioCheck() {
 		super(null, MESSAGE);
 	}
 
-	public VariableHasInterfaceType(double aPenaltyPerMistake) {
+	public VariableHasInterfaceTypeRatioCheck(double aPenaltyPerMistake) {
 		super(null, MESSAGE, aPenaltyPerMistake);
 
 	}

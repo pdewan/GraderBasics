@@ -39,8 +39,26 @@ public class BasicJUnitUtils {
 		Assert.assertTrue(e.getClass().getName() + " " + e.getMessage() + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete, false);
 		}
 	}
+	protected static boolean giveAssertionErrorStackTrace = false;
+	
+	public static boolean isGiveAssertionErrorStackTrace() {
+		return giveAssertionErrorStackTrace;
+	}
+
+
+	public static void setGiveAssertionErrorStackTrace(boolean throwAssertionError) {
+		BasicJUnitUtils.giveAssertionErrorStackTrace = throwAssertionError;
+	}
+
+
 	public static void assertTrue (String aMessage, double aFractionComplete, boolean aCondition) {
+//		if (aCondition || isThrowAssertionError()) {
+		
 		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete, aCondition);
+//		} else {
+//			System.err.println(aMessage + NotesAndScore.PERCENTAGE_MARKER + aFractionComplete);
+//		}
+		
 
 	}
 
@@ -86,7 +104,8 @@ public class BasicJUnitUtils {
 	}
 	
 	
-	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {		
+	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {	
+		setGiveAssertionErrorStackTrace(false);
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);
 		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;

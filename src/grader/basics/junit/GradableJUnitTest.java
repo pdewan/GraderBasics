@@ -13,8 +13,11 @@ import util.models.PropertyListenerRegisterer;
  *
  */
 public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializable  {
+	public static final String TEST_STARTED = "TestStarted";
 	public static final String TEST_RUN_STARTED = "TestRunStarted";
-	public static final String TEST_RUN_FINISHED = "TestRunEnded";
+	public static final String TEST_RUN_ENDED = "TestRunFinished";
+
+	public static final String TEST_ENDED = "TestFinished";
 	public void init() ;
 	public Class getJUnitClass() ;
 	

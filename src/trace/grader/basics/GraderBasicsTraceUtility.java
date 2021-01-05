@@ -8,6 +8,7 @@ import grader.basics.project.BasicProjectClassesManager;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.TimedProcess;
+import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.concurrency.AbstractBarrier;
 import gradingTools.shared.testcases.concurrency.AbstractEarlyJoinBasicJoiner;
@@ -79,6 +80,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(ALinesMatcher.class, true);
 			Tracer.setKeywordPrintStatus(AZippedRootFolderProxy.class, true);
 			Tracer.setKeywordPrintStatus(BasicProjectClassesManager.class, true);
+			Tracer.setKeywordPrintStatus(CheckStyleTestCase.class, true);
+
 
 
 
