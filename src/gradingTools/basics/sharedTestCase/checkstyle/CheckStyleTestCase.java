@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
@@ -233,26 +235,20 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
         if (aProject.getClassesManager().isEmpty())
             throw new NotGradableException();
         String aTypeTag = typeTag();
-//        if (aTypeTag != null) {
-//        Class aClass = IntrospectionUtil.getOrFindClass(project, this, typeTag); 
-        	// class exists check should have cached the class
-//        Class aClass = ProjectIntrospection.getClass(project, this, typeTag); 
-//
-//        if (aClass == null) {
-//	    	 return fail("Type " + aTypeTag + " not defined, cannot check");
-//	     }
-//	     typeName = aClass.getSimpleName();
-//        }
-//        SakaiProject aSakaiProject = ((ProjectWrapper) aProject).getProject();
+        try {
         String aCheckStyleText = aProject.getCheckstyleText();
 //        Tracer.info(CheckStyleTestCase.class, "Checkstyle output\n" + aCheckStyleText);
-        if (aCheckStyleText == null) {
+        if (aCheckStyleText == null || aCheckStyleText.isEmpty()) {
 //          System.err.println("No checkstyle output, check console error messages");
           return fail ("No checkstyle output, check console error messages");
         }
 //        String aCheckStyleFileName = aProject.getCheckStyleFileName(); // can read lines from this, maybe more efficient
         String[] aCheckStyleLines = aCheckStyleText.split(System.getProperty("line.separator"));
         return test(aProject, aCheckStyleLines, autoGrade);
+        } catch (Throwable e) {
+        	e.printStackTrace();
+        	return fail ("Internal error, please contact instructor");
+        } 
         
     }
     public   String toClassName(String aCheckstyleMessage) {
