@@ -1,14 +1,17 @@
 package grader.basics.observers;
 
 public class TestLogFileWriterFactory {
-	static ATestLogFileWriter singleton = new ATestLogFileWriter();
+	static AnAbstractTestLogFileWriter [] singletons = {
+			new AFineGrainedTestLogFileWriter(),
+			new AStandardTestLogFileWriter()
+	};
 
-	public static ATestLogFileWriter getFileWriter() {
-		return singleton;
+	public static AnAbstractTestLogFileWriter [] getFileWriter() {
+		return singletons;
 	}
 
-	public static void setFileWriter(ATestLogFileWriter singleton) {
-		TestLogFileWriterFactory.singleton = singleton;
+	public static void setFileWriter(AnAbstractTestLogFileWriter [] singleton) {
+		TestLogFileWriterFactory.singletons = singleton;
 	}
 
 }

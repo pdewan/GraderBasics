@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 import org.junit.runners.Suite;
 
 import bus.uigen.ObjectEditor;
@@ -98,7 +99,8 @@ public class BasicJUnitUtils {
 		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
-		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
+		for(RunListener listener: TestLogFileWriterFactory.getFileWriter()) 
+			RunNotifierFactory.getOrCreateRunNotifier().addListener(listener);
 		aGradable.testAll();
 		ObjectEditor.treeEdit(aGradable);
 	}
@@ -111,7 +113,8 @@ public class BasicJUnitUtils {
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
 //		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
-		RunNotifierFactory.getOrCreateRunNotifier().addListener(TestLogFileWriterFactory.getFileWriter());
+		for(RunListener listener: TestLogFileWriterFactory.getFileWriter()) 
+			RunNotifierFactory.getOrCreateRunNotifier().addListener(listener);
 		ObjectEditor.treeEdit(aGradable);
 		return aGradable;
 	}
