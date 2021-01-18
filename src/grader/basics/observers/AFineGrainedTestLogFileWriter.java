@@ -25,7 +25,7 @@ import grader.basics.vetoers.AConsentFormVetoer;
 
 public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	
-	private final String EXTENDED_HEADER = HEADER+",SessionNumber,SessionRunNumber,IsSuite,SuiteTests,PrerequisiteTests,";
+	private final String EXTENDED_HEADER = HEADER+",SessionNumber,SessionRunNumber,IsSuite,SuiteTests,PrerequisiteTests,ExtraCreditTests,";
 	private final String FILENAME_MODIFIER="FineGrained";
 	
 	public static final int SESSION_NUMBER_INDEX = 9;
@@ -33,9 +33,11 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	public static final int IS_SUITE_INDEX = 11;
 	public static final int SUITE_TESTS_INDEX = 12;
 	public static final int PREREQUISITE_TESTS_INDEX = 13;
+	public static final int EXTRA_CREDIT_TESTS_INDEX = 14;
 	
-	List<String> sortedPrereqTests=null;
-	List<String> sortedSuiteTests=null;
+	List<String> unsortedPrereqTests=null;
+	List<String> unsortedExtraCreditTests=null;
+	List<String> unsortedSuiteTests=null;
 	
 	int sessionNumber=0;
 	
@@ -72,15 +74,19 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			Class aTestOrSuiteSelectedClass = aTestOrSuiteSelected.getJUnitClass();
 
 			
+			unsortedExtraCreditTests = new ArrayList();
+			
 			testIsSuite = aTestOrSuiteSelected instanceof GradableJUnitSuite;
 			if(testIsSuite) {
-				sortedSuiteTests = new ArrayList();
-				for(GradableJUnitTest test : ((GradableJUnitSuite)aTestOrSuiteSelected).children()) {
-					sortedSuiteTests.add(test.getSimpleName());
-				}
-				Collections.sort(sortedSuiteTests);
-			}else
-				sortedSuiteTests=null;
+				unsortedSuiteTests = new ArrayList();
+				determineSuiteTests((GradableJUnitSuite)aTestOrSuiteSelected);
+			}else {
+				unsortedSuiteTests=null;
+				GradableJUnitTest selectedTest = (GradableJUnitTest)aTestOrSuiteSelected;
+				if(selectedTest.isExtra()) 
+					unsortedExtraCreditTests.add(selectedTest.getSimpleName());
+			}
+				
 			
 			if (numRuns == 0) {
 				totalTests = aTopLevelSuite.getLeafClasses().size();				
@@ -103,6 +109,19 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		} 
 			
     }
+	
+	private void determineSuiteTests(GradableJUnitSuite aSuite) {
+		boolean suiteIsExtra = aSuite.isExtra();
+		for(GradableJUnitTest test : aSuite.children()) {
+			if(test instanceof GradableJUnitSuite) { //used in instances where there are nested Suites such as running the top assignment suite
+				determineSuiteTests((GradableJUnitSuite)test);
+				continue;
+			}
+			if(suiteIsExtra || test.isExtra())
+				unsortedExtraCreditTests.add(test.getSimpleName());
+			unsortedSuiteTests.add(test.getSimpleName());
+		}
+	}
 	
 	private void maybeDetermineConsecutiveTestRunNumber(GradableJUnitSuite aTopLevelSuite) {
 		if(sessionDataFile.exists()) {
@@ -136,20 +155,27 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			if(sessionDataFile==null) 
 				throw new Exception("Session Data File Never Set");
 			
-			BufferedReader br = new BufferedReader(new FileReader(sessionDataFile));
-			String [] firstLine = br.readLine().split(NAME_SEPARATOR);
-			br.close();
+			int determinedSessionNumber = 0;
+			int determinedTotalRuns = 0;
 			
-			int determinedSessionNumber = Integer.parseInt(firstLine[SESSION_DATA_SESSION_NUMBER_INDEX]);
-			int determinedTotalRuns = Integer.parseInt(firstLine[SESSION_DATA_TOTAL_RUN_INDEX]);
+			if(sessionDataFile.exists()) {
+				BufferedReader br = new BufferedReader(new FileReader(sessionDataFile));
+				String [] firstLine = br.readLine().split(NAME_SEPARATOR);
+				br.close();
+				determinedSessionNumber = Integer.parseInt(firstLine[SESSION_DATA_SESSION_NUMBER_INDEX]);
+				determinedTotalRuns = Integer.parseInt(firstLine[SESSION_DATA_TOTAL_RUN_INDEX]);
+			}else {
+				sessionDataFile.createNewFile();
+			}
 			
 			determinedSessionNumber = determinedSessionNumber > sessionNumber ? determinedSessionNumber : sessionNumber;
 			determinedTotalRuns = determinedTotalRuns > numTotalRuns ? determinedTotalRuns : numTotalRuns;
 			
-			sessionDataFile.createNewFile();
+
 			FileWriter fw = new FileWriter(sessionDataFile);
-			fw.append(determinedSessionNumber+NAME_SEPARATOR+determinedTotalRuns);
+			fw.write(determinedSessionNumber+NAME_SEPARATOR+determinedTotalRuns);
 			fw.close();
+			
 		}catch(Exception e) {
 			System.err.println(e);
 		}
@@ -166,7 +192,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		checkTotalRunNumber();
 		composeTrace();
 		appendLine(fullTrace.toString());		
-		sortedPrereqTests=null;
+		unsortedPrereqTests=null;
+		unsortedExtraCreditTests=null;
 		numRuns++;
 		numTotalRuns++;
 		writeToSessionDataFile();
@@ -181,16 +208,18 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		fullTrace.append(sessionNumber+",");
 		fullTrace.append(numRuns+",");
 		fullTrace.append(testIsSuite+",");
-		fullTrace.append(composeString(sortedSuiteTests)+",");
-		fullTrace.append(composeString(sortedPrereqTests)+",");
+		fullTrace.append(composeString(unsortedSuiteTests)+",");
+		fullTrace.append(composeString(unsortedPrereqTests)+",");
+		fullTrace.append(composeString(unsortedExtraCreditTests)+",");
 	}
 	
 	private StringBuilder composeString(List<String> dataSrc) {
 		StringBuilder string = new StringBuilder();
-		if(dataSrc==null) {
+		if(dataSrc==null||dataSrc.size()==0) {
 			string.append("");
 			return string;
 		}
+		Collections.sort(dataSrc);
 		for(String data:dataSrc) {
 			string.append(data);
 			string.append(NAME_SEPARATOR);
@@ -208,14 +237,14 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 //		String test = description.getClassName();
 		
 		if(testIsSuite) 
-			testIsPrereq=!sortedSuiteTests.contains(fixedClassName);
+			testIsPrereq=!unsortedSuiteTests.contains(fixedClassName);
 		else
 			testIsPrereq=!currentTest.equals(fixedClassName);
 		
 		if(testIsPrereq) {
-			if(sortedPrereqTests==null) 
-				sortedPrereqTests=new ArrayList<String>();
-			sortedPrereqTests.add(fixedClassName);
+			if(unsortedPrereqTests==null) 
+				unsortedPrereqTests=new ArrayList<String>();
+			unsortedPrereqTests.add(fixedClassName);
 		}
 		
     }
