@@ -9,6 +9,7 @@ import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.TimedProcess;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
+import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleWarningsRatioTestCase;
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.concurrency.AbstractBarrier;
 import gradingTools.shared.testcases.concurrency.AbstractEarlyJoinBasicJoiner;
@@ -20,7 +21,9 @@ import gradingTools.shared.testcases.shapes.rotate.moving.MovingRotatingLineFort
 import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.MethodPropertyChecker;
 import util.trace.ImplicitKeywordKind;
+import util.trace.TraceableWarning;
 import util.trace.Tracer;
+import util.trace.uigen.UnknownPropertyNotification;
 
 public class GraderBasicsTraceUtility {
 	static boolean turnOn = true;
@@ -28,6 +31,22 @@ public class GraderBasicsTraceUtility {
 	@Deprecated
 	public static boolean isTurnOn() {
 		return turnOn;
+	}
+	public static int getMaxTraces() {
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.getMaxTraces();
+	}
+	public static void setMaxTraces(int newVal) {
+		 BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.setMaxTraces(newVal);
+	}
+	public static int getMaxPrintedTraces() {
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.getMaxPrintedTraces();
+	}
+	public static void setMaxPrintedTraces(int newVal) {
+		 BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+		.setMaxPrintedTraces(newVal);
 	}
 	public static void setBufferTracedMessages(boolean newVal) {
 //		bufferTracedMessages  = newVal;
@@ -59,6 +78,12 @@ public class GraderBasicsTraceUtility {
 //		Tracer.setBufferTracedMessages(bufferTracedMessages);
 		Tracer.setBufferTracedMessages(getBufferTracedMessages());
 		Tracer.setDisplayThreadName(true);
+		Tracer.showInfo(GraderBasicsTraceUtility.getTracerShowInfo());
+
+//		Tracer.showInfo(GraderBasicsTraceUtility.getTracerShowInfo());
+		Tracer.setMaxTraces(GraderBasicsTraceUtility.getMaxTraces());
+		Tracer.setMaxPrintedTraces(GraderBasicsTraceUtility.getMaxPrintedTraces());
+		TraceableWarning.doNotWarn(UnknownPropertyNotification.class);
 
 
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
@@ -81,6 +106,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(AZippedRootFolderProxy.class, true);
 			Tracer.setKeywordPrintStatus(BasicProjectClassesManager.class, true);
 			Tracer.setKeywordPrintStatus(CheckStyleTestCase.class, true);
+			Tracer.setKeywordPrintStatus(CheckStyleWarningsRatioTestCase.class, true);
+
 
 
 

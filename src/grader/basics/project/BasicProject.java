@@ -839,7 +839,7 @@ public class BasicProject implements Project {
 		}
 
 		if (aParentFolder == null) {
-			System.err.println("Please install plugin and run checkstyle on your prohect");
+			System.err.println("Please install plugin and run checkstyle on your project");
 			return null;
 		}
 		return aParentFolder;
@@ -928,7 +928,7 @@ public class BasicProject implements Project {
 
 			try {
 				checkStyleText = Common.readFile(new File(anOutFileName)).toString();
-		        Tracer.info(this, "Checkstyle output\n" + checkStyleText);
+//		        Tracer.info(this, "Checkstyle output\n" + checkStyleText);
 
 			} catch (IOException e) {
 				e.printStackTrace();

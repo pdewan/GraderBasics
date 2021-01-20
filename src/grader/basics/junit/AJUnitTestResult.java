@@ -55,7 +55,9 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			System.err.println (name + " did not pass completely:" + aMessage);
 
 			System.out.println("Steps traced since last test:");
-			System.out.println(Tracer.getBufferedTracedMessages());
+//			System.out.println(Tracer.getBufferedTracedMessages());
+			System.out.println(Tracer.consumeBufferedTracedMessages());
+
 			if (aMessage == null) { // some exception
 				checkResult = new TestCaseResult(false, 
 						aThrowable.toString(), name, true);

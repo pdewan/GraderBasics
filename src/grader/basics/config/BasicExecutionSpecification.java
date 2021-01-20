@@ -116,6 +116,10 @@ public interface BasicExecutionSpecification {
 	void setSMLIsBat(boolean newVal);
 	boolean getForkInProjectFolder();
 	void setForkInProjectFolder(boolean newVal);
+	int getMaxTraces();
+	void setMaxTraces(int newVal);
+	int getMaxPrintedTraces();
+	void setMaxPrintedTraces(int newVal);
 	
 	
 }

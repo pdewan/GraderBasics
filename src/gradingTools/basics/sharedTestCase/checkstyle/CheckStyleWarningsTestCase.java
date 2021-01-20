@@ -2,9 +2,14 @@ package gradingTools.basics.sharedTestCase.checkstyle;
 
 import java.util.List;
 
+import grader.basics.execution.GradingMode;
+import grader.basics.junit.JUnitTestsEnvironment;
+import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
+import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
+import gradingTools.shared.testcases.utils.AbstractConfigurationProvided;
 
 public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 //	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.2;
@@ -57,10 +62,6 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 //		return sb.toString();
 //	}
 	@Override
-//	 protected abstract  String warningName();
-//	 protected  String infoName() {
-//		 return null;
-//	 }
 	
 	protected  TestCaseResult test (Project aProject, String[] aCheckStyleLines, List<String> aFailedMatchedLines, List<String> aSucceededMatchedLines, boolean autoGrade) {
 		double aScore = computeScore(aProject, aCheckStyleLines, aFailedMatchedLines, aSucceededMatchedLines, autoGrade);
@@ -75,6 +76,37 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 
     	
     }
+	protected Class configurationClass() {
+		return null;
+	}
+	public TestCaseResult test(Project aProject, boolean autoGrade) throws NotAutomatableException, NotGradableException {
+        TestCaseResult aSuperResult = super.test(aProject, autoGrade);
+        return toConfigurationBasedResult(aSuperResult);
+//        Class aConfigurationClass = configurationClass();
+//        if (aConfigurationClass == null) {
+//        	return aSuperResult;
+//        }
+//        AbstractConfigurationProvided aConfigurationProvided = (AbstractConfigurationProvided) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aConfigurationClass);
+//		return aConfigurationProvided.computeResultBasedOnTaggedClasses(aSuperResult);
+        
+//        return retVal;
+
+        
+    }
+	public TestCaseResult toConfigurationBasedResult(TestCaseResult aSuperResult) throws NotAutomatableException, NotGradableException {
+//        TestCaseResult aSuperResult = super.test(aProject, autoGrade);
+        Class aConfigurationClass = configurationClass();
+        if (aConfigurationClass == null) {
+        	return aSuperResult;
+        }
+        AbstractConfigurationProvided aConfigurationProvided = (AbstractConfigurationProvided) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aConfigurationClass);
+		return aConfigurationProvided.computeResultBasedOnTaggedClasses(aSuperResult);
+        
+//        return retVal;
+
+        
+    }
+	
 //	protected  TestCaseResult test (Project aProject, String[] aCheckStyleLines, List<String> aFailedMatchedLines, List<String> aSucceededMatchedLines, boolean autoGrade) {
 //		if (aFailedMatchedLines != null && aFailedMatchedLines.size() == 0) {
 //			return pass();
@@ -105,22 +137,23 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 //
 //    	
 //    }
+	protected static boolean printSuccessLines = false;
 	protected  void printTrace (double aScore, Project aProject, String[] aCheckStyleLines, List<String> aFailedMatchedLines, List<String> aSucceededMatchedLines, boolean autoGrade) {
 		
 
         if (aScore != 1) {
-        	if (aFailedMatchedLines != null) {
-        	System.out.println(aFailedMatchedLines.size()  + " lines failing check");
+        	if (aFailedMatchedLines != null ) {
+        		util.trace.Tracer.info(CheckStyleWarningsRatioTestCase.class, aFailedMatchedLines.size()  + " lines failing check");
         	for (String aLine:aFailedMatchedLines) {
-        		System.out.println(aLine);
+        		util.trace.Tracer.info(CheckStyleWarningsRatioTestCase.class, aLine);
         	}
 //        	System.out.println(Arra(aFailedMatchedLines));
         	}
-        	if (aSucceededMatchedLines != null) {
-        		System.out.println(aSucceededMatchedLines.size()  + " lines passing check");
+        	if (aSucceededMatchedLines != null && printSuccessLines) {
+        		util.trace.Tracer.info(CheckStyleWarningsRatioTestCase.class, aSucceededMatchedLines.size()  + " lines passing check");
 //            	System.out.println(beautify(aSucceededMatchedLines));
         		for (String aLine:aSucceededMatchedLines) {
-            		System.out.println(aLine);
+        			util.trace.Tracer.info(CheckStyleWarningsRatioTestCase.class, aLine);
             	}
         	}
         }

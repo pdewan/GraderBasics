@@ -133,6 +133,12 @@ public class BasicStaticConfigurationUtils {
 
 	public static final String TRACING= "tracing";
 	public static final boolean DEFAULT_TRACING = true;
+	
+	public static final String MAX_TRACES = "maxTraces";
+	public static final int DEFAULT_MAX_TRACES = 2000;
+	
+	public static final String MAX_PRINTED_TRACES = "maxPrintedTraces";
+	public static final int DEFAULT_MAX_PRINTED_TRACES = 600;
 
 	public static final String BUFFER_TRACED_MESSAGES = "bufferTracedMessages";
 	public static final boolean DEFAULT_BUFFER_TRACED_MESSAGES = true;
@@ -1207,6 +1213,7 @@ public class BasicStaticConfigurationUtils {
 		if (retVal.isEmpty()) {
 			retVal = configuration.getList(module + "." + property);
 		}
+		
 		if (retVal.isEmpty()) {
 			retVal = configuration.getList(DEFAULT + "." + property);
 		}
