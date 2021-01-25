@@ -937,5 +937,20 @@ public class BasicProject implements Project {
 		}
 		return checkStyleText;
 	}
+//    String[] aCheckStyleLines = aCheckStyleText.split(System.getProperty("line.separator"));
+	protected String[] checkStyleLines;
+	@Override
+	public String[] getCheckstyleLines() {
+		if (checkStyleLines == null) {
+			String aCheckStyleText = getCheckstyleText();
+			if (aCheckStyleText == null) {
+				return null;
+			}
+			checkStyleLines = aCheckStyleText.split(System.getProperty("line.separator"));
+		}
+		// TODO Auto-generated method stub
+		return checkStyleLines;
+	}
+
 
 }

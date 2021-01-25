@@ -10,6 +10,7 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 import gradingTools.shared.testcases.utils.AbstractConfigurationProvided;
+import gradingTools.shared.testcases.utils.TaggedClassesDefined;
 
 public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 //	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.2;
@@ -79,9 +80,10 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 	protected Class configurationClass() {
 		return null;
 	}
+	
 	public TestCaseResult test(Project aProject, boolean autoGrade) throws NotAutomatableException, NotGradableException {
         TestCaseResult aSuperResult = super.test(aProject, autoGrade);
-        return toConfigurationBasedResult(aSuperResult);
+        return toConfigurationBasedResult(aProject, aSuperResult);
 //        Class aConfigurationClass = configurationClass();
 //        if (aConfigurationClass == null) {
 //        	return aSuperResult;
@@ -93,11 +95,13 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 
         
     }
-	public TestCaseResult toConfigurationBasedResult(TestCaseResult aSuperResult) throws NotAutomatableException, NotGradableException {
+	public TestCaseResult toConfigurationBasedResult(Project aProject, TestCaseResult aSuperResult) throws NotAutomatableException, NotGradableException {
 //        TestCaseResult aSuperResult = super.test(aProject, autoGrade);
         Class aConfigurationClass = configurationClass();
+        
         if (aConfigurationClass == null) {
-        	return aSuperResult;
+        
+        	return toTaggedClassBasedResult (aProject, aSuperResult);
         }
         AbstractConfigurationProvided aConfigurationProvided = (AbstractConfigurationProvided) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aConfigurationClass);
 		return aConfigurationProvided.computeResultBasedOnTaggedClasses(aSuperResult);
@@ -106,6 +110,22 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
 
         
     }
+	protected Class taggedClassesDefined() {
+		return null;
+	}
+	public TestCaseResult toTaggedClassBasedResult(Project aProject, TestCaseResult aSuperResult) throws NotAutomatableException, NotGradableException {
+//      TestCaseResult aSuperResult = super.test(aProject, autoGrade);
+      Class aTaggedClassesDefinedClass = taggedClassesDefined();
+      if (aTaggedClassesDefinedClass == null) {
+    	  return aSuperResult;
+      }
+      TaggedClassesDefined aTaggedClassesDefined = (TaggedClassesDefined) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aTaggedClassesDefinedClass);
+		return aTaggedClassesDefined.computeResultBasedOnTaggedClasses(aSuperResult);
+      
+//      return retVal;
+
+      
+  }
 	
 //	protected  TestCaseResult test (Project aProject, String[] aCheckStyleLines, List<String> aFailedMatchedLines, List<String> aSucceededMatchedLines, boolean autoGrade) {
 //		if (aFailedMatchedLines != null && aFailedMatchedLines.size() == 0) {
