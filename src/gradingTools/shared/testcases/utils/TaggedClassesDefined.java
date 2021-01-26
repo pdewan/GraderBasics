@@ -1,5 +1,8 @@
 package gradingTools.shared.testcases.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,40 +38,49 @@ import gradingTools.shared.testcases.openmp.scannedTree.SNode;
 import gradingTools.utils.RunningProjectUtils;
 import unc.checks.STBuilderCheck;
 import util.annotations.MaxValue;
+
 @MaxValue(10)
 public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
-	
+
 	Map<String[], Class> tagToClass = new HashMap<String[], Class>();
 	Map<Class, String[]> classToTag = new HashMap<>();
 	int numDuplicateClasses = 0;
 	int numMissingClasses = 0;
 	double score = 0;
 
+	public static final String TAGS_FILE_NAME = AbstractConfigurationProvided.CONFIGURATION_FILE_NAME;
+
 	public double getScore() {
 		return score;
 	}
+
 	public int getNumMissingClasses() {
 		return numMissingClasses;
 	}
+
 	public int getNumDuplicateClasses() {
 		return numDuplicateClasses;
 	}
+
 	public TaggedClassesDefined() {
 	}
 
 	public Map<String[], Class> getTagToClass() {
 		return tagToClass;
 	}
-	
+
 	public Map<Class, String[]> getClassToTag() {
 		return classToTag;
 	}
-	
+
 	public String[][] getClassesTags(Project project) {
 		return null;
 	}
+
 	List<String> matchedTags = new ArrayList<String>();
 	List<String> unmatchedTags = new ArrayList<String>();
+	public static final String MATCHED_CLASS_NAME_PREFIX = "Type";
+	public static final String MATCHED_CLASS_NAME_SUFFIX = "matches";
 
 	public TestCaseResult checkTagsFromCheckstyleText(Project project) {
 		String aText = project.getCheckstyleText();
@@ -84,21 +96,37 @@ public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
 			System.err.println("Did not find expected types");
 			return pass();
 		}
-		String aList = aText.substring(aListStart + 1, aListEnd );
+		String aList = aText.substring(aListStart + 1, aListEnd);
 		String[] anAndedTagsList = aList.split(",");
 //		String[][] retVal = new String[anAndedTags.length][0];
 		List<String> aFoundTags = new ArrayList<String>();
 		matchedTags.clear();
 		unmatchedTags.clear();
 		String[] aLines = project.getCheckstyleLines();
+		File aProjectDirectory = project.getProjectFolder();
+		PrintWriter aPrintWriter = null;
+		try {
+			String aTagsFileName = aProjectDirectory.getCanonicalPath() + "/" + TAGS_FILE_NAME;
+			File aFile = new File(aTagsFileName);
+			if (!aFile.exists()) {
+
+				aFile.createNewFile();
+
+			}
+			aPrintWriter = new PrintWriter(aFile);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (int anIndex = 0; anIndex < anAndedTagsList.length; anIndex++) {
 			String anAndedTags = anAndedTagsList[anIndex];
 //			String aNormalizedTags = anAndedTags.replaceAll(" ", "");
 			String aNormalizedTags = anAndedTags.trim();
 
-			String aContainingText = /*".*matches tags.*" +*/ "(" + aNormalizedTags + ")";
+			String aContainingText = /* ".*matches tags.*" + */ "(" + aNormalizedTags + ")";
 			boolean found = false;
-			for (String aLine:aLines ) {
+			for (String aLine : aLines) {
 //				String aNormalizedLine = aLine.replaceAll(" ", "");
 				String aNormalizedLine = aLine;
 
@@ -107,9 +135,22 @@ public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
 //					System.err.println(aLine);
 //					System.err.println(anAndedTags);
 //				}
-				
+
 //				if (aLine.matches(aRegex)) {
 				if (aNormalizedLine.contains(aContainingText)) {
+					// [INFO]
+					// D:\dewan_backup\Java\Comp533\Andrew533Assignment4\.\src\clientServerClasses\ClientCommandCaptureListener.java:9:
+					// Type clientServerClasses.ClientCommandCaptureListener matches tags
+					// (@DistributedTags.CLIENT_OUT_COUPLER+@DistributedTags.RMI) [STBuilder]
+
+					int aPrefixIndex = aNormalizedLine.indexOf(MATCHED_CLASS_NAME_PREFIX);
+					int aSuffixIndex = aNormalizedLine.indexOf(MATCHED_CLASS_NAME_SUFFIX);
+					if (aPrintWriter != null && aPrefixIndex >= 0 && aSuffixIndex >= 0 && aSuffixIndex > aPrefixIndex) {
+						String aClassName = aNormalizedLine
+								.substring(aPrefixIndex + MATCHED_CLASS_NAME_PREFIX.length() + 1, aSuffixIndex - 1);
+						aPrintWriter.println(aClassName + "," + aNormalizedTags);
+
+					}
 
 					found = true;
 					break;
@@ -122,21 +163,24 @@ public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
 				unmatchedTags.add(anAndedTags);
 			}
 		}
+		aPrintWriter.close();
+
 		double aNumUnmatchedTags = unmatchedTags.size();
 		if (aNumUnmatchedTags > 0) {
 			double aNumMatchedTags = matchedTags.size();
-			System.err.println ("Unmatched tags:" + unmatchedTags);
-			System.err.println ("Matched tags:" + matchedTags);
+			System.err.println("Unmatched tags:" + unmatchedTags);
+			System.err.println("Matched tags:" + matchedTags);
 			double aTotalTags = matchedTags.size() + unmatchedTags.size();
-			return partialPass(aNumMatchedTags/aTotalTags, "Only " + aNumMatchedTags + " matched out of " + aTotalTags + " tags.\n See console text");
+			return partialPass(aNumMatchedTags / aTotalTags,
+					"Only " + aNumMatchedTags + " matched out of " + aTotalTags + " tags.\n See console text");
 		}
-		
+
 		return pass();
 	}
 
 	@Override
-	public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
-			NotGradableException {
+	public TestCaseResult test(Project project, boolean autoGrade)
+			throws NotAutomatableException, NotGradableException {
 //		Map<String[], Class> tagToClass = new HashMap<String[], Class>();
 //		Map<Class, String[]> classToTag = new HashMap<>();
 //		int aNumDuplicateClasses = 0;
@@ -147,43 +191,45 @@ public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
 			if (aClassesTags == null) {
 				return checkTagsFromCheckstyleText(project);
 			}
-			for (String[] aClassTags:aClassesTags) {
+			for (String[] aClassTags : aClassesTags) {
 				Class aMatchedClass = BasicProjectIntrospection.findClassByTags(aClassTags);
-				if (aMatchedClass != null) {					
+				if (aMatchedClass != null) {
 //					tagToClass.put(aClassTags, aMatchedClass);
 					String[] aPreviousTags = classToTag.get(aMatchedClass);
 					tagToClass.put(aClassTags, aMatchedClass);
 					if (classToTag.get(aMatchedClass) != null) {
-						System.err.println(aMatchedClass + " matching tags" + Arrays.toString(aPreviousTags) + " and " + Arrays.toString(aClassTags));
+						System.err.println(aMatchedClass + " matching tags" + Arrays.toString(aPreviousTags) + " and "
+								+ Arrays.toString(aClassTags));
 						numDuplicateClasses++;
 					} else {
 						classToTag.put(aMatchedClass, aClassTags);
 					}
 				} else {
-					System.err.println("No class found for tags:" + Arrays.toString(aClassTags) + ".\nPlease define at least an empty class with these tags to receive non-zero style credit");
+					System.err.println("No class found for tags:" + Arrays.toString(aClassTags)
+							+ ".\nPlease define at least an empty class with these tags to receive non-zero style credit");
 					numMissingClasses++;
 				}
 			}
 
 			double aNumTags = getClassesTags(project).length;
 			if (numMissingClasses > 0) {
-				return fail (numMissingClasses + " classes for which required tags are missing.");
+				return fail(numMissingClasses + " classes for which required tags are missing.");
 			}
 			score = 1.0;
 			if (numDuplicateClasses > 0) {
-				score  = (aNumTags - numDuplicateClasses )/aNumTags;
+				score = (aNumTags - numDuplicateClasses) / aNumTags;
 
-				return partialPass (score, numDuplicateClasses + " classes that combine tags that should be associated with separate classes. Style sscores will be normalized");
-				
+				return partialPass(score, numDuplicateClasses
+						+ " classes that combine tags that should be associated with separate classes. Style sscores will be normalized");
+
 //				return fail (numMissingClasses + " classes for which required tags are missing.");
 			}
-				
+
 //			double aScore  = (aNumTags - numDuplicateClasses - numMissingClasses)/aNumTags;
 //			if (aScore < 1.0) {
 //				return partialPass(aScore, "Did not find unique classes for all expected tags. See console trace");
 //			}
 			return pass();
-			
 
 		} catch (NotRunnableException e) {
 			throw new NotGradableException();
@@ -194,16 +240,17 @@ public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
 		if (getScore() == 1.0) {
 			return aSuperResult;
 		} else if (getScore() == 0) {
-			return fail("Create " + getNumMissingClasses() + "  classes with missing tags to receive non zero score on this test");
+			return fail("Create " + getNumMissingClasses()
+					+ "  classes with missing tags to receive non zero score on this test");
 
-		} else  {
+		} else {
 			double anOriginalPercentage = aSuperResult.getPercentage();
-			double aPercentage = getScore()*anOriginalPercentage;
-			
-			return partialPass(aPercentage, "Raw score of " + anOriginalPercentage + " scaled by " + getScore() + " because of duplicate tagged classes. See console trace of failing and passing lines");
+			double aPercentage = getScore() * anOriginalPercentage;
+
+			return partialPass(aPercentage, "Raw score of " + anOriginalPercentage + " scaled by " + getScore()
+					+ " because of duplicate tagged classes. See console trace of failing and passing lines");
 		}
-		
-        
-    }
-	 
+
+	}
+
 }
