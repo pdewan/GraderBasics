@@ -94,8 +94,8 @@ public abstract class FactoryMethodTest extends ProxyTest{
 
 		singletonCheckPassed = aSecondCreation == aFirstInstantiation;
 		if (!singletonCheckPassed) {
-			factoryMessage = "First factory method return value " + 
-						aFirstInstantiation + " != " + aSecondCreation;
+			factoryMessage = "Factory class is not a singleton, first factory method return value " + 
+						aFirstInstantiation + " != second one" + aSecondCreation;
 		} else {
 			factoryCredit += factoryObjectSingletonCredit();
 

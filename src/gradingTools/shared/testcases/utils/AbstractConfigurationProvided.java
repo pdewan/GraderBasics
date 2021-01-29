@@ -13,6 +13,7 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
+import util.trace.Tracer;
 @MaxValue(10)
 @Explanation("Tests that the configuration class for requirements.")
 public abstract class AbstractConfigurationProvided extends PassFailJUnitTestCase {
@@ -58,7 +59,11 @@ public abstract class AbstractConfigurationProvided extends PassFailJUnitTestCas
 			configurationClass = BasicProjectIntrospection.
 					findClassByExistingSupertype(project, referenceInterface());
 			if (configurationClass == null) {
-				return fail ("Did not find an implementation of " + referenceInterface());
+				System.err.println("Class path:" + System.getProperty("java.class.path"));
+
+				System.err.println("Classes in project:"  + project.getClassesManager().get().getClassDescriptions());
+
+				return fail ("Did not find an implementation of " + referenceInterface() + " see console input above");
 			}
 //			testConfiguration = (MapReduceConfiguration) BasicProjectIntrospection.createInstanceOfPredefinedSupertype(REGISTRY_INTERFACE);
 			testConfiguration =  BasicProjectIntrospection.createInstanceAndProxy(configurationClass, referenceInterface() );
