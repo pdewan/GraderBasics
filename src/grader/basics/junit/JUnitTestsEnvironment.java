@@ -55,6 +55,10 @@ public class JUnitTestsEnvironment {
 	 */
 	public static PassFailJUnitTestCase getAndPossiblyRunGradableJUnitTest(Class aClass) {
 		JUnitTestContext aContext = history.get(aClass);
+		if (aContext == null) {
+			System.err.println("Internal error when trying to run missing independent test:" + aClass + ".\nPlease report to instructor");
+			return null;
+		}
 		return aContext.getAndPossiblyRunJUnitPassFailTestCase();
 	}
 	public static PassFailJUnitTestCase getPassFailJUnitTest(Class aClass) {
