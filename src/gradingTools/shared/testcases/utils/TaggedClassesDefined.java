@@ -237,10 +237,16 @@ public abstract class TaggedClassesDefined extends PassFailJUnitTestCase {
 	}
 
 	public TestCaseResult computeResultBasedOnTaggedClasses(TestCaseResult aSuperResult) {
+		int aNumMissingClasses = getNumMissingClasses();
+		if (aNumMissingClasses == 0) {
+			return aSuperResult;
+		}
+
 		if (getScore() == 1.0) {
 			return aSuperResult;
 		} else if (getScore() == 0) {
-			return fail("Create " + getNumMissingClasses()
+			
+			return fail("Create " + aNumMissingClasses
 					+ "  classes with missing tags to receive non zero score on this test");
 
 		} else {
