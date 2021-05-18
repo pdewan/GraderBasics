@@ -71,7 +71,7 @@ public class CheckStyleClassDefinedTestCase extends CheckStyleTestCase {
 	}
   //String literal expressions should be on the left side
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
-		 return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, autoGrade);
+		 return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);
 //		 if (aResult.getPercentage() != 1.0) {
 //			 if (aProject.getEntryPoints() == null || aProject.getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT) == null)
 //				 return aResult;

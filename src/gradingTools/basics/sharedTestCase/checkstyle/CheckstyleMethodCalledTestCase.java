@@ -10,11 +10,16 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
 
 public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
+
 	 protected String method;
+	 public static final String WARNING_NAME = "has not made expected call";
+		public static final String INFO_NAME = "has made expected call";
 //	 protected String typeTag;
 //	 protected String typeName;
 	 public CheckstyleMethodCalledTestCase(String aType, String aMethod) {
-	        super(aType, aType + "!" + aMethod);
+	        super(aType, aMethod);
+//	        super(aType, aType + "!" + aMethod);
+
 	        typeTag = aType;
 	        method = aMethod;
 	        
@@ -23,9 +28,19 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	
 	@Override
 	public String negativeRegexLineFilter() {
+		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
+
 		
 //		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-		return "(.*)" + getActualType() + "(.*)not made expected call(.*)\\Q" + method + "\\E(.*)";
+//		return "(.*)" + getActualType() + "(.*)not made expected call(.*)\\Q" + method + "\\E(.*)";
+//		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
+
+	}
+	@Override
+	public String positiveRegexLineFilter() {
+		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
+//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
+//		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
 //		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
 
 	}
@@ -64,7 +79,7 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 //	}
   //String literal expressions should be on the left side
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
-		 return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, autoGrade);
+		 return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);
 //		 if (aResult.getPercentage() != 1.0) {
 //			 if (aProject.getEntryPoints() == null || aProject.getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT) == null)
 //				 return aResult;

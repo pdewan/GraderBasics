@@ -30,6 +30,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	public String getName() {
 		return super.getName();
 	}
+	@Visible(false)
 	public void testAll() {
 
 		try {

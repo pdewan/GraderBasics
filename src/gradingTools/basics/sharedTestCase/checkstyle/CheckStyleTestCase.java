@@ -29,6 +29,7 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //        	System.out.println ("Null type tag");
 //        }
         typeTag = aTypeTag;
+        actualType = aTypeTag;
     }
     
 	protected String typeTag() {
@@ -84,7 +85,8 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     }
   
 	protected String beautify (String aCheckstyleString) {
-		return aCheckstyleString.substring(aCheckstyleString.indexOf(warningName())) + "\n";
+//		return aCheckstyleString.substring(aCheckstyleString.indexOf(warningName())) + "\n";
+		return aCheckstyleString;
 	}
 	protected String beautify (List<String> aList) {
 		StringBuffer sb = new StringBuffer();
@@ -181,11 +183,24 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	
     }
     
-    protected TestCaseResult singleMatchScore (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, boolean autoGrade) {
-    	
+    protected TestCaseResult singleMatchScore (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
+    	if (aSucceededLines != null && aSucceededLines.size() > 0) {
+    		return pass();
+    	}
+    	if (aFailedLines != null && aFailedLines.size() > 0) {
         String aNotes = failMessageSpecifier(aFailedLines); 
-        return fail(aNotes, autoGrade);    
-    	
+        return fail(aNotes, autoGrade); 
+    	}
+    	String aNegativeFilter = negativeRegexLineFilter();
+    	if (aNegativeFilter != null) {
+    	return fail ("Checkstyle output matches:" + aNegativeFilter, autoGrade);
+    	}
+    	String aPositiveFilter = positiveRegexLineFilter();
+    	if (aPositiveFilter != null) {
+        	return fail ("Checkstyle output does not match:" + aPositiveFilter, autoGrade);
+
+    	}
+    	return fail ("Test failed, Ask instructor for better explanation:" + autoGrade);
     }
     
     protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
