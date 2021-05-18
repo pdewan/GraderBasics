@@ -25,7 +25,7 @@ import grader.basics.vetoers.AConsentFormVetoer;
 
 public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	
-	private final String EXTENDED_HEADER = HEADER+",SessionNumber,SessionRunNumber,IsSuite,SuiteTests,PrerequisiteTests,ExtraCreditTests,";
+	private final String EXTENDED_HEADER = HEADER+",SessionNumber,SessionRunNumber,IsSuite,SuiteTests,PrerequisiteTests,ExtraCreditTests,TestScores,";
 	private final String FILENAME_MODIFIER="FineGrained";
 	
 	public static final int SESSION_NUMBER_INDEX = 9;
@@ -34,10 +34,13 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	public static final int SUITE_TESTS_INDEX = 12;
 	public static final int PREREQUISITE_TESTS_INDEX = 13;
 	public static final int EXTRA_CREDIT_TESTS_INDEX = 14;
+	public static final int TEST_SCORES_INDEX = 15;
+
 	
 	List<String> unsortedPrereqTests=null;
 	List<String> unsortedExtraCreditTests=null;
 	List<String> unsortedSuiteTests=null;
+	List<String> unsortedTestScores=null;
 	
 	int sessionNumber=0;
 	
@@ -46,7 +49,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	public static final int SESSION_DATA_TOTAL_RUN_INDEX=1;
 	
 	private boolean testIsSuite;
-	
+	private GradableJUnitTest testedSuiteOrTest;
 	
 	public AFineGrainedTestLogFileWriter() {
 		super();
@@ -73,18 +76,21 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			GradableJUnitTest aTestOrSuiteSelected = anEntry.getValue();
 			Class aTestOrSuiteSelectedClass = aTestOrSuiteSelected.getJUnitClass();
 
+			testedSuiteOrTest=aTestOrSuiteSelected;
 			
-			unsortedExtraCreditTests = new ArrayList();
+			unsortedExtraCreditTests = new ArrayList<String>();
+			
 			
 			testIsSuite = aTestOrSuiteSelected instanceof GradableJUnitSuite;
 			if(testIsSuite) {
-				unsortedSuiteTests = new ArrayList();
+				unsortedSuiteTests = new ArrayList<String>();
 				determineSuiteTests((GradableJUnitSuite)aTestOrSuiteSelected);
 			}else {
 				unsortedSuiteTests=null;
 				GradableJUnitTest selectedTest = (GradableJUnitTest)aTestOrSuiteSelected;
 				if(selectedTest.isExtra()) 
 					unsortedExtraCreditTests.add(selectedTest.getSimpleName());
+				
 			}
 				
 			
@@ -119,6 +125,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			}
 			if(suiteIsExtra || test.isExtra())
 				unsortedExtraCreditTests.add(test.getSimpleName());
+			
 			unsortedSuiteTests.add(test.getSimpleName());
 		}
 	}
@@ -187,13 +194,21 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		try {
 		super.testRunFinished(aResult);
 		loadCurrentSets(currentTopSuite);
+		determinePostRunScores();
 		correctUntested();
 		setPassPercentage();
 		checkTotalRunNumber();
 		composeTrace();
-		appendLine(fullTrace.toString());		
+		appendLine(fullTrace.toString());	
+		
+//		try {
+//			LogSender.sendToServer(fullTrace.toString(), numTotalRuns);
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//		}
 		unsortedPrereqTests=null;
 		unsortedExtraCreditTests=null;
+		unsortedTestScores=null;
 		numRuns++;
 		numTotalRuns++;
 		writeToSessionDataFile();
@@ -211,6 +226,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		fullTrace.append(composeString(unsortedSuiteTests)+",");
 		fullTrace.append(composeString(unsortedPrereqTests)+",");
 		fullTrace.append(composeString(unsortedExtraCreditTests)+",");
+		fullTrace.append(composeString(unsortedTestScores)+",");
 	}
 	
 	private StringBuilder composeString(List<String> dataSrc) {
@@ -249,5 +265,31 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		
     }
 	
+	
+	private void determinePostRunScores() {
+		unsortedTestScores = new ArrayList<String>();
+		if(testedSuiteOrTest instanceof GradableJUnitSuite)
+			determineForEachTest((GradableJUnitSuite)testedSuiteOrTest);
+		else
+			unsortedTestScores.add(composeTestScore(testedSuiteOrTest));
+	}
+	
+	private void determineForEachTest(GradableJUnitSuite aSuite) {
+		for(GradableJUnitTest test : aSuite.children()) {
+			if(test instanceof GradableJUnitSuite) { //used in instances where there are nested Suites such as running the top assignment suite
+				determineForEachTest((GradableJUnitSuite)test);
+				continue;
+			}
+			unsortedTestScores.add(composeTestScore(test));
+		}
+	}
+	
+	private String composeTestScore(GradableJUnitTest aTest) {
+		String name = aTest.getSimpleName();
+		String score = aTest.getDisplayedScore()+"";
+		String maxScore = aTest.getComputedMaxScore()+"";
+		
+		return name+"-("+score+"/"+maxScore+")";
+	}
 	
 }
