@@ -253,6 +253,7 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
         try {
         String aCheckStyleText = aProject.getCheckstyleText();
 //        Tracer.info(CheckStyleTestCase.class, "Checkstyle output\n" + aCheckStyleText);
+//        System.out.println("Checkstyle: " + aCheckStyleText);
         if (aCheckStyleText == null || aCheckStyleText.isEmpty()) {
 //          System.err.println("No checkstyle output, check console error messages");
           return fail ("No checkstyle output, check console error messages");
