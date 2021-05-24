@@ -192,26 +192,21 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
 		try {
-		super.testRunFinished(aResult);
-		loadCurrentSets(currentTopSuite);
-		determinePostRunScores();
-		correctUntested();
-		setPassPercentage();
-		checkTotalRunNumber();
-		composeTrace();
-		appendLine(fullTrace.toString());	
-		
-//		try {
-//			LogSender.sendToServer(fullTrace.toString(), numTotalRuns);
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}
-		unsortedPrereqTests=null;
-		unsortedExtraCreditTests=null;
-		unsortedTestScores=null;
-		numRuns++;
-		numTotalRuns++;
-		writeToSessionDataFile();
+			super.testRunFinished(aResult);
+			loadCurrentSets(currentTopSuite);
+			determinePostRunScores();
+			correctUntested();
+			setPassPercentage();
+			checkTotalRunNumber();
+			composeTrace();
+			appendLine(fullTrace.toString());	
+			unsortedPrereqTests=null;
+			unsortedExtraCreditTests=null;
+			unsortedTestScores=null;
+			numRuns++;
+			numTotalRuns++;
+			writeToSessionDataFile();
+			LogSender.sendToServer(fullTrace.toString(), numTotalRuns);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
