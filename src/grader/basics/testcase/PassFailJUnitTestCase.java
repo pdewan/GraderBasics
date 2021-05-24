@@ -98,9 +98,26 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
     	passfailDefaultTest();
     }
 
+    protected Class precedingTest() {
+		return null;
+	}
     
+    protected void checkPrecedingTest () {
+    	Class aPrecedingTest = precedingTest();
+    	if (aPrecedingTest == null) {
+    		return ;
+    	}
+		PassFailJUnitTestCase aResult = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTest);
+		if (aResult.getLastResult().isPass()) {
+			return ;
+		}
+//		Assert.assertTrue("Leaf object: " + leafProxy + " replaced with:" + computeLeafProxy(), 
+
+		Assert.assertTrue("Please correct test  " + aPrecedingTest + "before running this test", false);
+    }
 	
 	public void passfailDefaultTest() {
+		checkPrecedingTest();
 //		TestCaseResult result = null;
 		TestCaseResult lastResult = null;
 		

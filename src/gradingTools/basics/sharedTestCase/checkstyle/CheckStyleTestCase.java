@@ -192,7 +192,7 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
         return fail(aNotes, autoGrade); 
     	}
     	String aNegativeFilter = negativeRegexLineFilter();
-    	if (aNegativeFilter != null) {
+    	if (aNegativeFilter != null && aFailedLines != null && aFailedLines.size() > 0 ) {
     	return fail ("Checkstyle output matches:" + aNegativeFilter, autoGrade);
     	}
     	String aPositiveFilter = positiveRegexLineFilter();

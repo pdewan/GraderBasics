@@ -754,6 +754,9 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	// our parent class tags defaultTest
 	@Override
 	public void defaultTest() {
+//		TestCaseResult aPrecedingResult = precedingTestResult();
+		checkPrecedingTest();
+		
     	test();
     }
 //	@Test

@@ -31,8 +31,17 @@ public class CheckStylePropertyDefinedTestCase extends CheckStyleTestCase {
     
 	@Override
 	public String negativeRegexLineFilter() {
-		return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
+		return 	".*" + "WARN" + ".*" + property + ".*" + propertyType + ".*"+ typeTag + ".*" + "\\[ExpectedGetters\\]" + ".*" ;
+
+//		return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
 				
+	}
+	//[INFO] D:\dewan_backup\Java\grail13\src\shapes\AFork.java:1: Expected getter for property LeftLine of type @Comp301Tags.ROTATING_LINE in parent type @Comp301Tags.ANGLE. Good! [ExpectedGetters]
+
+	@Override
+	public String positiveRegexLineFilter() {
+		return ".*" + "INFO" + ".*" + property + ".*" +propertyType + ".*" + typeTag + ".*" + "\\[ExpectedGetters\\]" + ".*";
+	
 	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 	        TestCaseResult aResult = super.test(project, autoGrade);

@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 
+import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.project.BasicProjectIntrospection;
+import grader.basics.testcase.PassFailJUnitTestCase;
 
 public abstract class ProxyTest extends MethodExecutionTest{
 	protected Object rootProxy;
@@ -23,6 +25,10 @@ public abstract class ProxyTest extends MethodExecutionTest{
 //	
 	abstract protected String[] proxyClassTags() ;
 
+	protected Class precedingTest() {
+		return null;
+	}
+	
 	
 	protected abstract Class proxyClass();
 //	protected int originalX, originalY, originalWidth, originalHeight;
@@ -54,6 +60,10 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	}
 	
 	protected Object createOrGetLastRootProxy(){
+//		Class aPrecedingTest = precedingTest();
+//		if (aPrecedingTest != null) {
+//			 JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTest);
+//		}
 		rootProxy = BasicProjectIntrospection.createOrGetLastInstance(proxyClass(), getArgs());
 		maybeAssertNoClass(proxyClass(), rootProxy);
 		setLeafProxy();
