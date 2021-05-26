@@ -1,31 +1,30 @@
 package grader.basics.observers;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 
 public class LogSender {
 	private static final String reportURL = "https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
-	private static MessageDigest digest = null;
+	private static File fileStore;
+	private static final String auidFile="senderAUID.txt";
 	
-	public static void sendToServer(String log, int sessionId) throws Exception{
-		if(digest==null) 
-			digest = MessageDigest.getInstance("SHA-256");
-		
+	public static void setFileStore(String file) {
+		fileStore=new File(file+auidFile);
+	}
+	
+	public static void sendToServer(String log, int sessionId) throws Exception{		
 		JSONObject message = new JSONObject();
 		
 		message.put("log_id",System.currentTimeMillis()+"-"+sessionId);
@@ -40,7 +39,6 @@ public class LogSender {
 		message.put("log", logJSON);
 		
 		JSONObject ret = post(message,reportURL);
-		
 		if(ret==null) {
 			Thread.sleep(5000);
 			post(message,reportURL);
@@ -49,17 +47,39 @@ public class LogSender {
 	}
 	
 	private static String getHashMachineId() throws Exception {
-		InetAddress localHost = InetAddress.getLocalHost();
-		NetworkInterface network = NetworkInterface.getByInetAddress(localHost);
-		String machineId = byteToHexString(network.getHardwareAddress());
-		return byteToHexString(digest.digest(machineId.getBytes(StandardCharsets.UTF_8)));
+		String machineId;
+		if(fileStore.exists()) {	
+			BufferedReader br = new BufferedReader(new FileReader(fileStore));
+			machineId = br.readLine();
+			br.close();
+		}else {
+			InetAddress localHost = InetAddress.getLocalHost();
+			NetworkInterface network = NetworkInterface.getByInetAddress(localHost);
+			try {
+				machineId=byteToHexString(network.getHardwareAddress());
+				MessageDigest digest = MessageDigest.getInstance("SHA-256");
+				machineId=byteToHexString(digest.digest(machineId.getBytes(StandardCharsets.UTF_8)));
+			}catch(Exception e) {
+				System.err.println("Warning: Cannot determine hardware addr generating id for assignment...");
+				System.err.println("Thrown message:\n"+e.getMessage());
+				machineId = "R-"+Double.toString(Math.random()).replace("0.", "");
+			}
+			fileStore.createNewFile();
+			FileWriter fw = new FileWriter(fileStore);
+			fw.write(machineId);
+			fw.close();
+			fileStore.setWritable(false);
+		}
+		return machineId;
 	}
+	
 	private static String byteToHexString(byte [] arr) {
 		StringBuilder sb = new StringBuilder();
 		for(byte b:arr) 
 			sb.append(Integer.toHexString(Byte.toUnsignedInt(b)));
 		return sb.toString();
 	}
+	
 	private static String determineSemester() {
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);

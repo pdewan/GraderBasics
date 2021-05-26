@@ -95,9 +95,12 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 				
 			
 			if (numRuns == 0) {
-				totalTests = aTopLevelSuite.getLeafClasses().size();				
-				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
-				sessionDataFile = new File(AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
+				totalTests = aTopLevelSuite.getLeafClasses().size();
+				String fileLoc = AConsentFormVetoer.LOG_DIRECTORY + "/";
+				logFileName = fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
+				
+				LogSender.setFileStore(fileLoc);
 				
 				if (maybeReadLastLineOfLogFile(logFileName)) {
 					maybeLoadSavedSets();
@@ -206,7 +209,14 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			numRuns++;
 			numTotalRuns++;
 			writeToSessionDataFile();
-			LogSender.sendToServer(fullTrace.toString(), numTotalRuns);
+			
+			try {
+				LogSender.sendToServer(fullTrace.toString(), numTotalRuns);
+			}catch(Exception e) {
+				System.err.println("Error resolving local checks server sending");
+				System.err.println("Thrown message:\n"+e.getMessage());
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
