@@ -16,22 +16,22 @@ import java.security.MessageDigest;
 import java.util.Calendar;
 
 public class LogSender {
-	private static final String reportURL = "https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
-	private static File fileStore;
-	private static final String auidFile="senderAUID.txt";
+	private static final String reportURL="https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
+	private static final String uuidFile="LogsUUID.txt";
+	private static final File fileStore;
 	
-	public static void setFileStore(String file) {
-		fileStore=new File(file+auidFile);
+	static {
+		fileStore=new File(System.getProperty("user.home")+"/helper-config/"+uuidFile);
 	}
-	
-	public static void sendToServer(String log, int sessionId) throws Exception{		
+	public static void sendToServer(String log, String assignment, int sessionId) throws Exception{		
 		JSONObject message = new JSONObject();
 		
 		message.put("log_id",System.currentTimeMillis()+"-"+sessionId);
 		message.put("session_id",Integer.toString(sessionId));
 		message.put("machine_id",getHashMachineId());
 		message.put("log_type","LocalChecksLog");
-		message.put("course_id",determineSemester());
+		message.put("course_id",assignment);
+		//message.put("course_id",determineSemester());
 		
 		JSONObject logJSON = new JSONObject();
 		logJSON.put("json", log);
@@ -62,7 +62,7 @@ public class LogSender {
 			}catch(Exception e) {
 				System.err.println("Warning: Cannot determine hardware addr generating id for assignment...");
 				System.err.println("Thrown message:\n"+e.getMessage());
-				machineId = "R-"+Double.toString(Math.random()).replace("0.", "");
+				machineId = "R-"+getRandomID();
 			}
 			fileStore.createNewFile();
 			FileWriter fw = new FileWriter(fileStore);
@@ -72,6 +72,13 @@ public class LogSender {
 		}
 		return machineId;
 	}
+	
+	
+	private static String getRandomID(){
+		String val = Double.toString(Math.random())+Double.toString(Math.random())+Double.toString(Math.random());
+		return val.replaceAll("0.", "");
+	}
+	
 	
 	private static String byteToHexString(byte [] arr) {
 		StringBuilder sb = new StringBuilder();

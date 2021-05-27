@@ -50,6 +50,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	
 	private boolean testIsSuite;
 	private GradableJUnitTest testedSuiteOrTest;
+	private String topLevelInfo;
 	
 	public AFineGrainedTestLogFileWriter() {
 		super();
@@ -77,9 +78,9 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			Class aTestOrSuiteSelectedClass = aTestOrSuiteSelected.getJUnitClass();
 
 			testedSuiteOrTest=aTestOrSuiteSelected;
+			topLevelInfo = toFileName(aTopLevelSuite);
 			
 			unsortedExtraCreditTests = new ArrayList<String>();
-			
 			
 			testIsSuite = aTestOrSuiteSelected instanceof GradableJUnitSuite;
 			if(testIsSuite) {
@@ -99,8 +100,6 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 				String fileLoc = AConsentFormVetoer.LOG_DIRECTORY + "/";
 				logFileName = fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
-				
-				LogSender.setFileStore(fileLoc);
 				
 				if (maybeReadLastLineOfLogFile(logFileName)) {
 					maybeLoadSavedSets();
@@ -211,7 +210,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			writeToSessionDataFile();
 			
 			try {
-				LogSender.sendToServer(fullTrace.toString(), numTotalRuns);
+				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
 			}catch(Exception e) {
 				System.err.println("Error resolving local checks server sending");
 				System.err.println("Thrown message:\n"+e.getMessage());
