@@ -182,22 +182,33 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
         return partialPass((1 - aScore), aNotes, autoGrade);    
     	
     }
+    protected boolean checkForPositives() {
+		 return true;
+	 }
     
     protected TestCaseResult singleMatchScore (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
     	if (aSucceededLines != null && aSucceededLines.size() > 0) {
     		return pass();
     	}
+    	
     	if (aFailedLines != null && aFailedLines.size() > 0) {
+    		Tracer.info(CheckStyleTestCase.class, "Relevant Checkstyle Warnings:");
+    		Tracer.info(CheckStyleTestCase.class, aFailedLines.toString());
         String aNotes = failMessageSpecifier(aFailedLines); 
         return fail(aNotes, autoGrade); 
     	}
     	String aNegativeFilter = negativeRegexLineFilter();
+    	
+    	// when will this code be executed
     	if (aNegativeFilter != null && aFailedLines != null && aFailedLines.size() > 0 ) {
     	return fail ("Checkstyle output matches:" + aNegativeFilter, autoGrade);
     	}
+    	if (!checkForPositives()) {
+    		return pass();
+    	}
     	String aPositiveFilter = positiveRegexLineFilter();
     	if (aPositiveFilter != null) {
-        	return fail ("Checkstyle output does not match:" + aPositiveFilter, autoGrade);
+        	return fail ("Checkstyle output does not match:" + aPositiveFilter + ". Is your class named or tagged properly and checkstyle file upto date?", autoGrade);
 
     	}
     	return fail ("Test failed, Ask instructor for better explanation:" + autoGrade);

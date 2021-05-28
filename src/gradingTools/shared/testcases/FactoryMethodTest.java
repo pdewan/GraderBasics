@@ -140,11 +140,13 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		}
 	}
 	
+	static Object[] anEmptyArgs = {};
+	
 	protected Object assertingCreateInstance(Class aProxyClass) {
 		Tracer.info (this, "Trying parameterless constructor");
 
 		Object retVal = BasicProjectIntrospection.createInstance(aProxyClass);
-		maybeAssertNoClass(aProxyClass, retVal);
+		maybeAssertNoClass(aProxyClass, anEmptyArgs, retVal);
 		return retVal;
 	}
 	public static String[] emptyStringArray = {};

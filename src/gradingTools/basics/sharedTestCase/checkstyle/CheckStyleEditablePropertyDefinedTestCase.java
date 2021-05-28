@@ -27,10 +27,24 @@ public class CheckStyleEditablePropertyDefinedTestCase extends CheckStyleTestCas
 			return WARNING_NAME;
 		}
     
-	@Override
-	public String negativeRegexLineFilter() {
-		return MethodExecutionTest.toRegex(getActualType() + ", missing setter for property "+ property + " of type " + propertyType);
-				
+//	@Override
+//	public String negativeRegexLineFilter() {
+//		return MethodExecutionTest.toRegex(getActualType() + ", missing setter for property "+ property + " of type " + propertyType);
+//				
+//	}
+//	 [INFO] D:\dewan_backup\Java\grail13\.\src\shapes\AMagnifiablePolarLine.java:1: Expected setter for property Angle of type double. Good! [ExpectedSetters]
+//			 [INFO] D:\dewan_backup\Java\grail13\.\src\shapes\AMagnifiablePolarLine.java:1: Expected setter for property Radius of type double. Good! [ExpectedSetters]
+	 @Override
+		public String negativeRegexLineFilter() {
+			return 	".*" + "WARN" + ".*" + property + ".*" + propertyType + ".*"+ typeTag + ".*" + "\\[ExpectedSetters\\]" + ".*" ;
+
+//			return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
+					
+		}
+	 @Override
+	public String positiveRegexLineFilter() {
+		return ".*" + "INFO" + ".*" + property + ".*" +propertyType + ".*" + typeTag + ".*" + "\\[ExpectedSetters\\]" + ".*";
+	
 	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 	        TestCaseResult aResult = super.test(project, autoGrade);

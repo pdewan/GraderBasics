@@ -19,25 +19,34 @@ public class CheckstyleClassInstantiatedTestCase extends CheckStyleTestCase {
 	        instantiatedType = anInstantiatedType;
 	        
 	  }
-	
-	
+	//[INFO] D:\dewan_backup\Java\grail13\src\shapes\APopulatedQuestGorge.java:1: Expected instantiation of @Comp301Tags.AVATAR in type @Comp301Tags.BRIDGE_SCENE by methods [public  createGuard:->void, public  createApproachingKnights:->void]. Good! [ExpectedClassInstantiations]
+
 	@Override
 	public String negativeRegexLineFilter() {
-		
-//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-		return "(.*)Type(.*)" + instantiatedType + "(.*)should be instantiated by(.*)" + getActualType() + "(.*)";
-//		expectedClassInstantiations: (ScannerBean.java:1) Type @Call//EC should be instantiated by grail.ScannerBean 	ScannerBean.java	/Assignment3-Semion/src/grail	line 1	Checkstyle Problem
+		return 	".*" + "WARN" + ".*" + instantiatedType + ".*" + typeTag + ".*" + "\\[ExpectedClassInstantiations\\]" + ".*" ;
 
+//			return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
+				
 	}
+	@Override
+	public String positiveRegexLineFilter() {
+		return 	".*" + "INFO" + ".*" + instantiatedType + ".*" + typeTag + ".*" + "\\[ExpectedClassInstantiations\\]" + ".*" ;
+
+//			return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
+				
+	}
+	
+//	@Override
+//	public String negativeRegexLineFilter() {
+//		
+////		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
+//		return "(.*)Type(.*)" + instantiatedType + "(.*)should be instantiated by(.*)" + getActualType() + "(.*)";
+////		expectedClassInstantiations: (ScannerBean.java:1) Type @Call//EC should be instantiated by grail.ScannerBean 	ScannerBean.java	/Assignment3-Semion/src/grail	line 1	Checkstyle Problem
+//
+//	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
-
-		 int i = 0;
 		 TestCaseResult aResult = super.test(project, autoGrade);
-	     return aResult;
-
-	        
-	        
-	        
+	     return aResult;	        
 	 }
 
 

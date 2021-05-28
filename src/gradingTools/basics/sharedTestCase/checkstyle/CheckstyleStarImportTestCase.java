@@ -9,27 +9,36 @@ import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
 
-public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
+public class CheckstyleStarImportTestCase extends CheckStyleTestCase {
 
-	 protected String method;
-	 public static final String WARNING_NAME = "has not made expected call";
-		public static final String INFO_NAME = "has made expected call";
+	 protected String starImport;
+	 @Override
+	 protected boolean checkForPositives() {
+		 return false;
+	 }
+	
 //	 protected String typeTag;
 //	 protected String typeName;
-	 public CheckstyleMethodCalledTestCase(String aType, String aMethod) {
-	        super(aType, aMethod);
+//		[WARN] D:\dewan_backup\Java\grail13\src\main\Assignment1.java:3:14: Using the '.*' form of import should be avoided - shapes.*. [AvoidStarImport]
+	
+	 public CheckstyleStarImportTestCase (String anImportingType, String aStarImport) {
+	        super(anImportingType, aStarImport);
 //	        super(aType, aType + "!" + aMethod);
 
-	        typeTag = aType;
-	        method = aMethod;
+	        typeTag = anImportingType;
+	        starImport = aStarImport;
 	        
 	  }
-//	 [MissingMethodCall]
+	
 	
 	@Override
 	public String negativeRegexLineFilter() {
+		if (typeTag.isEmpty() && starImport.isEmpty()) {
+			return ".*" + "WARN" + ".*" +"\\[AvoidStarImport\\]" + ".*";
+
+		}
 //		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
-		return ".*" + "WARN" + ".*" +typeTag + "(.*)" + method + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
+		return ".*" + "WARN" + ".*" +typeTag + "(.*)" + starImport + "(.*)" + "\\[AvoidStarImport\\]" + ".*";
 
 
 		
@@ -38,15 +47,15 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 //		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
 
 	}
-	@Override
-	public String positiveRegexLineFilter() {
-		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + method + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
-//		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
-//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-//		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
-//		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
-
-	}
+//	@Override
+//	public String positiveRegexLineFilter() {
+//		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + method + "(.*)";
+////		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
+////		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
+////		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
+////		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
+//
+//	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 //	     Class aClass = IntrospectionUtil.getOrFindClass(project, this, typeTag); 
 //	     if (aClass == null) {

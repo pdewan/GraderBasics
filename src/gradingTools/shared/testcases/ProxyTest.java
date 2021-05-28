@@ -47,15 +47,16 @@ public abstract class ProxyTest extends MethodExecutionTest{
 	}
 	protected Object createRootProxy(){
 		rootProxy = BasicProjectIntrospection.createInstance(proxyClass(), getArgs());
-		maybeAssertNoClass(proxyClass(), rootProxy);
+		maybeAssertNoClass(proxyClass(), getArgs(), rootProxy);
 
 		
 		setLeafProxy();
 		return rootProxy;
 	}
-	protected void maybeAssertNoClass(Class aProxyClass, Object aProxy) {
-			assertTrue ("Could not find, or successfully call constructor, of class matching:" + 
-	Arrays.toString(BasicProjectIntrospection.getComputedInterfaceTags(aProxyClass)), aProxy != null);
+	protected void maybeAssertNoClass(Class aProxyClass, Object[] anArgs, Object aProxy) {
+//			assertTrue ("Could not find, or successfully call constructor, taking arguments " + Arrays.deepToString(anArgs) + " of class matching:" + 
+//	Arrays.toString(BasicProjectIntrospection.getComputedInterfaceTags(aProxyClass)), aProxy != null);
+			assertTrue ("Could not find, or successfully call constructor, taking arguments " + Arrays.deepToString(anArgs) + " See console message about NoSuch MethodException above stack trace", aProxy != null);
 	
 	}
 	
@@ -64,8 +65,12 @@ public abstract class ProxyTest extends MethodExecutionTest{
 //		if (aPrecedingTest != null) {
 //			 JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTest);
 //		}
-		rootProxy = BasicProjectIntrospection.createOrGetLastInstance(proxyClass(), getArgs());
-		maybeAssertNoClass(proxyClass(), rootProxy);
+		Object[] anArgs = getArgs();
+		Class aProxyClass= proxyClass();
+		rootProxy = BasicProjectIntrospection.createOrGetLastInstance(aProxyClass, anArgs);
+
+//		rootProxy = BasicProjectIntrospection.createOrGetLastInstance(proxyClass(), getArgs());
+		maybeAssertNoClass(proxyClass(), anArgs, rootProxy);
 		setLeafProxy();
 		return rootProxy;
 	}
