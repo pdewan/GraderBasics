@@ -25,7 +25,7 @@ import grader.basics.vetoers.AConsentFormVetoer;
 
 public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	
-	private final String EXTENDED_HEADER = HEADER+",SessionNumber,SessionRunNumber,IsSuite,SuiteTests,PrerequisiteTests,ExtraCreditTests,TestScores,";
+	private final String EXTENDED_HEADER = HEADER+",SessionNumber,SessionRunNumber,IsSuite,SuiteTests,PrerequisiteTests,ExtraCreditTests,TestScores,FailFromPreReq,";
 	private final String FILENAME_MODIFIER="FineGrained";
 	
 	public static final int SESSION_NUMBER_INDEX = 9;
@@ -35,12 +35,13 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	public static final int PREREQUISITE_TESTS_INDEX = 13;
 	public static final int EXTRA_CREDIT_TESTS_INDEX = 14;
 	public static final int TEST_SCORES_INDEX = 15;
-
+	public static final int FailFromPreReq_INDEX=16;
 	
 	List<String> unsortedPrereqTests=null;
 	List<String> unsortedExtraCreditTests=null;
 	List<String> unsortedSuiteTests=null;
 	List<String> unsortedTestScores=null;
+	List<String> unsortedFailFromPreReq=null;
 	
 	int sessionNumber=0;
 	
@@ -196,7 +197,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		try {
 			super.testRunFinished(aResult);
 			loadCurrentSets(currentTopSuite);
-			determinePostRunScores();
+			determinePostRunData();
 			correctUntested();
 			setPassPercentage();
 			checkTotalRunNumber();
@@ -231,6 +232,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		fullTrace.append(composeString(unsortedPrereqTests)+",");
 		fullTrace.append(composeString(unsortedExtraCreditTests)+",");
 		fullTrace.append(composeString(unsortedTestScores)+",");
+		fullTrace.append(composeString(unsortedFailFromPreReq)+",");
 	}
 	
 	private StringBuilder composeString(List<String> dataSrc) {
@@ -264,18 +266,22 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		if(testIsPrereq) {
 			if(unsortedPrereqTests==null) 
 				unsortedPrereqTests=new ArrayList<String>();
-			unsortedPrereqTests.add(fixedClassName);
+			unsortedPrereqTests.add(fixedClassName);	
 		}
 		
     }
 	
-	
-	private void determinePostRunScores() {
+	private void determinePostRunData() {
 		unsortedTestScores = new ArrayList<String>();
+		unsortedFailFromPreReq = new ArrayList<String>();
+		
 		if(testedSuiteOrTest instanceof GradableJUnitSuite)
 			determineForEachTest((GradableJUnitSuite)testedSuiteOrTest);
-		else
+		else {
 			unsortedTestScores.add(composeTestScore(testedSuiteOrTest));
+			checkForFailureCausedByPreRequisite(testedSuiteOrTest);
+		}
+			
 	}
 	
 	private void determineForEachTest(GradableJUnitSuite aSuite) {
@@ -285,14 +291,26 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 				continue;
 			}
 			unsortedTestScores.add(composeTestScore(test));
+			checkForFailureCausedByPreRequisite(test);
 		}
+	}
+	
+	private String [] preReqErrMsgs= {
+		"correct test"
+	};
+	private void checkForFailureCausedByPreRequisite(GradableJUnitTest aTest) {
+		if(aTest.getDisplayedScore()!=0) return;
+		String message = aTest.getMessage();
+		for(String errMsg:preReqErrMsgs)
+			if(message.contains(errMsg)) 
+				unsortedFailFromPreReq.add(aTest.getSimpleName());
+			
 	}
 	
 	private String composeTestScore(GradableJUnitTest aTest) {
 		String name = aTest.getSimpleName();
 		String score = aTest.getDisplayedScore()+"";
 		String maxScore = aTest.getComputedMaxScore()+"";
-		
 		return name+"-("+score+"/"+maxScore+")";
 	}
 	
