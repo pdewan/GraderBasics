@@ -1749,6 +1749,11 @@ public class BasicProjectIntrospection {
 		// return null;
 		// return aMethods.get(0);
 	}
+	
+	public static boolean nameIsUniqueTag(Method aMethod, String[] aSpecification) {
+		
+		return aSpecification.length == 1 && aMethod.getName().equalsIgnoreCase(aSpecification[0]);
+	}
 
 	/**
 	 * Looks for all methods with a particular tag
@@ -1766,7 +1771,8 @@ public class BasicProjectIntrospection {
 		List<Method> result = new ArrayList<>();
 		for (Method aMethod : aClass.getMethods()) {
 
-			if (matchesTags(aSpecificationList, getTags(aMethod))) {
+			if (matchesTags(aSpecificationList, getTags(aMethod)) ||  
+					nameIsUniqueTag(aMethod, aSpecification)) {
 				result.add(aMethod);
 			}
 

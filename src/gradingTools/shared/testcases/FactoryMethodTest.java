@@ -117,6 +117,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	}
 	protected boolean doFactoryMethodTest() {
 //		createUsingFactoryClassAndMethodTags();
+//		factoryMethodTags = factoryMethodTags();
 		createUsingFactory();
 		doSingletonCheck(rootProxy());
 //		fractionComplete = factoryCredit;
@@ -410,8 +411,11 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		if (matchProxyActualClass()) {
 
 		Class aReturnedClass = anInstance.getClass();
+		Class anExpectedClass = BasicProjectIntrospection.isPredefinedType(instantiatedTypeClass)?
+				instantiatedTypeClass:
+					BasicProjectIntrospection.findClass(instantiatedTypeClass);
 		
-		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
+//		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
 		
 		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
 				anExpectedClass.isInstance(anInstance);

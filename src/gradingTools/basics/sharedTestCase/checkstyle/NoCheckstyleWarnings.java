@@ -80,8 +80,9 @@ public class NoCheckstyleWarnings extends CheckStyleWarningsTestCase {
 	@Override
 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
 	NotGradableException {
-		return toConfigurationBasedResult(project, noConfigurationTest(project, autoGrade));
-	
+//		return toConfigurationBasedResult(project, noConfigurationTest(project, autoGrade));
+		return scaleResult( noConfigurationTest(project, autoGrade));
+
 }
 
 

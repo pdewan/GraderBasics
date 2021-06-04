@@ -99,6 +99,11 @@ public class TestCaseResult {
         return percentage;
     }
     
+    public void setPercentage(double newVal) {
+       percentage = newVal;
+    }
+    
+    
     public boolean isPass() {
     	return percentage == 1.0;
     }
@@ -149,6 +154,7 @@ public class TestCaseResult {
 	public void setScore(double score) {
 			this.score = score;
 	}
+	
 
 }
 

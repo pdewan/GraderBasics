@@ -7,8 +7,10 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.shared.testcases.MethodExecutionTest;
+import util.annotations.Explanation;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
+@Explanation("Checks that the property has the expected name and its interface type has expected name, tag, or pattern")
 
 public class CheckStylePropertyDefinedTestCase extends CheckStyleTestCase {
 	 protected String descriptor;

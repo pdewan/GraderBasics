@@ -6,6 +6,7 @@ import grader.basics.file.zipfile.AZippedRootFolderProxy;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectClassesManager;
 import grader.basics.project.BasicProjectIntrospection;
+import grader.basics.testcase.PassFailJUnitTestCase;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.TimedProcess;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
@@ -88,6 +89,8 @@ public class GraderBasicsTraceUtility {
 
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);	
 //		if (isTurnOn()) {
+			Tracer.setKeywordPrintStatus(PassFailJUnitTestCase.class, true);
+
 			Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
 			Tracer.setKeywordPrintStatus(LocatableTest.class, true);
 			Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);

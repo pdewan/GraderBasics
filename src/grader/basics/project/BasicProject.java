@@ -696,6 +696,17 @@ public class BasicProject implements Project {
 	static boolean checkCheckstyleFolder = true;
 
 	static boolean checkEclipseFolder = false;
+	
+	static boolean checkEclipseOrCheckstyleFolder = false;
+
+
+	public static boolean isCheckEclipseOrEclipseFolder() {
+		return checkEclipseOrCheckstyleFolder;
+	}
+
+	public static void setCheckEclipseOrEclipseFolder(boolean checkEclipseOrEclipseFolder) {
+		BasicProject.checkEclipseOrCheckstyleFolder = checkEclipseOrEclipseFolder;
+	}
 
 	public static boolean isCheckEclipseFolder() {
 		return checkEclipseFolder;
@@ -712,18 +723,29 @@ public class BasicProject implements Project {
 	public static void setCheckCheckstyleFolder(boolean checkCheckstyleFolder) {
 		BasicProject.checkCheckstyleFolder = checkCheckstyleFolder;
 	}
-
+//	protected boolean eclipseFolderExists = true;
 	public File getCheckstyleOutFolder() {
 		if (checkstyleOutFolder == null) {
 			File anEclipseFolder = new File(getProjectFolder().getAbsoluteFile() + "/Logs/Eclipse");
 			File aCheckStyleAllFile = new File(
 					getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/CheckStyle_All.csv");
-
+			File aReturnFolder = new File (getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/");
+			
+			if (isCheckEclipseOrEclipseFolder() && (anEclipseFolder.exists() || aCheckStyleAllFile.exists())) {
+				if (!aReturnFolder.exists()) {
+					aReturnFolder.mkdir();
+				}
+				checkstyleOutFolder = aReturnFolder;
+				return aReturnFolder;
+			}
 			
 			//			if (!anEclipseFolder.exists() ) {
 
 			if (!anEclipseFolder.exists() && !GradingMode.getGraderRun()  && isCheckEclipseFolder() ) {
+//				eclipseFolderExists = false;
 				System.err.println("File does not exist:" + anEclipseFolder);
+				System.err.println("Please run the checkstle plugin on your project");
+
 				return null;
 //			checkstyleOutFolder null;
 			}

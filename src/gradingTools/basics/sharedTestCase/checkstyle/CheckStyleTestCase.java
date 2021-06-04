@@ -11,6 +11,7 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import unc.checks.ISATypesCheck;
 import util.trace.Tracer;
 
 
@@ -56,25 +57,35 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	return null;
     }
 	 protected  String infoName() {
-		 return null;
+		 return warningName();
 	 }
     
-	public String positiveRegexLineFilter() {
-		String anInfoName = infoName();
-		if (anInfoName == null) {
-			return null;
-		}
-		// TODO Auto-generated method stub
-		return ".*" + anInfoName + ".*";
-	}
+//	public String positiveRegexLineFilter() {
+//		String anInfoName = infoName();
+//		if (anInfoName == null) {
+//			return null;
+//		}
+//		// TODO Auto-generated method stub
+//		return ".*" + anInfoName + ".*";
+//	}
 	
-	public String negativeRegexLineFilter() {
-		String aWarningName = warningName();
-		if (aWarningName == null) {
-			return null;
+//	public String negativeRegexLineFilter() {
+//		String aWarningName = warningName();
+//		if (aWarningName == null) {
+//			return null;
+//		}
+//		// TODO Auto-generated method stub
+//		return  ".*" + aWarningName + ".*";
+//	}
+	 
+	 public String positiveRegexLineFilter() {
+			String aWarningClassName = infoName();
+			return ".*" + "INFO" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
 		}
-		// TODO Auto-generated method stub
-		return ".*" + aWarningName + ".*";
+
+	public String negativeRegexLineFilter() {
+		String aWarningClassName = warningName();
+		return ".*" + "WARN" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
 	}
     protected String toLinesString(List<String> aLines) {
     	StringBuilder aString = new StringBuilder();
@@ -159,7 +170,7 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	}
     	List<String> aSucceededLines = null;
     	String aPositiveFilter = positiveRegexLineFilter();
-    	if (aPositiveFilter != null) {
+    	if (aPositiveFilter != null && checkForPositives()) {
     		aSucceededLines =	matchedLines(aCheckStyleLines, aPositiveFilter);
     	}
     	
@@ -193,7 +204,11 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	
     	if (aFailedLines != null && aFailedLines.size() > 0) {
     		Tracer.info(CheckStyleTestCase.class, "Relevant Checkstyle Warnings:");
-    		Tracer.info(CheckStyleTestCase.class, aFailedLines.toString());
+    		for (String aFailedLine:aFailedLines) {
+        		Tracer.info(CheckStyleTestCase.class, aFailedLine);
+
+    		}
+//    		Tracer.info(CheckStyleTestCase.class, aFailedLines.toString());
         String aNotes = failMessageSpecifier(aFailedLines); 
         return fail(aNotes, autoGrade); 
     	}
@@ -232,9 +247,24 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //        if (isPassed(aNumMatchedInstances, 0))
 //
 //    		return pass();
-    	return computeResult(aProject, aCheckStyleLines, aFailedMatchedLines, aSucceededMatchedLines, autoGrade);
-    	
+    	TestCaseResult anOriginalResult = computeResult(aProject, aCheckStyleLines, aFailedMatchedLines, aSucceededMatchedLines, autoGrade);
+    	TestCaseResult aScaledResult = scaleResult(anOriginalResult);
+    	return aScaledResult;
     }
+    public TestCaseResult scaleResult(TestCaseResult aResult) {
+    	 if (precedingTestInstances.size() == 0 || aResult.getPercentage() == 0) {
+    		 return aResult;
+    	 }
+		 double aTotalFractionComplete = 0;
+		 for (PassFailJUnitTestCase aTestCase:precedingTestInstances) {
+			 aTotalFractionComplete += aTestCase.getLastResult().getPercentage();
+		 }
+		 double anAverageFractionComplete =  aTotalFractionComplete/ (double) precedingTestInstances.size();
+		 double anOriginalFractionComplete = aResult.getPercentage();
+		 Tracer.info(CheckstyleSpecificWarningTestCase.class, "Score of " + anOriginalFractionComplete + " scaled by average preceding test pass percentage:" + anAverageFractionComplete);
+	      aResult.setPercentage(anOriginalFractionComplete*anAverageFractionComplete); 
+		 return aResult;
+	 }
     protected double scoreForMatchNumber(int aMistakeNumber) {
     	return 1.0/(Math.pow(2, aMistakeNumber+1)); // starting at 0
     }

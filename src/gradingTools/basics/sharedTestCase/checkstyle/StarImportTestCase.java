@@ -9,7 +9,7 @@ import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
 
-public class CheckstyleStarImportTestCase extends CheckStyleTestCase {
+public class StarImportTestCase extends CheckStyleTestCase {
 
 	 protected String starImport;
 	 @Override
@@ -21,7 +21,7 @@ public class CheckstyleStarImportTestCase extends CheckStyleTestCase {
 //	 protected String typeName;
 //		[WARN] D:\dewan_backup\Java\grail13\src\main\Assignment1.java:3:14: Using the '.*' form of import should be avoided - shapes.*. [AvoidStarImport]
 	
-	 public CheckstyleStarImportTestCase (String anImportingType, String aStarImport) {
+	 public StarImportTestCase (String anImportingType, String aStarImport) {
 	        super(anImportingType, aStarImport);
 //	        super(aType, aType + "!" + aMethod);
 

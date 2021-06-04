@@ -755,7 +755,7 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	@Override
 	public void defaultTest() {
 //		TestCaseResult aPrecedingResult = precedingTestResult();
-		checkPrecedingTest();
+		possiblyRunAndCheckPrecedingTests();
 		
     	test();
     }

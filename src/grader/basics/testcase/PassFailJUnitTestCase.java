@@ -1,5 +1,8 @@
 package grader.basics.testcase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,6 +18,7 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.shared.testcases.utils.ABufferingTestInputGenerator;
 import junit.framework.TestCase;
+import util.trace.Tracer;
 
 
 /**
@@ -109,8 +113,17 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
     	return emptyClasses;
     }
     
-    protected void checkPrecedingTest () {
+    protected List<PassFailJUnitTestCase> precedingTestInstances = new ArrayList<PassFailJUnitTestCase>();
+    
+    protected List<PassFailJUnitTestCase> getPrecedingTestInstances() {
+		return precedingTestInstances;
+	}
+
+	
+
+	protected void possiblyRunAndCheckPrecedingTests () {
     	Class[] aPrecedingTests;
+    	precedingTestInstances.clear();
     	Class aPrecedingTest = precedingTest();
     	if (aPrecedingTest != null) {
     		aPrecedingTests= oneClassElement;
@@ -127,8 +140,16 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 //			return;
 //		}
 		for (Class aPrecedingTestElement:aPrecedingTests) {
-			PassFailJUnitTestCase aResult = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTestElement);
-			if (aResult.getLastResult().isPass()) {
+			PassFailJUnitTestCase aPrecedingTestInstance = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTestElement);
+			TestCaseResult aLastResult = aPrecedingTestInstance.getLastResult();
+			if (!aLastResult.isFail()) {
+				if (aLastResult.isPartialPass()) {
+					
+					Tracer.info(PassFailJUnitTestCase.class, "Preceding test " + aPrecedingTestElement.getSimpleName() + " partially passed:" + aLastResult.getPercentage());
+					Tracer.info(PassFailJUnitTestCase.class, "Scores of this test will be scaled");
+
+				}
+				precedingTestInstances.add(aPrecedingTestInstance);
 				continue;
 			} else {
 				Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTestElement.getSimpleName() + " before running this test", false);
@@ -140,7 +161,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
     }
 	
 	public void passfailDefaultTest() {
-		checkPrecedingTest();
+		possiblyRunAndCheckPrecedingTests();
 //		TestCaseResult result = null;
 		TestCaseResult lastResult = null;
 		
