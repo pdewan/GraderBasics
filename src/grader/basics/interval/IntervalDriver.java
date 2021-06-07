@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import analyzer.logAnalyzer.AnIntervalReplayer;
 
@@ -18,23 +19,31 @@ public class IntervalDriver {
 	//For fixed work time, a pause is considered a rest if pauseTime > DEFAULT_THRESHOLD
 	//For context based work time, a threshold = DEFAULT_THRESHOLD if it is undefined for that type of command
 	public static final int DEFAULT_THRESHOLD = 5;
-	public static final long START_TIME = 0;
-	public static final long END_TIME = Long.MAX_VALUE;
-	public static final boolean CONSOLE_OUTPUT = false;
+//	public static final long START_TIME = 0;
+//	public static final long END_TIME = Long.MAX_VALUE;
+	//Print traces messages 
+	public static final boolean TRACE = false;
 	
 	public static void main(String[] args) {
 		if (!STUDENT_FOLDER.exists()) {
 			System.err.println("Error: Student Folder does not exist");
 			return;
 		}
-		AnIntervalReplayer replayer = new AnIntervalReplayer(MULTIPLIER, DEFAULT_THRESHOLD);
+		AnIntervalReplayer replayer = new AnIntervalReplayer(MULTIPLIER, DEFAULT_THRESHOLD, TRACE);
+		//getStartTime(File studentFolder) returns the wall time of first FileOpenCommand in the project. -1 when failed
+		long startTime = replayer.getStartTime(STUDENT_FOLDER);
+		//getEndTime(File studentFolder) returns the wall time of last edit, -1 when failed
+		long endTime = replayer.getEndTime(STUDENT_FOLDER);
+		System.out.println("Start Time: " + parseWallTime(startTime));
+		System.out.println("End Time: " + parseWallTime(endTime));
+		
 		/* 
 		 * getWorkTime(File studentFolder, long startTime, long endTime)
 		 * returns a long[] workTimes where 
 		 * workTimes[0] = context based work time, -1 if failed
 		 * workTimes[1] = fixed work time, -1 if failed
 		 */
-		long[] workTimes = replayer.getWorkTime(STUDENT_FOLDER, START_TIME, END_TIME);
+		long[] workTimes = replayer.getWorkTime(STUDENT_FOLDER, startTime, endTime);
 		System.out.println("Context Based Work Time: " + format(workTimes[0]));
 		System.out.println("Fixed Work Time (" + DEFAULT_THRESHOLD + "min): " + format(workTimes[1]));
 	}
@@ -46,6 +55,10 @@ public class IntervalDriver {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	public static String parseWallTime(long time) {
+		return new Date(time).toString();
 	}
 	
 	protected static String format(long time){
