@@ -283,7 +283,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	// does not retiurn a result
 	@Override
-	// @Visible(false)
+	 @Visible(false)
 	public void testAll() {
 		test();
 	}
@@ -355,6 +355,44 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //		
 //		return maxScore;
 //	}
+	@Override
+	protected String toScoreString() {
+		double aMaxRegularScore = getComputedRegularMaxScore();
+		double aMaxScoreWithExtraCredit = getComputedMaxScore();
+		double aDifference = aMaxScoreWithExtraCredit - aMaxRegularScore;
+		return aDifference == 0?
+								super.toScoreString():
+									aMaxRegularScore + "+" + aDifference + "=" + aMaxScoreWithExtraCredit;
+	}
+//	public String getName() {
+//		if (description == null) {
+//		double aMaxRegularScore = getComputedRegularMaxScore();
+//		double aMaxScoreWithExtraCredit = getComputedMaxScore();
+//		String aScore = "[" + toScoreString() +  " pts" + "]";
+//
+////		String aScore = "[" + GradableJUnitTest.round(getComputedRegularMaxScore()) + "," + GradableJUnitTest.round(getComputedMaxScore()) + " pts" + "]";
+//		String anExtra = isExtra?
+//				"(extra credit)"
+//				:"";
+////		description = explanation + aScore + anExtra;
+////		description = getJUnitClass().getSimpleName() + aScore + anExtra;
+//		description = getSimpleName() + aScore + anExtra;
+//		}
+//		return description;
+//	}
+	
+	@Visible(false)
+	public double getComputedRegularMaxScore() {
+		if (computedMaxScoreNoExtra == null) {
+			double retVal = 0;
+			for (GradableJUnitTest aTest : children) {
+				if (!aTest.isExtra())
+				retVal += aTest.getComputedRegularMaxScore();
+			}
+			computedMaxScoreNoExtra = retVal;
+		}
+		return computedMaxScoreNoExtra;
+	}
 
 	@Visible(false)
 	public double getComputedMaxScore() {

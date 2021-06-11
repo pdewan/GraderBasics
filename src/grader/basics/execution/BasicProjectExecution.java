@@ -123,7 +123,7 @@ public class BasicProjectExecution {
 		try {
 			if (BasicProjectExecution.isWaitForMethodConstructorsAndProcesses()) {
 				Object retVal = future.get(aMillSeconds, TimeUnit.MILLISECONDS);
-				Tracer.info(BasicProjectExecution.class,"Finshed calling on object " + anObject + " " + anObject.hashCode() + " method:"
+				Tracer.info(BasicProjectExecution.class,"Finished calling on object " + anObject + " " + anObject.hashCode() + " method:"
 						+ aMethod + " args:" + Arrays.toString(anArgs) + "timeOut:" + aMillSeconds);
 				return retVal;
 //			return future.get(aMillSeconds, TimeUnit.MILLISECONDS);

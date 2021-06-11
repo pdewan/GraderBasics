@@ -28,7 +28,7 @@ public class CheckStyleMinCalledMethodsTestCase extends CheckStyleTestCase {
 	}
   //String literal expressions should be on the left side
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
-	    	return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, autoGrade);
+	    	return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);
 	    	
 	}
 

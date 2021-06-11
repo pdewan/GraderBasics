@@ -5,7 +5,9 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleWarningsCountingT
 public class ExpectedSuperTypesRatioCheck extends CheckStyleWarningsRatioTestCase {
 	//expectedMethodCall = method {1} in class matching {2}  made expected call {0}. Good!
 	//missingMethodCall = method {1}  in class matching {2} has not made expected call {0}.
-	public static final String WARNING_NAME = "Missing supertype.*";
+	public static final String WARNING_NAME = "ExpectedSuperTypes";
+
+//	public static final String WARNING_NAME = "Missing supertype.*";
 	public static final String INFO_NAME = "Expected supertype:.*Good!";
 
 	public static final String MESSAGE = "Expected Super Types";
@@ -31,9 +33,9 @@ public class ExpectedSuperTypesRatioCheck extends CheckStyleWarningsRatioTestCas
 		return WARNING_NAME;
 	}
 
-	@Override
-	protected String infoName() {
-		return INFO_NAME;
-	}
+//	@Override
+//	protected String infoName() {
+//		return INFO_NAME;
+//	}
 
 }

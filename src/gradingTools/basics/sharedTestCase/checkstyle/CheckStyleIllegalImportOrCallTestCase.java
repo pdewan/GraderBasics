@@ -29,7 +29,7 @@ public class CheckStyleIllegalImportOrCallTestCase extends CheckStyleTestCase {
 		return "Illegal type or call in:\n" + beautify(aFailedLines);
 	}
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
-	    	return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, autoGrade);
+	    	return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);
 	    	
 	}
 	 public static void main (String[] args) {		 

@@ -3,9 +3,11 @@ package gradingTools.basics.sharedTestCase.checkstyle;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleWarningsCountingTestCase;
 
 public class NamedConstantsRatioCheck extends CheckStyleWarningsRatioTestCase {
-	
-	public static final String WARNING_NAME = "Magic number.*LiberalMagicNumber";
-	public static final String INFO_NAME = "Named Constant .* defined. Good!";
+	public static final String WARNING_NAME = "LiberalMagicNumber";
+	public static final String INFO_NAME = "ConstantDefined";
+
+//	public static final String WARNING_NAME = "Magic number.*LiberalMagicNumber";
+//	public static final String INFO_NAME = "Named Constant .* defined. Good!";
 
 	public static final String MESSAGE = "No magic number";
 	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.1;
@@ -29,6 +31,8 @@ public class NamedConstantsRatioCheck extends CheckStyleWarningsRatioTestCase {
 	protected String warningName() {
 		return WARNING_NAME;
 	}
+	
+	
 
 	@Override
 	protected String infoName() {

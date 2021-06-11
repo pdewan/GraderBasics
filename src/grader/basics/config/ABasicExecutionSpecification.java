@@ -899,6 +899,25 @@ protected String requirementsLocation = null;
 
 		
 	}
+	@Override
+	public int getMaxTraces() {
+		return getIntegerProperty(BasicStaticConfigurationUtils.MAX_TRACES, BasicStaticConfigurationUtils.DEFAULT_MAX_TRACES);
+
+	}
+	@Override
+	public void setMaxTraces(int newVal) {
+		runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.MAX_TRACES, newVal);		
+	}
+	@Override
+	public int getMaxPrintedTraces() {
+		return getIntegerProperty(BasicStaticConfigurationUtils.MAX_PRINTED_TRACES, BasicStaticConfigurationUtils.DEFAULT_MAX_PRINTED_TRACES);
+
+	}
+	@Override
+	public void setMaxPrintedTraces(int newVal) {
+		runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.MAX_PRINTED_TRACES, newVal);
+		
+	}
 	
 	@Override
 	public boolean getSMLIsBat() {

@@ -2,7 +2,8 @@ package gradingTools.shared.testcases.shapes.interfaces;
 
 import util.annotations.Tags;
 
-@Tags({"RotatingLine"})
+//@Tags({"RotatingLine"})
+@Tags(ShapeTags.ROTATING_LINE)
 public interface TestRotatingLine extends TestPolarLine, TestMovable, TestRotatable {
 	public void setRadius(double r);
 	

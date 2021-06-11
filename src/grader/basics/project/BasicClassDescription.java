@@ -3,6 +3,7 @@ package grader.basics.project;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import util.annotations.EditablePropertyNames;
@@ -97,6 +98,13 @@ public class BasicClassDescription implements ClassDescription {
 
     @Override
     public String toString() {
-        return javaClass.getCanonicalName();
+    	Class[] anInterfaces = javaClass.getInterfaces();
+//    	String anInterfaceString = Arrays.toString(anInterfaces);
+    	String anInterfaceString = anInterfaces == null || anInterfaces.length == 0?"":
+    		" implements " + Arrays.toString(anInterfaces);
+    	Class aSuperClass = javaClass.getSuperclass();
+    	String aSuperClassString = aSuperClass == null?"":
+    		" extends " + aSuperClass.toString();
+        return javaClass.getCanonicalName() + aSuperClassString + anInterfaceString;
     }
 }

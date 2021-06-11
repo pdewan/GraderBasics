@@ -1,5 +1,8 @@
 package grader.basics.testcase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,6 +18,7 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.shared.testcases.utils.ABufferingTestInputGenerator;
 import junit.framework.TestCase;
+import util.trace.Tracer;
 
 
 /**
@@ -98,9 +102,66 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
     	passfailDefaultTest();
     }
 
+    protected Class precedingTest() {
+		return null;
+	}
     
+    static Class[] emptyClasses = {};
+    static Class[] oneClassElement = {Object.class};
+    
+    protected Class[] precedingTests() {
+    	return emptyClasses;
+    }
+    
+    protected List<PassFailJUnitTestCase> precedingTestInstances = new ArrayList<PassFailJUnitTestCase>();
+    
+    protected List<PassFailJUnitTestCase> getPrecedingTestInstances() {
+		return precedingTestInstances;
+	}
+
+	
+
+	protected void possiblyRunAndCheckPrecedingTests () {
+    	Class[] aPrecedingTests;
+    	precedingTestInstances.clear();
+    	Class aPrecedingTest = precedingTest();
+    	if (aPrecedingTest != null) {
+    		aPrecedingTests= oneClassElement;
+    		aPrecedingTests[0] = aPrecedingTest;
+    	} else {
+//    	if (aPrecedingTest == null) {
+    		aPrecedingTests = precedingTests();
+    		if (aPrecedingTests == null || aPrecedingTests.length == 0) {
+    			return ;
+    		}
+    	}
+//		PassFailJUnitTestCase aResult = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTest);
+//		if (aResult.getLastResult().isPass()) {
+//			return;
+//		}
+		for (Class aPrecedingTestElement:aPrecedingTests) {
+			PassFailJUnitTestCase aPrecedingTestInstance = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTestElement);
+			TestCaseResult aLastResult = aPrecedingTestInstance.getLastResult();
+			if (!aLastResult.isFail()) {
+				if (aLastResult.isPartialPass()) {
+					
+					Tracer.info(PassFailJUnitTestCase.class, "Preceding test " + aPrecedingTestElement.getSimpleName() + " partially passed:" + aLastResult.getPercentage());
+					Tracer.info(PassFailJUnitTestCase.class, "Scores of this test will be scaled");
+
+				}
+				precedingTestInstances.add(aPrecedingTestInstance);
+				continue;
+			} else {
+				Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTestElement.getSimpleName() + " before running this test", false);
+
+			}
+		}
+
+//		Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTest.getSimpleName() + " before running this test", false);
+    }
 	
 	public void passfailDefaultTest() {
+		possiblyRunAndCheckPrecedingTests();
 //		TestCaseResult result = null;
 		TestCaseResult lastResult = null;
 		

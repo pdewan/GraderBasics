@@ -7,8 +7,10 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.shared.testcases.MethodExecutionTest;
+import util.annotations.Explanation;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
+@Explanation("Checks that the property has the expected name and its interface type has expected name, tag, or pattern")
 
 public class CheckStylePropertyDefinedTestCase extends CheckStyleTestCase {
 	 protected String descriptor;
@@ -31,8 +33,17 @@ public class CheckStylePropertyDefinedTestCase extends CheckStyleTestCase {
     
 	@Override
 	public String negativeRegexLineFilter() {
-		return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
+		return 	".*" + "WARN" + ".*" + property + ".*" + propertyType + ".*"+ typeTag + ".*" + "\\[ExpectedGetters\\]" + ".*" ;
+
+//		return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
 				
+	}
+	//[INFO] D:\dewan_backup\Java\grail13\src\shapes\AFork.java:1: Expected getter for property LeftLine of type @Comp301Tags.ROTATING_LINE in parent type @Comp301Tags.ANGLE. Good! [ExpectedGetters]
+
+	@Override
+	public String positiveRegexLineFilter() {
+		return ".*" + "INFO" + ".*" + property + ".*" +propertyType + ".*" + typeTag + ".*" + "\\[ExpectedGetters\\]" + ".*";
+	
 	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 	        TestCaseResult aResult = super.test(project, autoGrade);
@@ -63,7 +74,7 @@ public class CheckStylePropertyDefinedTestCase extends CheckStyleTestCase {
 //	}
   //String literal expressions should be on the left side
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {
-		 return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, autoGrade);
+		 return singleMatchScore(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);
 //		 if (aResult.getPercentage() != 1.0) {
 //			 if (aProject.getEntryPoints() == null || aProject.getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT) == null)
 //				 return aResult;

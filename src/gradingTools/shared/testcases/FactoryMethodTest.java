@@ -94,8 +94,8 @@ public abstract class FactoryMethodTest extends ProxyTest{
 
 		singletonCheckPassed = aSecondCreation == aFirstInstantiation;
 		if (!singletonCheckPassed) {
-			factoryMessage = "First factory method return value " + 
-						aFirstInstantiation + " != " + aSecondCreation;
+			factoryMessage = "Factory class is not a singleton, first factory method return value " + 
+						aFirstInstantiation + " != second one" + aSecondCreation;
 		} else {
 			factoryCredit += factoryObjectSingletonCredit();
 
@@ -117,6 +117,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	}
 	protected boolean doFactoryMethodTest() {
 //		createUsingFactoryClassAndMethodTags();
+//		factoryMethodTags = factoryMethodTags();
 		createUsingFactory();
 		doSingletonCheck(rootProxy());
 //		fractionComplete = factoryCredit;
@@ -140,11 +141,13 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		}
 	}
 	
+	static Object[] anEmptyArgs = {};
+	
 	protected Object assertingCreateInstance(Class aProxyClass) {
 		Tracer.info (this, "Trying parameterless constructor");
 
 		Object retVal = BasicProjectIntrospection.createInstance(aProxyClass);
-		maybeAssertNoClass(aProxyClass, retVal);
+		maybeAssertNoClass(aProxyClass, anEmptyArgs, retVal);
 		return retVal;
 	}
 	public static String[] emptyStringArray = {};
@@ -408,8 +411,11 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		if (matchProxyActualClass()) {
 
 		Class aReturnedClass = anInstance.getClass();
+		Class anExpectedClass = BasicProjectIntrospection.isPredefinedType(instantiatedTypeClass)?
+				instantiatedTypeClass:
+					BasicProjectIntrospection.findClass(instantiatedTypeClass);
 		
-		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
+//		Class anExpectedClass = BasicProjectIntrospection.findClass(instantiatedTypeClass);
 		
 		correctInstantiatedClass = aReturnedClass == null || anExpectedClass == null ||
 				anExpectedClass.isInstance(anInstance);

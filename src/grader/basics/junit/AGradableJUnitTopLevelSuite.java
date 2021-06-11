@@ -21,11 +21,16 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	public AGradableJUnitTopLevelSuite(Class aJUnitClass) {
 		super(aJUnitClass);
 	}
+	
+	public String toString() {
+		return "[" + toScoreString()+ "pts ]";
+	}
 
 	@Visible(false)
 	public String getName() {
 		return super.getName();
 	}
+	@Visible(false)
 	public void testAll() {
 
 		try {

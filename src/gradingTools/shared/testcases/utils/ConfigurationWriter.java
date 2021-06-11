@@ -79,7 +79,7 @@ public class ConfigurationWriter {
 		String aPropertyName = aPropertyDescriptor.getName();
 		if ("class".equals(aPropertyName))
 			return;
-		String aClassName = Character.toUpperCase(aPropertyName.charAt(0)) + aPropertyName.substring(1);
+		String aCanonicalClassName = Character.toUpperCase(aPropertyName.charAt(0)) + aPropertyName.substring(1);
 		Method aReadMethod = aPropertyDescriptor.getReadMethod();
 		try {
 			Class aPropertyClass = (Class) aReadMethod.invoke(aConfiguration);
@@ -88,7 +88,7 @@ public class ConfigurationWriter {
 			}
 
 			String aPropertyClassName = aPropertyClass.getName();
-			aPrintWriter.println(aPropertyClassName + "," + aClassName);
+			aPrintWriter.println(aPropertyClassName + "," + aCanonicalClassName);
 			if (!aPropertyClass.isInterface()) {
 
 				Class[] anInterfaces = aPropertyClass.getInterfaces();
@@ -96,7 +96,7 @@ public class ConfigurationWriter {
 
 //			aPrintWriter.println(aClassName + "," + aPropertyClassName);
 					for (Class anInterface : anInterfaces) {
-						aPrintWriter.println(anInterface.getName() + "," + aClassName);
+						aPrintWriter.println(anInterface.getName() + "," + aCanonicalClassName);
 					}
 				}
 			}

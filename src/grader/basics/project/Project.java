@@ -107,6 +107,7 @@ public interface Project {
 	void setCurrentOutput(StringBuffer currentOutput);
 
 	String getCheckstyleText();
+	String[] getCheckstyleLines();
 
 	String getStoredCheckstyleText();
 

@@ -31,7 +31,7 @@ import grader.basics.vetoers.AConsentFormVetoer;
 import util.trace.Tracer;
 
 
-public class ATestLogFileWriter extends RunListener {
+public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	public static final String NAME_SEPARATOR = " ";
 	public static final String LOG_SUFFIX = ".csv";
 	// must be consecutine indices
@@ -82,69 +82,71 @@ public class ATestLogFileWriter extends RunListener {
 	String lastLine, lastLineNormalized;
 	
 
-	public ATestLogFileWriter() {
+	public AnAbstractTestLogFileWriter() {
 		maybeCreateChecksFolder();
 	}
+	
+	//Override the following methods to change output format
+	
+	@Override
+	public void testRunFinished(Result aResult) throws Exception {
+		super.testRunFinished(aResult);
+	}
+	
 	@Override
 	public void testRunStarted(Description description) throws Exception {
-		try {
-			super.testRunStarted(description);
-			if (idField == null) {
-		    idField = Description.class.getDeclaredField("fUniqueId"); // ugh but why not give us the id?
-			idField.setAccessible(true);
-			}
-			AbstractMap.SimpleEntry<GradableJUnitSuite, GradableJUnitTest> anEntry = 
-				(AbstractMap.SimpleEntry<GradableJUnitSuite, GradableJUnitTest>) idField.get(description);
-				
-			GradableJUnitSuite aTopLevelSuite = anEntry.getKey();
-			Class aTopLevelSuiteClass = aTopLevelSuite.getJUnitClass();
-			GradableJUnitTest aTestOrSuiteSelected = anEntry.getValue();
-			Class aTestOrSuiteSelectedClass = aTestOrSuiteSelected.getJUnitClass();
-
-//			GradableJUnitSuite aSuite = (GradableJUnitSuite) idField.get(description);
-//			System.out.println (aSuite.getJUnitClass().getName());
-//			Class aJunitClass = aSuite.getJUnitClass();
-			if (numRuns == 0) {
-				totalTests = aTopLevelSuite.getLeafClasses().size();				
-				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite) + LOG_SUFFIX;
-				
-//				if (!maybeReadLastLineOfLogFile(logFileName)) {
-//					return;
-//				};
-				if (maybeReadLastLineOfLogFile(logFileName)) {
-				maybeLoadSavedSets();
-				maybeCreateOrLoadAppendableFile(logFileName);
-				}
-
-			}
-			currentTopSuite = aTopLevelSuite;
-			currentTest = description.getClassName();
-			saveState();
-//			System.out.println (toFileName(aSuite));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-			
+		super.testRunStarted(description);
     }
-	protected void closeFile() {
-		if (out == null)
-			return;
-		out.close();
-		bufWriter = null;
-	}
+
 	@Override
 	public void testStarted(Description description) throws Exception {
-		super.testStarted(description);
-
-			
+		super.testStarted(description);	
     }
 	@Override
 	public void testAssumptionFailure(Failure aFailure) {
 		super.testAssumptionFailure(aFailure);
-
 	}
 	
+	@Override
+	public void testFailure(Failure aFailure) throws Exception {
+		super.testFailure(aFailure);
+	}
+	
+	@Override
+	public void testFinished(Description description) {
+		try {
+			super.testFinished(description);
+			
+//			System.out.println ("Test finished:"+ description);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+	}
+	
+	public void composeTrace() {
+		fullTrace.setLength(0);
+		composePassString();
+		composePartialPassString();
+		composeFailString();
+		composeUntestedString();
+		fullTrace.append(""+numTotalRuns);
+		Date aDate = new Date(System.currentTimeMillis());
+		fullTrace.append("," + aDate);
+		fullTrace.append("," + currentPassPercentage);
+		fullTrace.append("," + (currentPassPercentage - previousPassPercentage));
+		fullTrace.append("," + currentTest);
+		fullTrace.append("," + passStringBulder + NAME_SEPARATOR);
+		fullTrace.append("," + partialPassStringBulder + NAME_SEPARATOR);
+		fullTrace.append("," + failStringBulder  + NAME_SEPARATOR);
+		fullTrace.append("," + untestedStringBuilder + NAME_SEPARATOR + ",");
+	}
+	
+	protected String getHeader() {
+		return HEADER;
+	}
+	
+	// helper methods
 	
 	StringBuilder passStringBulder = new StringBuilder();
 	StringBuilder partialPassStringBulder = new StringBuilder();
@@ -172,7 +174,7 @@ public class ATestLogFileWriter extends RunListener {
 		if (previousFails.contains(aFail)) {
 			return "";
 		}
-		if (previousUntested.contains(aFail))
+		if (numTotalRuns==0||previousUntested.contains(aFail)) //first run edge case
 			return "+"; 
 		return "-"; // otherwise it is a come down
 	}
@@ -238,68 +240,21 @@ public class ATestLogFileWriter extends RunListener {
 			untestedStringBuilder.append(anUntested);
 		}
 	}
-	public void composeTrace() {
-		fullTrace.setLength(0);
-		composePassString();
-		composePartialPassString();
-		composeFailString();
-		composeUntestedString();
-		fullTrace.append(""+numTotalRuns);
-		Date aDate = new Date(System.currentTimeMillis());
-		fullTrace.append("," + aDate);
-		fullTrace.append("," + currentPassPercentage);
-		fullTrace.append("," + (currentPassPercentage - previousPassPercentage));
-		fullTrace.append("," + currentTest);
-		fullTrace.append("," + passStringBulder + NAME_SEPARATOR);
-		fullTrace.append("," + partialPassStringBulder + NAME_SEPARATOR);
-		fullTrace.append("," + failStringBulder  + NAME_SEPARATOR);
-		fullTrace.append("," + untestedStringBuilder + NAME_SEPARATOR + ",");
-		
-	}
 
+
+	protected void closeFile() {
+		if (out == null)
+			return;
+		out.close();
+		bufWriter = null;
+	}
 	
-	@Override
-	public void testFailure(Failure aFailure) throws Exception {
-	  
-			super.testFailure(aFailure);
-			
-	}
-	@Override
-	public void testFinished(Description description) {
-		try {
-			super.testFinished(description);
-			
-//			System.out.println ("Test finished:"+ description);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
-		
-
-	}
 	public void testIgnored(Description description) throws Exception {
 		super.testIgnored(description);
 
 	}
 	protected void setPassPercentage() {
 		currentPassPercentage = (int) (100 * ((double) currentPasses.size())/totalTests);
-
-	}
-	@Override
-	public void testRunFinished(Result aResult) throws Exception {
-		try {
-		super.testRunFinished(aResult);
-		loadCurrentSets(currentTopSuite);
-		correctUntested();
-//		currentPassPercentage = (int) (100 * ((double) currentPasses.size())/totalTests);
-		setPassPercentage();
-		composeTrace();
-		appendLine(fullTrace.toString());		
-		numRuns++;
-		numTotalRuns++;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static String toDirectoryName(GradableJUnitTest aTest) {
@@ -309,7 +264,7 @@ public class ATestLogFileWriter extends RunListener {
        
         File folder = new File(AConsentFormVetoer.LOG_DIRECTORY);
         if (folder.mkdirs()) { // true if dirs made, false otherwise
-            CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), ATestLogFileWriter.class);
+            CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), AnAbstractTestLogFileWriter.class);
         }
 
     }
@@ -339,7 +294,7 @@ public class ATestLogFileWriter extends RunListener {
 	            out = new PrintWriter(bufWriter, true);
 	            if (aNewFile) {
 	            	aFile.createNewFile();
-	            	appendLine(HEADER);
+	            	appendLine(getHeader());
 	            }
 	        } catch (IOException e) {
 	            e.printStackTrace();

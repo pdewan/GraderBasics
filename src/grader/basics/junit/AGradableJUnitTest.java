@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +55,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	boolean isRestriction;
 	protected Double maxScore;
 	Double computedMaxScore;
+	Double computedMaxScoreNoExtra;
 	Double score = 0.0001;
 	String explanation;
 	String group = "";
@@ -182,6 +184,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 
 		
 	}
+	
+	
 	@Visible(false)
 	public boolean isRestriction() {
 		return isRestriction;
@@ -224,8 +228,10 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		status = aTestCaseResult.getPercentage()*100 + "% complete";
 		message = aTestCaseResult.getNotes();
 //		score = getUnroundedScore();	
-		score = getDisplayedScore();		
-
+		score = getDisplayedScore();	
+		
+		testCaseResult.setMaxScore(maxScore);
+		testCaseResult.setScore(score);
 		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore, getDisplayedScore());
 //		propertyChangeSupport.firePropertyChange("Status", oldStatus, status);
 
@@ -262,11 +268,14 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	protected TestCaseResult testNullJUnitClass() {
 		return null;
 	}
+	static Date date = new Date();
 	@Visible(false)
 	public TestCaseResult test()
 			throws NotAutomatableException, NotGradableException {
 		try {
-			Tracer.resetNumTraces();// previous test output should not affect this one
+			// consume is resetting so we do not need line below
+			Tracer.resetNumTraces();// previous test output should not affect this one in case messages were not consumed
+			
 			numTests++;
 			Class aJUnitClass = getJUnitClass();
 //			BasicStaticConfigurationUtils.setTest(aJUnitClass);
@@ -286,7 +295,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 				
 
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
-			System.out.println("Running junit test:" + aJUnitClass.getSimpleName());
+			date.setTime(System.currentTimeMillis());
+			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
 			aRunner.run(runNotifier);
 			testCaseResult = runListener.getTestCaseResult();
 			failure = runListener.getFailure();
@@ -306,6 +316,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //				jUnitTest.setLastResult(testCaseResult);
 //			}
 			fractionComplete = testCaseResult.getPercentage();
+//			testCaseResult.setMaxScore(maxScore);
+//			testCaseResult.setScore(score);
 			showResult(testCaseResult);
 			
 			return testCaseResult;
@@ -398,9 +410,14 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public String getSimpleName() {
 		return getJUnitClass().getSimpleName();
 	}
+	protected String toScoreString() {
+		return Double.toString (GradableJUnitTest.round(getComputedMaxScore()));
+	}
 	public String getName() {
 		if (description == null) {
-		String aScore = "[" + GradableJUnitTest.round(getComputedMaxScore()) + " pts" + "]";
+//		String aScore = "[" + GradableJUnitTest.round(getComputedRegularMaxScore()) + "/" + GradableJUnitTest.round(getComputedMaxScore()) + " pts" + "]";
+		String aScore = "[" + toScoreString() + " pts" + "]";
+
 		String anExtra = isExtra?
 				"(extra credit)"
 				:"";
@@ -497,6 +514,12 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //	}
 	@Visible(false)
 	@Override
+	public double getComputedRegularMaxScore() {
+		if (isExtra()) {
+			
+		}
+		return getMaxScore();
+	}
 	public double getComputedMaxScore() {
 		return getMaxScore();
 	}
