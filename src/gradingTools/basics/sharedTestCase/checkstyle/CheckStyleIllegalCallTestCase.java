@@ -6,67 +6,47 @@ import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
+import gradingTools.shared.testcases.MethodExecutionTest;
+import util.annotations.Explanation;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
+@Explanation("Checks that the property has the expected name and its interface type has expected name, tag, or pattern")
 
-public class StarImportTestCase extends CheckStyleTestCase {
-
-	 protected String starImport;
+public class CheckStyleIllegalCallTestCase extends CheckStyleTestCase {
+	 protected String descriptor;
+	 protected String property;
+	 protected String  propertyType;
+		public static final String WARNING_NAME = "IllegalMethodCall";
+		String call;
+	 public CheckStyleIllegalCallTestCase(String aCall) {
+	        super(aCall, aCall);
+	        call = aCall;
+	  }
 	 @Override
+		protected String warningName() {
+			return WARNING_NAME;
+		}
+		
+	
 	 protected boolean checkForPositives() {
 		 return false;
 	 }
-	 protected boolean failedTestVetoes() {
-	    	return false;
-	    }
-	
-//	 protected String typeTag;
-//	 protected String typeName;
-//		[WARN] D:\dewan_backup\Java\grail13\src\main\Assignment1.java:3:14: Using the '.*' form of import should be avoided - shapes.*. [AvoidStarImport]
-	
-	 public StarImportTestCase (String anImportingType, String aStarImport) {
-	        super(anImportingType, aStarImport);
-//	        super(aType, aType + "!" + aMethod);
-
-	        typeTag = anImportingType;
-	        starImport = aStarImport;
-	        
-	  }
-	
-	
 	@Override
 	public String negativeRegexLineFilter() {
-		if (typeTag.isEmpty() && starImport.isEmpty()) {
-			return ".*" + "WARN" + ".*" +"\\[AvoidStarImport\\]" + ".*";
+		return 	".*" + "WARN" + ".*" + call + ".*" + "\\[IllegalMethodCall\\]" + ".*" ;
 
-		}
-//		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
-		return ".*" + "WARN" + ".*" +typeTag + "(.*)" + starImport + "(.*)" + "\\[AvoidStarImport\\]" + ".*";
-
-
-		
-//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-//		return "(.*)" + getActualType() + "(.*)not made expected call(.*)\\Q" + method + "\\E(.*)";
-//		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
-
+//		return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
+				
 	}
-//	@Override
-//	public String positiveRegexLineFilter() {
-//		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + method + "(.*)";
-////		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
-////		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-////		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
-////		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
-//
-//	}
+	//[INFO] D:\dewan_backup\Java\grail13\src\shapes\AFork.java:1: Expected getter for property LeftLine of type @Comp301Tags.ROTATING_LINE in parent type @Comp301Tags.ANGLE. Good! [ExpectedGetters]
+
+	@Override
+	public String positiveRegexLineFilter() {
+		return 	".*" + "INFO" + ".*" + call + ".*" + "\\[IllegalMethodCall\\]" + ".*" ;
+	
+	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
-//	     Class aClass = IntrospectionUtil.getOrFindClass(project, this, typeTag); 
-//	     if (aClass == null) {
-//	    	 return fail("Type " + typeTag + "not defined, cannot check method");
-//	     }
-//	     typeName = aClass.getSimpleName();
-//		 int i = 0;
-		 TestCaseResult aResult = super.test(project, autoGrade);
+	        TestCaseResult aResult = super.test(project, autoGrade);
 //		 TestCaseResult aResult = fail("foo");
 	        return aResult;
 
@@ -90,7 +70,7 @@ public class StarImportTestCase extends CheckStyleTestCase {
 //	@Override
 //	public String failMessageSpecifier(List<String> aFailedLines) {
 //		// TODO Auto-generated method stub
-//		return "Method matching " + method + " not called in " + getActualType();
+//		return "Property matching " + descriptor + " not defined";
 //	}
   //String literal expressions should be on the left side
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {

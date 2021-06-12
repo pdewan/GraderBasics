@@ -119,6 +119,9 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		return precedingTestInstances;
 	}
 
+    protected boolean failedTestVetoes() {
+    	return true;
+    }
 	
 
 	protected void possiblyRunAndCheckPrecedingTests () {
@@ -135,15 +138,33 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
     			return ;
     		}
     	}
-//		PassFailJUnitTestCase aResult = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTest);
-//		if (aResult.getLastResult().isPass()) {
-//			return;
+
+//		for (Class aPrecedingTestElement:aPrecedingTests) {
+//			PassFailJUnitTestCase aPrecedingTestInstance = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTestElement);
+//			TestCaseResult aLastResult = aPrecedingTestInstance.getLastResult();
+//			if (!aLastResult.isFail()) {
+//				if (aLastResult.isPartialPass()) {
+//					
+//					Tracer.info(PassFailJUnitTestCase.class, "Preceding test " + aPrecedingTestElement.getSimpleName() + " partially passed:" + aLastResult.getPercentage());
+//					Tracer.info(PassFailJUnitTestCase.class, "Scores of this test will be scaled");
+//
+//				}
+//				precedingTestInstances.add(aPrecedingTestInstance);
+//				continue;
+//			} else {
+//				Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTestElement.getSimpleName() + " before running this test", false);
+//
+//			}
 //		}
+		
 		for (Class aPrecedingTestElement:aPrecedingTests) {
 			PassFailJUnitTestCase aPrecedingTestInstance = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aPrecedingTestElement);
 			TestCaseResult aLastResult = aPrecedingTestInstance.getLastResult();
-			if (!aLastResult.isFail()) {
-				if (aLastResult.isPartialPass()) {
+			if (aLastResult.isFail() && failedTestVetoes()) {
+				assertTrue("Preceding test failed:", false);
+			}
+			//			if (!aLastResult.isFail()) {
+				if (!aLastResult.isPass()) {
 					
 					Tracer.info(PassFailJUnitTestCase.class, "Preceding test " + aPrecedingTestElement.getSimpleName() + " partially passed:" + aLastResult.getPercentage());
 					Tracer.info(PassFailJUnitTestCase.class, "Scores of this test will be scaled");
@@ -151,13 +172,14 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 				}
 				precedingTestInstances.add(aPrecedingTestInstance);
 				continue;
-			} else {
-				Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTestElement.getSimpleName() + " before running this test", false);
+			} 
+//		else {
+//				Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTestElement.getSimpleName() + " before running this test", false);
+//
+//			}
+//		}
 
-			}
-		}
 
-//		Assert.assertTrue("Please find in the appropiate suite and correct test  " + aPrecedingTest.getSimpleName() + " before running this test", false);
     }
 	
 	public void passfailDefaultTest() {

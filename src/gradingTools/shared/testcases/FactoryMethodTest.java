@@ -92,7 +92,7 @@ public abstract class FactoryMethodTest extends ProxyTest{
 //		Object aSecondCreation = createUsingFactoryClassAndMethodTags();
 		Object aSecondCreation = createUsingFactory();
 
-		singletonCheckPassed = aSecondCreation == aFirstInstantiation;
+		singletonCheckPassed = (aSecondCreation != null )  && ( aSecondCreation == aFirstInstantiation);
 		if (!singletonCheckPassed) {
 			factoryMessage = "Factory class is not a singleton, first factory method return value " + 
 						aFirstInstantiation + " != second one" + aSecondCreation;

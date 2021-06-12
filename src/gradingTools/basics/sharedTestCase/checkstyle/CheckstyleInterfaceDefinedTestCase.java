@@ -24,11 +24,23 @@ public class CheckstyleInterfaceDefinedTestCase extends CheckStyleTestCase {
 	protected String warningName() {
 		return WARNING_NAME;
 	}
+	// [INFO] D:\dewan_backup\Java\Assignment12Daniel\src\grail\shapes\Locatable.java:10: Expected interface util.models.PropertyListenerRegisterer of class @Comp301Tags.LOCATABLE. Good! [ExpectedInterfaces]
+
     
+//	@Override
+//	public String negativeRegexLineFilter() {
+//		return MethodExecutionTest.toRegex(
+//				"In type(.*)" + getActualType() +"(.*)missing interface:(.*)" + expectedInterface);
+//				
+//	}
 	@Override
 	public String negativeRegexLineFilter() {
-		return MethodExecutionTest.toRegex(
-				"In type(.*)" + getActualType() +"(.*)missing interface:(.*)" + expectedInterface);
+		return ".*" + "WARN" + ".*" + expectedInterface + ".*" + descriptor + ".*";
+				
+	}
+	@Override
+	public String positiveRegexLineFilter() {
+		return ".*" + "INFO" + ".*" + expectedInterface + ".*" + descriptor + ".*";
 				
 	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {

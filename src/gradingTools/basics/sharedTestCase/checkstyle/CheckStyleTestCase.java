@@ -32,6 +32,9 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
         typeTag = aTypeTag;
         actualType = aTypeTag;
     }
+    protected boolean failedTestVetoes() {
+    	return false;
+    }
     
 	protected String typeTag() {
 		return typeTag;

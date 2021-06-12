@@ -6,66 +6,65 @@ import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
+import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
 
-public class StarImportTestCase extends CheckStyleTestCase {
+public class CheckstyleClassIsGenericTestCase extends CheckStyleTestCase {
+//	public static final String WARNING_NAME = "expectedDeclaredSignature";
+//	[INFO] D:\dewan_backup\Java\grail13\.\src\greeting\Cls.java:6: Expected signature main:String[]->void in type greeting.Cls:[@Comp301Tags.GREETING_MAIN]. Good! [ExpectedSignatures]
+//	[WARN] D:\dewan_backup\Java\grail13\.\src\greeting\Cls.java:6: Missing signature main:String[]->void in type greeting.Cls:[@Comp301Tags.GREETING_MAIN]. [ExpectedSignatures]
 
-	 protected String starImport;
-	 @Override
-	 protected boolean checkForPositives() {
-		 return false;
-	 }
-	 protected boolean failedTestVetoes() {
-	    	return false;
-	    }
-	
+//	 public static final String WARNING_NAME = "has not made expected call";
+//	 public static final String INFO_NAME = "has made expected call";
+
 //	 protected String typeTag;
 //	 protected String typeName;
-//		[WARN] D:\dewan_backup\Java\grail13\src\main\Assignment1.java:3:14: Using the '.*' form of import should be avoided - shapes.*. [AvoidStarImport]
-	
-	 public StarImportTestCase (String anImportingType, String aStarImport) {
-	        super(anImportingType, aStarImport);
-//	        super(aType, aType + "!" + aMethod);
-
-	        typeTag = anImportingType;
-	        starImport = aStarImport;
+	 public CheckstyleClassIsGenericTestCase(String aType) {
+	        super(aType, aType );
+	        typeTag = aType;
 	        
 	  }
-	
-	
+	 @Override
+	 protected String typeTag() {
+			return typeTag;
+		}
+//	 @Override
+//		protected String warningName() {
+//			return WARNING_NAME;
+//		}
+//		[INFO] D:\dewan_backup\Java\grail13\.\src\greeting\Cls.java:6: Expected signature main:String[]->void in type greeting.Cls:[@Comp301Tags.GREETING_MAIN]. Good! [ExpectedSignatures]
+//		[WARN] D:\dewan_backup\Java\grail13\.\src\greeting\Cls.java:6: Missing signature main:String[]->void in type greeting.Cls:[@Comp301Tags.GREETING_MAIN]. [ExpectedSignatures]
 	@Override
 	public String negativeRegexLineFilter() {
-		if (typeTag.isEmpty() && starImport.isEmpty()) {
-			return ".*" + "WARN" + ".*" +"\\[AvoidStarImport\\]" + ".*";
-
-		}
-//		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
-		return ".*" + "WARN" + ".*" +typeTag + "(.*)" + starImport + "(.*)" + "\\[AvoidStarImport\\]" + ".*";
-
-
+		
+		return ".*" + "WARN" + ".*" + typeTag + ".*" + "\\[ClassIsGeneric\\]" + ".*" ;
 		
 //		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-//		return "(.*)" + getActualType() + "(.*)not made expected call(.*)\\Q" + method + "\\E(.*)";
-//		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
+//		return "(.*)Signature(.*)" + method + "(.*)" + getActualType() + "(.*)";
+//		return  MethodExecutionTest.toRegex("WARN" + getActualType() +", missing declared signature: " + method);
+//		return  MethodExecutionTest.toRegex("WARN" + getActualType() +", missing declared signature: " + method);
+
 
 	}
-//	@Override
-//	public String positiveRegexLineFilter() {
-//		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + method + "(.*)";
-////		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
-////		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-////		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
-////		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
-//
-//	}
+	@Override
+	public String positiveRegexLineFilter() {
+		
+		return ".*" + "INFO" + ".*" + typeTag + ".*" + "\\[ClassIsGeneric\\]" + ".*" ;
+		
+//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
+//		return "(.*)Signature(.*)" + method + "(.*)" + getActualType() + "(.*)";
+//		return  MethodExecutionTest.toRegex("WARN" + getActualType() +", missing declared signature: " + method);
+//		return  MethodExecutionTest.toRegex("WARN" + getActualType() +", missing declared signature: " + method);
+
+
+	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 //	     Class aClass = IntrospectionUtil.getOrFindClass(project, this, typeTag); 
 //	     if (aClass == null) {
-//	    	 return fail("Type " + typeTag + "not defined, cannot check method");
+//	    	 return fail("Type " + typeTag + " not defined, cannot check method:" + typeTag);
 //	     }
 //	     typeName = aClass.getSimpleName();
-//		 int i = 0;
 		 TestCaseResult aResult = super.test(project, autoGrade);
 //		 TestCaseResult aResult = fail("foo");
 	        return aResult;
@@ -90,7 +89,7 @@ public class StarImportTestCase extends CheckStyleTestCase {
 //	@Override
 //	public String failMessageSpecifier(List<String> aFailedLines) {
 //		// TODO Auto-generated method stub
-//		return "Method matching " + method + " not called in " + getActualType();
+//		return "Method call matching " + method + " not defined by " + getActualType();
 //	}
   //String literal expressions should be on the left side
 	 protected TestCaseResult computeResult (Project aProject, String[] aCheckStyleLines, List<String> aFailedLines, List<String> aSucceededLines, boolean autoGrade) {

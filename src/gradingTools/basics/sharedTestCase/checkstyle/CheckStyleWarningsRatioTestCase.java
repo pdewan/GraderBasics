@@ -9,7 +9,9 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 public  class CheckStyleWarningsRatioTestCase extends CheckStyleWarningsTestCase {
 //	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.2;
 //	protected double penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
-
+	protected boolean failedTestVetoes() {
+    	return false;
+    }
 	public CheckStyleWarningsRatioTestCase(String aTypeName, String aMessage) {
 		super(aTypeName, aMessage);
 	}
