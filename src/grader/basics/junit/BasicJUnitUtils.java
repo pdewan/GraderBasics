@@ -1,5 +1,6 @@
 package grader.basics.junit;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.runner.JUnitCore;
@@ -17,13 +20,25 @@ import org.junit.runner.notification.RunListener;
 import org.junit.runners.Suite;
 
 import bus.uigen.ObjectEditor;
+import bus.uigen.attributes.AttributeNames;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.execution.GradingMode;
 import grader.basics.observers.TestLogFileWriterFactory;
 import grader.basics.project.BasicProjectIntrospection;
 //import grader.junit.GraderTestCase;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.vetoers.AConsentFormVetoer;
+import gradingTools.logs.LocalChecksLogData;
+import gradingTools.logs.localChecksStatistics.collectors.Collector;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.AttemptsCollectorV2;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.BreakTimeCollector;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DateFirstTestedCollector;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DateLastTestedCollector;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.TotalAttemptsCollector;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.TotalTimeCollector;
+import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
 import trace.grader.basics.GraderBasicsTraceUtility;
+import util.annotations.PreferredWidgetClass;
 import util.trace.Tracer;
 
 
@@ -105,8 +120,75 @@ public class BasicJUnitUtils {
 		ObjectEditor.treeEdit(aGradable);
 	}
 	
+	static int lastAssignmentNumber = -1;
+	public static int getLastAssignmentNumber() {
+		return lastAssignmentNumber;
+	}
+
+
+	public static void setLastAssignmentNumber(int lastAssignmentNumber) {
+		BasicJUnitUtils.lastAssignmentNumber = lastAssignmentNumber;
+	}
+	public static final int BREAK_TIME = 300;
+	static Collector [] collectors = {
+			new DateFirstTestedCollector(),
+			new DateLastTestedCollector(),
+			new TotalTimeCollector(),
+			new BreakTimeCollector(BREAK_TIME),
+			new WorkTimeCollector(BREAK_TIME),
+			new TotalAttemptsCollector(),
+			new AttemptsCollectorV2(),
+	};
 	
-	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {	
+	
+	static String noOutput = "Could not find project directory";
+	static String noOutputArray[] = {"Could not find project directory"};
+
+	 static List<String> noOutputList = Arrays.asList(noOutputArray);
+	 
+	 static StringBuffer stringBuffer = new StringBuffer();
+	public static List<String>  progressStatistics() {
+		File directory = CurrentProjectHolder.getProjectLocation();
+		if (!directory.exists()) {
+			return noOutputList;
+		}
+		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
+		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,collectors);
+//		stringBuffer.setLength(0);
+//		for (String aString:aData) {
+//			stringBuffer.append(aString + "\n");
+//		}
+//		return stringBuffer.toString();
+		return aData;
+	}
+
+
+	static void extractAssignmentNuber (Class aJUnitSuiteClass) {
+		String aClassName = aJUnitSuiteClass.getSimpleName();
+		Pattern p = Pattern.compile("\\d+");
+        Matcher m = p.matcher(aClassName);
+        String aDigitString = null;
+        while(m.find()) {
+//        	if (aDigitString != null) {
+//        		aDigitString = null;
+//        		break;
+//        	}
+           aDigitString = m.group();
+           
+        }
+        if (aDigitString != null) {
+        	try {
+        		lastAssignmentNumber = Integer.parseInt(aDigitString);
+            } catch (Exception e) {
+         	   
+            }
+        }
+	}
+	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
+		extractAssignmentNuber(aJUnitSuiteClass);
+		if (!GradingMode.getGraderRun()) {
+			ObjectEditor.setAttribute(ArrayList.class, AttributeNames.PREFERRED_WIDGET, javax.swing.JTextArea.class.getName());
+		}
 		setGiveAssertionErrorStackTrace(false);
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);
 		GraderBasicsTraceUtility.setTracing();

@@ -12,10 +12,12 @@ import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
+import util.annotations.Label;
 
 //import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 
 import util.annotations.Position;
+import util.annotations.PreferredWidgetClass;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
@@ -286,6 +288,10 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	 @Visible(false)
 	public void testAll() {
 		test();
+	}
+//	@PreferredWidgetClass(javax.swing.JTextArea.class)
+	public List<String> displayProgressStatistics() {
+		return BasicJUnitUtils.progressStatistics();
 	}
 
 	@Visible(false)

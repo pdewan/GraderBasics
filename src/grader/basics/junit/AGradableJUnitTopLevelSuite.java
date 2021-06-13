@@ -8,6 +8,7 @@ import org.apache.commons.collections.keyvalue.AbstractKeyValue;
 import org.apache.commons.collections.map.AbstractHashedMap;
 import org.junit.runner.Description;
 
+import util.annotations.Label;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
@@ -17,6 +18,7 @@ import util.annotations.Visible;
  * @author dewan
  *
  */
+@Label("Testing")
 public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	public AGradableJUnitTopLevelSuite(Class aJUnitClass) {
 		super(aJUnitClass);
