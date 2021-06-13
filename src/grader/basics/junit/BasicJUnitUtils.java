@@ -130,15 +130,42 @@ public class BasicJUnitUtils {
 		BasicJUnitUtils.lastAssignmentNumber = lastAssignmentNumber;
 	}
 	public static final int BREAK_TIME = 300;
-	static Collector [] collectors = {
-			new DateFirstTestedCollector(),
-			new DateLastTestedCollector(),
-			new TotalTimeCollector(),
-			new BreakTimeCollector(BREAK_TIME),
-			new WorkTimeCollector(BREAK_TIME),
-			new TotalAttemptsCollector(),
-			new AttemptsCollectorV2(),
+	static Collector dateFirstTested = new DateFirstTestedCollector();
+	static Collector dateLastTested = new DateLastTestedCollector();
+	static Collector totalTime = new TotalTimeCollector();
+	static Collector breakTime = new BreakTimeCollector(BREAK_TIME);
+	static Collector workTime = new WorkTimeCollector(BREAK_TIME);
+	static Collector totalAttempts = new WorkTimeCollector(BREAK_TIME);
+	static Collector totalAttemptsV2 = new  AttemptsCollectorV2();
+
+
+
+
+//	static Collector [] collectors = {
+//			new DateFirstTestedCollector(),
+//			new DateLastTestedCollector(),
+//			new TotalTimeCollector(),
+//			new BreakTimeCollector(BREAK_TIME),
+//			new WorkTimeCollector(BREAK_TIME),
+//			new TotalAttemptsCollector(),
+//			new AttemptsCollectorV2(),
+//	};
+	static Collector [] allCollectors = {
+			dateFirstTested,
+			dateLastTested,
+			totalTime,
+			breakTime,
+			workTime,
+			totalAttempts,
+			totalAttemptsV2,
 	};
+	
+	static Collector [] testingPeriodCollectors = {
+			dateFirstTested,
+			dateLastTested,
+			
+	};
+	
 	
 	
 	static String noOutput = "Could not find project directory";
@@ -147,13 +174,27 @@ public class BasicJUnitUtils {
 	 static List<String> noOutputList = Arrays.asList(noOutputArray);
 	 
 	 static StringBuffer stringBuffer = new StringBuffer();
-	public static List<String>  progressStatistics() {
+	public static List<String>  allProgressMetrics() {
 		File directory = CurrentProjectHolder.getProjectLocation();
 		if (!directory.exists()) {
 			return noOutputList;
 		}
 		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
-		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,collectors);
+		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,allCollectors);
+//		stringBuffer.setLength(0);
+//		for (String aString:aData) {
+//			stringBuffer.append(aString + "\n");
+//		}
+//		return stringBuffer.toString();
+		return aData;
+	}
+	public static List<String>  testingPeriodMetrics() {
+		File directory = CurrentProjectHolder.getProjectLocation();
+		if (!directory.exists()) {
+			return noOutputList;
+		}
+		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
+		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,testingPeriodCollectors);
 //		stringBuffer.setLength(0);
 //		for (String aString:aData) {
 //			stringBuffer.append(aString + "\n");

@@ -46,6 +46,10 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		this.implicit = implicit;
 	}
 	
+//	public List<String> totalAttempts() {
+//		return new ArrayList();
+//	}
+	
 
 	public GradableJUnitTest get(int anIndex) {
 		return children.get(anIndex);
@@ -289,9 +293,15 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public void testAll() {
 		test();
 	}
+	public List<String> totalAttempts(GradableJUnitTest aTest) {
+		return allProgressMetrics();
+	}
 //	@PreferredWidgetClass(javax.swing.JTextArea.class)
-	public List<String> displayProgressStatistics() {
-		return BasicJUnitUtils.progressStatistics();
+	public List<String> allProgressMetrics() {
+		return BasicJUnitUtils.allProgressMetrics();
+	}
+	public List<String> testingPeriodMetrics() {
+		return BasicJUnitUtils.testingPeriodMetrics();
 	}
 
 	@Visible(false)
