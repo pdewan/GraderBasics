@@ -14,17 +14,13 @@ import gradingTools.logs.localChecksStatistics.collectors.Collector;
 
 public class LocalLogDataAnalyzer {
 	private static final int TEST_PASS_INDEX=5,TEST_PARTIAL_INDEX=6,TEST_FAIL_INDEX=7,TEST_UNTESTED_INDEX=8, MAXIMUM_ASSIGNMENTS=20;
-	private static boolean printOutput=true;
 	private static final String nonFineGrainedFormatting = ".*Assignment#Suite\\.csv", 
 								logsPath="/Logs/LocalChecks",
 								localChecksCheckerDataPath=logsPath+"/LocalChecksAnalysis.csv",
 								localChecksCheckerDataHeader = "Log Checked,Date,Collectors Used\n";
-	
-	public static void setPrintOutput(boolean b) {
-		printOutput=b;
-	}
 
-	public static List<String> getData(File eclipseDirectory, int assignmentNumber, CollectorManager cm) {
+
+	public static List<String> getData(File eclipseDirectory, int assignmentNumber, CollectorManager cm, boolean printOutput, String [] desiredTests) {
 		File logsDirectory = new File(eclipseDirectory.getAbsolutePath()+logsPath);
 		if(!logsDirectory.exists()|| logsDirectory.isFile())
 			throw new IllegalArgumentException("The path "+logsDirectory.getAbsolutePath()+" must be a directory that exists");
@@ -34,7 +30,7 @@ public class LocalLogDataAnalyzer {
 			for(File log:logsDirectory.listFiles(File::isFile))
 				if(log.getName().matches(assignment))
 					try {
-						return runEvaluation(log,eclipseDirectory,cm);
+						return runEvaluation(log,eclipseDirectory,cm,printOutput,desiredTests);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -52,7 +48,7 @@ public class LocalLogDataAnalyzer {
 						retval.add(assignmentNote);
 						if(printOutput)
 							System.out.println(assignmentNote);
-						retval.addAll(runEvaluation(log,eclipseDirectory,cm));
+						retval.addAll(runEvaluation(log,eclipseDirectory,cm,printOutput,desiredTests));
 						
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -63,7 +59,7 @@ public class LocalLogDataAnalyzer {
 		return retval;
 	}
 	
-	public static List<String> runEvaluation(File log, File eclipseDirectory, CollectorManager cm) throws IOException {
+	public static List<String> runEvaluation(File log, File eclipseDirectory, CollectorManager cm, boolean printOutput, String [] desiredTests) throws IOException {
 		List<String> output = new ArrayList<>();
 		List<String> logData = readLog(log);
 		String [] tests = determineTests(logData);
@@ -82,13 +78,20 @@ public class LocalLogDataAnalyzer {
 		cm.processLog(logData, 1);
 		
 		//Gathering Data
-		List<String> headers = cm.getOrderedHeaders();
-		List<String> data = cm.getOrderedData();
-		for(int i=0;i<headers.size();i++) {
-			output.add(headers.get(i)+", "+data.get(i));
+//		List<String> headers = cm.getOrderedHeaders();
+//		List<String> data = cm.getOrderedData();
+//		for(int i=0;i<headers.size();i++) {
+//			output.add(headers.get(i)+", "+data.get(i));
+//			if(printOutput)
+//				System.out.println(output.get(i));
+//		}	
+		
+		List<String[]> data = cm.getCertainHeadersAndData(desiredTests);
+		for(String [] dataPoint:data) {
+			output.add(dataPoint[0]+":"+dataPoint[1]);
 			if(printOutput)
-				System.out.println(output.get(i));
-		}	
+				System.out.println(dataPoint[0]+":"+dataPoint[1]);
+		}
 		cm.reset();
 		
 		recordDataCheck(log, eclipseDirectory, cm);

@@ -69,7 +69,7 @@ public class BreakTimeCollector extends AbstractCollector{
 
 	@Override
 	protected String getHeaderPhrase() {
-		return " contained x breaks";
+		return " breaks taken";
 	}
 	
 }

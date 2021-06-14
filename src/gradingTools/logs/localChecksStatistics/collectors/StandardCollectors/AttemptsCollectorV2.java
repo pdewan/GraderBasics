@@ -11,7 +11,7 @@ public class AttemptsCollectorV2 extends AbstractCollector{
 	private final String headerPhrase;
 	
 	public AttemptsCollectorV2(){
-		this(" was attempted x times");
+		this(" attempts");
 		
 	}
 	public AttemptsCollectorV2(String header) {

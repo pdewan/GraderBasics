@@ -117,7 +117,7 @@ public abstract class AbstractCollector implements Collector {
 		suiteMapping=mapping;
 	}
 	
-	private HashMap<String,State> tests = new HashMap<String,State>();
+	protected HashMap<String,State> tests = new HashMap<String,State>();
 	private List<String> improvedTests, reducedTests, changedTests;
 	
 	protected void updateTests(String [] log) {
@@ -198,7 +198,7 @@ public abstract class AbstractCollector implements Collector {
 		return changedTests;
 	}
 
-	private enum State{
+	public enum State{
 		Pass,
 		Partial,
 		Untested,

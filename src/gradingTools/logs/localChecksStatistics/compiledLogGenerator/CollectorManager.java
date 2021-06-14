@@ -81,6 +81,32 @@ public class CollectorManager {
 		return retval;
 	}
 	
+	public List<String []> getCertainHeadersAndData(String [] desiredTests) {
+
+		List<String []> retval = new ArrayList<String[]>();
+		for(Collector collector:collectors) {
+			String [] headers = collector.getHeaders();
+			String [] data = collector.getResults();
+			boolean requiresTestName = collector.requiresTestNames();
+			
+			for(int i=0;i<headers.length;i++) {
+				if(requiresTestName && !headerContainsTests(headers[i],desiredTests)) continue;
+				String [] addToReturn = {headers[i],data[i]};
+				retval.add(addToReturn);
+			}
+		}
+		
+		return retval;
+	}
+	
+	private boolean headerContainsTests(String header, String [] desiredTests) {
+		if(desiredTests==null) return true;
+		for(String test:desiredTests)
+			if(header.contains(test))
+				return true;
+		return false;
+	}
+	
 }
 
 	

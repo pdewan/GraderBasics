@@ -7,7 +7,7 @@ import gradingTools.logs.localChecksStatistics.collectors.AbstractStateChangeCol
 public class DecreasingAttemptsCollectorV2 extends AbstractStateChangeCollector{
 	
 	public DecreasingAttemptsCollectorV2() {
-		this(" state has decreased x times");
+		this(" decreases");
 	}
 	
 	public DecreasingAttemptsCollectorV2(String header) {
