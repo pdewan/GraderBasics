@@ -295,12 +295,12 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public void testAll() {
 		test();
 	}
-	public TestMetrics totalAttempts(GradableJUnitTest aTest) {
-		return null;
-		
-	
-//		return allProgressMetrics();
-	}
+//	public TestMetrics totalAttempts(GradableJUnitTest aTest) {
+//		return null;
+//		
+//	
+////		return allProgressMetrics();
+//	}
 	
 //	public List<String> totalAttempts(GradableJUnitTest aTest) {
 //		return allProgressMetrics();
