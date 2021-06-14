@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,8 @@ import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.Dat
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.TotalAttemptsCollector;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.TotalTimeCollector;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
+import gradingTools.logs.models.ATestMetricsList;
+import gradingTools.logs.models.TestMetrics;
 import trace.grader.basics.GraderBasicsTraceUtility;
 import util.annotations.PreferredWidgetClass;
 import util.trace.Tracer;
@@ -129,79 +132,100 @@ public class BasicJUnitUtils {
 	public static void setLastAssignmentNumber(int lastAssignmentNumber) {
 		BasicJUnitUtils.lastAssignmentNumber = lastAssignmentNumber;
 	}
-	public static final int BREAK_TIME = 300;
-	static Collector dateFirstTested = new DateFirstTestedCollector();
-	static Collector dateLastTested = new DateLastTestedCollector();
-	static Collector totalTime = new TotalTimeCollector();
-	static Collector breakTime = new BreakTimeCollector(BREAK_TIME);
-	static Collector workTime = new WorkTimeCollector(BREAK_TIME);
-	static Collector totalAttempts = new WorkTimeCollector(BREAK_TIME);
-	static Collector totalAttemptsV2 = new  AttemptsCollectorV2();
-
-
-
-
-//	static Collector [] collectors = {
-//			new DateFirstTestedCollector(),
-//			new DateLastTestedCollector(),
-//			new TotalTimeCollector(),
-//			new BreakTimeCollector(BREAK_TIME),
-//			new WorkTimeCollector(BREAK_TIME),
-//			new TotalAttemptsCollector(),
-//			new AttemptsCollectorV2(),
+//	public static final int BREAK_TIME = 300;
+//	static Collector dateFirstTested = new DateFirstTestedCollector();
+//	static Collector dateLastTested = new DateLastTestedCollector();
+//	static Collector totalTime = new TotalTimeCollector();
+//	static Collector breakTime = new BreakTimeCollector(BREAK_TIME);
+//	static Collector workTime = new WorkTimeCollector(BREAK_TIME);
+//	static Collector totalAttempts = new WorkTimeCollector(BREAK_TIME);
+//	static Collector totalAttemptsV2 = new  AttemptsCollectorV2();
+//
+//
+//
+//
+////	static Collector [] collectors = {
+////			new DateFirstTestedCollector(),
+////			new DateLastTestedCollector(),
+////			new TotalTimeCollector(),
+////			new BreakTimeCollector(BREAK_TIME),
+////			new WorkTimeCollector(BREAK_TIME),
+////			new TotalAttemptsCollector(),
+////			new AttemptsCollectorV2(),
+////	};
+//	static Collector [] allCollectors = {
+//			dateFirstTested,
+//			dateLastTested,
+//			totalTime,
+//			breakTime,
+//			workTime,
+//			totalAttempts,
+//			totalAttemptsV2,
 //	};
-	static Collector [] allCollectors = {
-			dateFirstTested,
-			dateLastTested,
-			totalTime,
-			breakTime,
-			workTime,
-			totalAttempts,
-			totalAttemptsV2,
-	};
-	
-	static Collector [] testingPeriodCollectors = {
-			dateFirstTested,
-			dateLastTested,
-			
-	};
-	
-	
-	
-	static String noOutput = "Could not find project directory";
-	static String noOutputArray[] = {"Could not find project directory"};
-
-	 static List<String> noOutputList = Arrays.asList(noOutputArray);
-	 
-	 static StringBuffer stringBuffer = new StringBuffer();
-	public static List<String>  allProgressMetrics() {
-		File directory = CurrentProjectHolder.getProjectLocation();
-		if (!directory.exists()) {
-			return noOutputList;
-		}
-		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
-		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,allCollectors);
-//		stringBuffer.setLength(0);
-//		for (String aString:aData) {
-//			stringBuffer.append(aString + "\n");
+//	
+//	static Collector [] testingPeriodCollectors = {
+//			dateFirstTested,
+//			dateLastTested,
+//			
+//	};
+//	
+//	static Collector[] attemptsCollectors = {
+//			totalAttempts,
+//			totalAttemptsV2
+//	};
+//	public static void fillAttemptsInMap(
+//			Map<GradableJUnitTest,TestMetrics> aTestMetricsMap, 
+//			List<String> anAttemptsList) {
+//		
+//	}
+//
+//	
+//	public static void fillTestMetricsMap(Map<GradableJUnitTest,TestMetrics> aTestMetricsMap) {
+//		File directory = CurrentProjectHolder.getProjectLocation();
+//		if (!directory.exists()) {
+//			return ;
 //		}
-//		return stringBuffer.toString();
-		return aData;
-	}
-	public static List<String>  testingPeriodMetrics() {
-		File directory = CurrentProjectHolder.getProjectLocation();
-		if (!directory.exists()) {
-			return noOutputList;
-		}
-		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
-		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,testingPeriodCollectors);
-//		stringBuffer.setLength(0);
-//		for (String aString:aData) {
-//			stringBuffer.append(aString + "\n");
+//		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
+//		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,attemptsCollectors);
+//
+//	}
+//	
+//	
+//	static String noOutput = "Could not find project directory";
+//	static String noOutputArray[] = {"Could not find project directory"};
+//
+//	 static List<String> noOutputList = Arrays.asList(noOutputArray);
+//	 
+//	 static StringBuffer stringBuffer = new StringBuffer();
+//	public static List<String>  allProgressMetrics() {
+//		File directory = CurrentProjectHolder.getProjectLocation();
+//		if (!directory.exists()) {
+//			return noOutputList;
 //		}
-//		return stringBuffer.toString();
-		return aData;
-	}
+//		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
+//		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,allCollectors);
+////		stringBuffer.setLength(0);
+////		for (String aString:aData) {
+////			stringBuffer.append(aString + "\n");
+////		}
+////		return stringBuffer.toString();
+//		return aData;
+//	}
+//	public static List<String>  testingPeriodMetrics() {
+//		File directory = CurrentProjectHolder.getProjectLocation();
+//		if (!directory.exists()) {
+//			return noOutputList;
+//		}
+//		int assignmentNumber= BasicJUnitUtils.getLastAssignmentNumber();
+//		List<String> aData = LocalChecksLogData.getData(directory,assignmentNumber,testingPeriodCollectors);
+//		
+////		stringBuffer.setLength(0);
+////		for (String aString:aData) {
+////			stringBuffer.append(aString + "\n");
+////		}
+////		return stringBuffer.toString();
+//		return aData;
+//	}
 
 
 	static void extractAssignmentNuber (Class aJUnitSuiteClass) {
@@ -228,7 +252,10 @@ public class BasicJUnitUtils {
 	public static GradableJUnitSuite interactiveTest(Class<?> aJUnitSuiteClass) {
 		extractAssignmentNuber(aJUnitSuiteClass);
 		if (!GradingMode.getGraderRun()) {
-			ObjectEditor.setAttribute(ArrayList.class, AttributeNames.PREFERRED_WIDGET, javax.swing.JTextArea.class.getName());
+//			ObjectEditor.setAttribute(ArrayList.class, AttributeNames.PREFERRED_WIDGET, javax.swing.JTextArea.class.getName());
+			ObjectEditor.setAttribute(ArrayList.class, AttributeNames.PREFERRED_WIDGET, javax.swing.JTable.class.getName());
+//			ObjectEditor.setAttribute(ATestMetricsList.class, AttributeNames.PREFERRED_WIDGET, javax.swing.JTable.class.getName());
+
 		}
 		setGiveAssertionErrorStackTrace(false);
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);

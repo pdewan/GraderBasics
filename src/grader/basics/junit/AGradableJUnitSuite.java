@@ -12,6 +12,8 @@ import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
+import gradingTools.logs.models.MetricsUtils;
+import gradingTools.logs.models.TestMetrics;
 import util.annotations.Label;
 
 //import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
@@ -293,15 +295,22 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public void testAll() {
 		test();
 	}
-	public List<String> totalAttempts(GradableJUnitTest aTest) {
-		return allProgressMetrics();
+	public TestMetrics totalAttempts(GradableJUnitTest aTest) {
+		return null;
+		
+	
+//		return allProgressMetrics();
 	}
+	
+//	public List<String> totalAttempts(GradableJUnitTest aTest) {
+//		return allProgressMetrics();
+//	}
 //	@PreferredWidgetClass(javax.swing.JTextArea.class)
-	public List<String> allProgressMetrics() {
-		return BasicJUnitUtils.allProgressMetrics();
+	public List<TestMetrics> progressMetrics() {
+		return MetricsUtils.progressMetrics();
 	}
 	public List<String> testingPeriodMetrics() {
-		return BasicJUnitUtils.testingPeriodMetrics();
+		return MetricsUtils.testingPeriodMetrics();
 	}
 
 	@Visible(false)
