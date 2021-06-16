@@ -10,7 +10,7 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 public abstract class TaggedClassTest extends PassFailJUnitTestCase {
 	protected Class taggedClass;
 	protected abstract String tag();
-	protected Class getTaggedClass() {
+	public Class getTaggedClass() {
 		return taggedClass;
 	}
 	@Override

@@ -12,7 +12,7 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 
 public abstract class TaggedTypeTest extends TaggedClassTest {
 	protected Class taggedInterface;
-	protected Class getTaggedInterface() {
+	public Class getTaggedInterface() {
 		return taggedInterface;
 	}
 	

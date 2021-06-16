@@ -291,7 +291,7 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 
 	// does not retiurn a result
 	@Override
-//	 @Visible(false)
+	@Visible(false)
 	public void testAll() {
 		test();
 	}
