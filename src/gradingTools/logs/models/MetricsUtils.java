@@ -96,9 +96,13 @@ public class MetricsUtils {
 			}
 			TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
 
-			aTestMetrics.setAttempts(Double.parseDouble(aNameAndMetric[1]));
+			aTestMetrics.setAttempts(twoDecimalPlaces(Double.parseDouble(aNameAndMetric[1])));
 
 		}
+	}
+	
+	public static double twoDecimalPlaces (Double aDouble) {
+		return Math.round(aDouble * 100.0) / 100.0;
 	}
 	public static void fillBreaksInMap(Map<String, TestMetrics> aTestMetricsMap, List<String> aBreaksList) {
 		String[] aNameAndMetric = new String[2];
@@ -146,7 +150,7 @@ public class MetricsUtils {
 				continue;
 			}
 			TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
-			aTestMetrics.setRegressions(Double.parseDouble(aNameAndMetric[1]));
+			aTestMetrics.setRegressions(twoDecimalPlaces(Double.parseDouble(aNameAndMetric[1])));
 
 		}
 	}
@@ -166,7 +170,7 @@ public class MetricsUtils {
 		
 		List<String> aRegressionsList = LocalChecksLogData.getData(directory, assignmentNumber,
 				decreasingAttemptsCollectors);
-		fillRegressionsInMap(aTestMetricsMap, anAttemptsList);
+		fillRegressionsInMap(aTestMetricsMap, aRegressionsList);
 
 	}
 
