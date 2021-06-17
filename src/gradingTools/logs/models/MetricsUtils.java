@@ -95,8 +95,11 @@ public class MetricsUtils {
 				continue;
 			}
 			TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
-
-			aTestMetrics.setAttempts(twoDecimalPlaces(Double.parseDouble(aNameAndMetric[1])));
+			double anAttempts = twoDecimalPlaces(Double.parseDouble(aNameAndMetric[1]));
+			if (anAttempts < 0) {
+				anAttempts = - anAttempts;
+			}
+			aTestMetrics.setAttempts(anAttempts);
 
 		}
 	}
@@ -157,9 +160,7 @@ public class MetricsUtils {
 
 	public static void fillTestMetricsMap(Map<String, TestMetrics> aTestMetricsMap) {
 		File directory = CurrentProjectHolder.getProjectLocation();
-		if (!directory.exists()) {
-			return;
-		}
+		if (!directory.exists()) { }
 		int assignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
 		List<String> anAttemptsList = LocalChecksLogData.getData(directory, assignmentNumber, attemptsCollectors);
 		fillAttemptsInMap(aTestMetricsMap, anAttemptsList);
