@@ -55,9 +55,12 @@ public class MetricsUtils {
 	};
 	static Collector[] workTimeCollectors = { workTimeCollector };
 
-	static Collector[] attemptsCollectors = { totalAttempts, totalAttemptsV2 };
+//	static Collector[] attemptsCollectors = { totalAttempts, totalAttemptsV2 };
+	static Collector[] attemptsCollectors = {totalAttemptsV2 };
+
 	
-	static Collector[] decreasingAttemptsCollectors = { decreasingAttempts, decreasingAttemptsV2 };
+//	static Collector[] decreasingAttemptsCollectors = { decreasingAttempts, decreasingAttemptsV2 };
+	static Collector[] decreasingAttemptsCollectors = {decreasingAttemptsV2 };
 
 	public static void extractNameAndMetric(String aLine, String[] aNameAndMetric) {
 
