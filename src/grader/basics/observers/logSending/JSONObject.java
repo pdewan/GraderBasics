@@ -1,4 +1,4 @@
-package grader.basics.observers;
+package grader.basics.observers.logSending;
 
 import java.io.Serializable;
 import java.util.ArrayList;

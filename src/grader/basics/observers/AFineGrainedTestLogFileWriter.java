@@ -2,25 +2,21 @@ package grader.basics.observers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
+import grader.basics.observers.logSending.ALogSendingRunnable;
+import grader.basics.observers.logSending.LogSender;
 import grader.basics.vetoers.AConsentFormVetoer;
 
 public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
@@ -52,6 +48,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	private boolean testIsSuite;
 	private GradableJUnitTest testedSuiteOrTest;
 	private String topLevelInfo;
+	private ALogSendingRunnable logSender;
 	
 	public AFineGrainedTestLogFileWriter() {
 		super();
@@ -95,12 +92,18 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 				
 			}
 				
-			
 			if (numRuns == 0) {
 				totalTests = aTopLevelSuite.getLeafClasses().size();
 				String fileLoc = AConsentFormVetoer.LOG_DIRECTORY + "/";
 				logFileName = fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
+				
+				if(logSender==null) {
+					logSender = new ALogSendingRunnable();
+					Thread logSendingThread = new Thread(logSender);
+					logSendingThread.setName("Log Sending");
+					logSendingThread.start();
+				}	
 				
 				if (maybeReadLastLineOfLogFile(logFileName)) {
 					maybeLoadSavedSets();
@@ -208,14 +211,16 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			unsortedTestScores=null;
 			numRuns++;
 			numTotalRuns++;
-			writeToSessionDataFile();
+			
 			
 			try {
-				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
+//				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
+				logSender.addToQueue(fullTrace.toString(), topLevelInfo, numTotalRuns);
 			}catch(Exception e) {
 				System.err.println("Error resolving local checks server sending");
 				System.err.println("Thrown message:\n"+e.getMessage());
 			}
+			writeToSessionDataFile();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

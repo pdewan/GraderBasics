@@ -1,4 +1,4 @@
-package grader.basics.observers;
+package grader.basics.observers.logSending;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,8 +21,17 @@ public class LogSender {
 	private static final File fileStore;
 	
 	static {
-		fileStore=new File(System.getProperty("user.home")+"/helper-config/"+uuidFile);
+		File searchLoc = new File(System.getProperty("user.home")+"/helper-config/");
+		if(searchLoc.exists())
+			fileStore=new File(System.getProperty("user.home")+"/helper-config/"+uuidFile);
+		else
+			fileStore=new File("./Logs/LocalChecks/"+uuidFile);
 	}
+	
+	public static void sendToServer(SendingData sd) throws Exception {
+		sendToServer(sd.getLog(),sd.getAssignment(),sd.getIteration());
+	}
+	
 	public static void sendToServer(String log, String assignment, int sessionId) throws Exception{		
 		JSONObject message = new JSONObject();
 		
@@ -87,6 +96,7 @@ public class LogSender {
 		return sb.toString();
 	}
 	
+	@SuppressWarnings("unused")
 	private static String determineSemester() {
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
