@@ -206,6 +206,15 @@ public class BasicProjectExecution {
 
 	}
 	
+	public static boolean isCatchException = true;
+
+	public static boolean isCatchException() {
+		return isCatchException;
+	}
+
+	public static void setCatchException(boolean isCatchException) {
+		BasicProjectExecution.isCatchException = isCatchException;
+	}
 
 	public static Object timedInvoke(Object anObject, Method aMethod,
 			Object... anArgs) throws Throwable {
@@ -216,6 +225,9 @@ public class BasicProjectExecution {
 			try {
 				return aMethod.invoke(anObject, anArgs);
 			} catch (Exception e) {
+				if (!isCatchException()) {
+					throw e;
+				}
 				Throwable t = e;
 				while (t.getCause() != null) {
 					t=t.getCause();
