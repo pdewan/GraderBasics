@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -122,7 +121,8 @@ public class LogSender {
 		try {
 			body.put("body", request);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			System.err.println(e1.getMessage());
+//			e1.printStackTrace();
 		}
 
 		try {
@@ -157,8 +157,10 @@ public class LogSender {
 				reader.close();
 			}
 			conn.disconnect();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("Error sending logs:\n"+e.getMessage());
+			return null;
+//			e.printStackTrace();
 		} 
 		try {
 			return new JSONObject();
