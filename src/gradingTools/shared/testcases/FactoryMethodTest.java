@@ -29,6 +29,10 @@ public abstract class FactoryMethodTest extends ProxyTest{
 	protected static final double FACTORY_OBJECT_CLASS_CREDIT = 0.2;
 	protected static final double FACTORY_OBJECT_SINGLETON_CREDIT = 0.2;
 	boolean tryConstructor = false;
+	
+	protected boolean isSingleton() {
+		return true;
+	}
 
 	protected double factoryCredit;
 	
@@ -89,6 +93,9 @@ public abstract class FactoryMethodTest extends ProxyTest{
 		}
 	}
 	protected boolean doSingletonCheck(Object aFirstInstantiation) {
+		if (!isSingleton()) {
+			return true;
+		}
 //		Object aSecondCreation = createUsingFactoryClassAndMethodTags();
 		Object aSecondCreation = createUsingFactory();
 

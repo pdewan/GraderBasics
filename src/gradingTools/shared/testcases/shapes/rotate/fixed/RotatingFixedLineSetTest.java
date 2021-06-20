@@ -4,7 +4,12 @@ public class RotatingFixedLineSetTest extends RotatingLineTest{
 	protected Integer inputStudentX = 0;
 	protected Integer inputStudentY = 0;
 	protected void rotate() {
-		getRotatingLine().setAngle(inputAngle());
+		try {
+			getRotatingLine().setAngle(inputAngle());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getRotatingLine().setRadius(inputRadius());
 	
 	}
