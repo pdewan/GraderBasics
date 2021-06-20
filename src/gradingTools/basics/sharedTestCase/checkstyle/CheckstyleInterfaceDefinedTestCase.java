@@ -35,12 +35,12 @@ public class CheckstyleInterfaceDefinedTestCase extends CheckStyleTestCase {
 //	}
 	@Override
 	public String negativeRegexLineFilter() {
-		return ".*" + "WARN" + ".*" + expectedInterface + ".*" + descriptor + ".*";
+		return ".*" + "WARN" + ".*" + expectedInterface + ".*" + descriptor + ".*" + "\\[ExpectedInterfaces\\]" + ".*";
 				
 	}
 	@Override
 	public String positiveRegexLineFilter() {
-		return ".*" + "INFO" + ".*" + expectedInterface + ".*" + descriptor + ".*";
+		return ".*" + "INFO" + ".*" + expectedInterface + ".*" + descriptor + ".*" + "\\[ExpectedInterfaces\\]" + ".*";
 				
 	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
