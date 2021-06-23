@@ -260,7 +260,9 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	 }
 		 double aTotalFractionComplete = 0;
 		 for (PassFailJUnitTestCase aTestCase:precedingTestInstances) {
+			 if (aTestCase != null) {
 			 aTotalFractionComplete += aTestCase.getLastResult().getPercentage();
+			 }
 		 }
 		 double anAverageFractionComplete =  aTotalFractionComplete/ (double) precedingTestInstances.size();
 		 double anOriginalFractionComplete = aResult.getPercentage();

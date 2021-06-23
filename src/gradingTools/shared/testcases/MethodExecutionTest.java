@@ -264,6 +264,9 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 			return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
 		}
 		if (validOutput && hasError) {
+//			if (aResult.getOut().equals(aResult.getErr())) {
+//				return OutputErrorStatus.CORRECT_OUTPUT_NO_ERRORS;
+//			}
 			return OutputErrorStatus.CORRECT_OUTPUT_ERRORS;
 		}
 		if (!validOutput && !hasError) {

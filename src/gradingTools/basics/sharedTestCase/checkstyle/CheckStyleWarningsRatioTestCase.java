@@ -132,7 +132,10 @@ public  class CheckStyleWarningsRatioTestCase extends CheckStyleWarningsTestCase
 //    }
 	
 	protected  double computeScore (Project aProject, String[] aCheckStyleLines, List<String> aFailedMatchedLines, List<String> aSucceededMatchedLines, boolean autoGrade) {
-		if (aFailedMatchedLines != null && aFailedMatchedLines.size() == 0) {
+		if (aFailedMatchedLines != null && aFailedMatchedLines.size() == 0 ) {
+			if (aSucceededMatchedLines != null && aSucceededMatchedLines.size() == 0) {
+				return 0;
+			}
 			return 1.0;
 		}
 //		double score = Math.min(aMatchedLines.size(), 5) / 5.0;
