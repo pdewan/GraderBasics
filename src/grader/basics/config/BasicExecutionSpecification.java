@@ -120,6 +120,12 @@ public interface BasicExecutionSpecification {
 	void setMaxTraces(int newVal);
 	int getMaxPrintedTraces();
 	void setMaxPrintedTraces(int newVal);
+	boolean getStarterUI();
+	void setStarterUI(boolean newVal);
+	String setNavigationKind(String newVal);
+	String getNavigationKind();
+	boolean getSaveInteractiveSettings();
+	void setSaveInteractiveSettings(boolean newVal);
 	
 	
 }

@@ -152,6 +152,21 @@ public class BasicStaticConfigurationUtils {
 	
 	public static final String SHIFT_ASSIGNMENT_DATES = "shiftAssignmentDates";
 	public static final boolean DEFAULT_SHIFT_ASSIGNMENT_DATES = false;
+	
+	public static final String MANUAL_GRADING = "Manual";
+	public static final String AUTOMATIC_GRADING = "Automatic";
+	public static final String HYBRID_GRADING = "Automatic and then manual";
+    public static final String NAVIGATION_KIND = "navigationKind";
+  
+    
+	public static final String DEFAULT_NAVIGATION_KIND = HYBRID_GRADING;
+	
+	public static final String STARTER_UI = "starterUI";
+	public static final boolean DEFAULT_CREATE_STARTER_UI = true;
+	
+	public static final String SAVE_INTERACTIVE_SETTINGS = "saveInteractiveSettings";
+	public static final boolean DEFAULT_SAVE_INTERACTIVE_SETTINGS = true;
+
 
 
 //	private static  List<String> basicCommand;
@@ -986,6 +1001,9 @@ public class BasicStaticConfigurationUtils {
 		}
 		if (retVal == null) {
 			retVal = configuration.getBoolean(DEFAULT + "." + property, defaultValue);
+		} 
+        if (retVal == null) {
+			retVal = configuration.getBoolean(property, defaultValue);
 		}
 
 		return retVal;
@@ -1007,6 +1025,10 @@ public class BasicStaticConfigurationUtils {
 		}
 		if (retVal == null) {
 			retVal = configuration.getInteger(DEFAULT + "." + property, defaultValue);
+		}
+		if (retVal == null) {
+			retVal = configuration.getInteger(property, defaultValue);
+
 		}
 
 		return retVal;
@@ -1191,7 +1213,9 @@ public class BasicStaticConfigurationUtils {
 //		if (retVal == null) {
 		retVal = configuration.getString(DEFAULT + "." + property, defaultValue);
 //		}
-
+		if (retVal == null) {
+			retVal = configuration.getString(property, defaultValue);
+		}
 		return retVal;
 
 	}

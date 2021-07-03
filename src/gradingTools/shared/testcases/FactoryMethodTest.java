@@ -3,8 +3,6 @@ package gradingTools.shared.testcases;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.project.BasicProjectIntrospection;
 import util.trace.Tracer;

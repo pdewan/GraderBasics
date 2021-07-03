@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.corba.se.impl.ior.GenericTaggedComponent;
-
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.checkstyle.CheckStyleInvoker;
 import grader.basics.config.BasicExecutionSpecificationSelector;
@@ -27,7 +25,6 @@ import grader.basics.trace.SourceFolderAssumed;
 import grader.basics.trace.SourceFolderNotFound;
 import grader.basics.util.DirectoryUtils;
 import grader.basics.util.Option;
-import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 import unc.symbolTable.SymbolTable;
 import util.misc.Common;
 import util.pipe.InputGenerator;

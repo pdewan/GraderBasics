@@ -965,5 +965,37 @@ protected String requirementsLocation = null;
 
 		
 	}
+	@Override
+	public String getNavigationKind() {
+		return getStringProperty(BasicStaticConfigurationUtils.NAVIGATION_KIND, BasicStaticConfigurationUtils.DEFAULT_NAVIGATION_KIND);
+
+	}
+	@Override
+	public String setNavigationKind(String newVal) {
+		return getStringProperty(BasicStaticConfigurationUtils.NAVIGATION_KIND, BasicStaticConfigurationUtils.DEFAULT_NAVIGATION_KIND);
+
+	}
 	
+	@Override
+	public boolean getStarterUI() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.STARTER_UI, BasicStaticConfigurationUtils.DEFAULT_CREATE_STARTER_UI);
+
+	}
+	@Override
+	public void setStarterUI(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.STARTER_UI, newVal);
+
+		
+	}
+	@Override
+	public boolean getSaveInteractiveSettings() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.SAVE_INTERACTIVE_SETTINGS, BasicStaticConfigurationUtils.DEFAULT_SAVE_INTERACTIVE_SETTINGS);
+
+	}
+	@Override
+	public void setSaveInteractiveSettings(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.SAVE_INTERACTIVE_SETTINGS, newVal);
+
+		
+	}
 }
