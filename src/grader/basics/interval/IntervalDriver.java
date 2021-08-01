@@ -46,19 +46,27 @@ public class IntervalDriver {
 		long[] workTimes = replayer.getWorkTime(STUDENT_FOLDER, startTime, endTime);
 		System.out.println("Context Based Work Time: " + format(workTimes[0]));
 		System.out.println("Fixed Work Time (" + DEFAULT_THRESHOLD + "min): " + format(workTimes[1]));
+		
 		/*
 		 * getEdits(File studentFolder, long starTime, long endTime)
-		 * returns a long[] edits where 
+		 * returns a int[] edits where 
 		 * edits[0] = number of insert commands
 		 * edits[1] = number of characters inserted, -1 if failed
 		 * edits[2] = number of delete commands
 		 * edits[3] = number of characters deleted, -1 if failed 
 		 */
-		long[] edits = replayer.getEdits(STUDENT_FOLDER, startTime, endTime);
+		int[] edits = replayer.getEdits(STUDENT_FOLDER, startTime, endTime);
 		System.out.println("Number of Insert: " + edits[0]);
 		System.out.println("Characters inserted: " + edits[1]);
 		System.out.println("Number of Delete: " + edits[2]);
 		System.out.println("Characters deleted: " + edits[3]);
+		
+		/*
+		 * getRuns(File studentFolder, long starTime, long endTime)
+		 * returns a int runs = number of run commands
+		 */
+		int runs = replayer.getRuns(STUDENT_FOLDER, startTime, endTime);
+		System.out.println("Number of Insert: " + runs);
 	}
 	
 	public static long parseTime(String date, Scanner scanner) {
