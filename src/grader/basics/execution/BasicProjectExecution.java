@@ -215,6 +215,42 @@ public class BasicProjectExecution {
 	public static void setCatchException(boolean isCatchException) {
 		BasicProjectExecution.isCatchException = isCatchException;
 	}
+	
+	public static Object invokeClassMethod(String aClassName, String aMethodName, Class[] anArgTypes,
+			Object[] anArgs) throws Throwable {
+		try {
+			Class aClass = Class.forName(aClassName);
+			Method aMethod = aClass.getDeclaredMethod(aMethodName, anArgTypes);
+			Object retVal = aMethod.invoke(anArgs);
+			return retVal;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static Object timedInvokeClassMethod(String aClassName, String aMethodName, Class[] anArgTypes,
+			Object[] anArgs, long aTimeOut) throws Throwable {
+		try {
+			Class aClass = Class.forName(aClassName);
+			Method aMethod = aClass.getDeclaredMethod(aMethodName, anArgTypes);
+			return timedInvoke(aClass, aMethod, anArgs, aTimeOut);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static Object timedInvokeClassMethod(String aClassName, String aMethodName, Class[] anArgTypes,
+			Object[] anArgs) throws Throwable {
+		try {
+			Class aClass = Class.forName(aClassName);
+			Method aMethod = aClass.getDeclaredMethod(aMethodName, anArgTypes);
+			return timedInvoke(aClass, aMethod, anArgs);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 
 	public static Object timedInvoke(Object anObject, Method aMethod,
 			Object... anArgs) throws Throwable {

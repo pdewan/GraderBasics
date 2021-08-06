@@ -297,7 +297,13 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
 			date.setTime(System.currentTimeMillis());
 			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
+//			long aStartTime = System.currentTimeMillis();
 			aRunner.run(runNotifier);
+			
+			long anElapsedTime = System.currentTimeMillis() - date.getTime();
+			
+			System.out.println("Test execution time (ms):" + anElapsedTime);
+
 			testCaseResult = runListener.getTestCaseResult();
 			failure = runListener.getFailure();
 			
