@@ -230,14 +230,14 @@ public class BasicProjectExecution {
 	}
 	public static Object timedInvokeClassMethod(String aClassName, String aMethodName, Class[] anArgTypes,
 			Object[] anArgs, long aTimeOut) throws Throwable {
-		try {
+//		try {
 			Class aClass = Class.forName(aClassName);
 			Method aMethod = aClass.getDeclaredMethod(aMethodName, anArgTypes);
 			return timedInvoke(aClass, aMethod, anArgs, aTimeOut);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
 	}
 	public static Object timedInvokeClassMethod(String aClassName, String aMethodName, Class[] anArgTypes,
 			Object[] anArgs) throws Throwable {

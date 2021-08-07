@@ -1,7 +1,6 @@
 package gradingTools.shared.testcases.concurrency.propertyChanges;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ConcurrentEventSupport<EventType, ObservableType>  {
 	ConcurrentEvent<EventType>[] getConcurrentEvents();
@@ -18,5 +17,7 @@ public interface ConcurrentEventSupport<EventType, ObservableType>  {
 
 	int size();
 	long getResetTime();
-	Set<Thread> getThreads();
+	Thread[] getThreads();
+	boolean isEventsFrozen();
+	void setEventsFrozen(boolean eventsFrozen);
 }

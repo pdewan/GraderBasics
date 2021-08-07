@@ -78,16 +78,20 @@ public class ConcurrentEventUtility {
 			) {
 		Integer startSequenceNumber = null;
 		Integer stopSequenceNumber = null;
+		int aThreadIndex = 0; 
 		String threadSelector;
 		String sourceSelector;
 		String propertySelector;
 		String oldValueSelector;
 		String newValueSelector;
-		
-		if (aParameters.length != 7) {
-			System.out.println(Arrays.toString(aParameters) + "should have six elements");
+		int aParametersLength = aParameters.length;
+		if (aParametersLength != 7 && aParametersLength != 5  ) {
+			System.out.println(Arrays.toString(aParameters) + "should have five or seven elements instead of " + aParametersLength + " elements" );
 			return false;
 		}
+		if (aParametersLength == 7) {
+			aThreadIndex = 2;
+		
 		if (aParameters[0] != null) {
 			startSequenceNumber = (Integer) aParameters[0];
 		}
@@ -95,11 +99,12 @@ public class ConcurrentEventUtility {
 
 			stopSequenceNumber = (Integer) aParameters[1];
 		}
-		threadSelector = (String) aParameters[2];
-		sourceSelector = (String) aParameters[3];
-		propertySelector = (String) aParameters[4];
-		oldValueSelector = (String) aParameters[5];
-		newValueSelector = (String) aParameters[6];
+		}
+		threadSelector = (String) aParameters[aThreadIndex];
+		sourceSelector = (String) aParameters[aThreadIndex + 1];
+		propertySelector = (String) aParameters[aThreadIndex + 2];
+		oldValueSelector = (String) aParameters[aThreadIndex + 3];
+		newValueSelector = (String) aParameters[aThreadIndex + 4];
 		int aSequenceNumber = aConcurrentPropertyChange.getSequenceNumber();
 		String aThreadName = aConcurrentPropertyChange.getThread().getName();
 		String aSource = aConcurrentPropertyChange.getEvent().getSource().toString();
@@ -136,6 +141,9 @@ public class ConcurrentEventUtility {
 	public static ConcurrentPropertyChange[] selectEvents(ConcurrentPropertyChange[] anOriginalEventList,
 
 			Object[] aMatchedComponents) {
+		if (aMatchedComponents == null) {
+			return anOriginalEventList;
+		}
 		Selector<ConcurrentPropertyChange> aSelector = new ParameterizedPropertyChangeSelector(aMatchedComponents);
 		List<ConcurrentPropertyChange> retValList = new ArrayList<ConcurrentPropertyChange>();
 		return selectEvents(anOriginalEventList, aSelector);
@@ -154,8 +162,15 @@ public class ConcurrentEventUtility {
 		List<Integer> anIndices = indicesOf(anOriginalEvents, aMatchedComponentsList);
 		if (anIndices == null || 
 				anIndices.size() != aMatchedComponentsList.length ) {
-			System.err.println(
-					Arrays.toString(anOriginalEvents) + " does not match " + Arrays.toString(aMatchedComponentsList));
+			System.err.println("Match of actual events failed against expected events");
+			System.err.println("Actual events:");
+			for (ConcurrentPropertyChange aConcurrentChange:anOriginalEvents) {
+				System.out.println(aConcurrentChange);
+			}
+			System.err.println("Expected events:");
+			for (Object[] aMatchedComponents: aMatchedComponentsList) {
+				System.out.println(Arrays.toString(aMatchedComponents));
+			}
 			return false;
 		}
 		return true;
@@ -252,16 +267,16 @@ public class ConcurrentEventUtility {
 			boolean aNonOverlapping =
 					aPreviousStartIndex > aStopIndex ||
 					aStartIndex > aPreviousStopIndex;
-			if (aNonOverlapping) {
-				return false;
+			if (!aNonOverlapping) {
+				return true; // overlapping occurred
 			}
 		}
 		aStartIndices.add(aStartIndex);
 		aStopIndices.add(aStopIndex);
-		return true;
+		return false; // no overlapping or interleaved
 	}
 
-	public static boolean nonInterleaved(ConcurrentPropertyChange[] anOriginalEvents, Thread[] aThreads,
+	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents, Thread[] aThreads,
 			Object[] aMatchedComponents) {
 
 		Map<Thread, ConcurrentPropertyChange[]> aThreadToEvents = getConcurrentPropertyChangesByThread(
@@ -271,17 +286,17 @@ public class ConcurrentEventUtility {
 		for (Thread aThread : aThreads) {
 			ConcurrentPropertyChange[] aThreadEvents = aThreadToEvents.get(aThread);
 			ConcurrentPropertyChange[] aSelectedEvents = selectEvents(aThreadEvents, aMatchedComponents);
-			if (!processInterleaving(aThreadEvents, aStartIndices, aStopIndices)) {
+			if (processInterleaving(aThreadEvents, aStartIndices, aStopIndices)) {
 				Tracer.info(ConcurrentEventUtility.class,"Events of thread:" +
 							aThread + ":" + 
 							Arrays.toString(aSelectedEvents) +
 							" overlap with those of matched threads");
 				Tracer.info (ConcurrentEventUtility.class, "Start indices of matched threads:" + aStartIndices);
 				Tracer.info(ConcurrentEventUtility.class,"Stop indices of matched threads:" + aStopIndices);
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 
 	}
 	

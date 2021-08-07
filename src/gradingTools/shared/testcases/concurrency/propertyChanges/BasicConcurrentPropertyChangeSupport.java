@@ -13,7 +13,8 @@ public class BasicConcurrentPropertyChangeSupport
 		anObservable.addPropertyChangeListener(this);
 	}
 	@Override
-	public void propertyChange(PropertyChangeEvent anEvent) {
+	public synchronized void propertyChange(PropertyChangeEvent anEvent) {
+//		System.out.println("Received property change:" + anEvent);
 		addEvent(anEvent);
 	}
 	@Override

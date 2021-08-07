@@ -8,34 +8,37 @@ import java.util.Set;
 
 import com.sun.jmx.snmp.tasks.ThreadService;
 
-public abstract class AbstractConcurrentEventSupport<EventType, ObservableType> implements ConcurrentEventSupport<EventType, ObservableType>{
-    protected List<ConcurrentEvent<EventType>> concurrentEvents = new ArrayList();
-    protected int nextSequenceNumber = 0;
-    protected Selector<ConcurrentEventSupport<EventType, ObservableType>> selector;
-    protected long resetTime;
-    
+public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
+		implements ConcurrentEventSupport<EventType, ObservableType> {
+	protected List<ConcurrentEvent<EventType>> concurrentEvents = new ArrayList();
+	protected int nextSequenceNumber = 0;
+	protected Selector<ConcurrentEventSupport<EventType, ObservableType>> selector;
+	protected long resetTime;
+	protected boolean eventsFrozen;
 
-    protected List<ObservableType> observables = new ArrayList();    
-    protected List<Selector<EventType>> selectors = new ArrayList();
-    protected Set<Thread> threads = new HashSet();
-    public AbstractConcurrentEventSupport() {
-    	 resetConcurrentEvents();
-    }
+	protected List<ObservableType> observables = new ArrayList();
+	protected List<Selector<EventType>> selectors = new ArrayList();
+	protected Set<Thread> threads = new HashSet();
+
+	public AbstractConcurrentEventSupport() {
+		resetConcurrentEvents();
+	}
+
 	@Override
 	public ConcurrentEvent<EventType>[] getConcurrentEvents() {
-		return (ConcurrentEvent<EventType>[]) concurrentEvents.toArray();	
+		return (ConcurrentEvent<EventType>[]) concurrentEvents.toArray();
 	}
 
 	@Override
 	public void addIgnoreEventSelector(Selector aSelector) {
-		selectors.add(aSelector);		
+		selectors.add(aSelector);
 	}
 
 	@Override
 	public void removeIgnoreEventSelector(Selector aSelector) {
 		selectors.remove(aSelector);
 	}
-	
+
 	@Override
 	public Selector<EventType>[] getSelectors() {
 		return (Selector<EventType>[]) selectors.toArray();
@@ -43,7 +46,7 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType> 
 
 	@Override
 	public void addObservable(ObservableType anObservable) {
-		observables.add(anObservable);		
+		observables.add(anObservable);
 	}
 
 	@Override
@@ -51,6 +54,7 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType> 
 		observables.remove(anObservable);
 	}
 
+//	ObservableType[] emptyObservableArray = {};
 	@Override
 	public ObservableType[] getObservables() {
 		return (ObservableType[]) observables.toArray();
@@ -61,30 +65,32 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType> 
 		concurrentEvents.clear();
 		threads.clear();
 		resetTime = System.currentTimeMillis();
-		
+		setEventsFrozen(false);
+
 	}
-	
+
 	protected boolean ignoreEvent(EventType anEvent) {
-		for (Selector<EventType> aSelector:selectors) {
+		for (Selector<EventType> aSelector : selectors) {
 			if (aSelector.selects(anEvent)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	protected void addEvent(EventType anEvent) {
-		if (ignoreEvent(anEvent)) {
+
+	protected synchronized void addEvent(EventType anEvent) {
+		if (isEventsFrozen() || ignoreEvent(anEvent)) {
 			return;
 		}
 		int aSequenceNumber = nextSequenceNumber;
-		ConcurrentEvent<EventType> aConcurrentOrderedEvent =
-				new BasicConcurrentEvent<EventType>(resetTime, aSequenceNumber, anEvent);
+		ConcurrentEvent<EventType> aConcurrentOrderedEvent = new BasicConcurrentEvent<EventType>(resetTime,
+				aSequenceNumber, anEvent);
 		threads.add(aConcurrentOrderedEvent.getThread());
 		concurrentEvents.add(aConcurrentOrderedEvent);
-		nextSequenceNumber++;	
+		nextSequenceNumber++;
 	}
-	public ConcurrentEvent<EventType> getLastEvent() {
+
+	public synchronized ConcurrentEvent<EventType> getLastEvent() {
 		if (concurrentEvents.size() == 0) {
 			return null;
 		}
@@ -95,16 +101,20 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType> 
 		addEvent(anEvent);
 		maybeNotify();
 	}
+
 	protected synchronized void maybeNotify() {
 		if (selector.selects(this)) {
 			notify();
+			setEventsFrozen(true);
 		}
 	}
+
 	@Override
 	public int getNextSequenceNumber() {
-			return nextSequenceNumber;
+		return nextSequenceNumber;
 	}
-	public synchronized void wait (long aTimeOut, 
+
+	public synchronized void wait(long aTimeOut,
 			Selector<ConcurrentEventSupport<EventType, ObservableType>> aSelector) {
 		selector = aSelector;
 		while (!selector.selects(this)) {
@@ -115,15 +125,28 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType> 
 			}
 		}
 	}
+
 	@Override
 	public int size() {
 		return concurrentEvents.size();
 	}
+
 	public long getResetTime() {
 		return resetTime;
 	}
+
+	static Thread[] emptyThreads = {};
+
 	@Override
-	public Set<Thread> getThreads() {
-		return new HashSet(threads);
+	public Thread[] getThreads() {
+		return threads.toArray(emptyThreads);
+	}
+	@Override
+	public boolean isEventsFrozen() {
+		return eventsFrozen;
+	}
+	@Override
+	public void setEventsFrozen(boolean newValue) {
+		this.eventsFrozen = newValue;
 	}
 }
