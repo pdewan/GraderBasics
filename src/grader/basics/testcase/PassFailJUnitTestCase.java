@@ -213,7 +213,8 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 				BasicJUnitUtils.assertTrue(lastResult.getNotes(), lastResult.getPercentage(), lastResult.isPass());
 			}
 		} catch (Throwable e) {
-			if (BasicJUnitUtils.isGiveAssertionErrorStackTrace()) {
+			if (!(e instanceof AssertionError) || BasicJUnitUtils.isGiveAssertionErrorStackTrace()) {
+//			if (BasicJUnitUtils.isGiveAssertionErrorStackTrace() ) {
 				e.printStackTrace();
 			}
 			if (lastResult != null) {

@@ -10,7 +10,9 @@ public interface ConcurrentPropertyChangeSupport extends PropertyChangeListener,
 	ConcurrentPropertyChange[] getConcurrentPropertyChanges();
 
 	ConcurrentPropertyChange getLastConcurrentPropertyChange();
-	void wait (Selector<ConcurrentPropertyChangeSupport> aSelector, long aTimeOut);
+	void setWaitSelector(Selector<ConcurrentPropertyChangeSupport> aSelector);
+	Selector<ConcurrentPropertyChangeSupport> getWaitSelector();
+	void selectorBasedWait (long aTimeOut);
 
 
 }

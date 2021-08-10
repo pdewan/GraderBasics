@@ -53,6 +53,9 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			String aTestName = name != null? name:"Test";
 //			System.err.println ("Test Failed:" + aMessage);
 			System.err.println (name + " did not pass completely:" + aMessage);
+			if (!aThrowable.getClass().isAssignableFrom(AssertionError.class)) {
+			aThrowable.printStackTrace();
+			} 
 
 			System.out.println("Steps traced since last test:");
 //			System.out.println(Tracer.getBufferedTracedMessages());

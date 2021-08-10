@@ -14,6 +14,7 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleWarningsRatioTest
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.concurrency.AbstractBarrier;
 import gradingTools.shared.testcases.concurrency.AbstractEarlyJoinBasicJoiner;
+import gradingTools.shared.testcases.concurrency.propertyChanges.ConcurrentEventUtility;
 import gradingTools.shared.testcases.shapes.LocatableTest;
 import gradingTools.shared.testcases.shapes.interfaces.TestBoundedShape;
 import gradingTools.shared.testcases.shapes.rotate.detached.DetachedRotatingLineFortyFiveDegreeTest;
@@ -110,6 +111,8 @@ public class GraderBasicsTraceUtility {
 			Tracer.setKeywordPrintStatus(BasicProjectClassesManager.class, true);
 			Tracer.setKeywordPrintStatus(CheckStyleTestCase.class, true);
 			Tracer.setKeywordPrintStatus(CheckStyleWarningsRatioTestCase.class, true);
+			Tracer.setKeywordPrintStatus(ConcurrentEventUtility.class, true);
+
 
 
 

@@ -136,8 +136,8 @@ public class BasicProjectExecution {
 			
 			e.printStackTrace();
 			future.cancel(true); // not needed really
-			System.err.println("Terminated execution after milliseconds:"
-					+ aMillSeconds + " suspecting infinite loop");
+			System.err.println("Terminated execution of method" +  aMethod + " after milliseconds:"
+					+ aMillSeconds + " suspecting infinite loop or sequential execution of expected parallel program");
 //			executor = Executors.newSingleThreadExecutor();
 			executor = createExecutor();
 

@@ -8,6 +8,10 @@ import java.util.Set;
 
 import com.sun.jmx.snmp.tasks.ThreadService;
 
+import net.sf.saxon.expr.LastItemExpression;
+import util.trace.Tracer;
+import util.trace.WaitingForClearance;
+
 public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 		implements ConcurrentEventSupport<EventType, ObservableType> {
 	protected List<ConcurrentEvent<EventType>> concurrentEvents = new ArrayList();
@@ -15,17 +19,29 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	protected Selector<ConcurrentEventSupport<EventType, ObservableType>> selector;
 	protected long resetTime;
 	protected boolean eventsFrozen;
+	protected boolean waitSelectorSuccessful = false;
+	protected Thread creatingThread = null;
+	protected boolean ignorePreviousThreadEvents = false;
+
 
 	protected List<ObservableType> observables = new ArrayList();
 	protected List<Selector<EventType>> selectors = new ArrayList();
+	protected Set<Thread> previousThreads = new HashSet();
+	protected Set<Thread> lateThreads = new HashSet();
+	
 	protected Set<Thread> threads = new HashSet();
 
 	public AbstractConcurrentEventSupport() {
 		resetConcurrentEvents();
+		creatingThread = Thread.currentThread();
+	}
+	@Override
+	public synchronized Set<Thread> getLateThreads() {
+		return lateThreads;
 	}
 
 	@Override
-	public ConcurrentEvent<EventType>[] getConcurrentEvents() {
+	public synchronized ConcurrentEvent<EventType>[] getConcurrentEvents() {
 		return (ConcurrentEvent<EventType>[]) concurrentEvents.toArray();
 	}
 
@@ -61,15 +77,18 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	}
 
 	@Override
-	public void resetConcurrentEvents() {
+	public synchronized void resetConcurrentEvents() {
 		concurrentEvents.clear();
+		previousThreads.addAll(threads);
 		threads.clear();
 		resetTime = System.currentTimeMillis();
 		setEventsFrozen(false);
+		waitSelectorSuccessful = false;
+		lateThreads.clear();
 
 	}
 
-	protected boolean ignoreEvent(EventType anEvent) {
+	protected synchronized boolean ignoreEvent(EventType anEvent) {
 		for (Selector<EventType> aSelector : selectors) {
 			if (aSelector.selects(anEvent)) {
 				return true;
@@ -77,15 +96,37 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 		}
 		return false;
 	}
-
+	boolean eventsReceivedWhenFrozen = false;
 	protected synchronized void addEvent(EventType anEvent) {
-		if (isEventsFrozen() || ignoreEvent(anEvent)) {
+//		System.out.println("received event:" + anEvent);
+		if (isEventsFrozen()) {
+			eventsReceivedWhenFrozen = true;
+			Tracer.info(this, "Event " + anEvent + "received when events were frozen");
+			return;
+		}
+//		if (isEventsFrozen() || ignoreEvent(anEvent)) {
+		if (ignoreEvent(anEvent)) {
+
 			return;
 		}
 		int aSequenceNumber = nextSequenceNumber;
 		ConcurrentEvent<EventType> aConcurrentOrderedEvent = new BasicConcurrentEvent<EventType>(resetTime,
 				aSequenceNumber, anEvent);
-		threads.add(aConcurrentOrderedEvent.getThread());
+		Thread anEventThread = aConcurrentOrderedEvent.getThread();
+		if (isIgnorePreviousThreadEvents()  && previousThreads.contains(anEventThread)) {
+			Tracer.info(this, "ignoring event from previous thread " + anEventThread);
+			lateThreads.add(anEventThread);
+			return;
+		}
+		if (!threads.contains(anEventThread)) {
+			Tracer.info(this, " Added new thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
+			threads.add(aConcurrentOrderedEvent.getThread());
+
+
+		}
+//		threads.add(aConcurrentOrderedEvent.getThread());
+//		System.out.println("added event:" + anEvent);
+
 		concurrentEvents.add(aConcurrentOrderedEvent);
 		nextSequenceNumber++;
 	}
@@ -103,7 +144,7 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	}
 
 	protected synchronized void maybeNotify() {
-		if (selector.selects(this)) {
+		if (selector != null && selector.selects(this)) {
 			notify();
 			setEventsFrozen(true);
 		}
@@ -148,5 +189,13 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	@Override
 	public void setEventsFrozen(boolean newValue) {
 		this.eventsFrozen = newValue;
+	}
+	@Override
+	public boolean isIgnorePreviousThreadEvents() {
+		return ignorePreviousThreadEvents;
+	}
+	@Override
+	public void setIgnorePreviousThreadEvents(boolean ignorePreviousThreadEvents) {
+		this.ignorePreviousThreadEvents = ignorePreviousThreadEvents;
 	}
 }
