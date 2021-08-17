@@ -2,8 +2,10 @@ package gradingTools.shared.testcases.concurrency.propertyChanges;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.sun.jmx.snmp.tasks.ThreadService;
@@ -12,7 +14,7 @@ import net.sf.saxon.expr.LastItemExpression;
 import util.trace.Tracer;
 import util.trace.WaitingForClearance;
 
-public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
+public class AbstractConcurrentEventSupport<EventType, ObservableType>
 		implements ConcurrentEventSupport<EventType, ObservableType> {
 	protected List<ConcurrentEvent<EventType>> concurrentEvents = new ArrayList();
 	protected int nextSequenceNumber = 0;
@@ -26,10 +28,16 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 
 	protected List<ObservableType> observables = new ArrayList();
 	protected List<Selector<EventType>> selectors = new ArrayList();
-	protected Set<Thread> previousThreads = new HashSet();
+	protected Set<Thread> previousNotifyingThreads = new HashSet();
 	protected Set<Thread> lateThreads = new HashSet();
 	
-	protected Set<Thread> threads = new HashSet();
+	protected List<Thread> notifyingThreads = new ArrayList();
+	protected List<Thread> notifyingNewThreads = new ArrayList();
+
+	protected Set<Thread> allKnownThreads = new HashSet();
+	protected long minimumEventDelayPerThread = 0;
+	protected Map<Thread, Long> threadToLastEventTimes = new HashMap();
+
 
 	public AbstractConcurrentEventSupport() {
 		resetConcurrentEvents();
@@ -75,16 +83,23 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	public ObservableType[] getObservables() {
 		return (ObservableType[]) observables.toArray();
 	}
-
+	@Override
+	public boolean isWaitSelectorSuccessful() {
+		return waitSelectorSuccessful;
+	}
 	@Override
 	public synchronized void resetConcurrentEvents() {
+		allKnownThreads.addAll(ConcurrentEventUtility.getCurrentThreads());
 		concurrentEvents.clear();
-		previousThreads.addAll(threads);
-		threads.clear();
+		previousNotifyingThreads.addAll(notifyingThreads);
+		allKnownThreads.addAll(notifyingThreads);
+		notifyingThreads.clear();
+		notifyingNewThreads.clear();
 		resetTime = System.currentTimeMillis();
 		setEventsFrozen(false);
 		waitSelectorSuccessful = false;
 		lateThreads.clear();
+		threadToLastEventTimes.clear();
 
 	}
 
@@ -97,6 +112,16 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 		return false;
 	}
 	boolean eventsReceivedWhenFrozen = false;
+	protected <EventType> boolean checkEventSeparation(Thread aThread, ConcurrentEvent<EventType> aNewEvent) {
+		if (minimumEventDelayPerThread == 0) {
+			return true; // short circuit
+		}
+		long aNewEventTime = aNewEvent.getRelativeTime();
+		Long lastEventTime = threadToLastEventTimes.get(aThread);
+		return (lastEventTime == null  
+				|| (aNewEventTime - lastEventTime) >= minimumEventDelayPerThread);
+			
+	}
 	protected synchronized void addEvent(EventType anEvent) {
 //		System.out.println("received event:" + anEvent);
 		if (isEventsFrozen()) {
@@ -104,6 +129,8 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 			Tracer.info(this, "Event " + anEvent + "received when events were frozen");
 			return;
 		}
+		
+		
 //		if (isEventsFrozen() || ignoreEvent(anEvent)) {
 		if (ignoreEvent(anEvent)) {
 
@@ -113,14 +140,26 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 		ConcurrentEvent<EventType> aConcurrentOrderedEvent = new BasicConcurrentEvent<EventType>(resetTime,
 				aSequenceNumber, anEvent);
 		Thread anEventThread = aConcurrentOrderedEvent.getThread();
-		if (isIgnorePreviousThreadEvents()  && previousThreads.contains(anEventThread)) {
+		if (minimumEventDelayPerThread != 0) {
+			Thread aThread = Thread.currentThread();
+			boolean anEventsSeparated = checkEventSeparation(aThread, aConcurrentOrderedEvent);
+			threadToLastEventTimes.put(aThread, aConcurrentOrderedEvent.getRelativeTime());
+			if (!anEventsSeparated) {
+				return ;
+			}
+		}
+		
+		if (isIgnorePreviousThreadEvents()  && previousNotifyingThreads.contains(anEventThread)) {
 			Tracer.info(this, "ignoring event from previous thread " + anEventThread);
 			lateThreads.add(anEventThread);
 			return;
 		}
-		if (!threads.contains(anEventThread)) {
+		if (!notifyingThreads.contains(anEventThread)) {
 			Tracer.info(this, " Added new thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
-			threads.add(aConcurrentOrderedEvent.getThread());
+			notifyingThreads.add(aConcurrentOrderedEvent.getThread());
+			if (!allKnownThreads.contains(anEventThread)) {
+				notifyingNewThreads.add(anEventThread);
+			}
 
 
 		}
@@ -140,7 +179,9 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 
 	protected void addEventAndMabeNotify(EventType anEvent) {
 		addEvent(anEvent);
-		maybeNotify();
+		if (!isEventsFrozen()) {
+			maybeNotify();
+		}
 	}
 
 	protected synchronized void maybeNotify() {
@@ -179,8 +220,12 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	static Thread[] emptyThreads = {};
 
 	@Override
-	public Thread[] getThreads() {
-		return threads.toArray(emptyThreads);
+	public Thread[] getNotifyingThreads() {
+		return notifyingThreads.toArray(emptyThreads);
+	}
+	@Override
+	public Thread[] getNotifyingNewThreads() {
+		return notifyingNewThreads.toArray(emptyThreads);
 	}
 	@Override
 	public boolean isEventsFrozen() {
@@ -188,6 +233,7 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	}
 	@Override
 	public void setEventsFrozen(boolean newValue) {
+		Tracer.info(this, "Events frozen = " + newValue);
 		this.eventsFrozen = newValue;
 	}
 	@Override
@@ -197,5 +243,14 @@ public abstract class AbstractConcurrentEventSupport<EventType, ObservableType>
 	@Override
 	public void setIgnorePreviousThreadEvents(boolean ignorePreviousThreadEvents) {
 		this.ignorePreviousThreadEvents = ignorePreviousThreadEvents;
+	}
+	@Override
+	public void setMinimumEventDelayPerThread(long newVal) {
+		minimumEventDelayPerThread = newVal;
+	}
+	@Override
+	public long getMinimumEventDelayPerThread() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

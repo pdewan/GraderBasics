@@ -4,15 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 
 public class ParameterizedPropertyChangeSelector implements Selector<ConcurrentPropertyChange> {
-//	Integer startSequenceNumber;
-//	Integer stopSequenceNumber;
-//	String threadSelector;
-//	String sourceSelector;
-//	String propertySelector;
-//	String oldValueSelector;
-//	String newValueSelector;
-	Object[] parameters;
-	
+	Object[] parameters;	
 
 	public ParameterizedPropertyChangeSelector(Integer aStartSequenceNumber, Integer aStopSequenceNumber,
 			String aThreadSelector, String aSourceSelector, String aPropertySelector, String anOldValueSelector,

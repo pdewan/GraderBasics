@@ -6,13 +6,9 @@ import java.beans.PropertyChangeListener;
 import util.models.PropertyListenerRegisterer;
 
 public interface ConcurrentPropertyChangeSupport extends PropertyChangeListener, ConcurrentEventSupport<PropertyChangeEvent, PropertyListenerRegisterer> {
-
 	ConcurrentPropertyChange[] getConcurrentPropertyChanges();
-
 	ConcurrentPropertyChange getLastConcurrentPropertyChange();
-	void setWaitSelector(Selector<ConcurrentPropertyChangeSupport> aSelector);
+	void addtWaitSelector(Selector<ConcurrentPropertyChangeSupport> aSelector);
 	Selector<ConcurrentPropertyChangeSupport> getWaitSelector();
 	void selectorBasedWait (long aTimeOut);
-
-
 }

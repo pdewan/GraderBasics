@@ -7,6 +7,8 @@ public interface ConcurrentEventSupport<EventType, ObservableType>  {
 	ConcurrentEvent<EventType>[] getConcurrentEvents();
 	void addIgnoreEventSelector(Selector<EventType> aSelector);
 	void removeIgnoreEventSelector(Selector<EventType> aSelector);	
+	void setMinimumEventDelayPerThread(long newVal);
+	long getMinimumEventDelayPerThread();	
 	Selector<EventType>[] getSelectors();
 	void addObservable(ObservableType anObservable);
 	void removeObservable(ObservableType anObservable);
@@ -18,10 +20,12 @@ public interface ConcurrentEventSupport<EventType, ObservableType>  {
 
 	int size();
 	long getResetTime();
-	Thread[] getThreads();
+	Thread[] getNotifyingThreads();
 	boolean isEventsFrozen();
 	void setEventsFrozen(boolean eventsFrozen);
 	Set<Thread> getLateThreads();
 	boolean isIgnorePreviousThreadEvents();
 	void setIgnorePreviousThreadEvents(boolean ignorePreviousThreadEvents);
+	boolean isWaitSelectorSuccessful();
+	Thread[] getNotifyingNewThreads();
 }

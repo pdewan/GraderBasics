@@ -25,6 +25,9 @@ public class BasicConcurrentPropertyChangeSupport
 	@Override
 	public synchronized ConcurrentPropertyChange getLastConcurrentPropertyChange () {
 		ConcurrentEvent<PropertyChangeEvent> aLastEvent =  super.getLastEvent();
+		if (aLastEvent == null) {
+			return null;
+		}
 		return new BasicConcurrentPropertyChange(aLastEvent);
 	}
 	
@@ -53,7 +56,7 @@ public class BasicConcurrentPropertyChangeSupport
 		}
 	}
 	@Override
-	public synchronized void setWaitSelector(Selector<ConcurrentPropertyChangeSupport> aSelector) {
+	public synchronized void addtWaitSelector(Selector<ConcurrentPropertyChangeSupport> aSelector) {
 		propertyChangeSelector = aSelector;
 		
 	}

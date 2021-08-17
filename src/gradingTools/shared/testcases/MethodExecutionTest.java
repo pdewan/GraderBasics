@@ -50,9 +50,9 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	protected String incorrectOutputDetails = "";
 	protected boolean testing = false;
 	// should move to MethodExecution
-	protected Set<Thread> previousThreads = new HashSet();
-	protected Set<Thread> currentThreads = new HashSet();
-	protected List<Thread> newThreads = new ArrayList();
+//	protected Set<Thread> previousThreads = new HashSet();
+//	protected Set<Thread> currentThreads = new HashSet();
+//	protected List<Thread> newThreads = new ArrayList();
 	public static Object[] emptyArgs = {};
 	protected Method doTestMethod;
 	protected SubstringSequenceChecker checker;	
@@ -852,18 +852,19 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 	
 	protected Object instantiateClass(Object... anArgs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
 		return  constructor.newInstance(anArgs);
-	}
-	
+	}	
 	
 	protected void initConstructor() throws Exception {
 		instantiatedClass = findInstantiatedClass();
 		assertTrue("Could not find class  matching " + instantiatedTag(), instantiatedClass != null);
 		constructor = findConstructor(instantiatedClass);
 	}
+	protected Set<Thread> previousThreads = new HashSet();
+	protected Set<Thread> currentThreads = new HashSet();
+	protected List<Thread> newThreads = new ArrayList();
 	protected void recordPreviousThreads() {
 		previousThreads = new HashSet(Thread.getAllStackTraces().keySet());
-		Tracer.info (this, "Previous threads:" + previousThreads);
-		
+		Tracer.info (this, "Previous threads:" + previousThreads);		
 	}
 	protected void recordCurrentThreads() {
 		currentThreads = new HashSet(Thread.getAllStackTraces().keySet());
@@ -871,9 +872,7 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 
 		newThreads = new ArrayList(currentThreads);
 		newThreads.removeAll(previousThreads);
-//		Tracer.info (this, "New threads:" + newThreads);
-
-		
+//		Tracer.info (this, "New threads:" + newThreads);		
 	}
 	protected void assertNewThreadCreated() {
 		assertTrue("No thread created by previous operation:", newThreads.size() > 0);

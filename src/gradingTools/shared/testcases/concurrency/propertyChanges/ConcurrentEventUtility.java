@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import util.models.PropertyListenerRegisterer;
 import util.trace.Tracer;
@@ -41,8 +43,37 @@ public class ConcurrentEventUtility {
 //	static int getNextSequenceNumber() {
 //		
 //	}
+//	public static Set<Thread> recordedThreads;
+//	public static void recordThreads() {
+//		recordedThreads = getCurrentThreads();
+//	}
+	public static Set<Thread> newThreads(Set<Thread> aPreviousThreads) {
+		Set<Thread> retVal = new HashSet(getCurrentThreads());
+		retVal.removeAll(aPreviousThreads);
+		return retVal;
+	}
+	public static Set<Thread> newThreads(Thread[] aPreviousThreads) {
+		Set<Thread> aPreviousThreadsSet = new HashSet(Arrays.asList(aPreviousThreads));
+		Set<Thread> retVal = new HashSet(getCurrentThreads());
+		retVal.removeAll(aPreviousThreadsSet);
+		return retVal;
+	}
+	public static Thread getFirstNewThread(Set<Thread> aPreviousThreads) {
+		Set<Thread> aNewThreads = ConcurrentEventUtility.newThreads(aPreviousThreads);
+		if (aNewThreads.size() > 0) {
+		return aNewThreads.iterator().next();
+		} else {
+			return null;
+		}
+	}
 	public static Set<Thread> getCurrentThreads() {
 		return new HashSet<Thread>(Thread.getAllStackTraces().keySet());
+	}
+	
+	public static boolean newThreadsCreated(Set<Thread> aPreviousThreads, int aNumThreads) {
+		Set<Thread> aNewThreads = ConcurrentEventUtility.newThreads(aPreviousThreads);
+		return (aNewThreads.size() != aNumThreads) ;
+		
 	}
 
 	public static <EventType> ConcurrentEvent<EventType>[] selectEvents(
@@ -75,6 +106,9 @@ public class ConcurrentEventUtility {
 	public static boolean matches(ConcurrentPropertyChange aConcurrentPropertyChange, Object[] aParameters
 
 	) {
+		if (aParameters == null) {
+			return true;
+		}
 		Integer startSequenceNumber = null;
 		Integer stopSequenceNumber = null;
 		int aThreadIndex = 0;
@@ -156,25 +190,50 @@ public class ConcurrentEventUtility {
 	public static void setMatchEveryThreadWaitSelector(ConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport,
 			Object[] aParameters, int aNumThreads,  int aNumMatches, String aThreadPattern) {
 		Selector<ConcurrentPropertyChangeSupport> aSelector = 
-				new ConcurrentPropertyChangeThreadMatchesSelector(aParameters, aNumThreads, aNumMatches, null);
-		aConcurrentPropertyChangeSupport.setWaitSelector(aSelector);
+				new ConcurrentPropertyChangeThreadMatchesSelector(aParameters, aNumThreads, aNumMatches, null, 0);
+		aConcurrentPropertyChangeSupport.addtWaitSelector(aSelector);
 	}
 	public static void setWaitSelector(ConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport,
 			Selector<ConcurrentPropertyChangeSupport> aSelector) {		
-		aConcurrentPropertyChangeSupport.setWaitSelector(aSelector);
+		aConcurrentPropertyChangeSupport.addtWaitSelector(aSelector);
 	}
 	public static void setWaitSelector(ConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport,
 			Object[][] aParameters, int aNumMatches, long aTimeOut) {
 		Selector<ConcurrentPropertyChangeSupport> aSelector = 
 				new ConcurrentPropertyChangeHistoryMatchesSelector(aParameters, aNumMatches);
-		aConcurrentPropertyChangeSupport.setWaitSelector(aSelector);
+		aConcurrentPropertyChangeSupport.addtWaitSelector(aSelector);
 	}
 	
     public static void trace(ConcurrentPropertyChange[] anOriginalEvents) {
-    	for (ConcurrentPropertyChange aConcurrentChange : anOriginalEvents) {
-			
+    	Tracer.info(ConcurrentEventUtility.class, "Tracing events start");
+    	for (ConcurrentPropertyChange aConcurrentChange : anOriginalEvents) {			
 			Tracer.info(ConcurrentEventUtility.class, aConcurrentChange.toString());
 		}
+    	Tracer.info(ConcurrentEventUtility.class, "Tracing events end");
+    }  
+    
+    public static void traceAll(ConcurrentPropertyChange[] anOriginalEvents) {
+    	trace(anOriginalEvents);
+    	Map<Thread, ConcurrentPropertyChange[]> aThreadToEvents = getConcurrentPropertyChangesByThread(anOriginalEvents);
+    	trace(aThreadToEvents);
+    	Map<Object, ConcurrentPropertyChange[]> aThreadToSources = getConcurrentPropertyChangesBySource(anOriginalEvents);
+    	trace(aThreadToSources);
+    	Map<Long, ConcurrentPropertyChange[]> aThreadToTimes = getConcurrentPropertyChangesByTime(anOriginalEvents);
+    	trace(aThreadToTimes);
+    }
+	
+    public static <KeyType> void trace(Map<KeyType, ConcurrentPropertyChange[]> aMap) {
+    	Tracer.info(ConcurrentEventUtility.class, "Tracing events by key start");
+    	for (KeyType aKey:aMap.keySet()) {
+    		if (aKey instanceof Thread) {
+    			Tracer.info(ConcurrentEventUtility.class, ((Thread) aKey).getName()); // yuk instance of!
+    		} else {
+    			Tracer.info(ConcurrentEventUtility.class, aKey.toString());
+    		}
+    		trace(aMap.get(aKey));    		
+    	}
+    	Tracer.info(ConcurrentEventUtility.class, "Tracing events by key end");
+
     }
     
     public static void trace(Object[][] aMatchedComponentsList) {
@@ -328,6 +387,8 @@ public class ConcurrentEventUtility {
 		return true;
 
 	}
+	
+	
 //	
 //	public static <KeyType> boolean matchesEachKey(Map<KeyType, ConcurrentPropertyChange[]> aKeyToEvents,
 //			Object[][] aMatchedComponentsList, int aMinExpectedMatches, int aMaxExppectedMatches, String aMatchPattern) {
@@ -527,6 +588,8 @@ public class ConcurrentEventUtility {
 		aStopIndices.add(aStopIndex);
 		return false; // no overlapping or interleaved
 	}
+	
+	protected static Thread[] emptyThreads = {};
 
 	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents, Thread[] aThreads,
 			Object[] aMatchedComponents) {
@@ -535,13 +598,17 @@ public class ConcurrentEventUtility {
 				anOriginalEvents);
 		List<Integer> aStartIndices = new ArrayList();
 		List<Integer> aStopIndices = new ArrayList();
-		List<Integer> aThreadsMatched = new ArrayList();
+//		List<Integer> aThreadsMatched = new ArrayList();
+		if (aThreads == null) {
+			List<Thread> aList = new ArrayList( aThreadToEvents.keySet());
+			aThreads = aList.toArray(emptyThreads);
+		}
 		for (Thread aThread : aThreads) {			
 			ConcurrentPropertyChange[] aThreadEvents = aThreadToEvents.get(aThread);
 			ConcurrentPropertyChange[] aSelectedEvents = selectEvents(aThreadEvents, aMatchedComponents);
 			if (processInterleaving(aThreadEvents, aStartIndices, aStopIndices)) {
 				Tracer.info(ConcurrentEventUtility.class, "Events of thread:" + aThread + 
-						" overlap with one or more of matched threads:" + aThreadsMatched );
+						" overlap with one or more of matched threads:" + aThreads );
 				
 				Tracer.info(ConcurrentEventUtility.class, "Events of new thread:");
 				trace(aSelectedEvents);
@@ -551,7 +618,7 @@ public class ConcurrentEventUtility {
 				return true;
 			}
 		}
-		Tracer.info(ConcurrentEventUtility.class, "No intervealing occured in matched threads " + aThreadsMatched);
+		Tracer.info(ConcurrentEventUtility.class, "No intervealing occured in matched threads " + aThreads);
 		Tracer.info(ConcurrentEventUtility.class, "Start indices " + aStartIndices);
 		Tracer.info(ConcurrentEventUtility.class, "Sop indices " + aStopIndices);
 
@@ -631,7 +698,7 @@ public class ConcurrentEventUtility {
 	}
 
 
-	public static <EventType> Map<Thread, List<ConcurrentPropertyChange>> getConcurrentPropertyChangeListByThread(
+	public static  Map<Thread, List<ConcurrentPropertyChange>> getConcurrentPropertyChangeListByThread(
 			ConcurrentPropertyChange[] anOriginalEvents) {
 		Map<Thread, List<ConcurrentPropertyChange>> retVal = new HashMap<>();
 		for (ConcurrentPropertyChange anEvent : anOriginalEvents) {
@@ -645,13 +712,27 @@ public class ConcurrentEventUtility {
 		}
 		return retVal;
 	}
+	public static <EventType> Map<Long, List<ConcurrentPropertyChange>> getConcurrentPropertyChangeListByTime(
+			ConcurrentPropertyChange[] anOriginalEvents) {
+		Map<Long, List<ConcurrentPropertyChange>> retVal = new TreeMap<>();
+		for (ConcurrentPropertyChange anEvent : anOriginalEvents) {
+			Long aTime = anEvent.getRelativeTime();
+			List<ConcurrentPropertyChange> anEventList = retVal.get(aTime);
+			if (anEventList == null) {
+				anEventList = new ArrayList();
+				retVal.put(aTime, anEventList);
+			}
+			anEventList.add(anEvent);
+		}
+		return retVal;
+	}
 
 	public static Map<Object, List<ConcurrentPropertyChange>> getConcurrentEventListBySource(
 			ConcurrentPropertyChange[] anOriginalEvents) {
 		Map<Object, List<ConcurrentPropertyChange>> retVal = new HashMap<Object, List<ConcurrentPropertyChange>>();
 		for (ConcurrentPropertyChange aConcurrentEvent : anOriginalEvents) {
 			Object aSource = aConcurrentEvent.getEvent().getSource();
-			List<ConcurrentPropertyChange> anEventList = retVal.get(aSource);
+			List<ConcurrentPropertyChange> anEventList = retVal.get(aSource);			
 			if (anEventList == null) {
 				anEventList = new ArrayList<ConcurrentPropertyChange>();
 				retVal.put(aSource, anEventList);
@@ -662,6 +743,7 @@ public class ConcurrentEventUtility {
 		return retVal;
 
 	}
+	
 
 	public static <EventType> Map<Thread, ConcurrentEvent<EventType>[]> getConcurrentEventsByThread(
 			ConcurrentEvent<EventType>[] anOriginalEvents) {
@@ -686,6 +768,36 @@ public class ConcurrentEventUtility {
 		Map<Thread, ConcurrentPropertyChange[]> retVal = new HashMap();
 		for (Thread aThread : anEventListByThread.keySet()) {
 			List<ConcurrentPropertyChange> aList = anEventListByThread.get(aThread);
+			ConcurrentPropertyChange[] anArray = aList.toArray(emptyPropertyChange);
+			retVal.put(aThread, anArray);
+
+		}
+		return retVal;
+
+	}
+	public static ConcurrentPropertyChange[] removeLaterCooccuringEvents(
+			ConcurrentPropertyChange[] anOriginalEvents) {
+
+		Map<Long, List<ConcurrentPropertyChange>> anEventListByTime = getConcurrentPropertyChangeListByTime(
+				anOriginalEvents);
+		ConcurrentPropertyChange[] retVal = new ConcurrentPropertyChange[anEventListByTime.size()];
+		int aTimeIndex = 0;
+		for (Long aTime : anEventListByTime.keySet()) {
+			List<ConcurrentPropertyChange> aList = anEventListByTime.get(aTime);
+			retVal[aTimeIndex] = aList.get(0); // take only the first of these events
+
+		}
+		return retVal;
+	}
+
+	public static Map<Long, ConcurrentPropertyChange[]> getConcurrentPropertyChangesByTime(
+			ConcurrentPropertyChange[] anOriginalEvents) {
+
+		Map<Long, List<ConcurrentPropertyChange>> anEventListByTime = getConcurrentPropertyChangeListByTime(
+				anOriginalEvents);
+		Map<Long, ConcurrentPropertyChange[]> retVal = new HashMap();
+		for (Long aThread : anEventListByTime.keySet()) {
+			List<ConcurrentPropertyChange> aList = anEventListByTime.get(aThread);
 			ConcurrentPropertyChange[] anArray = aList.toArray(emptyPropertyChange);
 			retVal.put(aThread, anArray);
 

@@ -4,19 +4,38 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import util.trace.Tracer;
+
 public class ConcurrentPropertyChangeThreadMatchesSelector implements Selector<ConcurrentPropertyChangeSupport> {
 	Object[] parameters;
 	int numMatches;
 	int numThreads;
 	String threadPattern;
 	Map<Thread, Integer> threadToMatches = new HashMap();
-	public ConcurrentPropertyChangeThreadMatchesSelector (Object[] aParameters,  int aNumThreads, int aNumMatches, String aThreadPattern) {
+	Map<Thread, Long> threadToLastEventTimes = new HashMap();
+
+	long minimumEventDelayPerThread;
+	
+//	long lastEventTime = 0;
+//	int minThreads = 0;
+
+
+	public ConcurrentPropertyChangeThreadMatchesSelector (Object[] aParameters,  int aNumThreads, int aNumMatches, String aThreadPattern, long aMinDelay) {
 		parameters = aParameters;
 		numMatches = aNumMatches;
 		numThreads = aNumThreads;
 		threadPattern = aThreadPattern;
+		minimumEventDelayPerThread = aMinDelay;
+//		minThreads = aMinThreads;
 		
 		
+	}
+	protected boolean checkEventSeparation(Thread aThread, ConcurrentPropertyChange aNewEvent) {
+		long aNewEventTime = aNewEvent.getRelativeTime();
+		Long lastEventTime = threadToLastEventTimes.get(aThread);
+		return (lastEventTime == null  
+				|| (aNewEventTime - lastEventTime) >= minimumEventDelayPerThread);
+			
 	}
 	protected boolean maybeIncrementThreadMatches (ConcurrentPropertyChange anEvent) {
 		Thread aThread = anEvent.getThread();
@@ -32,6 +51,8 @@ public class ConcurrentPropertyChangeThreadMatchesSelector implements Selector<C
 			aNumMatches++;
 		}
 		threadToMatches.put(aThread, aNumMatches);
+//		System.out.println("Incremented matches for thread" + aThread);
+
 		return true;
 	}
 	
@@ -40,17 +61,32 @@ public class ConcurrentPropertyChangeThreadMatchesSelector implements Selector<C
 			return false;
 		}
 		for (Thread aThread: threadToMatches.keySet()) {
-			if (threadToMatches.get(aThread) < numMatches) {
+			int anActualMatches = threadToMatches.get(aThread);
+			if (anActualMatches < numMatches) {
+//				System.out.println("Num matches " + anActualMatches + " for thread:" +  aThread + " < " + numMatches);
+
 				return false;
 			}
+			Tracer.info(this, "Num matches " + anActualMatches + " for thread:" +  aThread + " == " + numMatches);
+
 		}
+		Tracer.info("Num matches for all threads == " + numMatches);
+
 		return true;
 	}
 	
 	@Override
 	public boolean selects(ConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport) {
 		ConcurrentPropertyChange aNewEvent = aConcurrentPropertyChangeSupport.getLastConcurrentPropertyChange();
-//		System.out.println("new event:" + aNewEvent);
+		Thread aThread = aNewEvent.getThread();
+		boolean anEventsSeparated = checkEventSeparation(aThread, aNewEvent);
+		threadToLastEventTimes.put(aThread, aNewEvent.getRelativeTime());
+		if (!anEventsSeparated) {
+			return false;
+		}
+//		System.out.println("Events separated by delay for thread:" + aThread);
+		
+		//		System.out.println("new event:" + aNewEvent);
 		if (ConcurrentEventUtility.matches(aNewEvent, parameters)) {
 			if (maybeIncrementThreadMatches(aNewEvent) )
 			return checkThreadMatches();
