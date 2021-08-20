@@ -1,6 +1,5 @@
 package gradingTools.shared.testcases.concurrency.propertyChanges;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,11 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.jmx.snmp.tasks.ThreadService;
-
-import net.sf.saxon.expr.LastItemExpression;
 import util.trace.Tracer;
-import util.trace.WaitingForClearance;
 
 public class AbstractConcurrentEventSupport<EventType, ObservableType>
 		implements ConcurrentEventSupport<EventType, ObservableType> {
