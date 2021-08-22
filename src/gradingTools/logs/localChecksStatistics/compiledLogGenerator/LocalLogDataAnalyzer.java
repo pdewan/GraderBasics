@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import gradingTools.logs.localChecksStatistics.collectors.Collector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.AbstractIntervalReplayerBasedCollector;
 
 public class LocalLogDataAnalyzer {
 	private static final int TEST_PASS_INDEX=5,TEST_PARTIAL_INDEX=6,TEST_FAIL_INDEX=7,TEST_UNTESTED_INDEX=8, MAXIMUM_ASSIGNMENTS=20;
 	private static final String nonFineGrainedFormatting = ".*Assignment#Suite\\.csv", 
+								fineGrainedFormatting = ".*Assignment#SuiteFineGrained\\.csv",
 								logsPath="/Logs/LocalChecks",
 								localChecksCheckerDataPath=logsPath+"/LocalChecksAnalysis.csv",
 								localChecksCheckerDataHeader = "Log Checked,Date,Collectors Used\n";
@@ -24,7 +26,7 @@ public class LocalLogDataAnalyzer {
 		File logsDirectory = new File(eclipseDirectory.getAbsolutePath()+logsPath);
 		if(!logsDirectory.exists()|| logsDirectory.isFile())
 			throw new IllegalArgumentException("The path "+logsDirectory.getAbsolutePath()+" must be a directory that exists");
-			
+		
 		if(assignmentNumber!=-1) {
 			String assignment = nonFineGrainedFormatting.replace("#", assignmentNumber+"");
 			for(File log:logsDirectory.listFiles(File::isFile))
@@ -72,7 +74,13 @@ public class LocalLogDataAnalyzer {
 				c.setTestNames(tests);
 			if(c.requiresSuiteMapping())
 				throw new IllegalArgumentException("Tests which require suite to test mapping are unable to be run currently");
+			
+			//A quick solution for code integration
+			if(c instanceof AbstractIntervalReplayerBasedCollector)
+				((AbstractIntervalReplayerBasedCollector)c).setStudentProjectLocation(eclipseDirectory);
 		}
+		
+
 		
 		//Collector manager processess the provided log
 		cm.processLog(logData, 1);

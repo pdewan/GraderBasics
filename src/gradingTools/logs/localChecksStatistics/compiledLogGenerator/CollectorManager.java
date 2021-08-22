@@ -82,7 +82,6 @@ public class CollectorManager {
 	}
 	
 	public List<String []> getCertainHeadersAndData(String [] desiredTests) {
-
 		List<String []> retval = new ArrayList<String[]>();
 		for(Collector collector:collectors) {
 			String [] headers = collector.getHeaders();
@@ -95,7 +94,6 @@ public class CollectorManager {
 				retval.add(addToReturn);
 			}
 		}
-		
 		return retval;
 	}
 	
@@ -106,6 +104,9 @@ public class CollectorManager {
 				return true;
 		return false;
 	}
+	
+	
+	
 	
 }
 

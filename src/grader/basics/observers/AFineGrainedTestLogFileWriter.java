@@ -217,8 +217,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 //				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
 				logSender.addToQueue(fullTrace.toString(), topLevelInfo, numTotalRuns);
 			}catch(Exception e) {
-				System.err.println("Error resolving local checks server sending");
-				System.err.println("Thrown message:\n"+e.getMessage());
+//				System.err.println("Error resolving local checks server sending");
+//				System.err.println("Thrown message:\n"+e.getMessage());
 			}
 			writeToSessionDataFile();
 			
@@ -243,7 +243,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	private StringBuilder composeString(List<String> dataSrc) {
 		StringBuilder string = new StringBuilder();
 		if(dataSrc==null||dataSrc.size()==0) {
-			string.append("");
+			string.append(" ");
 			return string;
 		}
 		Collections.sort(dataSrc);

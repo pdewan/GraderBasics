@@ -32,7 +32,7 @@ public class ALogSendingRunnable implements Runnable {
 					LogSender.sendToServer(log);
 //					System.out.println("Log Sent " + System.currentTimeMillis());
 				}  catch (Exception e) {
-					  System.err.println("Error sending log: "+e.getMessage());
+//					  System.err.println("Error sending log: "+e.getMessage());
 				}
 	}
 

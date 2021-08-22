@@ -25,6 +25,7 @@ import org.junit.runner.notification.RunListener;
 
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
+import grader.basics.project.CurrentProjectHolder;
 import grader.basics.trace.CheckersLogFolderCreated;
 import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
 import grader.basics.vetoers.AConsentFormVetoer;
@@ -49,8 +50,9 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	int numTotalRuns = 0;
 	Integer totalTests = null;
 	
-	protected  PrintWriter out = null;
-	protected  BufferedWriter bufWriter;
+	protected  PrintWriter out = null, out_altLocation = null;
+	protected  BufferedWriter bufWriter, bufWriter_altLocation;	
+	
 	protected String logFileName;
 	Field idField;
 	List<String[]> previousRunData = new ArrayList();
@@ -247,33 +249,24 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 			return;
 		out.close();
 		bufWriter = null;
+		
+		if (out_altLocation == null)
+			return;
+		out_altLocation.close();
+		bufWriter_altLocation = null;
 	}
-	
-	public void testIgnored(Description description) throws Exception {
-		super.testIgnored(description);
-
-	}
-	protected void setPassPercentage() {
-		currentPassPercentage = (int) (100 * ((double) currentPasses.size())/totalTests);
-	}
-	
-	public static String toDirectoryName(GradableJUnitTest aTest) {
-		return AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTest);
-	}
-	public static void maybeCreateChecksFolder() {
-       
-        File folder = new File(AConsentFormVetoer.LOG_DIRECTORY);
-        if (folder.mkdirs()) { // true if dirs made, false otherwise
-            CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), AnAbstractTestLogFileWriter.class);
-        }
-
-    }
 	
 	void appendLine(String aLine) {
 		if (out == null) return;
 		Tracer.info(this, aLine);
 		out.println(aLine);
 		out.flush();
+		
+		if (out_altLocation == null) return;
+		Tracer.info(this, aLine);
+		out_altLocation.println(aLine);
+		out_altLocation.flush();
+		
 	}
 	
 	 void maybeCreateOrLoadAppendableFile(String aFileName) {
@@ -303,7 +296,60 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 
 	        JUnitLogFileCreatedOrLoaded.newCase(aFullFileName, this);
 
+	        maybeCreateOrLoadSecondAppendableFile(aFile);
 	    }
+	
+	 void maybeCreateOrLoadSecondAppendableFile(File javaFile) {
+		 	File currentProjectLocation=CurrentProjectHolder.getProjectLocation();
+		 
+		 	if(!currentProjectLocation.getAbsolutePath().equals(javaFile.getAbsolutePath()))
+		 		return;
+		 
+	        File aFile = currentProjectLocation;
+	        String aFullFileName = aFile.getAbsolutePath();
+	        boolean aNewFile = !aFile.exists();
+	        try {
+	            bufWriter_altLocation
+	                    = Files.newBufferedWriter(
+	                            Paths.get(aFullFileName),
+	                            Charset.forName("UTF8"),
+	                            StandardOpenOption.WRITE,
+	                            StandardOpenOption.APPEND,
+	                            StandardOpenOption.CREATE);
+	            out_altLocation = new PrintWriter(bufWriter_altLocation, true);
+	            if (aNewFile) {
+	            	aFile.createNewFile();
+	            	appendLine(getHeader());
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            //Oh, no! Failed to create PrintWriter
+	        }
+
+	        JUnitLogFileCreatedOrLoaded.newCase(aFullFileName, this);
+	    } 
+	 
+	public void testIgnored(Description description) throws Exception {
+		super.testIgnored(description);
+
+	}
+	protected void setPassPercentage() {
+		currentPassPercentage = (int) (100 * ((double) currentPasses.size())/totalTests);
+	}
+	
+	public static String toDirectoryName(GradableJUnitTest aTest) {
+		return AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTest);
+	}
+	public static void maybeCreateChecksFolder() {
+       
+        File folder = new File(AConsentFormVetoer.LOG_DIRECTORY);
+        if (folder.mkdirs()) { // true if dirs made, false otherwise
+            CheckersLogFolderCreated.newCase(folder.getAbsolutePath(), AnAbstractTestLogFileWriter.class);
+        }
+
+    }
+	
+
 	public static String toFileName (GradableJUnitTest aTest) {
 		String aClassName = aTest.getJUnitClass().getName();
 		String[] aClassParts = aClassName.split("\\.");
