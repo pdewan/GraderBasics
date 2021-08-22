@@ -20,15 +20,18 @@ public class LocalLogDataAnalyzer {
 								logsPath="/Logs/LocalChecks",
 								localChecksCheckerDataPath=logsPath+"/LocalChecksAnalysis.csv",
 								localChecksCheckerDataHeader = "Log Checked,Date,Collectors Used\n";
+	public static final String ALL_ASSIGNMENTS = "AllAssignments";
 
-
-	public static List<String> getData(File eclipseDirectory, int assignmentNumber, CollectorManager cm, boolean printOutput, String [] desiredTests) {
+	public static List<String> getData(File eclipseDirectory, String assignmentNumber, CollectorManager cm, boolean printOutput, String [] desiredTests) {
 		File logsDirectory = new File(eclipseDirectory.getAbsolutePath()+logsPath);
 		if(!logsDirectory.exists()|| logsDirectory.isFile())
 			throw new IllegalArgumentException("The path "+logsDirectory.getAbsolutePath()+" must be a directory that exists");
-		
-		if(assignmentNumber!=-1) {
-			String assignment = nonFineGrainedFormatting.replace("#", assignmentNumber+"");
+		if(!ALL_ASSIGNMENTS.equals(assignmentNumber)) {
+
+//		if(assignmentNumber!=-1) {
+			String assignment = nonFineGrainedFormatting.replace("#", assignmentNumber);
+//	h		String assignment = nonFineGrainedFormatting.replace("#", assignmentNumber+"");
+
 			for(File log:logsDirectory.listFiles(File::isFile))
 				if(log.getName().matches(assignment))
 					try {

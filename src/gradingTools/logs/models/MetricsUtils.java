@@ -6,16 +6,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import org.apache.commons.collections.map.HashedMap;
-
-import bus.uigen.ObjectEditor;
 import grader.basics.junit.BasicJUnitUtils;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.project.CurrentProjectHolder;
 import gradingTools.logs.LocalChecksLogData;
 import gradingTools.logs.localChecksStatistics.collectors.Collector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.ContextBasedWorkTimeIRCollector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.EditsIRCollector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.FixedWorkTimeIRCollector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.RunsIRCollector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.TestFocusedContextBasedWorkTimeIRCollector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.TestFocusedFixedWorkTimeIRCollector;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.AttemptsCollector;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.AttemptsCollectorV2;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.BreakTimeCollector;
@@ -33,6 +35,16 @@ public class MetricsUtils {
 	static Collector totalTime = new TotalTimeCollector();
 	static Collector breakTime = new BreakTimeCollector(BREAK_TIME);
 	static Collector workTimeCollector = new WorkTimeCollector(BREAK_TIME);
+	static Collector fixedTestTimeCollector = new TestFocusedFixedWorkTimeIRCollector();
+	static Collector fixedWorkTimeCollector = new FixedWorkTimeIRCollector();
+
+	static Collector contextWorkTimeCollector = new ContextBasedWorkTimeIRCollector
+();
+	static Collector contextTestTimeCollector = new TestFocusedContextBasedWorkTimeIRCollector
+();
+	static Collector  editsColector = new EditsIRCollector();
+	static Collector runsCollector = new RunsIRCollector();
+
 	static Collector totalAttempts = new AttemptsCollector();
 	static Collector totalAttemptsV2 = new AttemptsCollectorV2();
 	static Collector decreasingAttempts = new DecreasingAttemptsCollector();
@@ -50,10 +62,11 @@ public class MetricsUtils {
 	static Collector[] allCollectors = { dateFirstTested, dateLastTested, totalTime, breakTime, workTimeCollector, totalAttempts,
 			totalAttemptsV2, };
 
-	static Collector[] testingPeriodCollectors = { dateFirstTested, dateLastTested,
+	static Collector[] testingPeriodCollectors = { dateFirstTested, dateLastTested, fixedWorkTimeCollector, contextWorkTimeCollector
 
 	};
-	static Collector[] workTimeCollectors = { workTimeCollector };
+//	static Collector[] workTimeCollectors = { workTimeCollector };
+	static Collector[] workTimeCollectors = { contextTestTimeCollector };
 
 //	static Collector[] attemptsCollectors = { totalAttempts, totalAttemptsV2 };
 	static Collector[] attemptsCollectors = {totalAttemptsV2 };
@@ -132,7 +145,9 @@ public class MetricsUtils {
 				continue;
 			}
 			TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
-			int aSeconds = (int) Double.parseDouble(aNameAndMetric[1]);
+			int aMilliSeconds = (int) Double.parseDouble(aNameAndMetric[1]);
+			int aSeconds = aMilliSeconds/1000;
+
 			String aFormattedString = formatSecondDateTime(aSeconds);
 			aTestMetrics.setTimeWorked(aFormattedString);
 
@@ -164,7 +179,7 @@ public class MetricsUtils {
 	public static void fillTestMetricsMap(Map<String, TestMetrics> aTestMetricsMap) {
 		File directory = CurrentProjectHolder.getProjectLocation();
 		if (!directory.exists()) { }
-		int assignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
+		String assignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
 		List<String> anAttemptsList = LocalChecksLogData.getData(directory, assignmentNumber, attemptsCollectors);
 		fillAttemptsInMap(aTestMetricsMap, anAttemptsList);
 		
@@ -215,8 +230,8 @@ public class MetricsUtils {
 		if (!directory.exists()) {
 			return noOutputList;
 		}
-		int assignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
-		List<String> aData = LocalChecksLogData.getData(directory, assignmentNumber, testingPeriodCollectors);
+		String anAssignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
+		List<String> aData = LocalChecksLogData.getData(directory, anAssignmentNumber, testingPeriodCollectors);
 
 //		stringBuffer.setLength(0);
 //		for (String aString:aData) {

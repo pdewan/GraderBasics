@@ -11,7 +11,7 @@ import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.Att
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
 import gradingTools.logs.localChecksStatistics.compiledLogGenerator.CollectorManager;
 import gradingTools.logs.localChecksStatistics.compiledLogGenerator.LocalLogDataAnalyzer;
-
+import static gradingTools.logs.localChecksStatistics.compiledLogGenerator.LocalLogDataAnalyzer.ALL_ASSIGNMENTS;
 public class LocalChecksLogData {
 	private static CollectorManager collectors=null;
 	private static boolean printOutput=true;
@@ -34,70 +34,70 @@ public class LocalChecksLogData {
 	
 	
 	public static List<String> getData() {
-		return LocalLogDataAnalyzer.getData(defaultDirectory,-1,collectors,printOutput,null);
+		return LocalLogDataAnalyzer.getData(defaultDirectory,ALL_ASSIGNMENTS,collectors,printOutput,null);
 	}
 	
 	public static List<String> getData(Collector [] collectorsArray) {
-		return LocalLogDataAnalyzer.getData(defaultDirectory, -1,new CollectorManager(collectorsArray),printOutput,null);
+		return LocalLogDataAnalyzer.getData(defaultDirectory, ALL_ASSIGNMENTS,new CollectorManager(collectorsArray),printOutput,null);
 	}
 	
-	public static List<String> getData(int assignmentNumber){
+	public static List<String> getData(String assignmentNumber){
 		return LocalLogDataAnalyzer.getData(defaultDirectory,assignmentNumber,collectors,printOutput,null);
 	}
 	
 	public static List<String> getData(File eclipseDirectory) {
-		return LocalLogDataAnalyzer.getData(eclipseDirectory,-1,collectors,printOutput,null);
+		return LocalLogDataAnalyzer.getData(eclipseDirectory,ALL_ASSIGNMENTS,collectors,printOutput,null);
 	}
 	
 	public static List<String> getData(File eclipseDirectory, Collector [] collectorsArray) {
-		return LocalLogDataAnalyzer.getData(eclipseDirectory,-1, new CollectorManager(collectorsArray),printOutput,null);	
+		return LocalLogDataAnalyzer.getData(eclipseDirectory,ALL_ASSIGNMENTS, new CollectorManager(collectorsArray),printOutput,null);	
 	}
 	
-	public static List<String> getData(File eclipseDirectory, int assignmentNumber){
+	public static List<String> getData(File eclipseDirectory, String assignmentNumber){
 		return LocalLogDataAnalyzer.getData(eclipseDirectory,assignmentNumber,collectors,printOutput,null);
 	}
 	
-	public static List<String> getData(int assignmentNumber, Collector [] collectorsArray) {
+	public static List<String> getData(String assignmentNumber, Collector [] collectorsArray) {
 		return LocalLogDataAnalyzer.getData(defaultDirectory, assignmentNumber,new CollectorManager(collectorsArray),printOutput,null);
 	}
 	
-	public static List<String> getData(File eclipseDirectory, int assignmentNumber, Collector [] collectorsArray) {
+	public static List<String> getData(File eclipseDirectory, String assignmentNumber, Collector [] collectorsArray) {
 		return LocalLogDataAnalyzer.getData(eclipseDirectory,assignmentNumber,new CollectorManager(collectorsArray),printOutput,null);
 	}
 	
 	public static List<String> getAttemptsData(){
-		return LocalLogDataAnalyzer.getData(defaultDirectory,-1,attemptsCollector,printOutput,null);
+		return LocalLogDataAnalyzer.getData(defaultDirectory,ALL_ASSIGNMENTS, attemptsCollector,printOutput,null);
 	}
 	
 	public static List<String> getAttemptsData(File eclipseDirectory){
-		return LocalLogDataAnalyzer.getData(eclipseDirectory,-1,attemptsCollector,printOutput,null);
+		return LocalLogDataAnalyzer.getData(eclipseDirectory,ALL_ASSIGNMENTS, attemptsCollector,printOutput,null);
 	}
 	
-	public static List<String> getAttemptsData(int assignmentNumber){
+	public static List<String> getAttemptsData(String assignmentNumber){
 		return LocalLogDataAnalyzer.getData(defaultDirectory,assignmentNumber,attemptsCollector,printOutput,null);
 	}
 	
-	public static List<String> getAttemptsData(File eclipseDirectory, int assignmentNumber){
+	public static List<String> getAttemptsData(File eclipseDirectory, String assignmentNumber){
 		return LocalLogDataAnalyzer.getData(eclipseDirectory,assignmentNumber,attemptsCollector,printOutput,null);
 	}
 	
 	public static List<String> getWorkTimeData(){
-		return LocalLogDataAnalyzer.getData(defaultDirectory,-1,workTimeCollector,printOutput,null);
+		return LocalLogDataAnalyzer.getData(defaultDirectory,ALL_ASSIGNMENTS,workTimeCollector,printOutput,null);
 	}
 	
 	public static List<String> getWorkTimeData(File eclipseDirectory){
-		return LocalLogDataAnalyzer.getData(eclipseDirectory,-1,workTimeCollector,printOutput,null);
+		return LocalLogDataAnalyzer.getData(eclipseDirectory,ALL_ASSIGNMENTS,workTimeCollector,printOutput,null);
 	}
 	
-	public static List<String> getWorkTimeData(int assignmentNumber){
+	public static List<String> getWorkTimeData(String assignmentNumber){
 		return LocalLogDataAnalyzer.getData(defaultDirectory,assignmentNumber,workTimeCollector,printOutput,null);
 	}
 	
-	public static List<String> getWorkTimeData(File eclipseDirectory, int assignmentNumber){
+	public static List<String> getWorkTimeData(File eclipseDirectory, String assignmentNumber){
 		return LocalLogDataAnalyzer.getData(eclipseDirectory,assignmentNumber,workTimeCollector,printOutput,null);
 	}
 	
-	public static List<String> getData(File eclipseDirectory, int assignmentNumber, Collector [] collectorsArray, boolean printOutput, String ... desiredTests) {
+	public static List<String> getData(File eclipseDirectory, String assignmentNumber, Collector [] collectorsArray, boolean printOutput, String ... desiredTests) {
 		return LocalLogDataAnalyzer.getData(eclipseDirectory,assignmentNumber,new CollectorManager(collectorsArray),printOutput,desiredTests);
 	}
 	

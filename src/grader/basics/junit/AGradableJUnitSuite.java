@@ -306,10 +306,10 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //		return allProgressMetrics();
 //	}
 //	@PreferredWidgetClass(javax.swing.JTextArea.class)
-	public List<TestMetrics> progressMetrics() {
+	public List<TestMetrics> testSpecificMetrics() {
 		return MetricsUtils.progressMetrics();
 	}
-	public List<String> testingPeriodMetrics() {
+	public List<String> workTimeMetrics() {
 		return MetricsUtils.testingPeriodMetrics();
 	}
 
