@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import gradingTools.logs.localChecksStatistics.collectors.Collector;
+import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.*;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.AttemptsCollectorV2;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
 import gradingTools.logs.localChecksStatistics.compiledLogGenerator.CollectorManager;
@@ -106,6 +107,23 @@ public class LocalChecksLogData {
 			writeTo.write(dataPoint);
 		writeTo.close();
 	}
+	
+	
+//	public static void main(String[] args) {
+//		Collector [] collectors = {
+//			new AttemptsCollectorV2(),
+//			new ContextBasedWorkTimeIRCollector(),
+//			new FixedWorkTimeIRCollector(),
+//			new EditsIRCollector(),
+//			new RunsIRCollector(),
+////			new TestFocusedContextBasedWorkTimeIRCollector(),
+////			new TestFocusedFixedWorkTimeIRCollector(),
+//			
+//		};
+//		File project = new File("");
+//		
+//		List<String> data = getData(project,4,collectors);
+//	}
 	
 	
 }
