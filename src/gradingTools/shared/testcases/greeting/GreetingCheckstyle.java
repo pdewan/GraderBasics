@@ -53,7 +53,7 @@ public class GreetingCheckstyle extends PassFailJUnitTestCase {
 		if (aText == null) {
 			return fail("Please see console error messages:");
 		}
-		System.out.println("Checkstyle text:\n" + aText);
+//		System.out.println("Checkstyle text:\n" + aText);
 		return pass();
 		
 			
