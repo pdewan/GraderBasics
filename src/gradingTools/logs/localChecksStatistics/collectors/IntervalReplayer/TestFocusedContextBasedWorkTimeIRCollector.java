@@ -2,6 +2,8 @@ package gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer;
 
 import java.util.List;
 
+import grader.basics.interval.IntervalDriver;
+
 public class TestFocusedContextBasedWorkTimeIRCollector extends AbstractIntervalReplayerBasedCollector{
 
 	public TestFocusedContextBasedWorkTimeIRCollector() {
@@ -46,7 +48,7 @@ public class TestFocusedContextBasedWorkTimeIRCollector extends AbstractInterval
 //				numNeverAttempted++;
 //		double amount=-1.0*((double)time/numNeverAttempted);
 		for(int i=0;i<workingResults.length;i++)
-			results[i]=Double.toString(workingResults[i]);//==0?amount:workingResults[i]);
+			results[i]=IntervalDriver.format((long)workingResults[i]);//==0?amount:workingResults[i]);
 		return super.getResults();
 	}
 	

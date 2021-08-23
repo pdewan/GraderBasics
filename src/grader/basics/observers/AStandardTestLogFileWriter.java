@@ -37,15 +37,16 @@ public class AStandardTestLogFileWriter extends AnAbstractTestLogFileWriter{
 //			System.out.println (aSuite.getJUnitClass().getName());
 //			Class aJunitClass = aSuite.getJUnitClass();
 			if (numRuns == 0) {
-				totalTests = aTopLevelSuite.getLeafClasses().size();				
-				logFileName = AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite) + LOG_SUFFIX;
+				totalTests = aTopLevelSuite.getLeafClasses().size();	
+				logFileName = toFileName(aTopLevelSuite) + LOG_SUFFIX;
+				logFilePath = AConsentFormVetoer.LOG_DIRECTORY + "/" + logFileName;
 				
 //				if (!maybeReadLastLineOfLogFile(logFileName)) {
 //					return;
 //				};
-				if (maybeReadLastLineOfLogFile(logFileName)) {
+				if (maybeReadLastLineOfLogFile(logFilePath)) {
 				maybeLoadSavedSets();
-				maybeCreateOrLoadAppendableFile(logFileName);
+				maybeCreateOrLoadAppendableFile(logFilePath);
 				}
 
 			}

@@ -2,6 +2,8 @@ package gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer;
 
 import java.util.List;
 
+import grader.basics.interval.IntervalDriver;
+
 public class TestFocusedFixedWorkTimeIRCollector extends AbstractIntervalReplayerBasedCollector{
 
 	public TestFocusedFixedWorkTimeIRCollector() {
@@ -42,7 +44,7 @@ public class TestFocusedFixedWorkTimeIRCollector extends AbstractIntervalReplaye
 	@Override
 	public String[] getResults() {
 		for(int i=0;i<workingResults.length;i++)
-			results[i]=Double.toString(workingResults[i]);
+			results[i]=IntervalDriver.format((long)workingResults[i]);
 		return super.getResults();
 	}
 	

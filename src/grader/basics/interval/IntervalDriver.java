@@ -82,7 +82,7 @@ public class IntervalDriver {
 		return new Date(time).toString();
 	}
 	
-	protected static String format(long time){
+	public static String format(long time){
 		String sign = "";
 		if (time < 0) {
 			sign += "-";

@@ -53,7 +53,7 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	protected  PrintWriter out = null, out_altLocation = null;
 	protected  BufferedWriter bufWriter, bufWriter_altLocation;	
 	
-	protected String logFileName;
+	protected String logFilePath, logFileName;
 	Field idField;
 	List<String[]> previousRunData = new ArrayList();
 	String[] normalizedLastLines = null;
@@ -245,13 +245,11 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 
 
 	protected void closeFile() {
-		if (out == null)
-			return;
+		if (out == null) return;
 		out.close();
 		bufWriter = null;
 		
-		if (out_altLocation == null)
-			return;
+		if (out_altLocation == null) return;
 		out_altLocation.close();
 		bufWriter_altLocation = null;
 	}
@@ -270,9 +268,8 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	}
 	
 	 void maybeCreateOrLoadAppendableFile(String aFileName) {
-		 if (out != null && bufWriter != null) {
-			 return;
-		 }
+		 if (out != null && bufWriter != null) return;
+		 
 	        String aFullFileName = aFileName;
 	        File aFile = new File(aFullFileName);
 	        boolean aNewFile = !aFile.exists();
@@ -299,12 +296,16 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	        maybeCreateOrLoadSecondAppendableFile(aFile);
 	    }
 	
-	 void maybeCreateOrLoadSecondAppendableFile(File javaFile) {
-		 	File currentProjectLocation=CurrentProjectHolder.getProjectLocation();
+	 private void maybeCreateOrLoadSecondAppendableFile(File javaFile) {
+		 	File projectLocation =  CurrentProjectHolder.getProjectLocation();
 		 
-		 	if(!currentProjectLocation.getAbsolutePath().equals(javaFile.getAbsolutePath()))
-		 		return;
-		 
+		 	File currentProjectLocation=new File(projectLocation,AConsentFormVetoer.LOG_DIRECTORY); 
+		 	if(!currentProjectLocation.exists())
+		 		currentProjectLocation.mkdir();
+		 	currentProjectLocation = new File(currentProjectLocation,"/"+logFileName);
+		 	
+		 	if(currentProjectLocation.getAbsolutePath().replace("\\.\\", "\\").equals(javaFile.getAbsolutePath())) return;
+		 	
 	        File aFile = currentProjectLocation;
 	        String aFullFileName = aFile.getAbsolutePath();
 	        boolean aNewFile = !aFile.exists();
@@ -327,7 +328,7 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	        }
 
 	        JUnitLogFileCreatedOrLoaded.newCase(aFullFileName, this);
-	    } 
+	} 
 	 
 	public void testIgnored(Description description) throws Exception {
 		super.testIgnored(description);

@@ -132,7 +132,7 @@ public class LocalLogDataAnalyzer {
 		return retval;
 	}
 	
-	public static void recordDataCheck(File log, File eclipseDirectory, CollectorManager cm) throws IOException {
+	private static void recordDataCheck(File log, File eclipseDirectory, CollectorManager cm) throws IOException {
 		File localCheckAnalysis = new File(eclipseDirectory.getAbsoluteFile()+localChecksCheckerDataPath);
 		FileWriter writer;
 		if(localCheckAnalysis.exists()) {

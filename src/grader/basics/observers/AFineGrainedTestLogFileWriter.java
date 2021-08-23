@@ -95,7 +95,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			if (numRuns == 0) {
 				totalTests = aTopLevelSuite.getLeafClasses().size();
 				String fileLoc = AConsentFormVetoer.LOG_DIRECTORY + "/";
-				logFileName = fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+				logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+				logFilePath = fileLoc + logFileName;
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
 				
 				if(logSender==null) {
@@ -105,9 +106,9 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 					logSendingThread.start();
 				}	
 				
-				if (maybeReadLastLineOfLogFile(logFileName)) {
+				if (maybeReadLastLineOfLogFile(logFilePath)) {
 					maybeLoadSavedSets();
-					maybeCreateOrLoadAppendableFile(logFileName);
+					maybeCreateOrLoadAppendableFile(logFilePath);
 					maybeDetermineConsecutiveTestRunNumber(aTopLevelSuite);
 				}
 

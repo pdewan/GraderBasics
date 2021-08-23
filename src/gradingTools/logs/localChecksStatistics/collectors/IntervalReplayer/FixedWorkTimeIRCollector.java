@@ -1,5 +1,7 @@
 package gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer;
 
+import grader.basics.interval.IntervalDriver;
+
 public class FixedWorkTimeIRCollector extends AbstractIntervalReplayerBasedCollector {
 	
 	private final String headerPhrase;
@@ -19,7 +21,7 @@ public class FixedWorkTimeIRCollector extends AbstractIntervalReplayerBasedColle
 	@Override
 	public String[] getResults() {
 		long result = this.replayer.getWorkTime(this.studentProject,this.startTime,this.lastTestTime)[1];
-		results[0] = Long.toString(result);
+		results[0] = IntervalDriver.format(result);
 		return results;
 	}
 

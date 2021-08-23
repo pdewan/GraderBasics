@@ -1,5 +1,7 @@
 package gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer;
 
+import grader.basics.interval.IntervalDriver;
+
 public class ContextBasedWorkTimeIRCollector extends AbstractIntervalReplayerBasedCollector {
 	
 	private final String headerPhrase;
@@ -19,7 +21,7 @@ public class ContextBasedWorkTimeIRCollector extends AbstractIntervalReplayerBas
 	@Override
 	public String[] getResults() {
 		long [] result = this.replayer.getWorkTime(this.studentProject,this.startTime,this.lastTestTime);
-		results[0] = Long.toString(result[0]);
+		results[0] = IntervalDriver.format(result[0]);
 		return results;
 	}
 
