@@ -68,7 +68,13 @@ public class NoCheckstyleWarnings extends CheckStyleWarningsTestCase {
 
 			}
 			Tracer.info(CheckStyleWarningsRatioTestCase.class, "Warnings found in following checkstyle text");
-			Tracer.info(CheckStyleWarningsRatioTestCase.class, aText);
+			String[] aLines = aText.split("\n");
+			for (String aLine:aLines) {
+				if (aLine.startsWith("[WARN]")) {
+					Tracer.info(CheckStyleWarningsRatioTestCase.class, aLine);
+				}
+			}
+//			Tracer.info(CheckStyleWarningsRatioTestCase.class, aText);
 			return fail("Warnings found in checkstyle text, see traced console output");
 		}
 		return pass();

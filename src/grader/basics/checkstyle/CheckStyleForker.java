@@ -68,7 +68,7 @@ public static void main (String[] args) {
 	}
 	if (!aCheckStyleAllFile.exists()) {
 //		System.err.println("File does not exist:" + aCheckStyleAllFile);
-		System.err.println("Please run the checkstle plugin on your project");
+		System.err.println("Please run the checkstyle plugin on your project");
 
 	}
 	PostProcessingMain.setSecondPassFile(new File("mysecondpass.txt"));
