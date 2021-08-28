@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 public abstract class ExpectedCallsKnownMax extends WarningsRatioKnownMax{
 	protected abstract String[][] tagAndMethods();
+	public static final String WARNING_NAME = "No method .* has made expected call";
+	public static final String INFO_NAME = "has made expected call.*Good!";
 	protected String warningString;
 	protected String infoString;
 //	static StringBuilder stringBuilder = new StringBuilder();
@@ -48,12 +50,15 @@ public abstract class ExpectedCallsKnownMax extends WarningsRatioKnownMax{
 //		
 //	}
 	protected void makeWarning() {
-		warningString = makeMethodAndTagRegex("method.*", ".*in class matching.*", ".*not made expected call", tagAndMethods());
-		
+//		warningString = makeMethodAndTagRegex("method.*", ".*in class matching.*", ".*not made expected call", tagAndMethods());
+		warningString = makeMethodAndTagRegex("ethod.*", ".*", ".*not made expected call", tagAndMethods());
+
 		
 	}
 	protected void makeInfo() {
-		infoString = makeMethodAndTagRegex("method.*", ".*in class matching.*", ".*alled expected method.*Good", tagAndMethods());
+		infoString = makeMethodAndTagRegex("ethod.*", ".*", ".*alled expected method.*Good", tagAndMethods());
+
+//		infoString = makeMethodAndTagRegex("method.*", ".*in class matching.*", ".*alled expected method.*Good", tagAndMethods());
 		
 		
 	}

@@ -168,11 +168,14 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //    	}
     	List<String> aFailedLines = null;
     	String aNegativeFilter = negativeRegexLineFilter();
+    	Tracer.info(CheckStyleTestCase.class, "Failure regex:" + aNegativeFilter);
     	if (aNegativeFilter != null) {
     		aFailedLines =	matchedLines(aCheckStyleLines, aNegativeFilter);
     	}
     	List<String> aSucceededLines = null;
     	String aPositiveFilter = positiveRegexLineFilter();
+    	Tracer.info(CheckStyleTestCase.class, "Success regex:" + aPositiveFilter);
+
     	if (aPositiveFilter != null && checkForPositives()) {
     		aSucceededLines =	matchedLines(aCheckStyleLines, aPositiveFilter);
     	}
@@ -204,7 +207,8 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	if (aSucceededLines != null && aSucceededLines.size() > 0) {
     		return pass();
     	}
-    	
+		Tracer.info(CheckStyleTestCase.class, "No lines succeeded check");
+
     	if (aFailedLines != null && aFailedLines.size() > 0) {
     		Tracer.info(CheckStyleTestCase.class, "Relevant Checkstyle Warnings:");
     		for (String aFailedLine:aFailedLines) {

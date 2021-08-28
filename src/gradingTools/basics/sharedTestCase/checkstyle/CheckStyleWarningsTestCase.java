@@ -164,6 +164,10 @@ public abstract class CheckStyleWarningsTestCase extends CheckStyleTestCase {
         	for (int i = 0; i < aMaxLines; i++) {
         		util.trace.Tracer.info(CheckStyleWarningsRatioTestCase.class, aFailedMatchedLines.get(i));
         	}
+        	if (aSucceededMatchedLines != null) {
+        		util.trace.Tracer.info(CheckStyleWarningsRatioTestCase.class, aSucceededMatchedLines.size()  + " lines passing check");
+        	}
+
 //        	System.out.println(Arra(aFailedMatchedLines));
         	}
         	if (aSucceededMatchedLines != null && printSuccessLines) {

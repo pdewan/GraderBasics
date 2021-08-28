@@ -214,6 +214,9 @@ public class BasicProjectIntrospection {
 				Tracer.info(BasicProjectIntrospection.class,
 						"Found multiple matching classes:"
 								+ aClasses);
+				Class aClass =  aClasses.iterator().next();
+				Tracer.info(BasicProjectIntrospection.class, "Choosing " + aClass);
+				return aClass;
 			} else {
 				Tracer.info(BasicProjectIntrospection.class,
 						"Found no matching class."
