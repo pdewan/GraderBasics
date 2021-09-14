@@ -12,10 +12,12 @@ import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import bus.uigen.introspect.IntrospectUtility;
+import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.Project;
 
 public class ConfigurationWriter {
@@ -91,15 +93,19 @@ public class ConfigurationWriter {
 			aPrintWriter.println(aPropertyClassName + "," + aCanonicalClassName);
 			if (!aPropertyClass.isInterface()) {
 
-				Class[] anInterfaces = aPropertyClass.getInterfaces();
-				if (anInterfaces.length == 1 && !anInterfaces[0].getName().startsWith("java")) {
+//				Class[] anInterfaces = aPropertyClass.getInterfaces();
+				Set<Class> anInterfaces = BasicProjectIntrospection.getAllInterfaces(aPropertyClass);
+				
+//				if (anInterfaces.length == 1 && !anInterfaces[0].getName().startsWith("java")) {
 
 //			aPrintWriter.println(aClassName + "," + aPropertyClassName);
 					for (Class anInterface : anInterfaces) {
+						if (!anInterface.getName().startsWith("java")) {
 						aPrintWriter.println(anInterface.getName() + "," + aCanonicalClassName);
+						}
 					}
 				}
-			}
+//			}
 
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return;
