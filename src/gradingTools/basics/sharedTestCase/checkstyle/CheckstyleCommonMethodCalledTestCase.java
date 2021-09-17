@@ -37,7 +37,7 @@ public class CheckstyleCommonMethodCalledTestCase extends CheckStyleTestCase {
 	@Override
 	public String negativeRegexLineFilter() {
 //		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
-		return ".*" + "WARN" + ".*"  + method + "(.*)" + otherMethod +  "(.*)" + typeTag + "(.*)" + commonMethod + "\\[MissingCommonMethodCall\\]" + ".*" ;
+		return ".*" + "WARN" + ".*"  + method + "(.*)" + otherMethod +  "(.*)" + typeTag + "(.*)" + commonMethod + "(.*)" + "\\[MissingCommonMethodCall\\]" + ".*" ;
 
 
 		
@@ -48,7 +48,7 @@ public class CheckstyleCommonMethodCalledTestCase extends CheckStyleTestCase {
 	}
 	@Override
 	public String positiveRegexLineFilter() {
-		return ".*" + "INFO" + ".*"  + method + "(.*)" + otherMethod +  "(.*)" + typeTag + "(.*)" + "\\[MissingCommonMethodCall\\]" + ".*" ;
+		return ".*" + "INFO" + ".*"  + method + "(.*)" + otherMethod +  "(.*)" + typeTag + "(.*)" + commonMethod + "(.*)" + "\\[MissingCommonMethodCall\\]" + ".*" ;
 //		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
 //		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
 //		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
