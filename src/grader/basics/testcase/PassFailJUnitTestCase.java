@@ -16,6 +16,7 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
+import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleSpecificWarningTestCase;
 import gradingTools.shared.testcases.utils.ABufferingTestInputGenerator;
 import junit.framework.TestCase;
 import util.trace.Tracer;
@@ -198,6 +199,23 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 //		}
 
 	}
+	
+	  public TestCaseResult scaleResult(TestCaseResult aResult) {
+	    	 if (precedingTestInstances.size() == 0 || aResult.getPercentage() == 0) {
+	    		 return aResult;
+	    	 }
+			 double aTotalFractionComplete = 0;
+			 for (PassFailJUnitTestCase aTestCase:precedingTestInstances) {
+				 if (aTestCase != null) {
+				 aTotalFractionComplete += aTestCase.getLastResult().getPercentage();
+				 }
+			 }
+			 double anAverageFractionComplete =  aTotalFractionComplete/ (double) precedingTestInstances.size();
+			 double anOriginalFractionComplete = aResult.getPercentage();
+			 Tracer.info(CheckstyleSpecificWarningTestCase.class, "Score of " + anOriginalFractionComplete + " scaled by average preceding test pass percentage:" + anAverageFractionComplete);
+		      aResult.setPercentage(anOriginalFractionComplete*anAverageFractionComplete); 
+			 return aResult;
+		 }
 
 	public void passfailDefaultTest() {
 		possiblyRunAndCheckPrecedingTests();
