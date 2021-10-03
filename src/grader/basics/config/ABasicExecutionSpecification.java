@@ -545,6 +545,7 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     }
     @Override
     public void setLanguage(String aValue) {
+//    	System.out.println("Setting language to:" + aValue);
     	runtimeStudentStringProperties.put(BasicStaticConfigurationUtils.LANGUAGE, aValue);
     }
  

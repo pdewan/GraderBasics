@@ -82,6 +82,7 @@ public class BasicLanguageDependencyManager {
 
 	public static String getSourceFileSuffix() {
 		String aLanguage = getLanguage();
+//		System.out.println("Current language:" + aLanguage);
 		return languageToSourceFileSuffix.get(aLanguage);
 //		if (sourceFileSuffix == null) {
 //			getLanguage(); // has side effect of setting source file suffix
