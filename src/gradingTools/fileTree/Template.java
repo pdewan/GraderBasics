@@ -1,5 +1,6 @@
 package gradingTools.fileTree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +47,8 @@ public class Template {
 	 */
 	public Template(String [] template, String name) {
 		this.name=name;
-		List<String> templateList = Arrays.asList(template);
+		List<String> templateList = new ArrayList<>();
+		templateList.addAll(Arrays.asList(template));
 		this.template= new DirectoryNode(templateList);
 	}
 	
