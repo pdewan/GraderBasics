@@ -21,7 +21,15 @@ public abstract class AbstractFolderMatchesTemplateTest extends PassFailJUnitTes
 		
 		if(similarityPercent >= getAcceptabilityCutoff())
 				return pass();
-		return fail("Your project does not meet the required similarity percent of: "+getAcceptabilityCutoff()+" your similarity: "+similarityPercent);
+		
+		System.out.println("\nYour project does not meet the required similarity percent of: "+getAcceptabilityCutoff()+" your similarity: "+similarityPercent);
+
+		System.out.println("|- represents a package, |~ represents a file\n\nThe structure of your project was found to be:");
+		System.out.println(src);
+		System.out.println("\nAttempting to match to the structure:");
+		System.out.println(getTemplate().getTemplateFileTree());
+		System.out.println();
+		return fail("View console for more information");
 	}
 	
 	/**
