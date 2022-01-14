@@ -36,4 +36,9 @@ public class ExpectedSignaturesRatioCheck extends CheckStyleWarningsRatioTestCas
 		return INFO_NAME;
 	}
 
+	@Override 
+	protected boolean addBrackets() {
+		return false;
+	}
+	
 }

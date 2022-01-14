@@ -26,6 +26,11 @@ public class ExpectedGettersRatioCheck extends CheckStyleWarningsRatioTestCase {
 
 	}
 
+	@Override 
+	protected boolean addBrackets() {
+		return false;
+	}
+	
 	@Override
 	protected String warningName() {
 		return WARNING_NAME;

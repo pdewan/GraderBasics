@@ -45,6 +45,11 @@ public class ExpectedCallsRatioCheck extends CheckStyleWarningsRatioTestCase {
 	protected String infoName() {
 		return INFO_NAME;
 	}
+	
+	@Override 
+	protected boolean addBrackets() {
+		return false;
+	}
 //	public TestCaseResult test(Project aProject, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 //        TestCaseResult aSuperResult = super.test(aProject, autoGrade);
 //        Class aConfigurationClass = configurationClass();

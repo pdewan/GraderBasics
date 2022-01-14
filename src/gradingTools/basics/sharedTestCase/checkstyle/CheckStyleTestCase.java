@@ -81,14 +81,25 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //		return  ".*" + aWarningName + ".*";
 //	}
 	 
+	 
+	 protected boolean addBrackets() {
+		 return true;
+	 }
+	 
 	 public String positiveRegexLineFilter() {
 			String aWarningClassName = infoName();
-			return ".*" + "INFO" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
-		}
+			if(addBrackets()) {
+				return ".*" + "INFO" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
+			}
+			return ".*" + "INFO" + ".*" + aWarningClassName + ".*";
+	 }
 
 	public String negativeRegexLineFilter() {
 		String aWarningClassName = warningName();
-		return ".*" + "WARN" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
+		if(addBrackets()) {
+			return ".*" + "WARN" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
+		}
+		return ".*" + "WARN" + ".*" + aWarningClassName + ".*";
 	}
     protected String toLinesString(List<String> aLines) {
     	StringBuilder aString = new StringBuilder();

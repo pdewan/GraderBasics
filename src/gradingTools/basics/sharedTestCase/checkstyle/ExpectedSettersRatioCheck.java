@@ -36,4 +36,9 @@ public class ExpectedSettersRatioCheck extends CheckStyleWarningsRatioTestCase {
 		return INFO_NAME;
 	}
 
+	@Override 
+	protected boolean addBrackets() {
+		return false;
+	}
+	
 }
