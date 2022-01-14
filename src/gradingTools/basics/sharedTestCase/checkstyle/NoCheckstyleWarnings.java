@@ -1,5 +1,6 @@
 package gradingTools.basics.sharedTestCase.checkstyle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -63,16 +64,33 @@ public class NoCheckstyleWarnings extends CheckStyleWarningsTestCase {
 			return fail("Could not run checkstyle");
 		}
 		if (aText.contains("WARN")) {
+			String[] aLines = aText.split("\n");
+			List<String> aWarningLines = new ArrayList();
+			for (String aLine:aLines) {
+				if (aLine.startsWith("[WARN]")) {
+					aWarningLines.add(aLine);
+				}
+			}
+			if (aWarningLines.size() == 0) {
+				return pass();
+			}
+			Tracer.info(CheckStyleWarningsRatioTestCase.class, "Found " + aWarningLines.size() + " warnings");
 			if (GradingMode.getGraderRun()) {
-				return fail("Warnings found in checkstyle text, run checkstyle or local checks to view them");
+				Tracer.info(CheckStyleWarningsRatioTestCase.class, "First warning: " + aWarningLines.get(0));
+				return fail("Warnings found in checkstyle text, run checkstyle or local checks to view  all of them");
 
 			}
 			Tracer.info(CheckStyleWarningsRatioTestCase.class, "Warnings found in following checkstyle text");
-			String[] aLines = aText.split("\n");
-			for (String aLine:aLines) {
-				if (aLine.startsWith("[WARN]")) {
+//			String[] aLines = aText.split("\n");
+			
+//			for (String aLine:aLines) {
+//				if (aLine.startsWith("[WARN]")) {
+//					Tracer.info(CheckStyleWarningsRatioTestCase.class, aLine);
+//				}
+//			}
+			for (String aLine:aWarningLines) {
 					Tracer.info(CheckStyleWarningsRatioTestCase.class, aLine);
-				}
+			
 			}
 //			Tracer.info(CheckStyleWarningsRatioTestCase.class, aText);
 			return fail("Warnings found in checkstyle text, see traced console output");
