@@ -11,7 +11,7 @@ import gradingTools.shared.testcases.utils.AbstractConfigurationProvided;
 public class ExpectedCallsRatioCheck extends CheckStyleWarningsRatioTestCase {
 	//expectedMethodCall = method {1} in class matching {2}  made expected call {0}. Good!
 	//missingMethodCall = method {1}  in class matching {2} has not made expected call {0}.
-	public static final String WARNING_NAME = "No method .* has made expected call";
+	public static final String WARNING_NAME = "No method.*made expected call";
 	public static final String INFO_NAME = "has made expected call.*Good!";
 
 	public static final String MESSAGE = "Expected Calls";
