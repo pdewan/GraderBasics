@@ -38,5 +38,17 @@ public class NamedConstantsRatioCheck extends CheckStyleWarningsRatioTestCase {
 	protected String infoName() {
 		return INFO_NAME;
 	}
-
+	protected String namedConstantNegativeRegexLineFilter () {
+		String aWarningClassName = infoName(); // it is both a warning and info class
+		if(addBrackets()) {
+			return ".*" + "WARN" + ".*" +"\\[" + aWarningClassName +"\\]" + ".*";
+		}
+		return ".*" + "WARN" + ".*" + aWarningClassName + ".*";
+	}
+	
+	public String negativeRegexLineFilter () {
+		return super.negativeRegexLineFilter() + "|" + namedConstantNegativeRegexLineFilter ();
+	}
+	
+	
 }
