@@ -7,7 +7,7 @@ public class ExpectedInterfacesRatioCheck extends CheckStyleWarningsRatioTestCas
 //	missingInterface = Missing interface {0} of class {1}
 
 	public static final String WARNING_NAME = "Missing interface.*";
-	public static final String INFO_NAME = "Expected interface:.*Good!";
+	public static final String INFO_NAME = "Expected interface.*Good!";
 
 	public static final String MESSAGE = "Expected Interfaces";
 	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.1;

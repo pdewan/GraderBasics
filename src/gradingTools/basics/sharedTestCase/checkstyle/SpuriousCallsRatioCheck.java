@@ -35,5 +35,10 @@ public class SpuriousCallsRatioCheck extends CheckStyleWarningsRatioTestCase {
 	protected String infoName() {
 		return INFO_NAME;
 	}
+	
+	@Override 
+	protected boolean addBrackets() {
+		return false;
+	}
 
 }
