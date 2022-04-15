@@ -299,7 +299,14 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	 private void maybeCreateOrLoadSecondAppendableFile(File javaFile) {
 		 	File projectLocation =  CurrentProjectHolder.getProjectLocation();
 		 
-		 	File currentProjectLocation=new File(projectLocation,AConsentFormVetoer.LOG_DIRECTORY); 
+		 	if(!projectLocation.exists()) {
+		 		System.err.println("Project Location does not exist");
+		 		return;
+		 	}
+		 	File currentProjectLocation = new File(projectLocation,AConsentFormVetoer.LOG);
+		 	if(!currentProjectLocation.exists())
+		 		currentProjectLocation.mkdir();
+		 	currentProjectLocation=new File(currentProjectLocation,AConsentFormVetoer.LOCALCHECKS); 
 		 	if(!currentProjectLocation.exists())
 		 		currentProjectLocation.mkdir();
 		 	currentProjectLocation = new File(currentProjectLocation,"/"+logFileName);

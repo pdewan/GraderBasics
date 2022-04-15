@@ -25,7 +25,9 @@ public class AConsentFormVetoer implements VetoableChangeListener {
 	public static final String CONSENT_FILE_NAME = "Consent.txt";
 //	public static final String LOG_DIRECTORY = "Checks";
 	public static final String LOG_DIRECTORY = "Logs/LocalChecks";
-
+	public static final String LOG = "Logs";
+	public static final String LOCALCHECKS = "LocalChecks";
+	
 	public static final String AGREE_FILE_FULL_NAME = LOG_DIRECTORY
 			+ "/" + CONSENT_FILE_NAME;
 	public static final String MESSAGE_CONTENTS = 
