@@ -1,0 +1,20 @@
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <pthread.h>
+#include "lru.h"
+
+init:			  int numthreads -> int
+reference:		  int key -> int
+clean: 			  int check_water_mark -> void
+shutdown_threads: void -> void
+print: 			  void -> void
+
+*, pthread_mutex_init: pthread_mutex_t *mutex, const pthread_mutexattr_t *attr -> int
+*, pthread_mutex_lock: pthread_mutex_t *mutex -> int
+*, pthread_mutex_unlock: pthread_mutex_t *mutex -> int
+
+*, pthread_cond_wait: pthread_cond_t *cond, pthread_mutex_t *mutex -> int
+*, pthread_cond_signal: pthread_cond_t *cond -> int
+*, pthread_cond_broadcast: pthread_cond_t *cond -> int
+*, pthread_cond_init: pthread_cond_t *restrict cond, const pthread_condattr_t *restrict attr -> int
