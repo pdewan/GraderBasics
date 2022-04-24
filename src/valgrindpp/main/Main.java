@@ -17,7 +17,7 @@ import valgrindpp.helpers.DockerHelper;
 
 public class Main {
 	public static final String WRAPPER_FILE_SUFFIX = "-wrapper";
-	public static final String CONFIG_FILE = "MutexLruConfig";
+	public static final String CONFIG_FILE = "SimpleAdderConfig";
 	public static final String TRACE_FILE = "Traces";
 	
 	public static void main(String[] args) {
