@@ -890,6 +890,55 @@ protected String requirementsLocation = null;
 	}
 	
 	@Override
+	public String getValgrindConfiguration() {
+		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_CONFIGURATION, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_CONFIGURATION);
+	}
+	
+	@Override
+	public void setValgrindConfiguration(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_CONFIGURATION, newVal);
+	}
+	
+	@Override
+	public String getDockerProgramName() {
+		return getStringProperty(BasicStaticConfigurationUtils.DOCKER_PROGRAM_NAME, BasicStaticConfigurationUtils.DEFAULT_DOCKER_PRORAM_NAME);
+	}
+	
+	@Override
+	public void setDockerProgramName(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.DOCKER_PROGRAM_NAME, newVal);
+	}
+	
+	@Override
+	public String getValgrindConfigurationDirectory() {
+		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_CONFIGURATION_DIRECTORY, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_CONFIGURATION_DRECTORY);
+	}
+	@Override
+	public void setValgrindConfigurationDirectory(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_CONFIGURATION_DIRECTORY, newVal);
+
+		
+	}
+	@Override
+	public String getValgrindTraceFile() {
+		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_TRACE_FILE, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_TRACE_FILE);
+	}
+	@Override
+	public void setValgrindTraceFile(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_TRACE_FILE, newVal);
+
+	}
+	@Override
+	public String getValgrindTraceDirectory() {
+		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_TRACE_DIRECTORY, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_TRACE_DIRECTORY);
+	}
+	@Override
+	public void setValgrindTraceDirectory(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_TRACE_DIRECTORY, newVal);
+
+	}
+	
+	@Override
 	public boolean getTracing() {
 		return getBooleanProperty(BasicStaticConfigurationUtils.TRACING, BasicStaticConfigurationUtils.DEFAULT_TRACING);
 
@@ -999,4 +1048,6 @@ protected String requirementsLocation = null;
 
 		
 	}
+	
+	
 }

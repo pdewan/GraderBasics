@@ -1,9 +1,11 @@
 package grader.basics.execution;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import grader.basics.project.Project;
+import util.pipe.InputGenerator;
 
 public interface CommandGenerator {
 //	public Class mainClass(RootCodeFolder aRootCodeFolder, ProxyClassLoader aProxyClassLoader, String expectedName, Project aProject);
@@ -18,6 +20,26 @@ public interface CommandGenerator {
 	}
 	 public  String getUserBinary() ;
 	public void setUserBinary(String newVal) ;
+
+	List<String> processedCommands(List<String> basicCommand, Project aProject, String aProcessName, File aBuildFolder,
+			String anEntryPoint, String anEntryTagTarget, String[] anArgs);
+
+	void runPreIndividualCommand(RunningProject runner, InputGenerator anOutputBasedInputGenerator, String[] aCommand,
+			String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
+			throws NotRunnableException;
+
+	void runPostIndividualCommand(RunningProject runner, InputGenerator anOutputBasedInputGenerator, String[] aCommand,
+			String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
+			throws NotRunnableException;
+
+	public void  runPreTeamCommands (String aProcessTeam, RunningProject runner, InputGenerator anOutputBasedInputGenerator
+			
+			) throws NotRunnableException;
+		
+
+	public void  runPostTeamCommands (String aProcessTeam, RunningProject runner, InputGenerator anOutputBasedInputGenerator
+			
+			) throws NotRunnableException;
 	
 
 

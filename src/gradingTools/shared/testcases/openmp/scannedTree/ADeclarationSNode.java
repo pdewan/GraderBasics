@@ -18,10 +18,12 @@ public class ADeclarationSNode extends AnSNode implements DeclarationSNode {
 	Set<AssignmentSNode> assignmentsEffectingDeclaredIdentifier;
 
 	
-	
 	public ADeclarationSNode(int aLineNumber, String aTypeName, String aVariableName) {
 		super(aLineNumber);
 		typeName = aTypeName;
+		if (aVariableName.endsWith(",") || aVariableName.endsWith(";")) {
+			aVariableName = aVariableName.substring(0, aVariableName.length() - 1);
+		}
 		variableName = aVariableName;
 		operators = OMPSNodeUtils.operatorsIn(typeName);
 		operators.addAll(OMPSNodeUtils.operatorsIn(typeName));

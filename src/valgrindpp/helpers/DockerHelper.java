@@ -3,8 +3,8 @@ package valgrindpp.helpers;
 public class DockerHelper {
 	public static final String IMAGE_NAME = "nalingaddis/valgrind";
 	public static final String CONTAINER_NAME = "grader-container";
-	public static final String DOCKER_PATH = "/usr/local/bin/docker";
-	
+	//public static final String DOCKER_PATH = "/usr/local/bin/docker";
+	public static final String DOCKER_PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe";	
 	public static int startContainer() throws Exception {
 		return createContainer(System.getProperty("user.dir"));
 	}

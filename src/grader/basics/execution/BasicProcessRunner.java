@@ -455,6 +455,7 @@ public class BasicProcessRunner implements Runner {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+		BasicLanguageDependencyManager.getMainClassFinder().runPreTeamCommands(aProcessTeam, runner, anOutputBasedInputGenerator);
 		for (String aProcess : processes) {
 //			List<String> startTags = executionSpecification
 //					.getStartTags(aProcess);
@@ -515,6 +516,8 @@ public class BasicProcessRunner implements Runner {
 		}
 		waitForDynamicProcesses();
 		waitForStartedProcesses();
+		BasicLanguageDependencyManager.getMainClassFinder().runPostTeamCommands(aProcessTeam, runner, anOutputBasedInputGenerator);
+
 //		terminateTeam();
 //		waitForPortsOfTerminatedProcessesToBeReleased();
 //		releaseTeamLocks();
@@ -831,6 +834,7 @@ public class BasicProcessRunner implements Runner {
 			if (anOnlyProcess)
 			runner.start();
 
+			BasicLanguageDependencyManager.getMainClassFinder().runPreIndividualCommand(runner, anOutputBasedInputGenerator, aCommand, input, args, timeout, aProcessName, anOnlyProcess);
 
 			String classPath = getClassPath();
 			
@@ -1065,6 +1069,8 @@ public class BasicProcessRunner implements Runner {
 			runner.end();
 		}
 		// return runner;
+		BasicLanguageDependencyManager.getMainClassFinder().runPostIndividualCommand(runner, anOutputBasedInputGenerator, aCommand, input, args, timeout, aProcessName, anOnlyProcess);
+
 		return process;
 	}
 	

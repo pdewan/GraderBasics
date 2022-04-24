@@ -126,7 +126,8 @@ public class AnAssignmentSNode extends AnSNode implements AssignmentSNode {
 		expressionSNode.setParent(this);
 		DeclarationSNode aDeclarationSNode = OMPSNodeUtils.getDeclarationOfAssignedVariable(this, this);
 		if (aDeclarationSNode == null) {
-			System.err.println("Null declaration node for assignment:" + this);
+			System.out.println("Null declaration node for assignment:" + this);
+			return;
 		}
 		aDeclarationSNode.getAssignmentsToDeclaredVariable().add(this);
 		setLhsFirstIdentifierDeclaration(aDeclarationSNode);

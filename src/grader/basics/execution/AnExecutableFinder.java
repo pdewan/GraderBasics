@@ -10,8 +10,12 @@ import java.util.List;
 //import framework.project.Project;
 import java.util.Map;
 
+import grader.basics.project.Project;
+
 public class AnExecutableFinder extends ACommandGenerator implements CommandGenerator {
 	public static final String EXECUTABLE_SUFFIX = ".exe";
+	public static final String EXECUTABLE_SUFFIX_2 = ".out";
+
 	public static final String[] DEFAULT_EXECUTABLE_COMMAND_ARRAY = {
 			"{buildFolder}\\{entryPoint}", "{args}"
 	};
@@ -35,7 +39,7 @@ public class AnExecutableFinder extends ACommandGenerator implements CommandGene
     	String aMainFile = null;
         for ( File child:binaryChildren) {
         	String aChildName = child.getName();
-        	if (aChildName.endsWith(EXECUTABLE_SUFFIX)) {
+        	if (aChildName.endsWith(EXECUTABLE_SUFFIX) || aChildName.endsWith(EXECUTABLE_SUFFIX_2)) {
         		if (aSpecifiedMainClass != null && aChildName.contains(aSpecifiedMainClass)) {
         			aMainFile = aChildName;
         			retVal.put(BasicProcessRunner.MAIN_ENTRY_POINT, aChildName);
@@ -132,7 +136,7 @@ public class AnExecutableFinder extends ACommandGenerator implements CommandGene
 	public void setDefaultCommand(List<String> aCommand) {
 		defaultCommand = aCommand;
 	}
-
+	
 
 //	@Override
 //	public Class mainClass(RootCodeFolder aRootCodeFolder,

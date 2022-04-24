@@ -54,15 +54,24 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		}
 	}
 
-	public static DeclarationSNode getDeclarationSNode(int aLineNumber, String aString) {
+	public static DeclarationSNode[] getDeclarationSNode(int aLineNumber, String aString) {
 		String[] aTokens = aString.split(" ");
-		return new ADeclarationSNode(aLineNumber, aTokens[0], aTokens[1]);
+		DeclarationSNode[] retVal = new DeclarationSNode[aTokens.length - 1];
+		for (int i = 1; i < aTokens.length; i++) {
+			retVal[i-1] = new ADeclarationSNode(aLineNumber, aTokens[0], aTokens[i]);
+		}
+		return retVal;
+		
+		//return new ADeclarationSNode(aLineNumber, aTokens[0], aTokens[1]);
 	}
 
 	public static DeclaringAssignmentSNode getDeclaringAssignmentSNode(int aLineNumber, String aString) {
 		String[] anLHSAndRHS = aString.split("=");
 		String[] aTypeAndVariable = anLHSAndRHS[0].split(" ");
-		return new ADeclaringAssignmentSNode(aLineNumber, aTypeAndVariable[0], aTypeAndVariable[1], anLHSAndRHS[1]);
+//		return new ADeclaringAssignmentSNode(aLineNumber, aTypeAndVariable[0], aTypeAndVariable[1], anLHSAndRHS[1]);
+		// may have a * at the start which we are ignoring
+		return new ADeclaringAssignmentSNode(aLineNumber, aTypeAndVariable[aTypeAndVariable.length - 2], aTypeAndVariable[aTypeAndVariable.length - 1], anLHSAndRHS[1]);
+
 	}
 	public static ConstDeclarationSNode getConstDeclarationSNode(int aLineNumber, String aString) {
 		String anAssignmentString = aString.substring(CONST.length()).trim();
@@ -72,7 +81,9 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	}
 
 	public static boolean isDeclaringAssignment(String aFileLine) {
-		return startsWithTypeName(aFileLine) && aFileLine.contains("=");
+		return (startsWithTypeName(aFileLine) ||startsWithPointerAndTypeName(aFileLine))
+				
+				&& aFileLine.contains("=");
 	}
 	public static boolean isConstDeclaration(String aFileLine) {
 		return aFileLine.startsWith(CONST);
@@ -253,7 +264,15 @@ public class OMPSNodeUtils extends OpenMPUtils {
 			} else if (isAssignment(aFileLine)) {
 				aNewLeafNode = getAssignmentSNode(i, aFileLine);
 			} else if (isVariableDeclaration(aFileLine)) {
-				aNewLeafNode = getDeclarationSNode(i, aFileLine);
+				DeclarationSNode[] aDeclarations = getDeclarationSNode(i, aFileLine);
+				for (DeclarationSNode aNode:aDeclarations) {
+					if (previousHeaderNode != null) {
+						aNode.setParent(previousHeaderNode);
+					} else {
+						aNode.setParent(anSNodes.peek());
+					}
+				}
+				continue;
 			} else {
 				List<MethodCall> aCalls = callsIn(i, aFileLine, null); // parent will be assigned below
 				if (aCalls != null && aCalls.size() == 1) {
@@ -460,6 +479,11 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	public static List<String> identifiersIn(String aString) {
 		if (aString == null)
 			return null;
+		boolean hasStar = false;
+		if (aString.startsWith("*")) {
+			aString = aString.substring(1).trim(); //we have no memory of it being a pointer
+			
+		}
 //		Pattern mypattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
 //		Matcher mymatcher = mypattern.matcher(aString);
 		Matcher mymatcher = identifierPattern.matcher(aString);
@@ -1036,6 +1060,7 @@ public class OMPSNodeUtils extends OpenMPUtils {
 		for (String aFileName:aFileNameToContents.keySet()) {
 			StringBuffer aFileContents = aFileNameToContents.get(aFileName);
 //			List<OpenMPPragma> anOpenMPPragmas = OpenMPUtils.getOpemMPPragmas(aFileContents);
+			System.out.println("Processing file:" + aFileName);
 			RootOfFileSNode anSNode = OMPSNodeUtils.getSNode(aFileName, aFileContents);
 			retVal.getFileNameToSNode().put(aFileName, anSNode);
 			anSNode.setParent(retVal);
@@ -1147,10 +1172,24 @@ public class OMPSNodeUtils extends OpenMPUtils {
 //			anIndirectAssignments.addAll(anAliasAssignments);
 			for (AssignmentSNode aDirectAssignment:aDirectAssignments) {
 				List<String> aVariableIdentifiers = aDirectAssignment.getRhsVariableIdentifiers();
-				
 				for (String aVariableIdentifier:aVariableIdentifiers) {
 					DeclarationSNode aDependeeDeclarationSNode = getDeclarationOfVariableIdentifier(aDirectAssignment, aVariableIdentifier);
 					if (aDependeeDeclarationSNode == null) {
+						if (typeNamesSet.contains(aVariableIdentifier)) {
+//							continue;
+							return;
+						}
+						if (aVariableIdentifier.equals("new")) {
+//							continue;
+							return;
+						}
+						int aCommentStart = aDirectAssignment.toString().indexOf("//");
+						if (aCommentStart != -1) {
+							int aVariableStart = aDirectAssignment.toString().indexOf(aVariableIdentifier + " ");
+							if (aVariableStart == -1 || aVariableStart > aCommentStart) {
+								continue;
+							}
+						}
 						System.err.println("Could not find declaration of:" + aVariableIdentifier + " referenced in:" + aDirectAssignment );
 						continue;
 					}

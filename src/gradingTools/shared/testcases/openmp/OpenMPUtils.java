@@ -1,9 +1,12 @@
 package gradingTools.shared.testcases.openmp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import gradingTools.shared.testcases.openmp.scannedTree.ADeclarationSNode;
@@ -28,6 +31,8 @@ public class OpenMPUtils {
 
 	protected static Map<String, OpenMPKeywordEnum> stringToOpenMPKeyword = new HashMap();
 	protected static String[] typeNames = {"void", "double", "float", "int", "short", "long" };
+	protected static Set<String> typeNamesSet = new HashSet(Arrays.asList(typeNames));
+
 	protected static String[] openMPCalls = { "omp_get_thread_num()", "omp_get_num_threads()" };
 	public static final String CONST = "const";
 
@@ -40,7 +45,7 @@ public class OpenMPUtils {
 //		return getSNode(aFileLines);
 //	}
 	public static boolean isCodeLine(String aLine) {
-		return !aLine.isEmpty() && !aLine.startsWith("//");
+		return !aLine.isEmpty() && !aLine.startsWith("//") && !aLine.trim().startsWith("* ");
 	}
 
 	public static boolean isBlockStart(String aLine) {
@@ -169,6 +174,15 @@ public class OpenMPUtils {
 			}
 		}
 		return false;
+	}
+	
+	public static boolean startsWithPointerAndTypeName(String aLine) {
+		if (aLine.startsWith("*")) {
+			String aNonPointerLine = aLine.substring(1).trim();
+			return startsWithTypeName(aNonPointerLine);
+		}
+		return false;
+		
 	}
 
 	public static List<OpenMPPragma> getOpenMPPragmas(String[] aFileLines) {

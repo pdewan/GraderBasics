@@ -126,6 +126,16 @@ public interface BasicExecutionSpecification {
 	String getNavigationKind();
 	boolean getSaveInteractiveSettings();
 	void setSaveInteractiveSettings(boolean newVal);
+	void setValgrindConfiguration(String newVal);
+	String getValgrindConfiguration();
+	String getValgrindConfigurationDirectory();
+	void setValgrindConfigurationDirectory(String newVal);
+	String getValgrindTraceFile();
+	void setValgrindTraceFile(String newVal);
+	String getValgrindTraceDirectory();
+	void setValgrindTraceDirectory(String newVal);
+	String getDockerProgramName();
+	void setDockerProgramName(String newVal);
 	
 	
 }

@@ -1,8 +1,12 @@
 package grader.basics.execution;
 
+import java.io.File;
 import java.util.List;
 
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.project.Project;
+import grader.basics.util.TimedProcess;
+import util.pipe.InputGenerator;
 
 public abstract class ACommandGenerator implements CommandGenerator{
 	protected List<String> defaultCommand;
@@ -39,5 +43,34 @@ public abstract class ACommandGenerator implements CommandGenerator{
 		defaultCommand = aCommand; 
 		
 	}
-
+	@Override
+	public  List<String> processedCommands(List<String> originalCommand, Project aProject, String aProcessName,
+			File aBuildFolder, String anEntryPoint, String anEntryTagTarget, String[] anArgs) {
+		return originalCommand;
+	}
+	@Override
+	public void  runPreIndividualCommand (RunningProject runner, InputGenerator anOutputBasedInputGenerator,
+			String[] aCommand, String input, String[] args, int timeout,
+			String aProcessName, boolean anOnlyProcess) throws NotRunnableException {
+		
+	}
+	@Override
+	public void  runPostIndividualCommand (RunningProject runner, InputGenerator anOutputBasedInputGenerator,
+			String[] aCommand, String input, String[] args, int timeout,
+			String aProcessName, boolean anOnlyProcess) throws NotRunnableException {
+		
+	}
+	@Override
+	public void  runPreTeamCommands (String aProcessTeam, RunningProject runner, InputGenerator anOutputBasedInputGenerator
+		
+			) throws NotRunnableException {
+		
+	}
+	@Override
+	public void  runPostTeamCommands (String aProcessTeam, RunningProject runner, InputGenerator anOutputBasedInputGenerator
+		
+			) throws NotRunnableException {
+		
+	}
+	
 }

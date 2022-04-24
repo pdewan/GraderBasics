@@ -688,6 +688,11 @@ public class BasicProject implements Project {
 
 	protected boolean cannotInitializeCheckstyle = false;
 	protected File checkstyleOutFolder = null;
+	
+	protected File valgrindTraceFolder = null;
+	protected File valgrindConfigurationFolder = null;
+
+
 
 //	boolean checkCheckstyle = true;
 	static boolean checkCheckstyleFolder = true;
@@ -759,6 +764,36 @@ public class BasicProject implements Project {
 		return checkstyleOutFolder;
 
 	}
+	public File getValgrindTraceFolder() {
+		if (valgrindTraceFolder == null) {
+			String aTraceFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindTraceDirectory();
+			if (aTraceFolder == null) {
+				aTraceFolder = "Logs/Valgrind";
+			}
+			valgrindTraceFolder = new File(getProjectFolder().getAbsoluteFile() + "/" + aTraceFolder);
+			if (!valgrindTraceFolder.exists()) {
+				valgrindTraceFolder.mkdir();
+			}
+		}
+		return valgrindTraceFolder;
+
+	}
+	public File getValgrindConfigurationFolder() {
+		if (valgrindConfigurationFolder == null) {
+			String aFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindConfigurationDirectory();
+			if (aFolder == null) {
+				aFolder = "Logs/Valgrind";
+			}
+			valgrindConfigurationFolder = new File(getProjectFolder().getAbsoluteFile() + "/" + aFolder);
+			if (!valgrindConfigurationFolder.exists()) {
+				valgrindConfigurationFolder.mkdir();
+			}
+		}
+		return valgrindConfigurationFolder;
+
+	}
+
+	
 
 	public static final String DEFAULT_CHECK_STYLE_FILE_PREFIX = "checks";
 
@@ -812,6 +847,10 @@ public class BasicProject implements Project {
 	}
 
 	protected String checkStyleFileName = null;
+	protected File valgrindTraceFile = null;
+
+	
+
 
 	public String getCheckStyleOutputFileName() {
 		if (cannotInitializeCheckstyle) {
@@ -875,6 +914,8 @@ public class BasicProject implements Project {
 	protected File getCheckStyleConfigurationDefaultFolder() {
 		return getCheckstyleOutFolder();
 	}
+	
+
 
 	public String findCheckstyleConfigurationParentFolder() {
 		String aDefaultFolder = getCheckStyleConfigurationDefaultFolder().getAbsolutePath();

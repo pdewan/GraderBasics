@@ -125,11 +125,31 @@ public class BasicStaticConfigurationUtils {
 	public static final String CHECK_STYLE_FILE = "checkStyleFile";
 	public static final String DEFAULT_CONFIGURATION_FILE = "checks.xml";
 	
+
+	
 	public static final String CHECK_STYLE_CONFIGURATION_DIRECTORY = "checkStyleDirectory";
 	public static final String DEFAULT_CONFIGURATION_DIRECTORY = null;
 	
+	
+	
 	public static final String CHECK_STYLE_OUTPUT_DIRECTORY = "checkStyleOutputDirectory";
 	public static final String DEFAULT_CHECKSTYLE_OUTPUT_DIRECTORY = null;
+	
+	public static final String VALGRIND_CONFIGURATION = "valgrindFile";
+	public static final String DEFAULT_VALGRIND_CONFIGURATION = "valgrindConfiguration";
+	
+
+	public static final String VALGRIND_CONFIGURATION_DIRECTORY = "valgrindDirectory";
+	public static final String DEFAULT_VALGRIND_CONFIGURATION_DRECTORY = null;
+	
+	public static final String VALGRIND_TRACE_FILE = "valgrindTraceFile";
+	public static final String DEFAULT_VALGRIND_TRACE_FILE = "ValgrindTrace.txt";
+	
+	public static final String VALGRIND_TRACE_DIRECTORY = "valgrindTraceDirectory";
+	public static final String DEFAULT_VALGRIND_TRACE_DIRECTORY = null;
+	
+	public static final String DOCKER_PROGRAM_NAME = "docker_program_name";
+	public static final String DEFAULT_DOCKER_PRORAM_NAME = "docker";
 
 	public static final String TRACING= "tracing";
 	public static final boolean DEFAULT_TRACING = true;
@@ -784,6 +804,7 @@ public class BasicStaticConfigurationUtils {
 			basicCommand = getBasicCommand(aProcessName);
 
 		}
+		
 		return getExecutionCommand(basicCommand, aProject, aProcessName, aBuildFolder, anEntryPoint, anEntryTagTarget,
 				anArgs);
 ////		List<String> retVal = new ArrayList(basicCommand.size());
@@ -890,6 +911,7 @@ public class BasicStaticConfigurationUtils {
 		replaceBuildFolder(retVal, aBuildFolder);
 		replaceSourceFiles(retVal);
 		replaceArgs(retVal, anArgs);
+		retVal = BasicLanguageDependencyManager.getMainClassFinder().processedCommands(retVal, aProject, aProcessName, aBuildFolder, anEntryPoint, anEntryTagTarget, anArgs);
 		return retVal.toArray(new String[0]);
 
 //		

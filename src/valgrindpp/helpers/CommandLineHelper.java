@@ -1,5 +1,6 @@
 package valgrindpp.helpers;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 
@@ -48,6 +49,12 @@ public class CommandLineHelper {
 	}
 	
 	public static int delete(Path filepath) throws Exception {
+		File aFile = filepath.toFile();
+		aFile.delete();
+		return 0;
+	}
+	
+	public static int deleteUsingRm(Path filepath) throws Exception {
 		String[] command = {
 				"rm",
 				"-f",
@@ -56,6 +63,7 @@ public class CommandLineHelper {
 		
 		return execute(command);
 	}
+	
 	
 	public static int deleteInDocker(Path filepath) throws Exception {
 		String[] command = {
