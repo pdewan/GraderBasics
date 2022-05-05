@@ -135,8 +135,11 @@ public class BasicStaticConfigurationUtils {
 	public static final String CHECK_STYLE_OUTPUT_DIRECTORY = "checkStyleOutputDirectory";
 	public static final String DEFAULT_CHECKSTYLE_OUTPUT_DIRECTORY = null;
 	
-	public static final String VALGRIND_CONFIGURATION = "valgrindFile";
-	public static final String DEFAULT_VALGRIND_CONFIGURATION = "valgrindConfiguration";
+	public static final String VALGRIND_IMAGE = "valgrindImage";
+	public static final String DEFAULT_VALGRIND_IMAGE = "nalingaddis/valgrind";
+	
+	public static final String VALGRIND_CONFIGURATION = "valgrindConfiguration";
+	public static final String DEFAULT_VALGRIND_CONFIGURATION = null;
 	
 
 	public static final String VALGRIND_CONFIGURATION_DIRECTORY = "valgrindDirectory";

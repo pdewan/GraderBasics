@@ -920,6 +920,16 @@ protected String requirementsLocation = null;
 		
 	}
 	@Override
+	public String getValgrindImage() {
+		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_IMAGE, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_IMAGE);
+	}
+	@Override
+	public void setValgrindImage(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_IMAGE, newVal);
+
+		
+	}
+	@Override
 	public String getValgrindTraceFile() {
 		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_TRACE_FILE, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_TRACE_FILE);
 	}

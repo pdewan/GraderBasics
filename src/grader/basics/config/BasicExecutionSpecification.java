@@ -136,6 +136,8 @@ public interface BasicExecutionSpecification {
 	void setValgrindTraceDirectory(String newVal);
 	String getDockerProgramName();
 	void setDockerProgramName(String newVal);
+	String getValgrindImage();
+	void setValgrindImage(String newVal);
 	
 	
 }
