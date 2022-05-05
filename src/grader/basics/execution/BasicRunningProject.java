@@ -141,6 +141,10 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
         outputSorter.start();
     }
     Thread outputSorter;
+    @Override
+    public Project getBasicProject() {
+    	return project;
+    }
     
     protected void maybeProcessProjectWrappper(Project aProject) {
 //    	if (aProject != null && aProject instanceof ProjectWrapper) {

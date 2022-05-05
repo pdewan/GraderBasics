@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.util.List;
 import java.util.Map;
 
+import grader.basics.project.Project;
 import grader.basics.util.TimedProcess;
 import gradingTools.shared.testcases.utils.LinesMatcher;
 
@@ -128,6 +129,8 @@ public interface RunningProject {
 
 	Map<String, LinesMatcher> getProcessLinesMatcher();
 	LinesMatcher getLinesMatcher();
+
+	Project getBasicProject();
 
 	
 

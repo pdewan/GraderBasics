@@ -1,6 +1,6 @@
 package valgrindpp.helpers;
 
-public class DockerHelper {
+public class GraderDockerHelper {
 	public static final String IMAGE_NAME = "nalingaddis/valgrind";
 	public static final String CONTAINER_NAME = "grader-container";
 	//public static final String DOCKER_PATH = "/usr/local/bin/docker";
@@ -8,28 +8,28 @@ public class DockerHelper {
 	public static int startContainer() throws Exception {
 		return createContainer(System.getProperty("user.dir"));
 	}
-	
-	protected String dockerPath() {
+	public static String dockerPath() {
 		return DOCKER_PATH;
 	}
-	protected String containerName() {
+	public static String containerName() {
 		return CONTAINER_NAME;
 	}
-	protected String imageName() {
+	public static String imageName() {
 		return IMAGE_NAME;
 	}
 	
+	
 	public static int createContainer(String mountDir) throws Exception {
 		String[] command = new String[]{
-				DOCKER_PATH, 
+				dockerPath(), 
 				"run",
 				"-it",
 				"-d",
 				"--mount", 
 				"type=bind,src="+mountDir+",target=/home",
 				"--name",
-				CONTAINER_NAME,
-				IMAGE_NAME
+				containerName(),
+				imageName()
 		};
 		
 		return CommandLineHelper.execute(command);
@@ -37,9 +37,9 @@ public class DockerHelper {
 	
 	public static int stopContainer() throws Exception {
 		String[] command = {
-				DOCKER_PATH,
+				dockerPath(),
 				"stop",
-				CONTAINER_NAME
+				containerName()
 		};
 		
 		return CommandLineHelper.execute(command);
@@ -47,10 +47,10 @@ public class DockerHelper {
 	
 	public static int deleteContainer() throws Exception {
 		String[] command = {
-				DOCKER_PATH,
+				dockerPath(),
 				"rm",
 				"-f",
-				CONTAINER_NAME
+				containerName()
 		};
 		
 		return CommandLineHelper.execute(command);
