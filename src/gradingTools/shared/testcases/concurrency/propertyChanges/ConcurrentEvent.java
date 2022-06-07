@@ -9,6 +9,7 @@ public interface ConcurrentEvent<EventType> {
 	 EventType getEvent();
 	 int getSequenceNumber();
 	 Thread getThread();
+	 String toMatchableText();
 	
 
 }

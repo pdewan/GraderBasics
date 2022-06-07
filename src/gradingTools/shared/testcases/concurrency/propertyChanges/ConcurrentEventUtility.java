@@ -176,7 +176,7 @@ public class ConcurrentEventUtility {
 			return anOriginalEventList;
 		}
 		Selector<ConcurrentPropertyChange> aSelector = new ParameterizedPropertyChangeSelector(aMatchedComponents);
-		List<ConcurrentPropertyChange> retValList = new ArrayList<ConcurrentPropertyChange>();
+//		List<ConcurrentPropertyChange> retValList = new ArrayList<ConcurrentPropertyChange>();
 		return selectEvents(anOriginalEventList, aSelector);
 	}
 
@@ -241,6 +241,29 @@ public class ConcurrentEventUtility {
 			Tracer.info(ConcurrentEventUtility.class, Arrays.toString(aMatchedComponents));
 		}
     }
+    
+    public static String toMatchableText(Object[] aSpecification) {
+    	return new BasicConcurrentPropertyChange(aSpecification).toMatchableText();
+    }
+    static StringBuffer stringBuffer = new StringBuffer();
+
+    
+    public static String toMatchableText(Object[][] aSpecifications, int aStartIndex) {
+
+    	stringBuffer.setLength(0);
+    	for (int i = aStartIndex; i < aSpecifications.length; i++) {
+    		stringBuffer.append(toMatchableText(aSpecifications[i]));
+    	}
+    	return stringBuffer.toString();
+    }
+//    public static String toMatchableText(ConcurrentPropertyChange[] anOriginalEvents, int aStartIndex) {
+//
+//    	stringBuffer.setLength(0);
+//    	
+//    		stringBuffer.append(anEvent.toMatchableText());
+//    	}
+//    	return stringBuffer.toString();
+//    }
 
 	
     public static void trace(ConcurrentPropertyChange[] anOriginalEvents, Object[][] aMatchedComponentsList) {
@@ -299,19 +322,19 @@ public class ConcurrentEventUtility {
 	
 	public static int numMatches(ConcurrentPropertyChange[] anOriginalEvents,
 
-			Object[][] aMatchedComponentsList) {
+			Object[][] anOredMatchedComponents) {
 		Tracer.info(ConcurrentEventUtility.class, "Matching following events:");
 		trace(anOriginalEvents);
 
 		int aNumMatches = 0;
 		int aStartIndex = 0;
 		for (; true; aNumMatches++) {
-			List<Integer> anIndices = indicesOf(anOriginalEvents, aMatchedComponentsList, aStartIndex);
+			List<Integer> anIndices = indicesOf(anOriginalEvents, anOredMatchedComponents, aStartIndex);
 			int aNumMatchedComponents = anIndices.size();
-			if (anIndices == null || aNumMatchedComponents != aMatchedComponentsList.length) {
+			if (anIndices == null || aNumMatchedComponents != anOredMatchedComponents.length) {
 				if (aNumMatchedComponents > 0) {
 					Tracer.info(ConcurrentEventUtility.class, "Unmatched specification at index " + aNumMatchedComponents + " = " +
-							Arrays.toString(aMatchedComponentsList[anIndices.size()]));;
+							Arrays.toString(anOredMatchedComponents[anIndices.size()]));;
 				}
 				break;
 			} 
@@ -343,10 +366,51 @@ public class ConcurrentEventUtility {
 //				Arrays.toString(anOriginalEvents) + " does not match " + Arrays.toString(aMatchedComponentsList));
 //		return false;
 	}
+	public static int indexOf(ConcurrentPropertyChange[] anOriginalEvents, 
+			Selector<ConcurrentPropertyChange>[] aSelectorSequence, int aStartIndex) {
+		
+		for (int aPropertyChangeIndex = aStartIndex; 
+				aPropertyChangeIndex < anOriginalEvents.length; 
+				aPropertyChangeIndex++) {
+			if (startsWith(anOriginalEvents, aSelectorSequence, aPropertyChangeIndex)) {
+				return aPropertyChangeIndex;
+			}
+			 
+		}
+		return -1;
+
+	}
+	public static boolean startsWith(ConcurrentPropertyChange[] anOriginalEvents, 
+			Selector<ConcurrentPropertyChange>[] aSelectorSequence, int aStartIndex) {
+		
+		if (anOriginalEvents.length - aStartIndex < aSelectorSequence.length) {
+			return false;
+		}
+		for (int aSelectorIndex = 0; aSelectorIndex < aSelectorSequence.length; aSelectorIndex++) {
+			Selector<ConcurrentPropertyChange> aSelector = aSelectorSequence[aSelectorIndex];
+			if (!aSelector.selects(anOriginalEvents[aStartIndex + aSelectorIndex])) return false;
+		}
+		return true;
+	}
+	
+	public static boolean startsWith(ConcurrentPropertyChange[] anOriginalEvents, 
+			Object[][] aSelectorSequence, int aStartIndex) {
+		
+		return startsWith(anOriginalEvents, createSelectors(aSelectorSequence), aStartIndex);
+	}
+	
+	public static Selector<ConcurrentPropertyChange>[] createSelectors( 
+			Object[][] aSelectorSequence) {
+		ParameterizedPropertyChangeSelector[] aSelectors = new ParameterizedPropertyChangeSelector[aSelectorSequence.length];
+		for (int i = 0; i < aSelectors.length; i++ ) {
+			aSelectors[i] = new ParameterizedPropertyChangeSelector(aSelectorSequence[i]);
+		}
+		return aSelectors;
+	}
 
 	public static List<Integer> indicesOf(ConcurrentPropertyChange[] anOriginalEvents,
 
-			Object[][] aMatchedComponentsList, int aStartIndex) {
+			Object[][] anOredMatchedComponents, int aStartIndex) {
 		List<Integer> retVal = new ArrayList();
 
 		if (anOriginalEvents == null) {
@@ -355,7 +419,7 @@ public class ConcurrentEventUtility {
 		}
 
 		int aMatchIndex = 0;
-		Selector aSelector = createSelector(aMatchedComponentsList, aMatchIndex);
+		Selector aSelector = createSelector(anOredMatchedComponents, aMatchIndex);
 
 //		for (ConcurrentPropertyChange anEvent : anOriginalEvents) {
 		for (int anEventIndex = aStartIndex; anEventIndex < anOriginalEvents.length; anEventIndex++) {
@@ -366,7 +430,7 @@ public class ConcurrentEventUtility {
 			if (aSelector.selects(anEvent)) {
 				retVal.add(anEventIndex);
 				aMatchIndex++;
-				aSelector = createSelector(aMatchedComponentsList, aMatchIndex);
+				aSelector = createSelector(anOredMatchedComponents, aMatchIndex);
 			}
 		}
 //		System.err.println(

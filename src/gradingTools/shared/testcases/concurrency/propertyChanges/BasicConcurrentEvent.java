@@ -22,6 +22,7 @@ public class BasicConcurrentEvent<EventType> implements ConcurrentEvent<EventTyp
 		startTime = aStartTime;
 				
 	}
+	
 	public BasicConcurrentEvent (
 			ConcurrentEvent<EventType> anOriginalEvent) {
 		sequenceNumber = anOriginalEvent.getSequenceNumber();
@@ -70,5 +71,11 @@ public class BasicConcurrentEvent<EventType> implements ConcurrentEvent<EventTyp
 			event;
 			
 			
+	}
+	@Override
+	public String toMatchableText() {
+		// TODO Auto-generated method stub
+		return ":" + getThread().getName() + "," +
+		event + ":";
 	}
 }
