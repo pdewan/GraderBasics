@@ -59,9 +59,13 @@ public class RunningProjectUtils extends BasicProjectExecution{
 		Integer aTimeout = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getProcessTimeOut();
 		return runProject(project, BasicProjectExecution.DEFAULT_INPUT_SEPARATOR, aTimeout, anOutputBasedInputGenerator, inputs);
 	}
+	
+	// ambiguous
 	public static RunningProject runProject(Project project, String inputSeparator, int timeout, String... inputs) throws NotRunnableException {
-		return runProject(project, timeout, null, inputs);
+		return runProject(project, timeout, (InputGenerator) null, inputs);
 	}
+	
+	
 	
 //	public static String toString(String inputSeparator, String... inputs) {
 //		String allInputsStr = "";
@@ -89,6 +93,20 @@ public class RunningProjectUtils extends BasicProjectExecution{
 //		}
 		return project.launch(anOutputBasedInputGenerator, toString(inputSeparator, inputs), timeout);
 	}
+	// new method added with some null casts, beware
+	public static RunningProject runProject(Project project,   int timeout, String[] anArgs, String... anInputs 
+			) throws NotRunnableException {
+//		String allInputsStr = "";
+//		for (int i = 0; i < inputs.length; i++) {
+//			if (i > 0) {
+//				allInputsStr += inputSeparator;
+//			}
+//			allInputsStr += inputs[i];
+//		}
+		return project.launch( toString( BasicProjectExecution.DEFAULT_INPUT_SEPARATOR, anInputs), anArgs, timeout);
+	}
+//	RunningProject launch(String input, String[] anArgs, int timeout)
+//			throws NotRunnableException;
 	public static RunningProject runProject(Project project,  int timeout, InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput) throws NotRunnableException {
 //		String allInputsStr = "";
 //		for (int i = 0; i < inputs.length; i++) {
@@ -107,7 +125,7 @@ public class RunningProjectUtils extends BasicProjectExecution{
 //			}
 //			allInputsStr += inputs[i];
 //		}
-		return project.launch(null, aProcessToInput, timeout);
+		return project.launch((InputGenerator) null, aProcessToInput, timeout);
 	}
 
 }

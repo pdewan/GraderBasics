@@ -592,7 +592,9 @@ public class BasicProjectClassesManager implements ClassesManager {
         for (ClassDescription description : classDescriptions) {
             if (!className.contains("[") && 
             		description.getJavaClass().getCanonicalName().
-            		matches(BasicProjectIntrospection.toRegex(className))) {
+//            		matches(BasicProjectIntrospection.toRegex(className))) {
+        		matches(className)) {
+
                 classes.add(description);
             }
         }

@@ -8,11 +8,11 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 
-public abstract class TaggedClassTest extends NamedClassTest
+public abstract class NameMatchClassTest extends NamedClassTest
 //PassFailJUnitTestCase 
 {
 	protected Class findClass(String aTag) {
-		return BasicProjectIntrospection.findClassByTags( aTag);
+		 return BasicProjectIntrospection.findClassByNameMatch(CurrentProjectHolder.getOrCreateCurrentProject(), aTag);
 	}
 //	protected Class taggedClass;
 //	protected abstract String tag();

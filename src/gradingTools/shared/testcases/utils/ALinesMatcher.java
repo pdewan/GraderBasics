@@ -19,7 +19,7 @@ public class ALinesMatcher implements LinesMatcher {
 		
 	}
 	public ALinesMatcher(String[] aLines) {
-		lines =aLines;;
+		lines =aLines;
 		init(lines);
 		
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.RunningProject;
 //import grader.basics.execution.RunningProject;
 import grader.basics.junit.BasicJUnitUtils;
@@ -17,7 +18,9 @@ import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleSpecificWarningTestCase;
+import gradingTools.shared.testcases.NamedClassTest;
 import gradingTools.shared.testcases.utils.ABufferingTestInputGenerator;
+import gradingTools.utils.RunningProjectUtils;
 import junit.framework.TestCase;
 import util.trace.Tracer;
 
@@ -288,5 +291,26 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
 //		testing = true;
 //		Assert.assertTrue(aMessage + NotesAndScore.PERCENTAGE_MARKER + fractionComplete, aCheck);
+	}
+	
+	protected void setEntryPoint (Project aProject, Class aClassProvided) {
+//		NamedClassTest aNamedClassTest = (NamedClassTest) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aClassProvided);
+//		Class aTaggedClass = aNamedClassTest.getTaggedClass();
+//		NamedClassTest aNamedClassTest = (NamedClassTest) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aClassProvided);
+//		Class aTaggedClass = aNamedClassTest.getTaggedClass();
+		Class aTaggedClass = getTaggedClass(aProject, aClassProvided);
+		if (aTaggedClass == null) {
+//			System.err.println("Cannot run test, no main class");
+			throw new NotGradableException("Cannot run test, no main class");
+			
+		}
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setEntryPoint(aTaggedClass.getName());
+		
+	}
+	protected Class getTaggedClass (Project aProject, Class aClassProvided) {
+		NamedClassTest aNamedClassTest = (NamedClassTest) JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(aClassProvided);
+		Class aTaggedClass = aNamedClassTest.getTaggedClass();
+		return aTaggedClass;
+		
 	}
 }

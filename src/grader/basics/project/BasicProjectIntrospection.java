@@ -1258,7 +1258,11 @@ public class BasicProjectIntrospection {
 
 	public static Class findClassByNameMatch(Project aProject, String aName) {
 		return findClass(aProject, (String) null, (String) null,
-				toRegex(aName), null);
+//				toRegex(aName), null);
+		aName, null);
+
+		
+		
 		// return findClass(aProject, null, aName, toRegex(aName),
 		// toRegex(aName) );
 		// return findClass(aProject, aName, aName, aName, aName );

@@ -484,7 +484,7 @@ public class BasicRunningProject implements ProcessInputListener, RunningProject
 	public void appendProcessOutput(String aProcess, String newVal) {
     	String aProcessName = aProcess == null?BasicProcessRunner.MAIN_ENTRY_POINT:aProcess;
 //		System.out.println("Received output from: " + aProcessName + ": " + newVal);
-
+    	System.out.println(newVal);
     	if (BasicRunningProject.isEchoOutput())
     		Tracer.info(this, System.currentTimeMillis() + ": Received output from " + aProcessName + ": " + newVal);
     	allReceivedOutputAndErrorLines.add(newVal); // we do not resort errors, so mix them with received output
