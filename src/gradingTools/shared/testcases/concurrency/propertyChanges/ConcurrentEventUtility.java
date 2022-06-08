@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import util.models.PropertyListenerRegisterer;
 import util.trace.Tracer;
 
@@ -329,7 +331,7 @@ public class ConcurrentEventUtility {
 		int aNumMatches = 0;
 		int aStartIndex = 0;
 		for (; true; aNumMatches++) {
-			List<Integer> anIndices = indicesOf(anOriginalEvents, anOredMatchedComponents, aStartIndex);
+			List<Integer> anIndices = indicesOfOredSelectors(anOriginalEvents, anOredMatchedComponents, aStartIndex);
 			int aNumMatchedComponents = anIndices.size();
 			if (anIndices == null || aNumMatchedComponents != anOredMatchedComponents.length) {
 				if (aNumMatchedComponents > 0) {
@@ -378,7 +380,62 @@ public class ConcurrentEventUtility {
 			 
 		}
 		return -1;
+	}
+	public static List<Integer> indicesOf(ConcurrentPropertyChange[] anOriginalEvents, 
+			Selector<ConcurrentPropertyChange>[] aSelectorSequence, int aStartIndex) {
+		List<Integer> retVal = new ArrayList();
+		int aNextStartIndex = aStartIndex;
+		while (true) {
+			aNextStartIndex = indexOf(anOriginalEvents, aSelectorSequence, aNextStartIndex);
+			if (aNextStartIndex < 0) {
+				return retVal;
+			}
+			aNextStartIndex += aSelectorSequence.length;
+		}
+	}
+	public static List<Integer> indicesOf(ConcurrentPropertyChange[] anOriginalEvents, 
+			Object[][] aSelectorSequence, int aStartIndex) {
+		return indicesOf(anOriginalEvents, createSelectors(aSelectorSequence), aStartIndex);
+	}
+	public static List<Long> interEventTimeDifferences(ConcurrentPropertyChange[] anOriginalEvents, int from) {
+		List<Long> retVal = new ArrayList();
+		for (int aStartIndex = from + 1; aStartIndex < anOriginalEvents.length; aStartIndex++) {
+			long aTimeDifference = anOriginalEvents[aStartIndex].getStartTime() - 
+					anOriginalEvents[aStartIndex -1].getStartTime();
+			retVal.add(aTimeDifference);
+		}
+		return retVal;
+	}
+	public static List<Long> interEventPairTimeDifferences(ConcurrentPropertyChange[] anOriginalEvents, int from) {
+		List<Long> retVal = new ArrayList();
+		for (int aStartIndex = from + 4; aStartIndex < anOriginalEvents.length; aStartIndex = aStartIndex + 4) {
+			long aTimeDifference = anOriginalEvents[aStartIndex -1].getStartTime() - 
+					anOriginalEvents[aStartIndex -3].getStartTime();
+			retVal.add(aTimeDifference);
+		}
+		
+		return retVal;
+	}
+	public static List<Long> intraEventPairTimeDifferences(ConcurrentPropertyChange[] anOriginalEvents, int from) {
+		List<Long> retVal = new ArrayList();
+		for (int aStartIndex = from + 1; aStartIndex < anOriginalEvents.length; aStartIndex = aStartIndex + 2) {
+			long aTimeDifference = anOriginalEvents[aStartIndex].getStartTime() - 
+					anOriginalEvents[aStartIndex-1].getStartTime();
+			retVal.add(aTimeDifference);
+		}
+		return retVal;
+	}
+	
+	public static DescriptiveStatistics computeDescriptiveStatistics(List<Long> aValues) {
+		
+		// Get a DescriptiveStatistics instance
+	DescriptiveStatistics stats = new DescriptiveStatistics();
 
+	// Add the data from the array
+	for( int i = 0; i < aValues.size(); i++) {
+	        stats.addValue(aValues.get(i));
+	}
+	return stats;
 	}
 	public static boolean startsWith(ConcurrentPropertyChange[] anOriginalEvents, 
 			Selector<ConcurrentPropertyChange>[] aSelectorSequence, int aStartIndex) {
@@ -408,7 +465,7 @@ public class ConcurrentEventUtility {
 		return aSelectors;
 	}
 
-	public static List<Integer> indicesOf(ConcurrentPropertyChange[] anOriginalEvents,
+	public static List<Integer> indicesOfOredSelectors(ConcurrentPropertyChange[] anOriginalEvents,
 
 			Object[][] anOredMatchedComponents, int aStartIndex) {
 		List<Integer> retVal = new ArrayList();
