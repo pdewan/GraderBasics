@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 
 import gradingTools.shared.testcases.utils.ALinesMatcher;
 import gradingTools.shared.testcases.utils.LinesMatcher;
+import util.trace.Tracer;
 
 public class ResultingOutErr {
 	public final String out;
@@ -69,12 +70,12 @@ public class ResultingOutErr {
 	}
 	protected Future future;
 	
-	public static boolean isTrace(String aString) {
-		return aString.length() > 4 && 
-				aString.charAt(1) == '*' &&
-				aString.charAt(2) == '*' &&
-				aString.charAt(3) == '*';
-	}
+//	public static boolean isTrace(String aString) {
+//		return aString.length() > 4 && 
+//				aString.charAt(1) == '*' &&
+//				aString.charAt(2) == '*' &&
+//				aString.charAt(3) == '*';
+//	}
 	
 	public List<String> getOutputLinesList() {
 		if (outputLinesList == null) {
@@ -83,7 +84,7 @@ public class ResultingOutErr {
 			if (out != null && !out.isEmpty()) {
 				String[] aRawLines = out.split("\n");
 				for (String aRawLine:aRawLines) {
-					if (isTrace(aRawLine)) continue;
+					if (Tracer.isTrace(aRawLine)) continue;
  					outputLinesList.add(aRawLine);
 				}
 			}

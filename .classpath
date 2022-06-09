@@ -2,15 +2,28 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_181"/>
-	<classpathentry kind="lib" path="lib/commons-configuration-1.9.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-configuration-1.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/diff_match_patch-current.jar"/>
-	<classpathentry kind="lib" path="lib/opencsv-2.3.jar"/>
-	<classpathentry kind="lib" path="lib/oeall22.jar" sourcepath="/util/src"/>
-	<classpathentry kind="lib" path="lib/checkstyle-8.33-all.jar"/>
-	<classpathentry kind="lib" path="lib/UNCChecks-8.jar" sourcepath="/UNC_Checkstyle_8"/>
-	<classpathentry kind="lib" path="lib/dayton.ellwanger.Hermes.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/opencsv-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/oeall22.jar" sourcepath="/util/src"/>
+	<classpathentry exported="true" kind="lib" path="lib/checkstyle-8.33-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/UNCChecks-8.jar" sourcepath="/UNC_Checkstyle_8"/>
+	<classpathentry exported="true" kind="lib" path="lib/dayton.ellwanger.Hermes.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-10.0.2">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.core.commands_3.9.200.v20180827-1727.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.equinox.common_3.10.100.v20180827-1235.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.jdt.core_3.15.0.v20180905-0317.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.jface.text_3.14.0.v20180824-1140.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.swt.win32.win32.x86_64_3.108.0.v20180904-1901.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.text_3.7.0.v20180822-1511.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.ui.workbench_3.112.0.v20180906-1121.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-math3-3.6.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -14,12 +14,21 @@ public abstract class NamedClassTest extends PassFailJUnitTestCase {
 	public Class getTaggedClass() {
 		return taggedClass;
 	}
-	protected Class findClass(String aTag) {
+	protected Class findClassByName(String aTag) {
 		try {
 			return Class.forName(aTag);
 		} catch (ClassNotFoundException e) {
 			return null;
 		}
+//		return BasicProjectIntrospection.findClassByNameMatch(CurrentProjectHolder.getOrCreateCurrentProject(), aTag);
+	}
+	protected Class findClass(String aTag) {
+		return findClassByName(aTag);
+//		try {
+//			return Class.forName(aTag);
+//		} catch (ClassNotFoundException e) {
+//			return null;
+//		}
 //		return BasicProjectIntrospection.findClassByNameMatch(CurrentProjectHolder.getOrCreateCurrentProject(), aTag);
 	}
 	@Override

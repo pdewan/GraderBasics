@@ -8,16 +8,21 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 
-public abstract class TaggedClassTest extends NamedClassTest
+public abstract class TaggedOrNamedClassTest extends TaggedClassTest
 //PassFailJUnitTestCase 
 {
-	protected Class findClassByTag(String aTag) {
-		return BasicProjectIntrospection.findClassByTags( aTag);
-	}
+//	protected Class findClassByTag(String aTag) {
+//		return BasicProjectIntrospection.findClassByTags( aTag);
+//	}
 	
 	@Override
 	protected Class findClass(String aTag) {
+		Class retVal = findClassByName (aTag);
+		if (retVal != null) {
+			return retVal;
+		}
 		return findClassByTag(aTag);
+
 	}
 
 }

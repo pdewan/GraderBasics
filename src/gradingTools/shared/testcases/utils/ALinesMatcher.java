@@ -98,16 +98,19 @@ public class ALinesMatcher implements LinesMatcher {
 
        		boolean aMatch = false;
 //       		int aMatchedLineNumber = 0;
+       		if (aMatchKind == LinesMatchKind.ONE_TIME_UNORDERED) {
+       			aLineNumber = 0;
+       		}
        		for (; aLineNumber < lines.length; aLineNumber++) {
        			if (linesUsageStatus[aLineNumber]) {
-       				Tracer.info(this, "Skipping line:" + aLineNumber);
+       				Tracer.info(this, "Skipping matched line:" + aLineNumber);
        				continue; 
        			}
        			String aLine =  lines[aLineNumber];
        			Tracer.info(this, aLineNumber + ": Checking: " + aLine);
        			aMatch = aPattern.matcher(aLine).matches();
        			if (aMatch) {
-       				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {
+       				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE || aMatchKind == LinesMatchKind.ONE_TIME_UNORDERED) {
 //       					if (aLineNumber == 35) {
 //       						String aTrueLine = aLine;
 //       					}
@@ -131,7 +134,7 @@ public class ALinesMatcher implements LinesMatcher {
    			return true;
    		}
        	if (aMatchKind == LinesMatchKind.ONE_TIME_SUBSEQUENCE) {
-       		startLineNumber = aLineNumber + 1;
+       		startLineNumber = aLineNumber + 1;// this is for the next match?
        		return true;
        	}
        	for (Integer aMatchedLine:aMatchedLines) {
@@ -139,7 +142,7 @@ public class ALinesMatcher implements LinesMatcher {
        		Tracer.info(this, "Matched Line " + lines[aMatchedLine] + " for pattern " + Arrays.toString(aPatterns));
 
        		//       		linesUsageStatus[aLineNumber] = true;
-       		linesUsageStatus[aMatchedLine] = true; 
+       		linesUsageStatus[aMatchedLine] = true; // so this is for the next match?
 
        	}
        	return true;
