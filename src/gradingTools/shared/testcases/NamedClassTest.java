@@ -36,7 +36,12 @@ public abstract class NamedClassTest extends PassFailJUnitTestCase {
 			throws NotAutomatableException, NotGradableException {	
 		 
 		 try {
-			 String aTag = tag();
+			 String aTag = AssignmentSuiteSkeleton.getMainClass();
+			 if (aTag == null) {
+				 aTag = tag();
+			 }
+					 
+					 
 			 taggedClass =  findClass(aTag);
 			
 		    if (taggedClass == null) {	

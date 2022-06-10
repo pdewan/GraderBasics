@@ -759,6 +759,11 @@ public class BasicProject implements Project {
 
 //			return null;
 			}
+			if (!aCheckStyleAllFile.exists() && !GradingMode.getGraderRun() ) {
+				checkstyleOutFolder = new File(".");
+				return checkstyleOutFolder;
+			}
+			
 			checkstyleOutFolder = aCheckStyleAllFile.getParentFile();
 		}
 		return checkstyleOutFolder;

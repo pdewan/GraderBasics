@@ -2,8 +2,11 @@ package gradingTools.shared.testcases.utils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import org.apache.commons.collections.map.HashedMap;
 
 import util.trace.Tracer;
 
@@ -12,12 +15,15 @@ public class ALinesMatcher implements LinesMatcher {
 	protected boolean[] linesUsageStatus;
 	protected int startLineNumber;
 	protected String lastUnmatchedRegex;
+	protected Map<Object, Integer> patternToLineNumber = new HashedMap();
+	protected int maxMatchedLineNumber;
 	
 	public ALinesMatcher(String aStringWithLines) {
 		lines = aStringWithLines.split("\n");
 		init(lines);
 		
 	}
+	
 	public ALinesMatcher(String[] aLines) {
 		lines =aLines;
 		init(lines);
@@ -32,6 +38,8 @@ public class ALinesMatcher implements LinesMatcher {
     	for (int i = 0; i < linesUsageStatus.length; i++) {
     		linesUsageStatus[i] = false;
     	}
+    	patternToLineNumber.clear();
+    	maxMatchedLineNumber = 0;
     }
     @Override
 	public boolean match(String[] aRegexes, LinesMatchKind aMatchKind, int aFlags ) {
@@ -51,7 +59,9 @@ public class ALinesMatcher implements LinesMatcher {
     			String aLine =  lines[aLineNumber];
     			aMatch = aPattern.matcher(aLine).matches();
     			if (aMatch) {
-    				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {
+//    				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE) {
+           				if (aMatchKind == LinesMatchKind.ONE_TIME_LINE || aMatchKind == LinesMatchKind.ONE_TIME_UNORDERED) {
+
 //    					if (aLineNumber == 35) {
 //    						String aTrueLine = aLine;
 //    					}
@@ -118,7 +128,8 @@ public class ALinesMatcher implements LinesMatcher {
        	    		}
 //    	    		System.out.println(aLineNumber+ ": Matched  pattern " + aPattern);
     	    		Tracer.info (this, aLineNumber+ ": Matched  pattern " + aPattern);
-
+    	    		maxMatchedLineNumber = Math.max(maxMatchedLineNumber, aLineNumber);
+    	    		patternToLineNumber.put(aPattern, aLineNumber);
        				aLineNumber++;
        				break;
        			}
@@ -151,5 +162,20 @@ public class ALinesMatcher implements LinesMatcher {
     @Override
 	public String getLastUnmatchedRegex() {
 		return lastUnmatchedRegex;
+	}
+    public int getStartLineNumber() {
+		return startLineNumber;
+	}
+	public void setStartLineNumber(int startLineNumber) {
+		this.startLineNumber = startLineNumber;
+	}
+	public String[] getLines() {
+		return lines;
+	}
+	public boolean[] getLinesUsageStatus() {
+		return linesUsageStatus;
+	}
+	public int getMaxMatchedLineNumber() {
+		return maxMatchedLineNumber;
 	}
 }

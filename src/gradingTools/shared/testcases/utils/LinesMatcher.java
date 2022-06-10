@@ -12,5 +12,10 @@ public interface LinesMatcher {
 	String getLastUnmatchedRegex();
 
 	boolean match(Pattern[] aPatterns, LinesMatchKind aMatchKind, int aFlags);
-
+	
+	public int getStartLineNumber() ;
+	public void setStartLineNumber(int startLineNumber) ;
+	public String[] getLines() ;
+	public boolean[] getLinesUsageStatus() ;
+	public int getMaxMatchedLineNumber() ;
 }
