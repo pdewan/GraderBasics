@@ -16,7 +16,10 @@ public class CheckstyleClassInstantiatedTestCase extends CheckStyleTestCase {
 	 public CheckstyleClassInstantiatedTestCase(String aType, String anInstantiatedType) {
 	        super(aType, aType + "!" + anInstantiatedType);
 	        typeTag = aType;
+	        String[] aComponents = anInstantiatedType.split("\\.");	        
 	        instantiatedType = anInstantiatedType;
+	        
+	        
 	        
 	  }
 	//[INFO] D:\dewan_backup\Java\grail13\src\shapes\APopulatedQuestGorge.java:1: Expected instantiation of @Comp301Tags.AVATAR in type @Comp301Tags.BRIDGE_SCENE by methods [public  createGuard:->void, public  createApproachingKnights:->void]. Good! [ExpectedClassInstantiations]
