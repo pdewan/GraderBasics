@@ -201,6 +201,18 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 				e.printStackTrace();
 			}
 		}
+		setEventsFrozen(true);
+	}
+	@Override
+	public synchronized void timeOutBasedWait(long aTimeOut) {
+		
+			try {
+				wait(aTimeOut);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		
+		setEventsFrozen(true);
 	}
 
 	@Override

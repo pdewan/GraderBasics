@@ -18,6 +18,7 @@ public class AMethodExecutionCallable implements Callable{
 //		System.out.println ("calling method: " + method + " with args " + Common.toString(args));
 		Object retVal = null;
 		try {
+			BasicProjectExecution.setLastMainMethodThread(Thread.currentThread());
 			retVal = method.invoke(object, args);
 		} catch (OutOfMemoryError e) {
 			e.printStackTrace();

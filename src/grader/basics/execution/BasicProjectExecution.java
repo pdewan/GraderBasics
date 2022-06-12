@@ -56,8 +56,13 @@ public class BasicProjectExecution {
 
 	public static final String MISSING_CONSTRUCTOR = "Status.MissingConstructor";
 	public static final String CLASS_MATCHED = "Status.ClassMatched";
+	public static final String DEFAULT_INPUT_SEPARATOR = "\n";
 
-//	static ExecutorService executor = Executors.newSingleThreadExecutor();
+	
+	static Thread lastMainMethodThread = null;
+
+
+	//	static ExecutorService executor = Executors.newSingleThreadExecutor();
 	static ExecutorService executor = createExecutor();
 
 	
@@ -1683,5 +1688,12 @@ public class BasicProjectExecution {
 		basicExecutionSpecification.setWaitForMethodConstructorAndProcesses(newVal);
 	}
 
-	public static final String DEFAULT_INPUT_SEPARATOR = "\n";
+	
+	public static Thread getLastMainMethodThread() {
+		return lastMainMethodThread;
+	}
+
+	public static void setLastMainMethodThread(Thread lastMainMethodThread) {
+		BasicProjectExecution.lastMainMethodThread = lastMainMethodThread;
+	}
 }

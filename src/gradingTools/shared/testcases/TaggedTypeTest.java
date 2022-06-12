@@ -30,18 +30,18 @@ public abstract class TaggedTypeTest extends TaggedClassTest {
 		}
 		Class[] anInterfaces = taggedClass.getInterfaces();
 		if (anInterfaces.length == 0) {
-			return fail ("Class " + taggedClass + " with tag " + tag() + " does not have an interface");
+			return fail ("Class " + taggedClass + " with tag " + mainClassIdentifier() + " does not have an interface");
 		}
 		if (anInterfaces.length > 1) {
-			return fail ("Class " + taggedClass + " with tag " + tag() + " has multiple interfaces " + Arrays.toString(anInterfaces));
+			return fail ("Class " + taggedClass + " with tag " + mainClassIdentifier() + " has multiple interfaces " + Arrays.toString(anInterfaces));
 		}
 		taggedInterface = anInterfaces[0];
 		String[] aTags = BasicProjectIntrospection.getTags(taggedInterface);
 		List aTagsList = Arrays.asList(aTags);
-		if (aTagsList.contains(tag())) {
+		if (aTagsList.contains(mainClassIdentifier())) {
 			return pass();
 		}
-		return fail ("Class " + taggedClass + " with tag " + tag() + " has untagged interface " + taggedInterface);
+		return fail ("Class " + taggedClass + " with tag " + mainClassIdentifier() + " has untagged interface " + taggedInterface);
 
 		 
 		 

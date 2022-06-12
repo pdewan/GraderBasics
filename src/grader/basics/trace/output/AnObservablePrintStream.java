@@ -20,11 +20,13 @@ public class AnObservablePrintStream extends PrintStream implements ObservablePr
 	List<Selector> positiveOutputSelectors = new ArrayList();
 	List<Selector> negativeOutputSelectors = new ArrayList();
 	ObjectToPropertyChange converter = new BasicObjectToPropertyChange();
+	boolean redirectionFrozen = false;
 
 //	public AnObservablePrintStream(String fileName) throws FileNotFoundException {
 //		super(fileName);
 //		// TODO Auto-generated constructor stub
 //	}
+	
 	public AnObservablePrintStream(PrintStream aDelegate) throws FileNotFoundException {
 		super(aDelegate);
 		delegate = aDelegate;
@@ -151,6 +153,10 @@ public	void	write(int b) {
 		propertyChangeSupport.addPropertyChangeListener(aListener);
 	}
 	@Override
+	public void removePropertyChangeListener(PropertyChangeListener aListener) {
+		propertyChangeSupport.removePropertyChangeListener(aListener);
+	}
+	@Override
 	public void addPositiveSelector(Selector aSelector) {
 		positiveOutputSelectors.add(aSelector);
 		
@@ -189,9 +195,15 @@ public	void	write(int b) {
 	}
 	
 	protected void maybeConvertAndAnnounceOutput(Object anOutput) {
-		if (checkWithSelectors(anOutput)) {
+		if (!redirectionFrozen && checkWithSelectors(anOutput)) {
 			convertAndAnnounceOutput(anOutput);	
 		}
+		
+	}
+	
+	@Override
+	public void setRedirectionFrozen(boolean newVal) {
+		redirectionFrozen = newVal;
 		
 	}
 	public static void main (String[] args) {
@@ -207,5 +219,4 @@ public	void	write(int b) {
 		System.out.println("after redirection");
 
 	}
-
 }

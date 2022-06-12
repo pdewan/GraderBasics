@@ -10,7 +10,7 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 
 public abstract class NamedClassTest extends PassFailJUnitTestCase {
 	protected Class taggedClass;
-	protected abstract String tag();
+	protected abstract String mainClassIdentifier();
 	public Class getTaggedClass() {
 		return taggedClass;
 	}
@@ -38,7 +38,7 @@ public abstract class NamedClassTest extends PassFailJUnitTestCase {
 		 try {
 			 String aTag = AssignmentSuiteSkeleton.getMainClass();
 			 if (aTag == null) {
-				 aTag = tag();
+				 aTag = mainClassIdentifier();
 			 }
 					 
 					 
