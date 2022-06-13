@@ -350,6 +350,33 @@ public class ConcurrentEventUtility {
 		}
 		return -1;
 	}
+	public static int indexOfMatch(List<String> aStringList, 
+			String aRegularExpression, int aStartIndex, int aStopIdex) {
+		
+		for (int anIndex = aStartIndex; 
+				anIndex < aStopIdex; 
+				anIndex++) {
+			if (aStringList.get(anIndex).matches(aRegularExpression)) {
+				return anIndex;
+			}
+			 
+		}
+		return -1;
+	}
+	public static int indexOfPrefix(List<String> aStringList, 
+			String aSubString, int aStartIndex, int aStopIndex) {
+		
+		for (int anIndex = aStartIndex; 
+				anIndex < aStopIndex; 
+				anIndex++) {
+			if (aStringList.get(anIndex).startsWith(aSubString)) {
+				return anIndex;
+			}
+			 
+		}
+		return -1;
+	}
+	
 	public static List<Integer> indicesOf(ConcurrentPropertyChange[] anOriginalEvents, 
 			Selector<ConcurrentPropertyChange>[] aSelectorSequence, int aStartIndex) {
 		List<Integer> retVal = new ArrayList();

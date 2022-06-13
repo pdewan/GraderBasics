@@ -1,4 +1,4 @@
-package grader.basics.trace.output;
+package grader.basics.output.observer;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

@@ -5,4 +5,4 @@
  * @author dewan
  *
  */
-package grader.basics.trace.output;
+package grader.basics.output.observer;

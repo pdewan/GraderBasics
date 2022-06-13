@@ -1,4 +1,4 @@
-package grader.basics.trace.output;
+package grader.basics.output.observer;
 
 import gradingTools.shared.testcases.concurrency.propertyChanges.Selector;
 import util.trace.Tracer;
