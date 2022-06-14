@@ -2,7 +2,7 @@ package grader.basics.output.observer;
 
 import java.beans.PropertyChangeListener;
 
-import gradingTools.shared.testcases.concurrency.propertyChanges.Selector;
+import grader.basics.concurrency.propertyChanges.Selector;
 import util.models.PropertyListenerRegisterer;
 
 public interface ObservablePrintStream extends PropertyListenerRegisterer{

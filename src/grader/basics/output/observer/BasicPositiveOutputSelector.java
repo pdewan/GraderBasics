@@ -1,6 +1,6 @@
 package grader.basics.output.observer;
 
-import gradingTools.shared.testcases.concurrency.propertyChanges.Selector;
+import grader.basics.concurrency.propertyChanges.Selector;
 
 public class BasicPositiveOutputSelector implements Selector{
 	@Override

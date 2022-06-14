@@ -1,6 +1,6 @@
 package grader.basics.output.observer;
 
-import gradingTools.shared.testcases.concurrency.propertyChanges.Selector;
+import grader.basics.concurrency.propertyChanges.Selector;
 import util.trace.Tracer;
 
 public class BasicNegativeOutputSelector implements Selector{

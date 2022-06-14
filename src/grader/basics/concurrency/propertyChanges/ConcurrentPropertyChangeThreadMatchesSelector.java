@@ -1,6 +1,5 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
+package grader.basics.concurrency.propertyChanges;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

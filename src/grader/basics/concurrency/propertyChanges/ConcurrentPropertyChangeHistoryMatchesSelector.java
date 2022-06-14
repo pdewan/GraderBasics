@@ -1,4 +1,4 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
+package grader.basics.concurrency.propertyChanges;
 
 public class ConcurrentPropertyChangeHistoryMatchesSelector implements Selector<ConcurrentPropertyChangeSupport> {
 	Object[][] matchedComponentsList;

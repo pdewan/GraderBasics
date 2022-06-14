@@ -1,4 +1,4 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
+package grader.basics.concurrency.propertyChanges;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -9,11 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import util.models.PropertyListenerRegisterer;
 import util.trace.Tracer;
 
 public class ConcurrentEventUtility {
@@ -890,21 +888,19 @@ public class ConcurrentEventUtility {
 
 	}
 	
-	public static Map<Object, List<ConcurrentPropertyChange>> getConcurrentEventListBySource(
-			ConcurrentPropertyChange[] anOriginalEvents, int from, int to) {
+	public static Map<Object, List<ConcurrentPropertyChange>> getConcurrentEventListByProperty(
+			ConcurrentPropertyChange[] anOriginalEvents) {
 		Map<Object, List<ConcurrentPropertyChange>> retVal = new HashMap<Object, List<ConcurrentPropertyChange>>();
 		for (ConcurrentPropertyChange aConcurrentEvent : anOriginalEvents) {
-			Object aSource = aConcurrentEvent.getEvent().getSource();
-			List<ConcurrentPropertyChange> anEventList = retVal.get(aSource);			
+			Object aPropertyName = aConcurrentEvent.getEvent().getPropertyName();
+			List<ConcurrentPropertyChange> anEventList = retVal.get(aPropertyName);			
 			if (anEventList == null) {
 				anEventList = new ArrayList<ConcurrentPropertyChange>();
-				retVal.put(aSource, anEventList);
+				retVal.put(aPropertyName, anEventList);
 			}
 			anEventList.add(aConcurrentEvent);
-
 		}
 		return retVal;
-
 	}
 
 	public static <EventType> Map<Thread, ConcurrentEvent<EventType>[]> getConcurrentEventsByThread(
@@ -995,7 +991,7 @@ public class ConcurrentEventUtility {
 		return retVal;
 
 	}
-	
+	// wy not use asList?
 	public static ConcurrentPropertyChange[] toConcurrentPropertyChanges2(
 			List<ConcurrentPropertyChange> anOriginalList) {
 		ConcurrentPropertyChange[] retVal = new ConcurrentPropertyChange[anOriginalList.size()];
@@ -1041,6 +1037,8 @@ public class ConcurrentEventUtility {
 		}
 		return retVal;
 	}
+	
+	
 
 	public static Map<Object, List<ConcurrentEvent<PropertyChangeEvent>>> getEventsBySource() {
 		return null;
@@ -1050,31 +1048,56 @@ public class ConcurrentEventUtility {
 	public static void setIgnorePreviousThreadEvents(ConcurrentEventSupport aConcurrentEventSupport, boolean newVal) {
 		aConcurrentEventSupport.setIgnorePreviousThreadEvents(newVal);
 	}
-	public static String[] toNewValueStrings(ConcurrentPropertyChange[] anOriginal) {
-		String[] retVal = new String[anOriginal.length];
+	static String[] emptyStringArray = {};
+	public static String[] toNewValueStrings(ConcurrentPropertyChange[] anOriginal, String aProperty) {
+		List<String> retVal = new ArrayList();
 		for (int index = 0; index < anOriginal.length; index++) {
-			retVal[index] = anOriginal[index].getEvent().getNewValue().toString();
+			PropertyChangeEvent anEvent = anOriginal[index].getEvent();
+			if (aProperty == null || aProperty.equals(anEvent.getPropertyName()))
+				retVal.add(anOriginal[index].getEvent().getNewValue().toString());
 		}
-		return retVal;
+		return retVal.toArray(emptyStringArray);
 	}
 
-	public static <KeyType> Map<KeyType, String[]> toNewValueStrings(Map<KeyType, ConcurrentPropertyChange[]> anOriginal) {
+	public static <KeyType> Map<KeyType, String[]> toNewValueStrings(Map<KeyType, ConcurrentPropertyChange[]> anOriginal, String aProperty) {
 		Map<KeyType, String[]> retVal = new HashMap<>();
 		for (KeyType key:anOriginal.keySet()) {
 			ConcurrentPropertyChange[] aPropertyChanges = anOriginal.get(key);
 			List<String> anOutputs = new ArrayList();
-			retVal.put(key, toNewValueStrings(anOriginal.get(key)));
+			retVal.put(key, toNewValueStrings(anOriginal.get(key), aProperty));
 		}
 		return retVal;
 		
 	}
 	public static Map<Thread, String[]> getConcurrentStringsByThread(
-			ConcurrentPropertyChange[] anOriginalEvents) {		
+			ConcurrentPropertyChange[] anOriginalEvents, String aProperty) {		
 		Map<Thread, ConcurrentPropertyChange[]> anOriginal = getConcurrentPropertyChangesByThread(anOriginalEvents);
-		Map<Thread, String[]> retVal = toNewValueStrings(anOriginal);
+		Map<Thread, String[]> retVal = toNewValueStrings(anOriginal, aProperty);
 		return retVal;	
 
 	}
+	public static IndexBasedSortableList toIndexBasedSortableList(List<Object> anOriginal, int aNumIndexBasedComponents) {
+		IndexBasedSortableList retVal = new AnIndexBasedSortableList();
+		try {
+			for (int index = 0; index < anOriginal.size(); index = index + aNumIndexBasedComponents) {
+				Object[] aComponents = new Object[aNumIndexBasedComponents];
+				aComponents[0] = anOriginal.get(index);
+				aComponents[1] = anOriginal.get(index + 1);
+				aComponents[2] = anOriginal.get(index + 2);
+				retVal.add(aComponents);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return retVal;
+		}
+		return retVal;
+		
+	}
+	public static IndexBasedSortableList toIndexBasedSortableList(Object[]  anOriginal, int aNumIndexBasedComponents) {
+		return toIndexBasedSortableList(Arrays.asList(anOriginal), aNumIndexBasedComponents);
+	}
+
 //	public static  Map<Object,List<PropertyChangeEvent>> getPropertyChangeEventsBySource() {
 //		return (Map<Object,List<PropertyChangeEvent>>) getEventsBySource();
 //		

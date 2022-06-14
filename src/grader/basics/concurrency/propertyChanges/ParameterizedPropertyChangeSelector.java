@@ -1,7 +1,4 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
-
-import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
+package grader.basics.concurrency.propertyChanges;
 
 public class ParameterizedPropertyChangeSelector implements Selector<ConcurrentPropertyChange> {
 	Object[] parameters;	

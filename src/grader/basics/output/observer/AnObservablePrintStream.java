@@ -11,7 +11,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import gradingTools.shared.testcases.concurrency.propertyChanges.Selector;
+import grader.basics.concurrency.propertyChanges.Selector;
 
 
 public class AnObservablePrintStream extends PrintStream implements ObservablePrintStream  {

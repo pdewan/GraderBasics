@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import grader.basics.concurrency.propertyChanges.AbstractConcurrentEventSupport;
+import grader.basics.concurrency.propertyChanges.BasicConcurrentPropertyChangeSupport;
+import grader.basics.concurrency.propertyChanges.ConcurrentEvent;
+import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
+import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
+import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChangeSupport;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
@@ -25,12 +31,6 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.SubstringSequenceChecker;
-import gradingTools.shared.testcases.concurrency.propertyChanges.AbstractConcurrentEventSupport;
-import gradingTools.shared.testcases.concurrency.propertyChanges.BasicConcurrentPropertyChangeSupport;
-import gradingTools.shared.testcases.concurrency.propertyChanges.ConcurrentEvent;
-import gradingTools.shared.testcases.concurrency.propertyChanges.ConcurrentEventUtility;
-import gradingTools.shared.testcases.concurrency.propertyChanges.ConcurrentPropertyChange;
-import gradingTools.shared.testcases.concurrency.propertyChanges.ConcurrentPropertyChangeSupport;
 import gradingTools.shared.testcases.greeting.AGreetingChecker;
 import gradingTools.shared.testcases.greeting.GreetingMainProvided;
 import gradingTools.shared.testcases.utils.ALinesMatcher;
@@ -71,6 +71,11 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected abstract SubstringSequenceChecker forkedThreadChecker();
 
 	protected abstract SubstringSequenceChecker rootThreadChecker();
+	
+	protected  String threadCheckerProperty() {
+		return null;
+	}
+
 
 	protected void invokeMainMethod(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {
 		super.invokeMainMethod(aMainClass, anArgs, anInputs);
@@ -257,7 +262,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	 protected  TestCaseResult checkEvents() {
 		propertyChanges = getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges();
 		threadToPropertyChanges = ConcurrentEventUtility.getConcurrentPropertyChangesByThread(propertyChanges);
-		threadToStrings = ConcurrentEventUtility.toNewValueStrings(threadToPropertyChanges);
+//		if (threadCheckerProperty() == null) {
+		threadToStrings = ConcurrentEventUtility.toNewValueStrings(threadToPropertyChanges, threadCheckerProperty());
+//		}
 		numOutputtingThreads = threadToPropertyChanges.size();
 		
 		TestCaseResult aRootThreadResult = null;
@@ -269,6 +276,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		List<TestCaseResult> aForkedThreadResults = new ArrayList();
 		for (Thread aThread : threadToStrings.keySet()) {
 			String[] aStrings = threadToStrings.get(aThread);
+			
 			if (aThread == rootThread) {
 				aRootThreadResult = checkRootThreadOutput(aStrings);
 			} else {

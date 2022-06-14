@@ -1,5 +1,6 @@
 package trace.grader.basics;
 
+import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.file.zipfile.AZippedRootFolderProxy;
@@ -14,7 +15,6 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleWarningsRatioTest
 import gradingTools.shared.testcases.MethodExecutionTest;
 import gradingTools.shared.testcases.concurrency.AbstractBarrier;
 import gradingTools.shared.testcases.concurrency.AbstractEarlyJoinBasicJoiner;
-import gradingTools.shared.testcases.concurrency.propertyChanges.ConcurrentEventUtility;
 import gradingTools.shared.testcases.shapes.LocatableTest;
 import gradingTools.shared.testcases.shapes.interfaces.TestBoundedShape;
 import gradingTools.shared.testcases.shapes.rotate.detached.DetachedRotatingLineFortyFiveDegreeTest;

@@ -1,6 +1,4 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
-
-import java.beans.PropertyChangeEvent;
+package grader.basics.concurrency.propertyChanges;
 
 public class BasicConcurrentEvent<EventType> implements ConcurrentEvent<EventType> {
 	int sequenceNumber; 

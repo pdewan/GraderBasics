@@ -1,6 +1,5 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
+package grader.basics.concurrency.propertyChanges;
 
-import java.util.List;
 import java.util.Set;
 
 public interface ConcurrentEventSupport<EventType, ObservableType>  {

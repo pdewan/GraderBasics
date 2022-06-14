@@ -1,4 +1,4 @@
-package gradingTools.shared.testcases.concurrency.propertyChanges;
+package grader.basics.concurrency.propertyChanges;
 
 import java.beans.PropertyChangeEvent;
 
