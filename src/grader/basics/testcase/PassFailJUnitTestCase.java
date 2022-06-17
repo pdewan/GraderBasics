@@ -313,4 +313,21 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		return aTaggedClass;
 		
 	}
+	protected TestCaseResult combineResults(TestCaseResult... aResultArray) {
+		boolean anAllPassed = true;
+		double aPercentage = 0;
+		StringBuffer aMessage = new StringBuffer();
+		for (TestCaseResult aTestCaseResult : aResultArray) {
+			if (!aTestCaseResult.isPass() && anAllPassed) {
+				anAllPassed = false;
+			}
+			aPercentage += aTestCaseResult.getPercentage();
+			aMessage.append("\n" + aTestCaseResult.getNotes());
+		}
+		if (anAllPassed) {
+			return pass();
+		}
+		return partialPass(aPercentage, aMessage.toString());
+	
+	}
 }

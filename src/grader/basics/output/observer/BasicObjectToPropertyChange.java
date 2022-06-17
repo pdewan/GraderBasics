@@ -7,6 +7,12 @@ public class BasicObjectToPropertyChange implements ObjectToPropertyChange {
 	public static final String ANONYMOUS_PROPERTY = "OutputLine";
 	public static final String SOURCE_SUFFIX = "->";
 	public static final String PROPERTY_SUFFIX = ":";
+	
+	public BasicObjectToPropertyChange() {
+		ObservablePrintStreamUtility.setSourceSuffix(sourceSuffix());
+		ObservablePrintStreamUtility.setPropertySuffix(propertySuffix());
+
+	}
 
 	protected String anonymousSource() {
 		return ANONYMOUS_SOURCE;

@@ -28,4 +28,5 @@ public interface ConcurrentEventSupport<EventType, ObservableType>  {
 	boolean isWaitSelectorSuccessful();
 	Thread[] getNotifyingNewThreads();
 	void timeOutBasedWait(long aTimeOut);
+//	int getNumberOfCreatedThreads();
 }

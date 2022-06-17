@@ -25,7 +25,9 @@ public ASubstringSequenceChecker(String[] aSubstrings ) {
 	   	  patterns = new Pattern[aSubstrings.length];
 		  substrings = aSubstrings;
 		  for (int aRegexIndex = 0; aRegexIndex < aSubstrings.length; aRegexIndex++) {
-	    		patterns[aRegexIndex ]= Pattern.compile(aSubstrings[aRegexIndex], Pattern.DOTALL);
+	    		patterns[aRegexIndex ]= Pattern.compile(
+	    				aSubstrings[aRegexIndex].toLowerCase(), 
+	    				Pattern.DOTALL);
 		  }
 //		  myWeight = aMyWeight;
 //		  regex = toRegex(substrings);

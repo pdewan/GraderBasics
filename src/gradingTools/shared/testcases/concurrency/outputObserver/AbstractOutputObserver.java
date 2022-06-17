@@ -1,45 +1,23 @@
 package gradingTools.shared.testcases.concurrency.outputObserver;
 
-import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
-import grader.basics.concurrency.propertyChanges.AbstractConcurrentEventSupport;
 import grader.basics.concurrency.propertyChanges.BasicConcurrentPropertyChangeSupport;
-import grader.basics.concurrency.propertyChanges.ConcurrentEvent;
-import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChangeSupport;
 import grader.basics.concurrency.propertyChanges.Selector;
-import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.NotRunnableException;
 import grader.basics.execution.ResultingOutErr;
-import grader.basics.execution.RunningProject;
-import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.output.observer.BasicNegativeOutputSelector;
 import grader.basics.output.observer.BasicPositiveOutputSelector;
-import grader.basics.output.observer.BasicPrintStreamListener;
 import grader.basics.output.observer.ObservablePrintStream;
 import grader.basics.output.observer.ObservablePrintStreamFactory;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
-import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.shared.testcases.SubstringSequenceChecker;
 import gradingTools.shared.testcases.TaggedOrNamedClassTest;
-import gradingTools.shared.testcases.greeting.AGreetingChecker;
-import gradingTools.shared.testcases.greeting.GreetingMainProvided;
-import gradingTools.shared.testcases.utils.ALinesMatcher;
-import gradingTools.shared.testcases.utils.LinesMatchKind;
-import gradingTools.shared.testcases.utils.LinesMatcher;
-import gradingTools.utils.RunningProjectUtils;
-import util.annotations.MaxValue;
-import util.models.PropertyListenerRegisterer;
 public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 	private ConcurrentPropertyChangeSupport concurrentPropertyChangeSupport;
 	private ResultingOutErr resultingOutErr;
@@ -62,9 +40,9 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 	protected ConcurrentPropertyChangeSupport getConcurrentPropertyChangeSupport() {
 		return concurrentPropertyChangeSupport;
 	}
-	protected  Class mainClass() throws ClassNotFoundException {
-		return Class.forName("Main");
-	}
+//	protected  Class mainClass() throws ClassNotFoundException {
+//		return Class.forName("Main");
+//	}
 	static String[] emptyArray = {};
 	protected String[] args() {
 		return emptyArray;
@@ -105,10 +83,10 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
     	observablePrintStream.removePropertyChangeListener(concurrentPropertyChangeSupport);
     	observablePrintStream.setRedirectionFrozen(true);
     }
-    protected  TestCaseResult checkOutput() {
+    protected  TestCaseResult checkOutput(ResultingOutErr anOutput) {
     	return pass();
     }
-    protected  TestCaseResult checkEvents() {
+    protected  TestCaseResult checkEvents(ConcurrentPropertyChange[] anEvents) {
     	return pass();
     }
     protected void waitForTermination() {
@@ -128,6 +106,18 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);
 		
 	}
+    abstract protected int numExpectedForkedThreads();
+    
+    protected abstract double threadCountCredit () ;
+	protected int numOutputtingForkedThreads;
+
+	protected TestCaseResult checkNumThreads (int aNumThreadsCreated) {
+		if  (aNumThreadsCreated == numExpectedForkedThreads()) {
+			return partialPass(threadCountCredit(), "Number of forked threads corrrect");
+		}
+		return fail("Num threads created " + aNumThreadsCreated + " != num expected threads " + numExpectedForkedThreads());
+	}
+	abstract protected boolean sufficientOutputCredit(TestCaseResult aResult) ;
 	protected TestCaseResult runAndCheck(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {		
 		observablePrintStream = redirectOutput();
 		receivePropertyChanges();
@@ -136,14 +126,27 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 		waitForTermination();
 		restoreOutput();
 		doNotReceiveEvents();
-		TestCaseResult aRetValOut = checkOutput();
-		TestCaseResult aRetValEvents = checkEvents();
-		if (aRetValOut.isPass() && aRetValEvents.isPass()) {
-			return pass();
+		TestCaseResult aRetValOut = checkOutput(getResultingOutErr());
+		
+		if (!sufficientOutputCredit(aRetValOut)) {
+  			TestCaseResult badOutput = fail ("Event tests will not be run until output fixed");
+			return combineResults(badOutput, aRetValOut);
 		}
-		return partialPass(
-				aRetValOut.getPercentage() + aRetValEvents.getPercentage(),
-				aRetValOut.getNotes() + "\n" + aRetValEvents.getNotes());
+//		 getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges();
+		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
+
+		TestCaseResult aNumThreadsCheck = checkNumThreads(
+				numOutputtingForkedThreads);
+		TestCaseResult aRetValEvents = checkEvents(
+				getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges());
+		return combineResults(aRetValOut, aNumThreadsCheck, aRetValEvents);
+
+//		if (aRetValOut.isPass() && aRetValEvents.isPass()) {
+//			return pass();
+//		}
+//		return partialPass(
+//				aRetValOut.getPercentage() + aRetValEvents.getPercentage(),
+//				aRetValOut.getNotes() + "\n" + aRetValEvents.getNotes());
 //		if (aRetValOut.isFail() && aRetValEvents.isFail()) {
 //			return fail(aRetValOut.getNotes() + " " + aRetValEvents.getNotes());
 //		}
@@ -172,5 +175,7 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 			throw new NotGradableException();
 		}
 	}
-
+	protected Class mainClass() {
+		return findClassByName(mainClassIdentifier());
+	}
 }

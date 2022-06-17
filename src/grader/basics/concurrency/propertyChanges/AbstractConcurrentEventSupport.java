@@ -32,15 +32,20 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 	protected Set<Thread> allKnownThreads = new HashSet();
 	protected long minimumEventDelayPerThread = 0;
 	protected Map<Thread, Long> threadToLastEventTimes = new HashMap();
+	protected int initialThreadCount;
 
-
-	public AbstractConcurrentEventSupport() {
+	public AbstractConcurrentEventSupport() {		
 		resetConcurrentEvents();
 		creatingThread = Thread.currentThread();
+//		initialThreadCount = getNumCurrentThreads();
 	}
+//	protected synchronized int getNumCurrentThreads() {
+//		return Thread.activeCount();
+//	}
+	
 	@Override
 	public synchronized Set<Thread> getLateThreads() {
-		return lateThreads;
+         		return lateThreads;
 	}
 
 	@Override
@@ -230,6 +235,10 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 	public Thread[] getNotifyingThreads() {
 		return notifyingThreads.toArray(emptyThreads);
 	}
+//	@Override
+//	public int getNumberOfCreatedThreads() {
+//		return getNumCurrentThreads() - initialThreadCount;
+//	}
 	@Override
 	public Thread[] getNotifyingNewThreads() {
 		return notifyingNewThreads.toArray(emptyThreads);
