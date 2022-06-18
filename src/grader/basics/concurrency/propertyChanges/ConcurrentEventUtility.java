@@ -732,7 +732,7 @@ public class ConcurrentEventUtility {
 			ConcurrentPropertyChange[] aSelectedEvents = selectEvents(aThreadEvents, aMatchedComponents);
 			if (processInterleaving(aThreadEvents, aStartIndices, aStopIndices)) {
 				Tracer.info(ConcurrentEventUtility.class, "Events of thread:" + aThread + 
-						" overlap with one or more of matched threads:" + aThreads );
+						" overlap with one or more of matched threads:" + Arrays.toString(aThreads) );
 				
 				Tracer.info(ConcurrentEventUtility.class, "Events of new thread:");
 				trace(aSelectedEvents);

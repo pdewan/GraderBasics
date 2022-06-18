@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.math3.genetics.TournamentSelection;
+
 import grader.basics.concurrency.propertyChanges.AbstractConcurrentEventSupport;
 import grader.basics.concurrency.propertyChanges.BasicConcurrentPropertyChangeSupport;
 import grader.basics.concurrency.propertyChanges.ConcurrentEvent;
@@ -50,11 +52,13 @@ import util.trace.Tracer;
 @MaxValue(2)
 public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObserver {
 //	public static final int TIME_OUT_SECS = 1; // secs
-
+	Map<String, Object[]> nameToType = new HashMap();
 	private int forkLineNumber = 0;
 	private int joinLineNumber = 0;
 	private ConcurrentPropertyChange[] propertyChanges;
 	protected Map<Thread, ConcurrentPropertyChange[]> emptyMap = new HashMap();
+	private Map<Thread, ConcurrentPropertyChange[]> threadToForkEvents = emptyMap;
+
 	private Map<Thread, ConcurrentPropertyChange[]> threadToIterationEvents = emptyMap;
 	private Map<Thread, ConcurrentPropertyChange[]> threadToPostIterationEvents = emptyMap;
 
@@ -63,8 +67,6 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //	private int numOutputtingThreads;
 
 //	private LinesMatcher linesMatcher;
-
-	
 
 	public AbstractForkJoinOutputObserver() {
 //		rootThread = Thread.currentThread();
@@ -77,34 +79,38 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected boolean isRootThread(Thread aThread) {
 		return aThread == rootThread;
 	}
-	
+
 	public static PropertyBasedStringChecker toChecker(String[][] anOutputProperties) {
 		if (anOutputProperties == null) {
 			return null;
 		}
 		return new APropertyBasedStringChecker(anOutputProperties);
 	}
+
 //    abstract protected int numExpectedForkedThreads();
 	protected PropertyBasedStringChecker preForkChecker;
+
 	protected PropertyBasedStringChecker preForkChecker() {
 		if (preForkChecker == null) {
-			preForkChecker = toChecker( preForkOutputProperties());
+			preForkChecker = toChecker(preForkOutputProperties());
 		}
 		return preForkChecker;
 	}
+
 	protected PropertyBasedStringChecker postForkChecker;
 
 	protected PropertyBasedStringChecker postForkChecker() {
 		if (postForkChecker == null) {
-			postForkChecker = toChecker( postForkOutputProperties());
+			postForkChecker = toChecker(postForkOutputProperties());
 		}
 		return postForkChecker;
 	}
+
 	protected PropertyBasedStringChecker postJoinChecker;
 
 	protected PropertyBasedStringChecker postJoinChecker() {
 		if (postJoinChecker == null) {
-			postJoinChecker = toChecker( postJoinOutputProperties());
+			postJoinChecker = toChecker(postJoinOutputProperties());
 		}
 		return postJoinChecker;
 	}
@@ -166,18 +172,19 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected double postJoinOutputCredit() {
 		return 0;
 	}
-	
-    protected double threadCountCredit () {
-    	return 0;
-    }
 
-    protected double totalIterationsCountCredit () {
-    	return 0;
-    }
+	protected double threadCountCredit() {
+		return 0;
+	}
+
+	protected double totalIterationsCountCredit() {
+		return 0;
+	}
 
 	protected double minimumOutputCredit() {
 		return preForkOutputCredit() + postForkOutputCredit() + postJoinOutputCredit();
 	}
+
 	protected boolean sufficientOutputCredit(TestCaseResult aResult) {
 		return aResult.getPercentage() >= minimumOutputCredit();
 	};
@@ -185,9 +192,17 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected double preForkEventCredit() {
 		return 0;
 	}
+
+	protected double forkEventCredit() {
+		return iterationsEventCredit() + postIterationsEventCredit();
+	}
+	protected double interleavingCredit() {
+		return 0;
+	}
 	protected double postJoinEventCredit() {
 		return 0;
 	}
+
 	protected double iterationsEventCredit() {
 		return 0;
 	}
@@ -195,8 +210,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected double postIterationsEventCredit() {
 		return 0;
 	}
-	
-	
+
 //	protected double forkedThreadPartialCredit() {
 //		return 0;
 //	}
@@ -227,36 +241,41 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected abstract Object[][] postIterationPropertyNamesAndType();
 
 	protected abstract Object[][] postJoinPropertyNamesAndType();
-	
 
 	protected abstract int totalIterations();
 	
-	public static String toTypeString(Class aClass) {
-		if (aClass == Number.class) {
-			return "\\d.*";
-		} 
-		if (aClass == Boolean.class) {
-			return "(true|false)";
-		}
-		if (aClass == Arrays.class || aClass == Array.class) {
-			  
-			return "\\[.*\\]";
-		}
-		return ".*";
-		
-	}
 	
-	public static String[] toThreeTupleOutputProperty (Object[] aNameAndType) {
-		String[] retVal = {
-				"Thread",
-				(String) aNameAndType[0],
-				toTypeString((Class) aNameAndType[1])	
-		
+//	public static String toTypeString(Object[] aNameAndType) {
+//		String aName = (String) aNameAndType[0];
+//		Class aClass = (Class) aNameAndType[1];
+//		if (aClass == Number.class || aClass == Integer.class || aClass == Long.class) {
+//			return "\\d.*";
+//		}
+//		if (aClass == Double.class ) {
+//			return "\\d.*\\.\\d.*";
+//		}
+//		if (aClass == Boolean.class) {
+//			return "(true|false)";
+//		}
+//		if (aClass == Arrays.class || aClass == Array.class || aClass == List.class || aClass == ArrayList.class) {
+//			if (aName.contains("Number") || aName.contains("Integer")) {
+//				return "\\[\\d.*\\]";
+//			}
+//			return "\\[.*\\]";
+//		}
+//		return ".*";
+//
+//	}
+
+	public static String[] toThreeTupleOutputProperty(Object[] aNameAndType) {
+		String[] retVal = { 
+				"Thread", (String) aNameAndType[0], ObservablePrintStreamUtility.toTypeString(aNameAndType)
+
 		};
-		return retVal;		
+		return retVal;
 	}
-	
-	public static String[][] toOutputProperties(Object[][] aNameAndTypes) {
+
+	public static String[][] toOutputPropertiesStatic(Object[][] aNameAndTypes) {
 		if (aNameAndTypes == null) {
 			return null;
 		}
@@ -266,39 +285,57 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		}
 		return retVal;
 	}
-	public static String[][] repeat(String[][] aThreeTuples, int aNumRepetitions) {
-		if (aThreeTuples == null) {
-			return null;
-		}
-		String[][] retVal = new String[aThreeTuples.length*aNumRepetitions][];
-		for (int index = 0; index <= retVal.length - aThreeTuples.length;) {
-			for (int aTuplesIndex = 0; aTuplesIndex < aThreeTuples.length; aTuplesIndex++) {
-				retVal[index] = aThreeTuples[aTuplesIndex];
-				index++;
-				
+	public  String[][] toOutputProperties(Object[][] aNameAndTypes) {
+		
+		String[][] retVal = toOutputPropertiesStatic(aNameAndTypes);
+		if (retVal != null) {
+			for (Object[] aNameAndType:aNameAndTypes) {
+				nameToType.put((String) aNameAndType[0], aNameAndType);
 			}
 		}
 		return retVal;
 	}
-	protected String[][] postIterationOutputProperties () {		
+
+	public static String[][] repeat(String[][] aThreeTuples, int aNumRepetitions) {
+		if (aThreeTuples == null) {
+			return null;
+		}
+		String[][] retVal = new String[aThreeTuples.length * aNumRepetitions][];
+		for (int index = 0; index <= retVal.length - aThreeTuples.length;) {
+			for (int aTuplesIndex = 0; aTuplesIndex < aThreeTuples.length; aTuplesIndex++) {
+				retVal[index] = aThreeTuples[aTuplesIndex];
+				index++;
+
+			}
+		}
+		return retVal;
+	}
+
+	protected String[][] postIterationOutputProperties() {
 		return repeat(toOutputProperties(postIterationPropertyNamesAndType()), numExpectedForkedThreads());
 	}
-	protected String[][] perIterationOutputProperties () {		
+
+	protected String[][] perIterationOutputProperties() {
 		return toOutputProperties(iterationPropertyNamesAndType());
 	}
-	protected String[][] allIterationsOutputProperties () {		
+
+	protected String[][] allIterationsOutputProperties() {
 		return repeat(perIterationOutputProperties(), totalIterations());
 	}
-	protected String[][] preForkOutputProperties () {		
+
+	protected String[][] preForkOutputProperties() {
 		return toOutputProperties(preForkPropertyNamesAndType());
 	}
+
 	protected String[][] postForkOutputProperties() {
-		return combine (allIterationsOutputProperties(), postIterationOutputProperties());
+		return combine(allIterationsOutputProperties(), postIterationOutputProperties());
 	}
-	protected String[][] postJoinOutputProperties () {		
+
+	protected String[][] postJoinOutputProperties() {
 		return toOutputProperties(postJoinPropertyNamesAndType());
 	}
-	public static String[][] combine (String[][] operand1, String[][] operand2) {
+
+	public static String[][] combine(String[][] operand1, String[][] operand2) {
 		if (operand1 == null && operand2 == null) {
 			return null;
 		}
@@ -306,15 +343,16 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 			return operand2;
 		}
 		if (operand1 == null) {
-		 return operand2;
+			return operand2;
 		}
 		List<String[]> retVal = new ArrayList();
 		List<String[]> list1 = Arrays.asList(operand1);
-		retVal.addAll (list1);
+		retVal.addAll(list1);
 		List<String[]> list2 = Arrays.asList(operand2);
 		retVal.addAll(list2);
 		return retVal.toArray(emptyStringMatrix);
 	}
+
 //	public APrimesPostForkPropertyChecker (int aNumItems) {
 //		
 //		int aNumNotifications = aNumItems*NOTIFICATIONS_PER_ITEM + REMAINING_NOTIFICATIONS;
@@ -336,8 +374,6 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected String[] iterationPropertyNames;
 	protected String[] postIterationPropertyNames;
 	protected String[] postJoinPropertyNames;
-	
-
 
 	protected String[] toNames(Object[][] aNamesAndType) {
 		if (aNamesAndType == null) {
@@ -368,16 +404,17 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		if (postIterationPropertyNames == null) {
 			postIterationPropertyNames = toNames(postIterationPropertyNamesAndType());
 		}
-		return postIterationPropertyNames;	
+		return postIterationPropertyNames;
 	}
 
 	protected String[] postJoinPropertyNames() {
 		if (postJoinPropertyNames == null) {
 			postJoinPropertyNames = toNames(postIterationPropertyNamesAndType());
 		}
-		return postJoinPropertyNames;	
+		return postJoinPropertyNames;
 
 	}
+
 	protected int numPreForkEvents() {
 //		PropertyBasedStringChecker aChecker = preForkChecker();
 //		if (aChecker == null) {
@@ -398,8 +435,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		}
 		return aPropertyNames.length;
 	}
+
 	protected int totalIterationEvents() {
-		return numPerIterationEvents()*totalIterations();
+		return numPerIterationEvents() * totalIterations();
 	}
 
 	protected int numPostIterationEvents() {
@@ -407,9 +445,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		if (aPropertyNames == null) {
 			return 0;
 		}
-		return aPropertyNames.length*numOutputtingForkedThreads;
+		return aPropertyNames.length * numOutputtingForkedThreads;
 	}
-	
+
 	protected int numPostJoinEvents() {
 		String[] aPropertyNames = postJoinPropertyNames();
 		if (aPropertyNames == null) {
@@ -714,15 +752,21 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //		} else {
 //			eventsAfterIterations = aPostForkEventsSize;
 //		}
-		int anActualIterationsSize = anEvents.length - (aPreForkEventsSize + aPostIterationEventsSize + aPostJoinEventsSize);
-		
-		TestCaseResult anIterationsCountResult = partialPass(totalIterationsCountCredit(), "Correct number of iterations");
+		int anActualIterationsSize = anEvents.length
+				- (aPreForkEventsSize + aPostIterationEventsSize + aPostJoinEventsSize);
+
+		TestCaseResult anIterationsCountResult = partialPass(totalIterationsCountCredit(),
+				"Correct number of iterations");
 		if (anActualIterationsSize != totalIterationEvents()) {
-			anIterationsCountResult = fail ("Actual # iterations  =" + anActualIterationsSize + " != " + "expected #" + totalIterations());
+			anIterationsCountResult = fail(
+					"Actual # iterations  =" + anActualIterationsSize + " != " + "expected #" + totalIterations());
 		}
-		
-		int anIterationsStartIndex = aPreForkEventsSize;
-		int anIterationsStopIndex = anIterationsStartIndex + anActualIterationsSize + aPostIterationEventsSize;
+		int aForkStartIndex = aPreForkEventsSize;
+		int aForkStopIndex = aForkStartIndex + anActualIterationsSize + aPostIterationEventsSize;
+		int anIterationsStartIndex = aForkStartIndex;
+		int anIterationsStopIndex = aForkStopIndex;
+//		int anIterationsStartIndex = aPreForkEventsSize;
+//		int anIterationsStopIndex = anIterationsStartIndex + anActualIterationsSize + aPostIterationEventsSize;
 		int aPostIterationStartIndex = anIterationsStartIndex;
 
 		int aPostIterationStopIndex = anIterationsStopIndex;
@@ -730,14 +774,16 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		int aPostJoinStopIndex = aPostIterationStopIndex + aPostJoinEventsSize;
 
 		TestCaseResult aPreForkResult = checkPreForkEvents(anEvents, aPreForkEventsSize);
-		TestCaseResult aFinalResult = combineResults (aPreForkResult, anIterationsCountResult);
+		TestCaseResult aFinalResult = combineResults(aPreForkResult, anIterationsCountResult);
 
-		TestCaseResult anIterationsResult = checkIterationsEvents(anEvents, anIterationsStartIndex,
-				anIterationsStopIndex);
-		aFinalResult = combineResults(aFinalResult, anIterationsResult);
-		TestCaseResult aPostIterationsResult = checkPostIterationsEvents(anEvents, aPostIterationStartIndex,
-				aPostIterationStopIndex);
-		aFinalResult = combineResults(aFinalResult, aPostIterationsResult);
+//		TestCaseResult anIterationsResult = checkIterationsEvents(anEvents, anIterationsStartIndex,
+//				anIterationsStopIndex);
+//		aFinalResult = combineResults(aFinalResult, anIterationsResult);
+//		TestCaseResult aPostIterationsResult = checkPostIterationsEvents(anEvents, aPostIterationStartIndex,
+//				aPostIterationStopIndex);
+//		aFinalResult = combineResults(aFinalResult, aPostIterationsResult);
+		TestCaseResult aForkResult = checkForkEvents(anEvents, aForkStartIndex, aForkStopIndex);
+		aFinalResult = combineResults(aFinalResult, aForkResult);
 		TestCaseResult aPostJoinResult = checkPostJoinEvents(anEvents, aPostJoinStartIndex, aPostJoinStopIndex);
 		aFinalResult = combineResults(aFinalResult, aPostJoinResult);
 		return aFinalResult;
@@ -802,9 +848,37 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		return fail("#pre fork notifying threads == " + preForkEvents.size() + " instead of 1");
 
 	}
+	
+	public  Map<String, Object> toNameValueMap (ConcurrentPropertyChange[] anEvents) {
+		Map<String, Object> anOriginal = ConcurrentEventUtility.toNameValueMap(anEvents);
+		toNameTypedValueMap(anOriginal);
+		return anOriginal;
+	}
+	
+	protected void toNameTypedValueMap (Map<String, Object> anOriginal) {
+		for (String aName: anOriginal.keySet()) {
+			try {
+			Object[] aNameAndType = nameToType.get(aName);
+			if (aNameAndType == null) {
+				continue;
+			}
+			Class aValueClass = (Class) aNameAndType[1];
+			
+			String aValueString = (String) anOriginal.get(aName);
+			Object aNewValue = ObservablePrintStreamUtility.toTypedObject(aName, aValueString, aValueClass);
+			if (aNewValue != aValueString) {
+				anOriginal.put(aName, aNewValue);
+			}
+			} catch (Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+		}
+	}
 
 	protected TestCaseResult checkPreForkEvents(Thread aThread, ConcurrentPropertyChange[] anEvents) {
-		Map<String, Object> aNameValuePairs = ConcurrentEventUtility.toNameValueMap(anEvents);
+		Map<String, Object> aNameValuePairs = toNameValueMap(anEvents);
 
 		return checkPreForkEvents(aThread, aNameValuePairs);
 	}
@@ -822,8 +896,6 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected String preForkEventsMessage(Thread aThread, Map<String, Object> aNameValuePairs) {
 		return null;
 	}
-	
-	
 
 	protected Map<Thread, ConcurrentPropertyChange[]> postJoinEvents;
 
@@ -841,7 +913,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	}
 
 	protected TestCaseResult checkPostJoinEvents(Thread aThread, ConcurrentPropertyChange[] anEvents) {
-		Map<String, Object> aNameValuePairs = ConcurrentEventUtility.toNameValueMap(anEvents);
+		Map<String, Object> aNameValuePairs = toNameValueMap(anEvents);
 
 		return checkPostJoinEvents(aThread, aNameValuePairs);
 	}
@@ -883,10 +955,10 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //		}
 		for (Thread aThread : postIterationEvents.keySet()) { // loop should go omly once
 			ConcurrentPropertyChange[] anOriginalEvents = threadToIterationEvents.get(aThread);
-			ConcurrentPropertyChange[] aPostIterationEvents =
-					ConcurrentEventUtility.filterByProperties(anOriginalEvents, postIterationPropertyNames);
+			ConcurrentPropertyChange[] aPostIterationEvents = ConcurrentEventUtility
+					.filterByProperties(anOriginalEvents, postIterationPropertyNames);
 			aResult = checkPostIterationEvents(aThread, aPostIterationEvents);
-			
+
 			if (aResult.getPercentage() < postIterationsEventCredit()) {
 				return aResult;
 			}
@@ -896,7 +968,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	}
 
 	protected TestCaseResult checkPostIterationEvents(Thread aThread, ConcurrentPropertyChange[] anEvents) {
-		Map<String, Object> aNameValuePairs = ConcurrentEventUtility.toNameValueMap(anEvents);
+		Map<String, Object> aNameValuePairs = toNameValueMap(anEvents);
 
 		return checkPostIterationEvents(aThread, aNameValuePairs);
 	}
@@ -922,7 +994,60 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //		return 0;
 //	}
 
-	protected Map<Thread, ConcurrentPropertyChange[]> iterationsEvents;
+//	protected Map<Thread, ConcurrentPropertyChange[]> iterationsEvents;
+
+	protected TestCaseResult checkForkEvents(ConcurrentPropertyChange[] anEvents, int aStartIndex, int aStopIndex) {
+		if (aStopIndex == aStartIndex) {
+			return partialPass(forkEventCredit(), "Fork events correct");
+
+		}
+		
+		TestCaseResult aResult = partialPass(forkEventCredit(), "Fork correct");
+		TestCaseResult anInterleavingResult = null;
+
+		boolean hasInterleaving = ConcurrentEventUtility.someInterleaving(anEvents, null, null);
+		if (!hasInterleaving) {
+			anInterleavingResult = fail ("No interleaving during fork");
+		} else {
+			anInterleavingResult = partialPass (interleavingCredit(), "Interleaving correct");
+		}
+		threadToForkEvents = ConcurrentEventUtility.getConcurrentPropertyChangesByThread(anEvents, aStartIndex,
+				aStopIndex);
+//			if (iterationEvents.size() != 1) {
+//				return fail("#iteration notifying threads == " + iterationEvents.size() + " instead of 1" );
+//			}
+//		TestCaseResult aResult = partialPass(forkEventCredit(), "Fork correct");
+		TestCaseResult anIterationsResult = null;
+		TestCaseResult aPostIterationsResult = null;
+		for (Thread aThread : threadToForkEvents.keySet()) {
+			ConcurrentPropertyChange[] anOriginalEvents = threadToForkEvents.get(aThread);
+			if (iterationPropertyNames != null) {
+
+				ConcurrentPropertyChange[] anIterationEvents = ConcurrentEventUtility
+						.filterByProperties(anOriginalEvents, iterationPropertyNames);
+
+				anIterationsResult = checkIterationEvents(aThread, anIterationEvents);
+				if (anIterationsResult.getPercentage() < iterationsEventCredit()) {
+					return combineResults (anInterleavingResult, anIterationsResult);
+				}
+			}
+			if (postIterationPropertyNames != null) {
+
+				ConcurrentPropertyChange[] aPostIterationEvents = ConcurrentEventUtility
+						.filterByProperties(anOriginalEvents, postIterationPropertyNames);
+				aPostIterationsResult = checkPostIterationEvents(aThread, aPostIterationEvents);
+				if (aPostIterationsResult.getPercentage() < postIterationsEventCredit()) {
+//					return combineResults(anIterationsResult, aPostIterationsResult);
+					combineResults (anInterleavingResult, 
+							combineResults (anIterationsResult, aPostIterationsResult));
+				}
+			}
+		}
+
+		return combineResults (anInterleavingResult, aResult);
+//			return fail("#Post Iteration  notifying threads == " + postIterationEvents.size() + " instead of 1" );
+
+	}
 
 	protected TestCaseResult checkIterationsEvents(ConcurrentPropertyChange[] anEvents, int aStartIndex,
 			int aStopIndex) {
@@ -939,8 +1064,8 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		TestCaseResult aResult = partialPass(iterationsEventCredit(), "Iterations correct");
 		for (Thread aThread : threadToIterationEvents.keySet()) {
 			ConcurrentPropertyChange[] anOriginalEvents = threadToIterationEvents.get(aThread);
-			ConcurrentPropertyChange[] anIterationEvents =
-					ConcurrentEventUtility.filterByProperties(anOriginalEvents, iterationPropertyNames);
+			ConcurrentPropertyChange[] anIterationEvents = ConcurrentEventUtility.filterByProperties(anOriginalEvents,
+					iterationPropertyNames);
 			aResult = checkIterationEvents(aThread, anIterationEvents);
 			if (aResult.getPercentage() < iterationsEventCredit()) {
 				return aResult;
@@ -955,14 +1080,14 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected TestCaseResult checkIterationEvents(Thread aThread, ConcurrentPropertyChange[] anEvents) {
 		TestCaseResult aResult = partialPass(iterationsEventCredit(), "Iteration events correct");
 		ConcurrentPropertyChange[] aTuple = new ConcurrentPropertyChange[numPerIterationEvents()];
-		for (int eventsIndex = 0; eventsIndex <= anEvents.length - aTuple.length; ) {
-			for (int aTupleIndex = 0; aTupleIndex < aTuple.length; aTupleIndex ++) {
+		for (int eventsIndex = 0; eventsIndex <= anEvents.length - aTuple.length;) {
+			for (int aTupleIndex = 0; aTupleIndex < aTuple.length; aTupleIndex++) {
 				aTuple[aTupleIndex] = anEvents[eventsIndex];
 				eventsIndex++;
 //				aTuple[aTupleIndex + 1] = anEvents[eventsIndex + 1];
 //				aTuple[aTupleIndex + 2] = anEvents[eventsIndex + 2];
 			}
-			Map<String, Object> aNameValuePairs = ConcurrentEventUtility.toNameValueMap(aTuple);
+			Map<String, Object> aNameValuePairs = toNameValueMap(aTuple);
 			aResult = checkIterationEvents(aThread, aNameValuePairs);
 			if (aResult.getPercentage() < iterationsEventCredit()) {
 				return aResult;
@@ -985,6 +1110,5 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected String iterationEventsMessage(Thread aThread, Map<String, Object> aNameValuePairs) {
 		return null;
 	}
-	
 
 }

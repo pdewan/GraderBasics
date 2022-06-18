@@ -1,6 +1,7 @@
 package grader.basics.output.observer;
 
 import java.beans.PropertyChangeEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,12 +82,89 @@ public class ObservablePrintStreamUtility {
 		
 		return new PropertyChangeEvent(aSource, aProperty, null, aNewValue);
 	}
-	
+	public static Object toTypedObject(String aName, String aValueString, Class aValueClass) {
+		Class aClass = aValueClass;
+		try {
+			if (aClass == Integer.class || aClass == Number.class) {
+				return Integer.parseInt(aValueString);
+			}
+			if (aClass == Double.class) {
+				return Double.parseDouble(aValueString);
+			}
+			if (aClass == Boolean.class) {
+				return Boolean.parseBoolean(aValueString);
+			}
+			if (aClass == Array.class || aClass == Arrays.class) {
+				String[] anArray = parseStringArray(aValueString);
+				if (aName.contains("Number") || aName.contains("Integer")) {
+					Object[] aRetVal = new Object[anArray.length];
+					try {
+					for (int index = 0; index < anArray.length; index++) {
+						String aString = anArray[index];
+						aRetVal[index] = Integer.parseInt(aString);
+					}
+					return aRetVal;
+					} catch (Exception e) {
+						e.printStackTrace();
+						return anArray;
+					}
+				}
+			}
+			if (aClass == List.class || aClass == ArrayList.class) {
+				List<String> aList = parseStringList(aValueString);
+				if (aName.contains("Number") || aName.contains("Integer")) {
+					List aRetVal = new ArrayList(aList.size());
+					try {
+					for (int index = 0; index < aList.size(); index++) {
+						String aString =  aList.get(index);
+						aRetVal.add (Integer.parseInt(aString));
+					}
+					return aRetVal;
+					} catch (Exception e) {
+						e.printStackTrace();
+						return aList;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+//			return aValueString;
+		}
+		return aValueString;
+	}
+	public static String toTypeString(Object[] aNameAndType) {
+		String aName = (String) aNameAndType[0];
+		Class aClass = (Class) aNameAndType[1];
+		if (aClass == Number.class || aClass == Integer.class || aClass == Long.class) {
+			return "\\d.*";
+		}
+		if (aClass == Double.class ) {
+			return "\\d.*\\.\\d.*";
+		}
+		if (aClass == Boolean.class) {
+			return "(true|false)";
+		}
+		if (aClass == Arrays.class || aClass == Array.class || aClass == List.class || aClass == ArrayList.class) {
+			if (aName.contains("Number") || aName.contains("Integer")) {
+				return "\\[\\d.*\\]";
+			}
+			return "\\[.*\\]";
+		}
+		return ".*";
+
+	}
+
 	public static String[] parseStringArray(String anArrayToString) {
 		String aValuesPart = anArrayToString.substring(1, anArrayToString.length() - 1);
 		String[] retVal = aValuesPart.split(", ");
 		return retVal;
 	}
+	
+	public static List<String> parseStringList(String aListToString) {
+		String[] anArray = parseStringArray(aListToString);
+		return Arrays.asList(anArray);		
+	}
+	
 	
 	public static List<String> toPropertyNames(String[][] aTuples) {
 		List<String> retVal = new ArrayList();
@@ -107,8 +185,10 @@ public class ObservablePrintStreamUtility {
 	
 	public static void main (String[] args) {
 		Object[] anArray = {1, 2, "345 ", 4.5};
+		List<Object> aList = Arrays.asList(anArray);
+		System.out.println(aList);
 		String anArrayToString = Arrays.toString(anArray);
-		String[] aParsedArray = parseStringArray(anArrayToString);
+		Object[] aParsedArray = parseStringArray(anArrayToString);
 	}
 
 }
