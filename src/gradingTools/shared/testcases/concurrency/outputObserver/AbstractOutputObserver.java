@@ -103,8 +103,14 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 		return observablePrintStream;
 	}
 	protected void invokeMainMethod(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {
+		int aPreviousTimeout = BasicProjectExecution.getMethodTimeOut();
+		BasicProjectExecution.setMethodTimeOut(mainTimeOut());
 		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);
-		
+		BasicProjectExecution.setMethodTimeOut(aPreviousTimeout);
+
+	}
+	protected int mainTimeOut() {
+		return BasicProjectExecution.getMethodTimeOut();
 	}
     abstract protected int numExpectedForkedThreads();
     
@@ -126,6 +132,8 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 		waitForTermination();
 		restoreOutput();
 		doNotReceiveEvents();
+		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
+
 		TestCaseResult aRetValOut = checkOutput(getResultingOutErr());
 		
 		if (!sufficientOutputCredit(aRetValOut)) {
@@ -133,7 +141,7 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 			return combineResults(badOutput, aRetValOut);
 		}
 //		 getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges();
-		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
+//		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
 
 		TestCaseResult aNumThreadsCheck = checkNumThreads(
 				numOutputtingForkedThreads);

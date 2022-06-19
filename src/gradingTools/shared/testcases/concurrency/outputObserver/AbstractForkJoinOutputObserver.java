@@ -162,23 +162,41 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //	}
 
 	protected double preForkOutputCredit() {
-		return 0;
+		return 0.1;
 	}
 
 	protected double postForkOutputCredit() {
-		return 0;
+		return 0.1;
 	}
 
 	protected double postJoinOutputCredit() {
-		return 0;
+		return 0.1;
 	}
 
 	protected double threadCountCredit() {
-		return 0;
+		return 0.1;
 	}
 
 	protected double totalIterationsCountCredit() {
-		return 0;
+		return 0.1;
+	}
+	
+	protected double preForkEventCredit() {
+		return 0.1;
+	}
+	protected double interleavingCredit() {
+		return 0.1;
+	}
+	protected double postJoinEventCredit() {
+		return 0.1;
+	}
+
+	protected double iterationsEventCredit() {
+		return 0.1;
+	}
+
+	protected double postIterationsEventCredit() {
+		return 0.1;
 	}
 
 	protected double minimumOutputCredit() {
@@ -189,27 +207,12 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		return aResult.getPercentage() >= minimumOutputCredit();
 	};
 
-	protected double preForkEventCredit() {
-		return 0;
-	}
+	
 
 	protected double forkEventCredit() {
 		return iterationsEventCredit() + postIterationsEventCredit();
 	}
-	protected double interleavingCredit() {
-		return 0;
-	}
-	protected double postJoinEventCredit() {
-		return 0;
-	}
-
-	protected double iterationsEventCredit() {
-		return 0;
-	}
-
-	protected double postIterationsEventCredit() {
-		return 0;
-	}
+	
 
 //	protected double forkedThreadPartialCredit() {
 //		return 0;
@@ -409,7 +412,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 
 	protected String[] postJoinPropertyNames() {
 		if (postJoinPropertyNames == null) {
-			postJoinPropertyNames = toNames(postIterationPropertyNamesAndType());
+			postJoinPropertyNames = toNames(postJoinPropertyNamesAndType());
 		}
 		return postJoinPropertyNames;
 
@@ -499,6 +502,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		aLinesMatcher.setStartLineNumber(forkLineNumber);
 		boolean aPostForkRetVal = true;
 		PropertyBasedStringChecker aPostForkChecker = postForkChecker();
+		if (postForkChecker == null) {
+			return partialPass(postForkOutputCredit(), "Post fork output correct as no fork checker");
+		}
 		postForkProperties = aPostForkChecker.getProperties();
 //		postForkPropertyNames = ObservablePrintStreamUtility.toPropertyNames(postForkProperties);
 		int aNumPostIterationEvents = numPostIterationEvents();
@@ -757,9 +763,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 
 		TestCaseResult anIterationsCountResult = partialPass(totalIterationsCountCredit(),
 				"Correct number of iterations");
-		if (anActualIterationsSize != totalIterationEvents()) {
+		if (anActualIterationsSize < totalIterationEvents()) {
 			anIterationsCountResult = fail(
-					"Actual # iterations  =" + anActualIterationsSize + " != " + "expected #" + totalIterations());
+					"Actual # iterations  =" + anActualIterationsSize + " < " + "expected #" + totalIterations());
 		}
 		int aForkStartIndex = aPreForkEventsSize;
 		int aForkStopIndex = aForkStartIndex + anActualIterationsSize + aPostIterationEventsSize;
@@ -995,6 +1001,10 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //	}
 
 //	protected Map<Thread, ConcurrentPropertyChange[]> iterationsEvents;
+	
+	protected void threadEventProcessingSwitched(Thread aPreviousThread, Thread aNewThread) {
+		
+	}
 
 	protected TestCaseResult checkForkEvents(ConcurrentPropertyChange[] anEvents, int aStartIndex, int aStopIndex) {
 		if (aStopIndex == aStartIndex) {
@@ -1005,7 +1015,10 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		TestCaseResult aResult = partialPass(forkEventCredit(), "Fork correct");
 		TestCaseResult anInterleavingResult = null;
 
-		boolean hasInterleaving = ConcurrentEventUtility.someInterleaving(anEvents, null, null);
+		boolean hasInterleaving = ConcurrentEventUtility.someInterleaving(anEvents,
+				aStartIndex,
+				aStopIndex,
+				null, null);
 		if (!hasInterleaving) {
 			anInterleavingResult = fail ("No interleaving during fork");
 		} else {
@@ -1019,7 +1032,10 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //		TestCaseResult aResult = partialPass(forkEventCredit(), "Fork correct");
 		TestCaseResult anIterationsResult = null;
 		TestCaseResult aPostIterationsResult = null;
+		Thread aPreviousThread = null;
 		for (Thread aThread : threadToForkEvents.keySet()) {
+			threadEventProcessingSwitched(aPreviousThread, aThread);
+			aPreviousThread = aThread;
 			ConcurrentPropertyChange[] anOriginalEvents = threadToForkEvents.get(aThread);
 			if (iterationPropertyNames != null) {
 
@@ -1038,7 +1054,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 				aPostIterationsResult = checkPostIterationEvents(aThread, aPostIterationEvents);
 				if (aPostIterationsResult.getPercentage() < postIterationsEventCredit()) {
 //					return combineResults(anIterationsResult, aPostIterationsResult);
-					combineResults (anInterleavingResult, 
+					return combineResults (anInterleavingResult, 
 							combineResults (anIterationsResult, aPostIterationsResult));
 				}
 			}

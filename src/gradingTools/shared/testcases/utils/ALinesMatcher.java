@@ -116,7 +116,7 @@ public class ALinesMatcher implements LinesMatcher {
 //       	Pattern[] aPatterns = new Pattern[aRegexes.length];
 		resetLineStatus();
 		int aLineNumber = startLineNumber;
-		int aNumMatchableLines = lines.length - startLineNumber;
+ 		int aNumMatchableLines = lines.length - startLineNumber;
 		if ((aNumMatchableLines < aPatterns.length) 
 				&& (aMatchKind == LinesMatchKind.ONE_TIME_UNORDERED||
 				aMatchKind == LinesMatchKind.ONE_TIME_UNORDERED
@@ -166,7 +166,12 @@ public class ALinesMatcher implements LinesMatcher {
 			if (!aMatch) {
 				lastUnmatchedRegex = aPatterns[aRegexIndex].toString();
 				Tracer.info(this, aLineNumber + ": Did not match  pattern " + aRegexIndex + ":" + aPattern);
-
+				Tracer.info(this, "Unmatched lines");
+				for (int i = 0; i < linesUsageStatus.length; i++) {
+					if (!linesUsageStatus[i]) {
+						Tracer.info("index " + i + " line " + lines[i]);
+					}
+				}
 				return false;
 			}
 

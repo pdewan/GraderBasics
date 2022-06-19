@@ -714,12 +714,19 @@ public class ConcurrentEventUtility {
 	}
 	
 	protected static Thread[] emptyThreads = {};
+	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents,
+			Thread[] aThreads,
+			Object[] aMatchedComponents) {
+		return someInterleaving(anOriginalEvents, 0, anOriginalEvents.length, aThreads, aMatchedComponents);
+	}
 
-	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents, Thread[] aThreads,
+	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents, 
+			int from, int to, 
+			Thread[] aThreads,
 			Object[] aMatchedComponents) {
 
 		Map<Thread, ConcurrentPropertyChange[]> aThreadToEvents = getConcurrentPropertyChangesByThread(
-				anOriginalEvents);
+				anOriginalEvents, from, to);
 		List<Integer> aStartIndices = new ArrayList();
 		List<Integer> aStopIndices = new ArrayList();
 //		List<Integer> aThreadsMatched = new ArrayList();

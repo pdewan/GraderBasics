@@ -12,20 +12,20 @@ public class NamedConstantsRatioCheck extends CheckStyleWarningsRatioTestCase {
 	public static final String MESSAGE = "No magic number";
 	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.1;
 
-	public NamedConstantsRatioCheck(String aMessage) {
-		super(null, aMessage);
-//		penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
-	}
+//	public NamedConstantsRatioCheck(String aMessage) {
+//		super(null, aMessage);
+////		penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
+//	}
 
 	public NamedConstantsRatioCheck() {
 		super(null, MESSAGE);
 //		penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
 	}
 
-	public NamedConstantsRatioCheck(double aPenaltyPerMistake) {
-		super(null, MESSAGE, aPenaltyPerMistake);
-
-	}
+//	public NamedConstantsRatioCheck(double aPenaltyPerMistake) {
+//		super(null, MESSAGE, aPenaltyPerMistake);
+//
+//	}
 
 	@Override
 	protected String warningName() {
