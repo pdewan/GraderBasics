@@ -11,13 +11,35 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
 public class CheckstyleClassInstantiatedTestCase extends CheckStyleTestCase {
 	 protected String instantiatedType;
+	 protected String instantiatingMethod;
 //	 protected String typeTag;
 //	 protected String typeName;
+	 
+/*
+ * [INFO] D:\dewan_backup\C\OpenMPTraining\JavaThreadsTraining\src\ConcurrentOddNumbers.java:1: 
+ * Expected instantiation of .*Worker in type default.ConcurrentOddNumbers[Concurrent.*] by 
+ * methods [static private  createRunnables:->void]. Good! [ExpectedClassInstantiations]
+
+ */
 	 public CheckstyleClassInstantiatedTestCase(String aType, String anInstantiatedType) {
+		 this(aType, "", anInstantiatedType);
+//	        super(aType, aType + "!" + anInstantiatedType);
+//	        typeTag = aType;
+//	        String[] aComponents = anInstantiatedType.split("\\.");	        
+//	        instantiatedType = anInstantiatedType;
+	        
+	        
+	        
+	  }
+	 public CheckstyleClassInstantiatedTestCase(String aType, 
+			 String anInstantiatingMethod,
+			 String anInstantiatedType 
+			 ) {
 	        super(aType, aType + "!" + anInstantiatedType);
 	        typeTag = aType;
 	        String[] aComponents = anInstantiatedType.split("\\.");	        
 	        instantiatedType = anInstantiatedType;
+	        instantiatingMethod = anInstantiatingMethod;
 	        
 	        
 	        
@@ -26,14 +48,22 @@ public class CheckstyleClassInstantiatedTestCase extends CheckStyleTestCase {
 
 	@Override
 	public String negativeRegexLineFilter() {
-		return 	".*" + "WARN" + ".*" + instantiatedType + ".*" + typeTag + ".*" + "\\[ExpectedClassInstantiations\\]" + ".*" ;
+		return 	".*" + "WARN" + ".*" + instantiatedType + 
+				".*" + typeTag + ".*" + 
+				instantiatingMethod + ".*" +
+				"\\[ExpectedClassInstantiations\\]" + ".*" ;
 
 //			return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
 				
 	}
 	@Override
 	public String positiveRegexLineFilter() {
-		return 	".*" + "INFO" + ".*" + instantiatedType + ".*" + typeTag + ".*" + "\\[ExpectedClassInstantiations\\]" + ".*" ;
+		return 	".*" + "INFO" + ".*" + 
+				instantiatedType + ".*" + 
+				typeTag + 
+				".*" + 
+				instantiatingMethod + ".*" +
+				"\\[ExpectedClassInstantiations\\]" + ".*" ;
 
 //			return MethodExecutionTest.toRegex(getActualType() + ", missing getter for property "+ property + " of type " + propertyType);
 				

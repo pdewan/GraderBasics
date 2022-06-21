@@ -11,17 +11,28 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckStyleTestCase;
 
 public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 
-	 protected String method;
+	 protected String calledMethod;
+	 protected String callingMethod;
 	 public static final String WARNING_NAME = "has not made expected call";
 		public static final String INFO_NAME = "has made expected call";
 //	 protected String typeTag;
 //	 protected String typeName;
-	 public CheckstyleMethodCalledTestCase(String aType, String aMethod) {
-	        super(aType, aMethod);
+	 public CheckstyleMethodCalledTestCase(String aType, String aCalledMethod) {
+		 this(aType, "", aCalledMethod);
+//	        super(aType, aCalledMethod);
+////	        super(aType, aType + "!" + aMethod);
+//
+//	        typeTag = aType;
+//	        method = aCalledMethod;
+	        
+	  }
+	 public CheckstyleMethodCalledTestCase(String aType, String aCallingMethod, String aCalledMethod) {
+	        super(aType, aCalledMethod);
 //	        super(aType, aType + "!" + aMethod);
 
 	        typeTag = aType;
-	        method = aMethod;
+	        calledMethod = aCalledMethod;
+	        callingMethod = aCallingMethod;
 	        
 	  }
 //	 [MissingMethodCall]
@@ -29,7 +40,7 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	@Override
 	public String negativeRegexLineFilter() {
 //		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
-		return ".*" + "WARN" + ".*" +typeTag + "(.*)" + method + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
+		return ".*" + "WARN" + ".*"  + callingMethod + ".*" + typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
 
 
 		
@@ -40,7 +51,11 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	}
 	@Override
 	public String positiveRegexLineFilter() {
-		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + method + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
+		return ".*" + "INFO" + ".*" + callingMethod + ".*" +typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
+		
+//		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
+
+		
 //		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
 //		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
 //		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";

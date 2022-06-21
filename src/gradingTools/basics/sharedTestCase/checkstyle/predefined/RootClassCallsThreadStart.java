@@ -9,5 +9,9 @@ public class RootClassCallsThreadStart extends CheckstyleMethodCalledTestCase {
 		super(aClassName, THREAD_START_CALL );
 		// TODO Auto-generated constructor stub
 	}
+	public RootClassCallsThreadStart(String aClassName, String aMethodName) {
+		super(aClassName, aMethodName, THREAD_START_CALL );
+		// TODO Auto-generated constructor stub
+	}
 
 }

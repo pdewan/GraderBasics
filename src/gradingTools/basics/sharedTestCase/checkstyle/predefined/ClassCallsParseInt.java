@@ -9,4 +9,7 @@ public class ClassCallsParseInt extends CheckstyleMethodCalledTestCase {
 		super(aClassName, "java.lang.Integer!parseInt:String->int");
 	}
 
+	public ClassCallsParseInt(String aClassName, String aCallingMethod) {
+		super(aClassName, aCallingMethod, "java.lang.Integer!parseInt:String->int");
+	}
 }

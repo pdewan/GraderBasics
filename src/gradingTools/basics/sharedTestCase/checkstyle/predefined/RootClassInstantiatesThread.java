@@ -9,5 +9,10 @@ public class RootClassInstantiatesThread extends CheckstyleClassInstantiatedTest
 		super(aClassName, "Thread");
 		// TODO Auto-generated constructor stub
 	}
+	public RootClassInstantiatesThread(String aClassName, String aMethod) {
+		super(aClassName,  aMethod,  "Thread");
+		// TODO Auto-generated constructor stub
+	}
+
 
 }

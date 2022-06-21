@@ -46,6 +46,11 @@ public class DirectoryUtils {
      */
     public static Option<File> locateFolder(File currentDir, final String folderName) {
         // Don't accept files (they don't make sense) or Mac meta folders
+    	try {
+    		if (currentDir == null) {
+//    			System.out.println("Null current dir in locate folder");
+    			return Option.empty();
+    		}
         if (!currentDir.isDirectory() || currentDir.getName().equals("__MACOSX")) {
             return Option.empty();
         } else {
@@ -67,6 +72,11 @@ public class DirectoryUtils {
                 return Option.empty();
             }
         }
+    	} catch (Exception e) {
+    		System.out.println ("Exception:" + e.getMessage());
+    		System.out.println ("Current file " + currentDir + " folder name " + folderName);
+    		 return Option.empty();
+    	}
     }
 
     /**

@@ -728,6 +728,10 @@ public class BasicProject implements Project {
 //	protected boolean eclipseFolderExists = true;
 	public File getCheckstyleOutFolder() {
 		if (checkstyleOutFolder == null) {
+			File aProjectFolder = getProjectFolder();
+			if (aProjectFolder == null) {
+				projectFolder = new File(".");
+			}
 			File anEclipseFolder = new File(getProjectFolder().getAbsoluteFile() + "/Logs/Eclipse");
 			File aCheckStyleAllFile = new File(
 					getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/CheckStyle_All.csv");

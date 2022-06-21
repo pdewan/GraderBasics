@@ -11,5 +11,7 @@ public class RootClassCallsThreadJoin extends CheckstyleMethodCalledTestCase {
 		super(aClassName, JOIN_CALL);
 	}
 	
-
+	public RootClassCallsThreadJoin(String aClassName, String aMethod) {
+		super(aClassName, aMethod, JOIN_CALL);
+	}
 }
