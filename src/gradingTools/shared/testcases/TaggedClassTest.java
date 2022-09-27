@@ -11,13 +11,13 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 public abstract class TaggedClassTest extends NamedClassTest
 //PassFailJUnitTestCase 
 {
-	protected Class findClassByTag(String aTag) {
+	protected Class findClassByTag(Project aProject, String aTag) {
 		return BasicProjectIntrospection.findClassByTags( aTag);
 	}
 	
 	@Override
-	protected Class findClass(String aTag) {
-		return findClassByTag(aTag);
+	protected Class findClass(Project aProject, String aTag) {
+		return findClassByTag(null, aTag);
 	}
 
 }

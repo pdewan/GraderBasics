@@ -16,12 +16,12 @@ public abstract class TaggedOrNamedClassTest extends TaggedClassTest
 //	}
 	
 	@Override
-	protected Class findClass(String aTag) {
-		Class retVal = findClassByName (aTag);
+	protected Class findClass(Project aProject, String aTag) {
+		Class retVal = findClassByName (null, aTag);
 		if (retVal != null) {
 			return retVal;
 		}
-		return findClassByTag(aTag);
+		return findClassByTag(null, aTag);
 
 	}
 

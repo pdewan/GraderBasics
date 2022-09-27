@@ -14,16 +14,17 @@ public abstract class NamedClassTest extends PassFailJUnitTestCase {
 	public Class getTaggedClass() {
 		return taggedClass;
 	}
-	protected Class findClassByName(String aTag) {
+	protected Class findClassByName(Project aProject, String aName) {
 		try {
-			return Class.forName(aTag);
-		} catch (ClassNotFoundException e) {
+			return  BasicProjectIntrospection.findClassByName(aProject, aName);
+		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 //		return BasicProjectIntrospection.findClassByNameMatch(CurrentProjectHolder.getOrCreateCurrentProject(), aTag);
 	}
-	protected Class findClass(String aTag) {
-		return findClassByName(aTag);
+	protected Class findClass(Project aProject, String aTag) {
+		return findClassByName(null, aTag);
 //		try {
 //			return Class.forName(aTag);
 //		} catch (ClassNotFoundException e) {
@@ -42,7 +43,7 @@ public abstract class NamedClassTest extends PassFailJUnitTestCase {
 			 }
 					 
 					 
-			 taggedClass =  findClass(aTag);
+			 taggedClass =  findClass(null, aTag);
 			
 		    if (taggedClass == null) {	
 		    	return fail ("No class in project matching name/tag:" + aTag);

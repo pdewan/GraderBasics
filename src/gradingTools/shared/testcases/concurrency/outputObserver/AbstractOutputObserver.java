@@ -170,7 +170,7 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 	public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
 			NotGradableException {
 		try {
-			Class aMainClass = mainClass();
+			Class aMainClass = mainClass(project);
 			TestCaseResult retVal = 
 			runAndCheck(aMainClass, args(), inputs());
 			return retVal;			
@@ -183,7 +183,7 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 			throw new NotGradableException();
 		}
 	}
-	protected Class mainClass() {
-		return findClassByName(mainClassIdentifier());
+	protected Class mainClass(Project aProject) {
+		return findClassByName(aProject, mainClassIdentifier());
 	}
 }

@@ -1267,6 +1267,17 @@ public class BasicProjectIntrospection {
 		// toRegex(aName) );
 		// return findClass(aProject, aName, aName, aName, aName );
 	}
+	public static Class findClassByName(Project aProject, String aName) {
+		return findClass(aProject, aName, (String) null,
+//				toRegex(aName), null);
+		(String) null, null);
+
+		
+		
+		// return findClass(aProject, null, aName, toRegex(aName),
+		// toRegex(aName) );
+		// return findClass(aProject, aName, aName, aName, aName );
+	}
 
 	public static Class findClassByTagMatch(Project aProject, String aName) {
 		return findClass(aProject, (String) null, (String) null, null,

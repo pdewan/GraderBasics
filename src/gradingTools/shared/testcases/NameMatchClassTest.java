@@ -11,7 +11,7 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 public abstract class NameMatchClassTest extends NamedClassTest
 //PassFailJUnitTestCase 
 {
-	protected Class findClass(String aTag) {
+	protected Class findClass(Project aProject, String aTag) {
 		 return BasicProjectIntrospection.findClassByNameMatch(CurrentProjectHolder.getOrCreateCurrentProject(), aTag);
 	}
 //	protected Class taggedClass;
