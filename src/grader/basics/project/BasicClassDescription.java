@@ -37,12 +37,21 @@ public class BasicClassDescription implements ClassDescription {
 
     @Override
     public String[] getTags() {
-        try {
-            return javaClass.getAnnotation(Tags.class).value();
-        } catch (Exception e) {
-            return new String[]{};
-        }
+//        try {
+//            return javaClass.getAnnotation(Tags.class).value();
+//        } catch (Exception e) {
+//            return new String[]{};
+//        }
+      return getTags(javaClass);   
     }
+    
+    public static String[] getTags(Class<?> aClass) {
+      try {
+          return aClass.getAnnotation(Tags.class).value();
+      } catch (Exception e) {
+          return new String[]{};
+      }
+  }
 
     @Override
     public String getStructurePatternName() {
