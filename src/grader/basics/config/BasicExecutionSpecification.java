@@ -134,10 +134,12 @@ public interface BasicExecutionSpecification {
 	void setValgrindTraceFile(String newVal);
 	String getValgrindTraceDirectory();
 	void setValgrindTraceDirectory(String newVal);
-	String getDockerProgramName();
-	void setDockerProgramName(String newVal);
+	String getDockerPath();
+	void setDockerPath(String newVal);
 	String getValgrindImage();
 	void setValgrindImage(String newVal);
+	String getDockerContainer();
+	void setDockerContainer(String newVal);
 	
 	
 }

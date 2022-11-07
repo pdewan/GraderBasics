@@ -28,9 +28,10 @@ public interface CommandGenerator {
 			String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
 			throws NotRunnableException;
 
-	void runPostIndividualCommand(RunningProject runner, InputGenerator anOutputBasedInputGenerator, String[] aCommand,
-			String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
-			throws NotRunnableException;
+//	void runPostIndividualCommand(RunningProject runner, InputGenerator anOutputBasedInputGenerator, String[] aCommand,
+//			String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
+//			throws NotRunnableException;
+	void runPostIndividualCommand(RunningProject runner);
 
 	public void  runPreTeamCommands (String aProcessTeam, RunningProject runner, InputGenerator anOutputBasedInputGenerator
 			
@@ -40,6 +41,8 @@ public interface CommandGenerator {
 	public void  runPostTeamCommands (String aProcessTeam, RunningProject runner, InputGenerator anOutputBasedInputGenerator
 			
 			) throws NotRunnableException;
+
+	String[] getExecutionCommand(Project aProject, File aBuildFolder, String anEntryPoint, String[] anArgs);
 	
 
 

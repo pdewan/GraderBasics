@@ -47,6 +47,18 @@ public class CommandLineHelper {
 		
 		return execute(dockerCommand, silent, input);
 	}
+	public static String[] getDockerCommand(String[] command) throws Exception {
+		String[] dockerCommand = {
+				DockerHelper.DOCKER_PATH,
+				"exec",
+				DockerHelper.CONTAINER_NAME,
+				"sh",
+				"-c",
+				String.join(" ", command)
+		};
+		
+		return dockerCommand;
+	}
 	
 	public static int delete(Path filepath) throws Exception {
 		File aFile = filepath.toFile();

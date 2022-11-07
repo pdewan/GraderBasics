@@ -900,15 +900,23 @@ protected String requirementsLocation = null;
 	}
 	
 	@Override
-	public String getDockerProgramName() {
+	public String getDockerPath() {
 		return getStringProperty(BasicStaticConfigurationUtils.DOCKER_PROGRAM_NAME, BasicStaticConfigurationUtils.DEFAULT_DOCKER_PRORAM_NAME);
 	}
 	
 	@Override
-	public void setDockerProgramName(String newVal) {
+	public void setDockerPath(String newVal) {
 		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.DOCKER_PROGRAM_NAME, newVal);
 	}
+	@Override
+	public String getDockerContainer() {
+		return getStringProperty(BasicStaticConfigurationUtils.DOCKER_CONTAINER_NAME, BasicStaticConfigurationUtils.DEFAULT_DOCKER_CONTAINER_NAME);
+	}
 	
+	@Override
+	public void setDockerContainer(String newVal) {
+		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.DOCKER_CONTAINER_NAME, newVal);
+	}
 	@Override
 	public String getValgrindConfigurationDirectory() {
 		return getStringProperty(BasicStaticConfigurationUtils.VALGRIND_CONFIGURATION_DIRECTORY, BasicStaticConfigurationUtils.DEFAULT_VALGRIND_CONFIGURATION_DRECTORY);

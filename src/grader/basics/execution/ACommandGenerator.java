@@ -55,9 +55,8 @@ public abstract class ACommandGenerator implements CommandGenerator{
 		
 	}
 	@Override
-	public void  runPostIndividualCommand (RunningProject runner, InputGenerator anOutputBasedInputGenerator,
-			String[] aCommand, String input, String[] args, int timeout,
-			String aProcessName, boolean anOnlyProcess) throws NotRunnableException {
+	public void  runPostIndividualCommand (RunningProject runner)
+	{
 		
 	}
 	@Override
@@ -71,6 +70,15 @@ public abstract class ACommandGenerator implements CommandGenerator{
 		
 			) throws NotRunnableException {
 		
+	}
+	@Override
+	public  String[] getExecutionCommand(Project aProject,
+			File aBuildFolder, String anEntryPoint, String[] anArgs) {
+//		return StaticConfigurationUtils.getExecutionCommand(aProject, aBuildFolder, anEntryPoint);
+//		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
+		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
+//		return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
+//		return null;
 	}
 	
 }

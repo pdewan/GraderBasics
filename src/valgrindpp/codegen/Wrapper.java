@@ -24,10 +24,13 @@ public class Wrapper {
 		imports = new ArrayList<String>();
 		functions = new ArrayList<Function>();
 	}
-	
+//	public void toFile(String filename, String studentDir, String srcDir) throws Exception {
+
 	public void toFile(String filename, String studentDir) throws Exception {
 		File file = new File(Paths.get(studentDir, filename + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".c").toString());
-		
+//		File file = new File(Paths.get(filename + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".c").toString());
+//		File file = new File(Paths.get(filename + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".c").toString());
+
 		if(file.exists()) {
 			file.delete();
 		}

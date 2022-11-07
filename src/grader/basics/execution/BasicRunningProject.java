@@ -14,6 +14,7 @@ import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.project.Project;
 import grader.basics.util.TimedProcess;
@@ -742,6 +743,8 @@ public void appendCumulativeOutput() {
 //        }
         appendCumulativeOutput();
         maybeSetCurrentProjectIO();
+		BasicLanguageDependencyManager.getMainClassFinder().runPostIndividualCommand(
+				this);
 //        try {
 //            Tracer.info(this, Thread.currentThread() + " waiting for output sorter to exit");
 //        	int anOutputSleepTime = getOutputSleepTime();

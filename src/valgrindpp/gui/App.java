@@ -52,8 +52,9 @@ public class App implements Runnable {
 			public void actionPerformed(ActionEvent event) {
 				try {
 					Paths.get(pathTextField.getText());
-					List<Test> tests = valgrindpp.main.Main.testDirectory(pathTextField.getText());
-					
+//					List<Test> tests = valgrindpp.main.Main.testDirectory(pathTextField.getText());
+					List<Test> tests = valgrindpp.main.Main.testMakefileDirectory(pathTextField.getText());
+
 					results.removeAll();
 					
 					for(Test test: tests) {

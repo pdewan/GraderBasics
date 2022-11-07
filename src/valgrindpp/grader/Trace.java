@@ -17,8 +17,12 @@ public class Trace {
 	}
 	
 	public Trace(String trace) throws Exception {
+		String aPrcessedTrace = trace;
+		if (trace.endsWith("\n")) {
+			aPrcessedTrace = trace.substring(0, trace.length() - 1);
+		}
 		Pattern pattern = Pattern.compile("([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
-		Matcher m = pattern.matcher(trace);
+		Matcher m = pattern.matcher(aPrcessedTrace);
 		
 		if(m.matches()) {
 			timestamp = Long.parseLong(m.group(1));

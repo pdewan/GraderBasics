@@ -1,10 +1,26 @@
 package valgrindpp.helpers;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.config.BasicStaticConfigurationUtils;
+
 public class DockerHelper {
-	public static final String IMAGE_NAME = "nalingaddis/valgrind";
-	public static final String CONTAINER_NAME = "grader-container";
+//	public static final String IMAGE_NAME = "nalingaddis/valgrind";
+	public static final String IMAGE_NAME = BasicExecutionSpecificationSelector.
+			getBasicExecutionSpecification().getValgrindImage();
+
+//	public static final String CONTAINER_NAME = "grader-container";
+	public static final String CONTAINER_NAME =  BasicExecutionSpecificationSelector.
+			getBasicExecutionSpecification().getDockerContainer();
 	//public static final String DOCKER_PATH = "/usr/local/bin/docker";
-	public static final String DOCKER_PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe";	
+//	public static final String DOCKER_PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe";	
+//	public static final String DOCKER_PATH = "docker";
+	public static final String DOCKER_PATH =
+			BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerPath();
+	
+
+
+
+
 	public static int startContainer() throws Exception {
 		return createContainer(System.getProperty("user.dir"));
 	}

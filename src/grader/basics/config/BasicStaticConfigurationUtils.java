@@ -143,16 +143,19 @@ public class BasicStaticConfigurationUtils {
 	
 
 	public static final String VALGRIND_CONFIGURATION_DIRECTORY = "valgrindDirectory";
-	public static final String DEFAULT_VALGRIND_CONFIGURATION_DRECTORY = null;
+	public static final String DEFAULT_VALGRIND_CONFIGURATION_DRECTORY = "config//valgrind";
 	
 	public static final String VALGRIND_TRACE_FILE = "valgrindTraceFile";
 	public static final String DEFAULT_VALGRIND_TRACE_FILE = "ValgrindTrace.txt";
 	
 	public static final String VALGRIND_TRACE_DIRECTORY = "valgrindTraceDirectory";
-	public static final String DEFAULT_VALGRIND_TRACE_DIRECTORY = null;
+	public static final String DEFAULT_VALGRIND_TRACE_DIRECTORY = "Logs//Valgrind";
 	
 	public static final String DOCKER_PROGRAM_NAME = "docker_program_name";
 	public static final String DEFAULT_DOCKER_PRORAM_NAME = "docker";
+	
+	public static final String DOCKER_CONTAINER_NAME = "docker_container";
+	public static final String DEFAULT_DOCKER_CONTAINER_NAME = "grader-container";
 
 	public static final String TRACING= "tracing";
 	public static final boolean DEFAULT_TRACING = true;

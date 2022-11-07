@@ -714,11 +714,10 @@ public class BasicProcessRunner implements Runner {
 	}
 	protected  String[] getExecutionCommand(Project aProject,
 			File aBuildFolder, String anEntryPoint, String[] anArgs) {
-//		return StaticConfigurationUtils.getExecutionCommand(aProject, aBuildFolder, anEntryPoint);
+
 //		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
-		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
-//		return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
-//		return null;
+//		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
+		return BasicLanguageDependencyManager.getMainClassFinder().getExecutionCommand(aProject, aBuildFolder, anEntryPoint, anArgs);
 	}
 	@Override
 	public RunningProject run(InputGenerator aDynamicInputProvider, String anEntryPoint, String input,
@@ -1069,7 +1068,7 @@ public class BasicProcessRunner implements Runner {
 			runner.end();
 		}
 		// return runner;
-		BasicLanguageDependencyManager.getMainClassFinder().runPostIndividualCommand(runner, anOutputBasedInputGenerator, aCommand, input, args, timeout, aProcessName, anOnlyProcess);
+//		BasicLanguageDependencyManager.getMainClassFinder().runPostIndividualCommand(runner, anOutputBasedInputGenerator, aCommand, input, args, timeout, aProcessName, anOnlyProcess);
 
 		return process;
 	}

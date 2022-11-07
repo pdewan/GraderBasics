@@ -1,5 +1,6 @@
 package valgrindpp.codegen;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -11,7 +12,19 @@ public class Parser {
 	}
 	
 	public Wrapper parse() throws Exception {
-		InputStream stream = Parser.class.getResourceAsStream("/"+filename);
+//		String aSingleSlashName = filename.replaceAll("//", "/");
+//		InputStream stream = Parser.class.getResourceAsStream("/"+filename);
+//		if (stream == null) {
+//		
+//		 stream = Parser.class.getResourceAsStream("/home/"+filename);
+//		}
+		
+//		InputStream stream = Parser.class.getResourceAsStream(filename);
+		
+		InputStream stream = new FileInputStream(filename);
+//		InputStream stream = new FileInputStream(aSingleSlashName);
+
+		
 		Scanner scanner = new Scanner(stream);
 		
 		Wrapper wrapper = new Wrapper();

@@ -10,6 +10,7 @@ import java.util.List;
 //import framework.project.Project;
 import java.util.Map;
 
+import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.project.Project;
 
 public class AnExecutableFinder extends ACommandGenerator implements CommandGenerator {
@@ -136,7 +137,15 @@ public class AnExecutableFinder extends ACommandGenerator implements CommandGene
 		public void setDefaultCommand(List<String> aCommand) {
 			defaultCommand = aCommand;
 		}
-		
+//		@Override
+//		public  String[] getExecutionCommand(Project aProject,
+//				File aBuildFolder, String anEntryPoint, String[] anArgs) {
+////			return StaticConfigurationUtils.getExecutionCommand(aProject, aBuildFolder, anEntryPoint);
+////			return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
+//			return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
+////			return BasicLanguageDependencyManager.getMainClassFinder().getDefaultCommand();
+////			return null;
+//		}
 	
 	//	@Override
 	//	public Class mainClass(RootCodeFolder aRootCodeFolder,
