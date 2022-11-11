@@ -5,23 +5,27 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class Parser {
-	private String filename;
+	private String relativeFilename;
+	private String fileName;
 	
-	public Parser(String filename) {
-		this.filename = filename;
+	public Parser(String aFileName, String aRelativeFileName) {
+		fileName = aFileName;
+		relativeFilename = aRelativeFileName;
 	}
 	
 	public Wrapper parse() throws Exception {
-//		String aSingleSlashName = filename.replaceAll("//", "/");
-//		InputStream stream = Parser.class.getResourceAsStream("/"+filename);
+//		String aSingleSlashName = relativeFilename.replaceAll("//", "/");
+//		InputStream stream = Parser.class.getResourceAsStream("/"+relativeFilename);
 //		if (stream == null) {
 //		
-//		 stream = Parser.class.getResourceAsStream("/home/"+filename);
+//		 stream = Parser.class.getResourceAsStream("/home/"+relativeFilename);
 //		}
+//		InputStream stream1 = Parser.class.getResourceAsStream("/" + relativeFilename);
+
 		
-//		InputStream stream = Parser.class.getResourceAsStream(filename);
+//		InputStream stream = Parser.class.getResourceAsStream(relativeFilename);
 		
-		InputStream stream = new FileInputStream(filename);
+		InputStream stream = new FileInputStream(fileName);
 //		InputStream stream = new FileInputStream(aSingleSlashName);
 
 		

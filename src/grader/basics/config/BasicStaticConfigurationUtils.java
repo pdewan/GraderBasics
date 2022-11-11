@@ -199,6 +199,8 @@ public class BasicStaticConfigurationUtils {
 	public static final String OUTPUT_TRACE = "outpt";
 	public static final boolean DEFAULT_OUTPUT_TRACE = false;
 
+	public static final String DOCKER_MOUNT_IS_COPY = "dockerMountIsCopy";
+	public static final boolean DEFAULT_DOCKER_MOUNT_IS_COPY = false;
 
 
 //	private static  List<String> basicCommand;

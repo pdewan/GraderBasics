@@ -3,7 +3,7 @@ package valgrindpp.grader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Trace {
+public class ValgrindTrace {
 	public long timestamp, thread;
 	public String fnname, result;
 	public String[] arguments;
@@ -16,7 +16,7 @@ public class Trace {
 		private static final long serialVersionUID = 1;
 	}
 	
-	public Trace(String trace) throws Exception {
+	public ValgrindTrace(String trace) throws Exception {
 		String aPrcessedTrace = trace;
 		if (trace.endsWith("\n")) {
 			aPrcessedTrace = trace.substring(0, trace.length() - 1);

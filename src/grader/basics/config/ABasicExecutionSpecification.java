@@ -468,12 +468,12 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.RESORT_TIME, aResortTime);
     	
     }
-    @Override
-    public void setProcessOutputWaitTime(Integer newVal) {
-//    	resortTime = aResortTime;
-    	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, newVal);
-    	
-    }
+//    @Override
+//    public void setProcessOutputWaitTime(Integer newVal) {
+////    	resortTime = aResortTime;
+//    	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, newVal);
+//    	
+//    }
     @Override
     public void setProcessTeamOutputWaitTime(Integer newVal) {
 //    	resortTime = aResortTime;
@@ -487,6 +487,12 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
     @Override
     public  Integer getProcessOutputSleepTime() {
     	return getIntegerProperty(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, BasicRunningProject.PROCESS_OUTPUT_SLEEP_TIME);
+    }
+    @Override
+    public void setProcessOutputSleepTime(Integer newVal) {
+//    	resortTime = aResortTime;
+    	runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.OUTPUT_WAIT_TIME, newVal);
+    	
     }
     @Override
     public  Integer getFirstInputDelay() {
@@ -1075,6 +1081,15 @@ protected String requirementsLocation = null;
 	@Override
 	public void setEchoOutput(boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.ECHO_OUTPUT, newVal);		
+	}
+	@Override
+	public boolean getDockerMountIsCopy() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.DOCKER_MOUNT_IS_COPY, 
+				BasicStaticConfigurationUtils.DEFAULT_OUTPUT_TRACE);
+	}
+	@Override
+	public void setDockerMountIsCopy(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.DOCKER_MOUNT_IS_COPY, newVal);		
 	}
 	@Override
 	public boolean getOutputValgrindTrace() {

@@ -674,7 +674,7 @@ public void appendCumulativeOutput() {
 
 	public static void setProcessOutputSleepTime(Integer processOutputSleepTime) {
 //		BasicRunningProject.processOutputSleepTime = processOutputSleepTime;
-		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setProcessOutputWaitTime(processOutputSleepTime);
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setProcessOutputSleepTime(processOutputSleepTime);
 
 	}
 

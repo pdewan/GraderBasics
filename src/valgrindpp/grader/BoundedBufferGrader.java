@@ -19,7 +19,7 @@ public class BoundedBufferGrader extends AbstractGrader {
 		
 		List<Test> tests = new ArrayList<Test>();
 		
-		for(Trace trace: traces) {
+		for(ValgrindTrace trace: traces) {
 			Map<Long, Set<String>> map;
 			
 			if(trace.fnname.equals("sem_wait")) {

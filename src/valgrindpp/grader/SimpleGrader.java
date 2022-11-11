@@ -23,7 +23,7 @@ public class SimpleGrader extends AbstractGrader {
 	private Test countFuncCall(String fnname, int requiredCount) {
 		int count = 0; 
 		
-		for(Trace trace: traces) {
+		for(ValgrindTrace trace: traces) {
 			if(trace.fnname.equals(fnname)) {
 				count ++;
 			}

@@ -253,6 +253,7 @@ public class BasicProject implements Project {
 //            aDirectory = new File(aLocation);
 			throw new FileNotFoundException("No directory given");
 		}
+		
 		if (aSourceFilePattern == null) {
 			sourceFilePattern = EMPTY_STRING;
 		} else {
@@ -264,8 +265,15 @@ public class BasicProject implements Project {
 //    	project = aProject;
 //    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
 //    	BasicConfigurationManagerSelector.getConfigurationManager().setProjectDirectory(aDirectory);
-
+		
+	
 		projectFolder = aDirectory;
+		File[] aFiles = aDirectory.listFiles();
+		if (aFiles.length == 1 && aFiles[0].getName().equals(aDirectory.getName())) {
+			// zipping issue;
+			projectFolder = aFiles[0];
+		}
+		
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
 //

@@ -11,7 +11,7 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.utils.RunningProjectUtils;
-import valgrindpp.grader.Trace;
+import valgrindpp.grader.ValgrindTrace;
 
 public class MutexTest extends PassFailJUnitTestCase {
 
@@ -22,11 +22,11 @@ public class MutexTest extends PassFailJUnitTestCase {
 		String mutexOut = noInputRunningProject.await();
 		Map<String, List<String>> aLinesMap = noInputRunningProject.getProcessOutputLines();
 		List<String> aMainLines = aLinesMap.get("main");
-		List<Trace> aMainTraces = new ArrayList();
+		List<ValgrindTrace> aMainTraces = new ArrayList();
 		List<String> aMainOutputs = new ArrayList();
 		for (String aLine: aMainLines) {
 			try {
-				aMainTraces.add(new Trace(aLine));
+				aMainTraces.add(new ValgrindTrace(aLine));
 			} catch (Exception e) {
 				aMainOutputs.add(aLine);
 				// TODO Auto-generated catch block

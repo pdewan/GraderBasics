@@ -29,7 +29,7 @@ public class Main {
 			DockerHelper.deleteContainer();
 			DockerHelper.createContainer(directory);
 			
-			Parser parser = new Parser(CONFIG_FILE);
+			Parser parser = new Parser(CONFIG_FILE, null);
 			
 			Wrapper wrapper = parser.parse();
 			wrapper.toFile(CONFIG_FILE, directory);
@@ -62,7 +62,7 @@ public class Main {
 			DockerHelper.deleteContainer();
 			DockerHelper.createContainer(directory);
 			
-			Parser parser = new Parser(CONFIG_FILE);
+			Parser parser = new Parser(CONFIG_FILE, null);
 			
 			Wrapper wrapper = parser.parse();
 			wrapper.toFile(CONFIG_FILE, directory);

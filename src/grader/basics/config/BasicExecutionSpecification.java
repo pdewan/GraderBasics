@@ -48,7 +48,7 @@ public interface BasicExecutionSpecification {
 	Integer getProcessOutputSleepTime();
 	Integer getProcessTeamOutputSleepTime();
 	boolean getWaitForResortProperty();
-	void setProcessOutputWaitTime(Integer newVal);
+	void setProcessOutputSleepTime(Integer newVal);
 	void setProcessTeamOutputWaitTime(Integer newVal);
 	void setGraderProcessTimeOut(int newVal);
 	int getProcessTimeOut();
@@ -144,6 +144,6 @@ public interface BasicExecutionSpecification {
 	void setEchoOutput(boolean newVal);
 	boolean getOutputValgrindTrace();
 	void setOutputValgrindTrace(boolean newVal);
-	
-	
+	boolean getDockerMountIsCopy();
+	void setDockerMountIsCopy(boolean newVal);	
 }

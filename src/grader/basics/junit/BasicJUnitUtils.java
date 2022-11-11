@@ -312,7 +312,7 @@ public class BasicJUnitUtils {
 		for (Failure failure : aResult.getFailures()) {
 			Tracer.info(BasicJUnitUtils.class, "To string" + failure.toString());
 			Tracer.info(BasicJUnitUtils.class, "Header" + failure.getTestHeader());
-			Tracer.info(BasicJUnitUtils.class, "Trace:" + failure.getTrace());
+			Tracer.info(BasicJUnitUtils.class, "ValgrindTrace:" + failure.getTrace());
 			Tracer.info(BasicJUnitUtils.class, "Description:" + failure.getDescription());
 		}
 		Tracer.info(BasicJUnitUtils.class, "" + aResult.wasSuccessful());

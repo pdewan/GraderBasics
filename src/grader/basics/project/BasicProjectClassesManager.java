@@ -305,7 +305,7 @@ public class BasicProjectClassesManager implements ClassesManager {
 				} else {
 					
 					System.err.println("Class loader returned null class for: " + className);
-//					System.out.println("Trace of steps before this error");
+//					System.out.println("ValgrindTrace of steps before this error");
 //					System.out.println(Tracer.getBufferedTracedMessages());
 //					Tracer.clearTracedMessages();
 					System.out.println("Trying to compile classes");
@@ -320,7 +320,7 @@ public class BasicProjectClassesManager implements ClassesManager {
 //				}
 			} catch (IncompatibleClassChangeError e) {
 				System.err.println("IncompatibleClassChangeError :" + file + " "+  e.getMessage());
-				System.out.println("Trace of steps before this error");
+				System.out.println("ValgrindTrace of steps before this error");
 				System.out.println(Tracer.getBufferedTracedMessages());
 			} catch (UnsupportedClassVersionError e) {
 				maybeCompileWrongVersion(className, file, sourceFiles);

@@ -40,7 +40,7 @@ public class MutexLruGrader extends AbstractGrader {
 		Set<String> seen = new HashSet<String>(), inits = new HashSet<String>();
 		boolean called = false;
 		
-		for(Trace trace: traces) {
+		for(ValgrindTrace trace: traces) {
 			if(trace.fnname.equals("pthread_cond_init")) {
 				seen.add(trace.arguments[0]);
 				inits.add(trace.arguments[0]);
@@ -59,7 +59,7 @@ public class MutexLruGrader extends AbstractGrader {
 	private boolean releaseConditionedWaiters() {
 		
 		Set<String> waiters = new HashSet<String>(), seen = new HashSet<String>();
-		for(Trace trace: traces) {
+		for(ValgrindTrace trace: traces) {
 			if(trace.fnname.equals("pthread_cond_wait")) {				
 				if(!seen.contains(trace.arguments[0])) 
 						waiters.add(trace.arguments[0]);
@@ -79,7 +79,7 @@ public class MutexLruGrader extends AbstractGrader {
 		
 		Map<Long, Boolean> threadState = new HashMap<Long, Boolean>();
 		
-		for(Trace trace: traces) {
+		for(ValgrindTrace trace: traces) {
 			switch(trace.fnname) {
 			case "clean": 
 				Boolean calledSignal = threadState.get(trace.thread);
@@ -103,7 +103,7 @@ public class MutexLruGrader extends AbstractGrader {
 //		Long shutdownThread = (long) -1;
 //		String lock = "";
 //		
-//		for(Trace trace: traces) {
+//		for(ValgrindTrace trace: traces) {
 //			if(trace.fnname.equals("pthread_mutex_init")) {
 //				lock = trace.arguments[0];
 //			}
