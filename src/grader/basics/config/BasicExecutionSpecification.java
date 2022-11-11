@@ -140,6 +140,10 @@ public interface BasicExecutionSpecification {
 	void setValgrindImage(String newVal);
 	String getDockerContainer();
 	void setDockerContainer(String newVal);
+	boolean getEchoOutput();
+	void setEchoOutput(boolean newVal);
+	boolean getOutputValgrindTrace();
+	void setOutputValgrindTrace(boolean newVal);
 	
 	
 }

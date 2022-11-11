@@ -74,6 +74,7 @@ public class TimedProcess {
         	return 0;
         } else {
         	Tracer.info(this, "Process timedout ");
+        	System.err.println("Process timed out in seconds:" + timeout);
         	return -1;
 
         }

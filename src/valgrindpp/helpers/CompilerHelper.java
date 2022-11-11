@@ -30,10 +30,11 @@ public class CompilerHelper {
 		this.cFile = configFile + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".c";
 		this.traceFile = traceFile;
 	}
-	public CompilerHelper(String aSourceFolder, String aBuildFolder, String configFile, String studentDir, String traceFile) {
-		src = toRelativePath(studentDir, aSourceFolder) ;
-		bin = toRelativePath(studentDir, aBuildFolder);
-		
+	public CompilerHelper(String anSrc, String aBin, String configFile, String studentDir, String traceFile) {
+//		src = toRelativePath(studentDir, aSourceFolder) ;
+//		bin = toRelativePath(studentDir, aBuildFolder);
+		src = anSrc;
+		bin = aBin;
 		
 		this.studentDir = studentDir;
 		this.objFile = bin  + configFile + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".o";

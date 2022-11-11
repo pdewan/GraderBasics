@@ -36,7 +36,7 @@ public class AValgrindDirectoryCommandGenerator extends AValgrindCommandGenerato
 	}
 protected String[] getBasicTraceCommand( ) {
 		
-		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDir, traceFileName);
+//		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDir, traceFileName);
 		String fullExecName = bin + CompilerHelper.EXEC_NAME;
 //		String aRedirection = 
 //				Tracer.showInfo()?
@@ -51,7 +51,8 @@ protected String[] getBasicTraceCommand( ) {
 //				"| tee",
 //				">",
 //				traceFile
-				aRelativeTraceFile
+//				aRelativeTraceFile
+				relativeTraceFileName
 		};
 		return command;
 }

@@ -120,6 +120,9 @@ public class BasicLanguageDependencyManager {
 	public static CommandGenerator getMainClassFinder() {
 		return languageToMainClassFinder.get(getLanguage());
 	}
+	public static void setMainClassFinder(CommandGenerator aCommandGenerator) {
+		 languageToMainClassFinder.put(getLanguage(), aCommandGenerator);
+	}
 	
 //	public static ClassFilesCompiler getSourceFilesCompiler() {
 //		return languageToCompiler.get(getLanguage());

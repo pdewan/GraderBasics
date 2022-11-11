@@ -1067,5 +1067,24 @@ protected String requirementsLocation = null;
 		
 	}
 	
+	@Override
+	public boolean getEchoOutput() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.ECHO_OUTPUT, 
+				BasicStaticConfigurationUtils.DEFAULT_ECHO_OUTPUT);
+	}
+	@Override
+	public void setEchoOutput(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.ECHO_OUTPUT, newVal);		
+	}
+	@Override
+	public boolean getOutputValgrindTrace() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.OUTPUT_TRACE, 
+				BasicStaticConfigurationUtils.DEFAULT_OUTPUT_TRACE);
+	}
+	@Override
+	public void setOutputValgrindTrace(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.OUTPUT_TRACE, newVal);		
+	}
+	
 	
 }

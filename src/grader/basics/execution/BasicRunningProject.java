@@ -1036,10 +1036,14 @@ public void appendCumulativeOutput() {
 		BasicRunningProject.timeToWaitForConcurrentOutput = timeToWaitForConcurrentOutput;
 	}
 	public static boolean isEchoOutput() {
-		return echoOutput;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEchoOutput();
+
+//		return echoOutput;
 	}
 
 	public static void setEchoOutput(boolean echoOutput) {
-		BasicRunningProject.echoOutput = echoOutput;
+//		BasicRunningProject.echoOutput = echoOutput;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setEchoOutput(echoOutput);
+
 	}
 }

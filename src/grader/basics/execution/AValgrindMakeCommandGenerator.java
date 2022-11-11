@@ -41,7 +41,9 @@ protected String[] getBasicTraceCommand( ) {
 		command[0] = "valgrind";
 		command[1]	= "--trace-children=yes";
 		command[command.length - 2] = redirection();
-		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDir, traceFileName);
+		String aRelativeTraceFile = relativeTraceFileName;
+				
+//				CompilerHelper.toRelativePath(studentDir, traceDockerFileName);
 
 		command[command.length - 1] = aRelativeTraceFile;
 		for (int anIndex = 0; anIndex < aBasicCommandList.size(); anIndex++) {

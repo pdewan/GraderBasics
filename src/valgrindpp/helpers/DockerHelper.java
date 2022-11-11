@@ -1,7 +1,10 @@
 package valgrindpp.helpers;
 
+import java.io.File;
+
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.execution.AValgrindCommandGenerator;
 
 public class DockerHelper {
 //	public static final String IMAGE_NAME = "nalingaddis/valgrind";
@@ -36,6 +39,23 @@ public class DockerHelper {
 	}
 	
 	public static int createContainer(String mountDir) throws Exception {
+//		mountDir = AValgrindCommandGenerator.toSingleSlash(mountDir);
+//		mountDir = "D:\\dewan_backup\\C\\ValgrindExamples\\Assignment5\\\\\"All, Correct\\\"\\(acorrect\\)\\\\\"Submission attachment\\\"\\(s\\)\\CorrectMutexLRU-No-Config\\CorrectMutexLRU-No-Config"; 
+//		mountDir = "D:\\dewan_backup\\C\\ValgrindExamples\\Link"; 
+		File aFile = new File(mountDir);
+//		if (!aFile.exists()) {
+//			System.out.println(" No link");
+//		}
+
+//		mountDir = "D:/dewan_backup/C/ValgrindExamples/Assignment5/\"All, Correct\"/\\(acorrect\\)/\"Submission attachment\\(s\\)\"/CorrectMutexLRU-No-Config/CorrectMutexLRU-No-Config";
+//		mountDir = "\"D:\\dewan_backup\\C\\ValgrindExamples\\Assignment5\\\\\'All, Correct (acorrect)\\\'\\\\\"Submission attachment(s)\\\"\\CorrectMutexLRU-No-Config\\CorrectMutexLRU-No-Config\\SimpleAdderConfig-wrapper.c\""; 
+
+	//			mountDir = mountDir.replaceAll("/", "\\ ");
+//			mountDir = "\'" + mountDir + "'";
+//			mountDir = mountDir.replaceAll(" ", "\\\\ ");
+//		}
+			
+		
 		String[] command = new String[]{
 				DOCKER_PATH, 
 				"run",

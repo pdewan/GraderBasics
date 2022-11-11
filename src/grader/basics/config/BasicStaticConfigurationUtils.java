@@ -192,6 +192,12 @@ public class BasicStaticConfigurationUtils {
 	
 	public static final String SAVE_INTERACTIVE_SETTINGS = "saveInteractiveSettings";
 	public static final boolean DEFAULT_SAVE_INTERACTIVE_SETTINGS = true;
+	
+	public static final String ECHO_OUTPUT = "echoOutput";
+	public static final boolean DEFAULT_ECHO_OUTPUT = true;
+	
+	public static final String OUTPUT_TRACE = "outpt";
+	public static final boolean DEFAULT_OUTPUT_TRACE = false;
 
 
 
