@@ -32,20 +32,22 @@ import valgrindpp.helpers.CompilerHelper;
 import valgrindpp.helpers.DockerHelper;
 
 public abstract class AValgrindCommandGenerator extends AnExecutableFinder  implements CommandGenerator {
-	CompilerHelper ch;
-	String traceDockerFileName;
+	private CompilerHelper ch;
+	private String traceExecutionFileName;
 //	File traceFile;
-	String relativeTraceFileName;
-	File traceDockerFile;
-	File traceDockerDir;
-	String traceDockerFolderName;
-	String studentDir;
-	String dockerDir;
-	String src;
-	String bin;
-	String dockerPath;
-	boolean copiedDockerDirectory = false;
+	private String relativeTraceFileName;
+	private File traceExecutionFile;
+	private File traceExecutionDirectory;
+//	private String traceExecutionFolderName;
+	private String studentDirectory;
+	private String executionDirectory;
+	private String src;
+	private String bin;
+//	private String executionDrectoryPath;
+	boolean copiedExecutionDirectory = false;
 	private static final String relativeDockerDirName = "copyForDocker";
+	private boolean createDockerContainer;
+	boolean instrumentUsingValgrind;
 	public static String getTraceFileRelativeName() {
 		String aValgrindTraceDirectory = 
 				BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindTraceDirectory();
@@ -93,7 +95,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 	
 	public String[] getTraceCommand( ) {
 		
-//		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDir, traceFileName);
+//		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDirectory, traceFileName);
 //		String fullExecName = bin + CompilerHelper.EXEC_NAME;
 //		String aRedirection = 
 //				Tracer.showInfo()?
@@ -101,13 +103,21 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 //							">";
 		String[] command = getBasicTraceCommand();
 		try {
-			return CommandLineHelper.getDockerCommand(command);
+			return CommandLineHelper.getExecutionCommand(command, executionDirectory);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
+//	public  String[] getExecutionCommand(String[] command) throws Exception {
+//	if (createDockerContainer)	{
+//		return CommandLineHelper.getDockerCommand(command);
+//	}
+//	return CommandLineHelper.getDirectCommand(command, executionDirectory);
+//	}
+	
+
 	public static void recursiveDelete(File aFile) {
 		if (aFile.isDirectory()) {
 			File[] aFiles = aFile.listFiles();
@@ -148,33 +158,37 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 	public  String[] getExecutionCommand(Project aProject,
 			File aBuildFolder, String anEntryPoint, String[] anArgs) {
 		try {
-			studentDir = aProject.getProjectFolder().getAbsolutePath();
-			dockerDir = studentDir;
-			if (GradingMode.getGraderRun() || 
-					BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerMountIsCopy()) {
+			createDockerContainer = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCreateDockerContainer();
+			instrumentUsingValgrind = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getInstrumentUsingValgrind();
+			
+			studentDirectory = aProject.getProjectFolder().getAbsolutePath();
+			executionDirectory = studentDirectory;
+			if (createDockerContainer && (
+					GradingMode.getGraderRun() || 
+					BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerMountIsCopy())) {
 				
 			
-			copyDir(studentDir, relativeDockerDirName, true);
-			dockerDir = new File( relativeDockerDirName).getAbsolutePath();
-			copiedDockerDirectory = true;
+			copyDir(studentDirectory, relativeDockerDirName, true);
+			executionDirectory = new File( relativeDockerDirName).getAbsolutePath();
+			copiedExecutionDirectory = true;
 			}
-//			dockerDir = studentDir;
-			src = CompilerHelper.toRelativePath(studentDir, aProject.getSourceFolder().getAbsolutePath()) ;
-			bin = CompilerHelper.toRelativePath(studentDir, aProject.getBuildFolder().getAbsolutePath());
+//			executionDirectory = studentDirectory;
+			src = CompilerHelper.toRelativePath(studentDirectory, aProject.getSourceFolder().getAbsolutePath()) ;
+			setBin(CompilerHelper.toRelativePath(studentDirectory, aProject.getBuildFolder().getAbsolutePath()));
 //		File aTraceFile = getTraceFile(aProject);
 			
-		relativeTraceFileName = getTraceFileRelativeName();
+		setRelativeTraceFileName(getTraceFileRelativeName());
 		
-		traceDockerFile = new File (dockerDir + "/" + relativeTraceFileName);
+		traceExecutionFile = new File (executionDirectory + "/" + getRelativeTraceFileName());
 
-		traceDockerDir = traceDockerFile.getParentFile();
-		if (!traceDockerDir.exists()) {
-			traceDockerDir.mkdirs();
+		traceExecutionDirectory = traceExecutionFile.getParentFile();
+		if (!traceExecutionDirectory.exists()) {
+			traceExecutionDirectory.mkdirs();
 		}
 //		String aValgrindTraceDirectory = aProjectDirectory + "/"  +
 //				BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindTraceDirectory();
 	
-			traceDockerFolderName = traceDockerDir.getCanonicalPath();
+//			traceExecutionFolderName = traceExecutionDirectory.getCanonicalPath();
 		
 //		File aFolder = new File(aValgrindTraceDirectory);
 //		if (!aFolder.exists()) {
@@ -188,7 +202,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 //		traceFile = aTraceShortFileName;
 
 //		String aTraceFile = aValgrindTraceDirectory + "/" + aTraceShortFileName;
-		traceDockerFileName = traceDockerFile.getCanonicalPath();
+		traceExecutionFileName = traceExecutionFile.getCanonicalPath();
 		return getTraceCommand();
 		
 		} catch (IOException e) {
@@ -205,18 +219,18 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 			String[] aCommand, String input, String[] args, int timeout,
 			String aProcessName, boolean anOnlyProcess) throws NotRunnableException {
 		try {
-		String aDockerProgramName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerPath();
+//		String aDockerProgramName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerPath();
 		String aValgrindConfigurationDirectory = 
 				BasicExecutionSpecificationSelector.
 				getBasicExecutionSpecification().getValgrindConfigurationDirectory();
-		String aProjectDirectory = runner.getBasicProject().getProjectFolder().getAbsolutePath();
+//		String aProjectDirectory = runner.getBasicProject().getProjectFolder().getAbsolutePath();
 		String aConfiguration = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindConfiguration();
 		String aValgrindConfigurationRelativeFileName = 
 				aValgrindConfigurationDirectory + "/" +
 				aConfiguration;
 		String aValgrindConfigurationFileName = aValgrindConfigurationRelativeFileName;
 		if (!GradingMode.getGraderRun()) {
-			aValgrindConfigurationFileName = dockerDir + "/" + aValgrindConfigurationRelativeFileName;
+			aValgrindConfigurationFileName = executionDirectory + "/" + aValgrindConfigurationRelativeFileName;
 		}
 //		String aValgrindConfigurationFileName = 
 //				aProjectDirectory + "/" +
@@ -247,7 +261,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 	
 //		String aProjectDirectory = runner.getBasicProject().getProjectFolder().getAbsolutePath();
 		DockerHelper.deleteContainer();
-		DockerHelper.createContainer(dockerDir);
+		DockerHelper.createContainer(executionDirectory);
 		
 //		Parser parser = new Parser(aValgrindConfigurationFileName);
 		Parser parser = new Parser(aValgrindConfigurationFileName, aValgrindConfigurationRelativeFileName);
@@ -256,8 +270,8 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 		Wrapper wrapper = parser.parse();
 //		String aSourceFolder = runner.getBasicProject().getSourceFolder().getAbsolutePath();
 //		String aBuildFolder = runner.getBasicProject().getBuildFolder().getAbsolutePath();
-		String aSourceFolder = dockerDir + "/" + src;
-		String aBuildFolder = dockerDir + "/" + bin;
+		String aSourceFolder = executionDirectory + "/" + src;
+		String aBuildFolder = executionDirectory + "/" + getBin();
 
 		wrapper.toFile(aConfiguration, aSourceFolder);
 //		wrapper.toFile(aConfiguration, aProjectDirectory);
@@ -268,12 +282,12 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 //	    ch = new CompilerHelper(aValgrindConfigurationFileName, aProjectDirectory, aTraceFile);
 //	    ch = new CompilerHelper(aConfiguration, aSourceFolder, aTraceFile);
 	    
-	    ch = new CompilerHelper(src, bin, aConfiguration, dockerDir, traceDockerFile.getAbsolutePath());
-		ch.compileWrapper();
-		ch.deleteWrapperCFile();
+	    setCompilerHelper(new CompilerHelper(src, getBin(), aConfiguration, executionDirectory, traceExecutionFile.getAbsolutePath()));
+		getCompilerHelper().compileWrapper();
+		getCompilerHelper().deleteWrapperCFile();
 		compileStudentCode();
 //		ch.compileStudentCode();
-		ch.deleteWrapperObjFile();
+		getCompilerHelper().deleteWrapperObjFile();
 //		ch.trace();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -285,10 +299,10 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 	}
 	abstract void deleteBinary() throws Exception;
 	void maybeCopyTraceFile() throws IOException {
-		if (copiedDockerDirectory) {
-			String aProjectTraceFileName = studentDir + "/" + relativeTraceFileName;
-//			String aDockerCopyTraceFileName = dockerDir + "/" + relativeDockerDirName + "/" + relativeTraceFileName;
-			String aDockerCopyTraceFileName = dockerDir + "/" + relativeTraceFileName;
+		if (copiedExecutionDirectory) {
+			String aProjectTraceFileName = studentDirectory + "/" + getRelativeTraceFileName();
+//			String aDockerCopyTraceFileName = executionDirectory + "/" + relativeDockerDirName + "/" + relativeTraceFileName;
+			String aDockerCopyTraceFileName = executionDirectory + "/" + getRelativeTraceFileName();
 			File aSourceFile = new File (aDockerCopyTraceFileName);
 			if (!aSourceFile.exists()) {
 				System.out.println(" No file");
@@ -316,5 +330,23 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder  impl
 		}
 		
 		
+	}
+	public String getRelativeTraceFileName() {
+		return relativeTraceFileName;
+	}
+	public void setRelativeTraceFileName(String relativeTraceFileName) {
+		this.relativeTraceFileName = relativeTraceFileName;
+	}
+	public String getBin() {
+		return bin;
+	}
+	public void setBin(String bin) {
+		this.bin = bin;
+	}
+	public CompilerHelper getCompilerHelper() {
+		return ch;
+	}
+	public void setCompilerHelper(CompilerHelper ch) {
+		this.ch = ch;
 	}	
 }

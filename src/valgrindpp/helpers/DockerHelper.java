@@ -19,12 +19,18 @@ public class DockerHelper {
 //	public static final String DOCKER_PATH = "docker";
 	public static final String DOCKER_PATH =
 			BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerPath();
+	private static boolean createDockerContainer = 
+			BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCreateDockerContainer();
+	
 	
 
 
 
 
 	public static int startContainer() throws Exception {
+		if (!createDockerContainer) {
+			return 0;
+		}
 		return createContainer(System.getProperty("user.dir"));
 	}
 	
@@ -39,6 +45,9 @@ public class DockerHelper {
 	}
 	
 	public static int createContainer(String mountDir) throws Exception {
+		if (!createDockerContainer) {
+			return 0;
+		}
 //		mountDir = AValgrindCommandGenerator.toSingleSlash(mountDir);
 //		mountDir = "D:\\dewan_backup\\C\\ValgrindExamples\\Assignment5\\\\\"All, Correct\\\"\\(acorrect\\)\\\\\"Submission attachment\\\"\\(s\\)\\CorrectMutexLRU-No-Config\\CorrectMutexLRU-No-Config"; 
 //		mountDir = "D:\\dewan_backup\\C\\ValgrindExamples\\Link"; 
@@ -68,20 +77,26 @@ public class DockerHelper {
 				IMAGE_NAME
 		};
 		
-		return CommandLineHelper.execute(command);
+		return CommandLineHelper.executeInProcessBuilder(command, null, false, null);
 	}
 	
 	public static int stopContainer() throws Exception {
+		if (!createDockerContainer) {
+			return 0;
+		}
 		String[] command = {
 				DOCKER_PATH,
 				"stop",
 				CONTAINER_NAME
 		};
 		
-		return CommandLineHelper.execute(command);
+		return CommandLineHelper.executeInProcessBuilder(command, null, false, null);
 	}
 	
 	public static int deleteContainer() throws Exception {
+		if (!createDockerContainer) {
+			return 0;
+		}
 		String[] command = {
 				DOCKER_PATH,
 				"rm",
@@ -89,6 +104,6 @@ public class DockerHelper {
 				CONTAINER_NAME
 		};
 		
-		return CommandLineHelper.execute(command);
+		return CommandLineHelper.executeInProcessBuilder(command, null, false, null);
 	}
 }

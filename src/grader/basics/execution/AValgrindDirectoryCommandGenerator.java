@@ -31,13 +31,13 @@ public class AValgrindDirectoryCommandGenerator extends AValgrindCommandGenerato
 	@Override
 	protected void compileStudentCode() throws Exception {
 		
-			ch.compileStudentCode();
+			getCompilerHelper().compileStudentCode();
 		
 	}
 protected String[] getBasicTraceCommand( ) {
 		
 //		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDir, traceFileName);
-		String fullExecName = bin + CompilerHelper.EXEC_NAME;
+		String fullExecName = getBin() + CompilerHelper.EXEC_NAME;
 //		String aRedirection = 
 //				Tracer.showInfo()?
 //						"| tee":
@@ -48,18 +48,14 @@ protected String[] getBasicTraceCommand( ) {
 //				"./"+EXEC_NAME,
 				"./" + fullExecName,
 				redirection(),
-//				"| tee",
-//				">",
-//				traceFile
-//				aRelativeTraceFile
-				relativeTraceFileName
+getRelativeTraceFileName()
 		};
 		return command;
 }
 
 	@Override
 	void deleteBinary() throws Exception {
-		ch.deleteBinary();
+		getCompilerHelper().deleteBinary();
 		
 	}
 	

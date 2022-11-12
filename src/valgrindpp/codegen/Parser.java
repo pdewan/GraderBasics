@@ -20,12 +20,14 @@ public class Parser {
 //		
 //		 stream = Parser.class.getResourceAsStream("/home/"+relativeFilename);
 //		}
-//		InputStream stream1 = Parser.class.getResourceAsStream("/" + relativeFilename);
+		InputStream stream = Parser.class.getResourceAsStream("/" + relativeFilename);
+		if (stream == null) {
+			stream = new FileInputStream(fileName);
+		}
 
-		
 //		InputStream stream = Parser.class.getResourceAsStream(relativeFilename);
 		
-		InputStream stream = new FileInputStream(fileName);
+//		InputStream stream = new FileInputStream(fileName);
 //		InputStream stream = new FileInputStream(aSingleSlashName);
 
 		

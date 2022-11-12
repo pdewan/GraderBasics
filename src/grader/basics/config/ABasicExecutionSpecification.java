@@ -1101,5 +1101,23 @@ protected String requirementsLocation = null;
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.OUTPUT_TRACE, newVal);		
 	}
 	
+	@Override
+	public boolean getCreateDockerContainer() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.CREATE_DOCKER_CONTAINER, 
+				BasicStaticConfigurationUtils.DEFAULT_CREATE_DOCKER_CONTAINER);
+	}
+	@Override
+	public void setCreateDockerContainer(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.CREATE_DOCKER_CONTAINER, newVal);		
+	}
 	
+	@Override
+	public boolean getInstrumentUsingValgrind() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.INSTRUMENT_USING_VALGRIND, 
+				BasicStaticConfigurationUtils.DEFAULT_INSTRUMENT_USING_VALGRIND);
+	}
+	@Override
+	public void setInstrumentUsingValgrind(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.INSTRUMENT_USING_VALGRIND, newVal);		
+	}
 }

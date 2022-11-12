@@ -145,5 +145,9 @@ public interface BasicExecutionSpecification {
 	boolean getOutputValgrindTrace();
 	void setOutputValgrindTrace(boolean newVal);
 	boolean getDockerMountIsCopy();
-	void setDockerMountIsCopy(boolean newVal);	
+	void setDockerMountIsCopy(boolean newVal);
+	boolean getCreateDockerContainer();
+	void setCreateDockerContainer(boolean newVal);
+	boolean getInstrumentUsingValgrind();
+	void setInstrumentUsingValgrind(boolean newVal);	
 }

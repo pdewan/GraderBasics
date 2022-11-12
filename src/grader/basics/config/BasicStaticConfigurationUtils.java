@@ -196,11 +196,18 @@ public class BasicStaticConfigurationUtils {
 	public static final String ECHO_OUTPUT = "echoOutput";
 	public static final boolean DEFAULT_ECHO_OUTPUT = true;
 	
-	public static final String OUTPUT_TRACE = "outpt";
+	public static final String OUTPUT_TRACE = "output";
 	public static final boolean DEFAULT_OUTPUT_TRACE = false;
 
 	public static final String DOCKER_MOUNT_IS_COPY = "dockerMountIsCopy";
 	public static final boolean DEFAULT_DOCKER_MOUNT_IS_COPY = false;
+	
+	public static final String CREATE_DOCKER_CONTAINER = "createDockerContainer";
+	public static final Boolean DEFAULT_CREATE_DOCKER_CONTAINER = true;
+	public static final String INSTRUMENT_USING_VALGRIND = "instrumentUsingValgrind";
+	public static final Boolean DEFAULT_INSTRUMENT_USING_VALGRIND = true;
+	
+	
 
 
 //	private static  List<String> basicCommand;
@@ -1047,6 +1054,7 @@ public class BasicStaticConfigurationUtils {
 	}
 
 	public static final String DEFAULT = "default";
+	
 
 	public static Integer getInheritedIntegerModuleProblemProperty(PropertiesConfiguration configuration, String module,
 			String problem, String test, String property, Integer defaultValue) {

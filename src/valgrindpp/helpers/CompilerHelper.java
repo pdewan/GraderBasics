@@ -11,10 +11,11 @@ public class CompilerHelper {
 	static final String CC = "gcc";
 	static final String FLAGS = "-pthread";
 	public static final String EXEC_NAME = "WrappedStudentCode";
-	static  String fullExecName;
+	private static  String fullExecName;
 	
-	private String studentDir, objFile, cFile, traceFile;
+	private String executionDirectory, objFile, cFile, traceFile;
 	private String src, bin;
+	
 	
 	public static String toRelativePath (String aParentAbsolutePath, String aChildAbsolutePath) {
 		URI aParentFile = new File(aParentAbsolutePath).toURI() ;
@@ -24,19 +25,19 @@ public class CompilerHelper {
 		
 	}
 	
-	public CompilerHelper(String configFile, String studentDir, String traceFile) {
-		this.studentDir = studentDir;
+	public CompilerHelper(String configFile, String anExecutionDir, String traceFile) {
+		this.executionDirectory = anExecutionDir;
 		this.objFile = configFile + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".o";
 		this.cFile = configFile + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".c";
 		this.traceFile = traceFile;
 	}
 	public CompilerHelper(String anSrc, String aBin, String configFile, String studentDir, String traceFile) {
-//		src = toRelativePath(studentDir, aSourceFolder) ;
-//		bin = toRelativePath(studentDir, aBuildFolder);
+//		src = toRelativePath(executionDirectory, aSourceFolder) ;
+//		bin = toRelativePath(executionDirectory, aBuildFolder);
 		src = anSrc;
 		bin = aBin;
 		
-		this.studentDir = studentDir;
+		this.executionDirectory = studentDir;
 		this.objFile = bin  + configFile + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".o";
 		
 		this.cFile = src +  configFile + valgrindpp.main.Main.WRAPPER_FILE_SUFFIX + ".c";
@@ -50,17 +51,17 @@ public class CompilerHelper {
 		String[] command = {CC, "-c", FLAGS, cFile, "-o", objFile};
 //		String[] command = {"cd", src, ";", 
 //				CC, "-c", FLAGS, cFile, "-o", objFile, ";",
-//				"cd", studentDir};
+//				"cd", executionDirectory};
 
 //		String[] command = {CC, "-c", FLAGS, aFileName, "-o", objFile};
 
 		
-		return CommandLineHelper.executeInDocker(command);
+		return CommandLineHelper.execute(command, executionDirectory);
 	}
 	
 	public int compileStudentCode() throws Exception {
-//		File dir = new File(studentDir);
-		File dir = new File(studentDir + "/" + src);
+//		File dir = new File(executionDirectory);
+		File dir = new File(executionDirectory + "/" + src);
 
 		
 		List<String> srcFiles = new ArrayList<String>();
@@ -86,27 +87,27 @@ public class CompilerHelper {
 			command[i+5] = srcFiles.get(i);
 		}
 
-		return CommandLineHelper.executeInDocker(command);
+		return CommandLineHelper.execute(command, executionDirectory);
 	}
 	
 	public int deleteWrapperCFile() throws Exception {
-		return CommandLineHelper.delete(Paths.get(studentDir, cFile));
+		return CommandLineHelper.delete(Paths.get(executionDirectory, cFile));
 	}
 	
 	public int deleteWrapperObjFile() throws Exception {
-		return CommandLineHelper.delete(Paths.get(studentDir, objFile));
+		return CommandLineHelper.delete(Paths.get(executionDirectory, objFile));
 	}
 	
 	public int deleteBinary() throws Exception {
-		return CommandLineHelper.delete(Paths.get(studentDir, EXEC_NAME));
+		return CommandLineHelper.delete(Paths.get(executionDirectory, EXEC_NAME));
 	}
 	
 	public int deleteTraces() throws Exception {
-		return CommandLineHelper.delete(Paths.get(studentDir, traceFile));
+		return CommandLineHelper.delete(Paths.get(executionDirectory, traceFile));
 	}
 	
 //	public String[] getTraceCommand( ) {
-//		String aRelativeTraceFile = toRelativePath(studentDir, traceFile);
+//		String aRelativeTraceFile = toRelativePath(executionDirectory, traceFile);
 //		String[] command = {
 //				"valgrind",
 //				"--trace-children=yes",
@@ -121,7 +122,7 @@ public class CompilerHelper {
 //	}
 	
 	public int trace() throws Exception {
-		String aRelativeTraceFile = toRelativePath(studentDir, traceFile);
+		String aRelativeTraceFile = toRelativePath(executionDirectory, traceFile);
 		String[] command = {
 				"valgrind",
 				"--trace-children=yes",
@@ -133,23 +134,23 @@ public class CompilerHelper {
 				aRelativeTraceFile
 		};
 		
-		return CommandLineHelper.executeInDocker(command);
+		return CommandLineHelper.execute(command, executionDirectory);
 	}
 	
-	public int trace(String testfile) throws Exception {
-		InputStream stream = CompilerHelper.class.getResourceAsStream("/"+testfile);
-		
-		String[] command = {
-				"valgrind",
-				"--trace-children=yes",
-				"./"+EXEC_NAME,
-				">",
-				traceFile
-		};
-		
-		return CommandLineHelper.executeInDocker(command, false, stream);
-	}
-	
+//	public int trace(String testfile) throws Exception {
+//		InputStream stream = CompilerHelper.class.getResourceAsStream("/"+testfile);
+//		
+//		String[] command = {
+//				"valgrind",
+//				"--trace-children=yes",
+//				"./"+EXEC_NAME,
+//				">",
+//				traceFile
+//		};
+//		
+//		return CommandLineHelper.executeInDocker(command, false, stream);
+//	}
+//	
 	public int trace(String[] command) throws Exception {
 		String[] fullCommand = new String[command.length + 4];
 		
@@ -161,7 +162,7 @@ public class CompilerHelper {
 		fullCommand[command.length+2] = ">";
 		fullCommand[command.length+3] = traceFile;
 		
-		return CommandLineHelper.executeInDocker(fullCommand);
+		return CommandLineHelper.executeInDocker(fullCommand, false, null);
 	}
 	
 	public int make() throws Exception {
@@ -170,7 +171,7 @@ public class CompilerHelper {
 				"wrapped"
 		};
 		
-		return CommandLineHelper.executeInDocker(command);
+		return CommandLineHelper.execute(command, executionDirectory);
 	}
 	
 	public int makeClean() throws Exception {
@@ -179,7 +180,7 @@ public class CompilerHelper {
 				"clean"
 		};
 		
-		return CommandLineHelper.executeInDocker(command);
+		return CommandLineHelper.execute(command, executionDirectory);
 	}
 }
 	
