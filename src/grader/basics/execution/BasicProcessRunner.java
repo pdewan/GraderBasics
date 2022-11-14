@@ -58,26 +58,27 @@ public class BasicProcessRunner implements Runner {
 	protected String specifiedMainClass;
 	public static final String MAIN_ENTRY_POINT = "main";
 	protected BasicExecutionSpecification executionSpecification;
-	
+
 //	protected void initializeExecutionState() {
 ////		executionSpecification = ExecutionSpecificationSelector
 ////				.getExecutionSpecification();
 //	}
-	// At some point we need a constructor with a map of entry points, called by this constructor
+	// At some point we need a constructor with a map of entry points, called by
+	// this constructor
 	public BasicProcessRunner(Project aProject, String aSpecifiedProxyMainClass) throws NotRunnableException {
 		try {
-		specifiedMainClass = aSpecifiedProxyMainClass;
-		project = aProject;
-		initializeExecutionState();
+			specifiedMainClass = aSpecifiedProxyMainClass;
+			project = aProject;
+			initializeExecutionState();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NotRunnableException();
 		}
-		
+
 	}
 
 	public BasicProcessRunner(Project aProject) throws NotRunnableException {
-		this (aProject, null);
+		this(aProject, null);
 
 //		try {
 ////			initializeExecutionState();
@@ -131,8 +132,7 @@ public class BasicProcessRunner implements Runner {
 		if (folder == null) {
 			try {
 //				folder = project.getBuildFolder(aMainClass); // why do we need to searc for it?
-				folder = project.getBuildFolder(); 
-
+				folder = project.getBuildFolder();
 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -176,8 +176,7 @@ public class BasicProcessRunner implements Runner {
 	/**
 	 * This runs the project with no arguments
 	 * 
-	 * @param input
-	 *            The input to use as standard in for the process
+	 * @param input The input to use as standard in for the process
 	 * @return A RunningProject object which you can use for synchronization and
 	 *         acquiring output
 	 * @throws NotRunnableException
@@ -190,32 +189,29 @@ public class BasicProcessRunner implements Runner {
 	/**
 	 * This runs the project with no arguments with a timeout
 	 * 
-	 * @param input
-	 *            The input to use as standard in for the process
-	 * @param timeout
-	 *            The timeout, in seconds. Set to -1 for no timeout
+	 * @param input   The input to use as standard in for the process
+	 * @param timeout The timeout, in seconds. Set to -1 for no timeout
 	 * @return A RunningProject object which you can use for synchronization and
 	 *         acquiring output
 	 * @throws NotRunnableException
 	 */
 	@Override
-	public RunningProject run(String input, int timeout)
-			throws NotRunnableException {
+	public RunningProject run(String input, int timeout) throws NotRunnableException {
 		return run(input, new String[] {}, timeout);
 	}
-	
+
 	@Override
 	public RunningProject run(InputGenerator anOutputBasedInputGenerator, String input, int timeout)
 			throws NotRunnableException {
 		return run(anOutputBasedInputGenerator, input, new String[] {}, timeout);
 	}
-	
-	public RunningProject run(InputGenerator anOutputBasedInputGenerator, Map<String, String> processToInput, int timeout)
-			throws NotRunnableException {
+
+	public RunningProject run(InputGenerator anOutputBasedInputGenerator, Map<String, String> processToInput,
+			int timeout) throws NotRunnableException {
 		return run(anOutputBasedInputGenerator, processToInput, new String[] {}, timeout);
 	}
-	public RunningProject run( Map<String, String> processToInput, int timeout)
-			throws NotRunnableException {
+
+	public RunningProject run(Map<String, String> processToInput, int timeout) throws NotRunnableException {
 		return run(null, processToInput, timeout);
 	}
 //	protected String getMainEntryPoint() {
@@ -229,21 +225,20 @@ public class BasicProcessRunner implements Runner {
 
 	/**
 	 * This runs the project providing input and arguments
-	 * @param input
-	 *            The input to use as standard in for the process
-	 * @param args
-	 *            The arguments to pass in
-	 * @param timeout
-	 *            The timeout, in seconds. Set to -1 for no timeout
-	 * @param anOutputBasedInputGenerator
-	 *            An object that provides input       
+	 * 
+	 * @param input                       The input to use as standard in for the
+	 *                                    process
+	 * @param args                        The arguments to pass in
+	 * @param timeout                     The timeout, in seconds. Set to -1 for no
+	 *                                    timeout
+	 * @param anOutputBasedInputGenerator An object that provides input
 	 * 
 	 * @return A RunningProject object which you can use for synchronization and
 	 *         acquiring output
 	 * @throws NotRunnableException
 	 */
 	@Override
-	public RunningProject run(InputGenerator anOutputBasedInputGenerator, String input, String[] args, int timeout )
+	public RunningProject run(InputGenerator anOutputBasedInputGenerator, String input, String[] args, int timeout)
 			throws NotRunnableException {
 		// String[] command =
 		// StaticConfigurationUtils.getExecutionCommand(folder,
@@ -252,16 +247,16 @@ public class BasicProcessRunner implements Runner {
 //		List<String> aProcessTeams = executionSpecification.getProcessTeams();
 		List<String> aProcessTeams = getProcessTeams();
 
-		if (aProcessTeams.isEmpty())		
+		if (aProcessTeams.isEmpty())
 			return run(anOutputBasedInputGenerator,
 //				getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT), 
-					getMainEntryPoint(),
-				input, args, timeout);
+					getMainEntryPoint(), input, args, timeout);
 		else
 			return runDefaultProcessTeam(aProcessTeams, input, args, timeout, anOutputBasedInputGenerator);
 	}
-	public RunningProject run(InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput, String[] args, int timeout )
-			throws NotRunnableException {
+
+	public RunningProject run(InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput,
+			String[] args, int timeout) throws NotRunnableException {
 		// String[] command =
 		// StaticConfigurationUtils.getExecutionCommand(folder,
 		// entryPoints.get(0));
@@ -272,27 +267,29 @@ public class BasicProcessRunner implements Runner {
 		if (aProcessTeams.isEmpty()) {
 			Set<String> aProcesses = aProcessToInput.keySet();
 			String anInput = "";
-			for (String aProcess:aProcesses) {
+			for (String aProcess : aProcesses) {
 				anInput += aProcessToInput.get(aProcess);
-				
+
 			}
-			
+
 			return run(anOutputBasedInputGenerator,
 //				getEntryPoints().get(MainClassFinder.MAIN_ENTRY_POINT), 
-					getMainEntryPoint(),
-				anInput, args, timeout);
+					getMainEntryPoint(), anInput, args, timeout);
 		} else
 			return runDefaultProcessTeam(aProcessTeams, aProcessToInput, args, timeout, anOutputBasedInputGenerator);
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * @see framework.execution.Runner#run(java.lang.String, java.lang.String[], int)
+	 * 
+	 * @see framework.execution.Runner#run(java.lang.String, java.lang.String[],
+	 * int)
 	 */
 	@Override
-	public RunningProject run(String input, String[] args, int timeout)
-			throws NotRunnableException {
+	public RunningProject run(String input, String[] args, int timeout) throws NotRunnableException {
 		return run(null, input, args, timeout);
 	}
+
 //	protected List<String> getProcesses(String firstTeam) {
 ////		return executionSpecification.getProcesses(firstTeam);
 //		return null;
@@ -301,9 +298,9 @@ public class BasicProcessRunner implements Runner {
 ////		return executionSpecification.getTerminatingProcesses(firstTeam);
 //		return null;
 //	}
-	public RunningProject runDefaultProcessTeam(List<String> aProcessTeams, String input, String[] args, int timeout, InputGenerator anOutputBasedInputGenerator)
-			throws NotRunnableException {
-	
+	public RunningProject runDefaultProcessTeam(List<String> aProcessTeams, String input, String[] args, int timeout,
+			InputGenerator anOutputBasedInputGenerator) throws NotRunnableException {
+
 		String firstTeam = aProcessTeams.get(0);
 		// provide input to the first terminating process
 //		List<String> aTerminatingProcesses = executionSpecification.getTerminatingProcesses(firstTeam);
@@ -314,23 +311,24 @@ public class BasicProcessRunner implements Runner {
 			throw NoTerminatingProcessSpecified.newCase(this);
 		}
 		Map<String, String> aProcessToInput = new HashMap();
-		for (String aProcess:aProcesses)
+		for (String aProcess : aProcesses)
 			aProcessToInput.put(aProcess, "");
 		aProcessToInput.put(aTerminatingProcesses.get(0), input);
-		return run(firstTeam, timeout, anOutputBasedInputGenerator, aProcessToInput); //ignoring args, should have processToArgs in this method
-		
+		return run(firstTeam, timeout, anOutputBasedInputGenerator, aProcessToInput); // ignoring args, should have
+																						// processToArgs in this method
+
 	}
-	public RunningProject runDefaultProcessTeam(List<String> aProcessTeams, Map<String, String> aProcessToInput, String[] args, int timeout, InputGenerator anOutputBasedInputGenerator)
-			throws NotRunnableException {
-	
+
+	public RunningProject runDefaultProcessTeam(List<String> aProcessTeams, Map<String, String> aProcessToInput,
+			String[] args, int timeout, InputGenerator anOutputBasedInputGenerator) throws NotRunnableException {
+
 		String firstTeam = aProcessTeams.get(0);
 		// provide input to the first terminating process
-		
-		return run(firstTeam, timeout, anOutputBasedInputGenerator, aProcessToInput); //ignoring args, should have processToArgs in this method
-		
+
+		return run(firstTeam, timeout, anOutputBasedInputGenerator, aProcessToInput); // ignoring args, should have
+																						// processToArgs in this method
+
 	}
-	
-	
 
 //	public String classWithEntryTagTarget(String anEntryTag) {
 //		if (anEntryTag == null)
@@ -389,15 +387,14 @@ public class BasicProcessRunner implements Runner {
 //		return null; // this should never be executed
 //	}
 
-	
 	void acquireIOLocks() {
 		try {
 			runner.start();
 			Set<String> aProcesses = processToOut.keySet();
-			for (String aProcess:aProcesses) {
+			for (String aProcess : aProcesses) {
 				processToOut.get(aProcess).getSemaphore().acquire();
 				processToErr.get(aProcess).getSemaphore().acquire();
-				
+
 			}
 //			outputSemaphore.acquire(); // share once for all processes
 //			errorSemaphore.acquire();
@@ -406,6 +403,7 @@ public class BasicProcessRunner implements Runner {
 			e.printStackTrace();
 		}
 	}
+
 	void releaseTeamLocks() {
 //		try {
 //			outputSemaphore.release(); // share once for all processes
@@ -416,22 +414,21 @@ public class BasicProcessRunner implements Runner {
 //			processToErr.get(aProcess).getSemaphore().release();
 //			
 //		}
-			runner.end();
+		runner.end();
 //		} catch (InterruptedException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 	}
-	
+
 //	protected List<String> getStartTags(String aProcess) {
 ////		return executionSpecification
 ////				.getStartTags(aProcess);
 //		return null;
 //	}
 
-	public RunningProject run(String aProcessTeam,
-			int aTimeout, InputGenerator anOutputBasedInputGenerator, Map<String, String> aProcessToInput)
-			throws NotRunnableException {
+	public RunningProject run(String aProcessTeam, int aTimeout, InputGenerator anOutputBasedInputGenerator,
+			Map<String, String> aProcessToInput) throws NotRunnableException {
 //		executionSpecification = ExecutionSpecificationSelector
 //				.getExecutionSpecification();
 		processTeam = aProcessTeam;
@@ -455,7 +452,8 @@ public class BasicProcessRunner implements Runner {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		BasicLanguageDependencyManager.getMainClassFinder().runPreTeamCommands(aProcessTeam, runner, anOutputBasedInputGenerator);
+		BasicLanguageDependencyManager.getMainClassFinder().runPreTeamCommands(aProcessTeam, runner,
+				anOutputBasedInputGenerator);
 		for (String aProcess : processes) {
 //			List<String> startTags = executionSpecification
 //					.getStartTags(aProcess);
@@ -516,7 +514,8 @@ public class BasicProcessRunner implements Runner {
 		}
 		waitForDynamicProcesses();
 		waitForStartedProcesses();
-		BasicLanguageDependencyManager.getMainClassFinder().runPostTeamCommands(aProcessTeam, runner, anOutputBasedInputGenerator);
+		BasicLanguageDependencyManager.getMainClassFinder().runPostTeamCommands(aProcessTeam, runner,
+				anOutputBasedInputGenerator);
 
 //		terminateTeam();
 //		waitForPortsOfTerminatedProcessesToBeReleased();
@@ -542,12 +541,11 @@ public class BasicProcessRunner implements Runner {
 		// args, timeout);
 
 	}
-	
+
 	protected void waitForPortsOfTerminatedProcessesToBeReleased() {
 		ThreadSupport.sleep(PORT_RELEASE_TIME);
 	}
-	
-	
+
 //	protected String searchForEntryPoint (String aProcess) {
 //		return null; // should have a seter for this
 ////		List<String> basicCommand = StaticConfigurationUtils
@@ -566,14 +564,14 @@ public class BasicProcessRunner implements Runner {
 ////
 ////		return anEntryPoint;
 //	}
-	
+
 	public static final String[] EMPTY_STRING_ARGS = {};
+
 	protected String[] getArgs(String aProcess) {
 		List<String> aListArgs = executionSpecification.getArgs(aProcess);
 		if (aListArgs == null) {
 			return EMPTY_STRING_ARGS;
-		}
-		else {
+		} else {
 			return aListArgs.toArray(EMPTY_STRING_ARGS);
 		}
 //		return executionSpecification.getArgs(aProcess).toArray(new String[0]);
@@ -583,20 +581,20 @@ public class BasicProcessRunner implements Runner {
 ////				new String[0]);
 //		return null;
 //	}
-	
+
 	protected int getResourceReleaseTime(String aProcess) {
 //		return executionSpecification.getSleepTime(aProcess);
 		return executionSpecification.getResourceReleaseTime(aProcess);
 		// why was this hardwired
 //		return 1000;
 	}
-	
-	protected String[] getCommand(String aProcess, String anEntryPoint, String anEntryTag, String[] anArgs ) {
+
+	protected String[] getCommand(String aProcess, String anEntryPoint, String anEntryTag, String[] anArgs) {
 //		return StaticConfigurationUtils.getExecutionCommand(project,
 //				aProcess, folder, anEntryPoint, anEntryTag, anArgs);
-			return BasicStaticConfigurationUtils.getExecutionCommand(project, aProcess, folder, anEntryPoint, anEntryTag,
-					anArgs);
-		
+		return BasicStaticConfigurationUtils.getExecutionCommand(project, aProcess, folder, anEntryPoint, anEntryTag,
+				anArgs);
+
 //		return null;
 	}
 
@@ -612,22 +610,24 @@ public class BasicProcessRunner implements Runner {
 //		String[] command = StaticConfigurationUtils.getExecutionCommand(project,
 //				aProcess, folder, anEntryPoint, aClassWithEntryTag, anArgs);
 		String[] command = getCommand(aProcess, anEntryPoint, aClassWithEntryTag, anArgs);
-		TimedProcess aTimedProcess = run(runner, anOutputBasedInputGenerator,
-				command, processToInput.get(aProcess), anArgs, timeout, aProcess, false); // do
-																					// not
-																					// wait
-																					// for
-																					// process
-																					// to
-																					// finish
+		TimedProcess aTimedProcess = run(runner, anOutputBasedInputGenerator, command, processToInput.get(aProcess),
+				anArgs, timeout, aProcess, false); // do
+		// not
+		// wait
+		// for
+		// process
+		// to
+		// finish
 		nameToProcess.put(aProcess, aTimedProcess);
 		runner.setProcess(aProcess, aTimedProcess);
-		Tracer.info(this, "Sleeping for " + aSleepTime + "ms to wait for release of resources of terminated process:" + aProcess);
-		ThreadSupport.sleep(aSleepTime); // should be before and not after., so ports can be released, or maybe before and after
+		Tracer.info(this,
+				"Sleeping for " + aSleepTime + "ms to wait for release of resources of terminated process:" + aProcess);
+		ThreadSupport.sleep(aSleepTime); // should be before and not after., so ports can be released, or maybe before
+											// and after
 		// some processes may be added dynamically on firing of events, will
 		// support them later
 	}
-	
+
 	public int numTeamMembers() {
 		return nameToProcess.size();
 	}
@@ -650,12 +650,12 @@ public class BasicProcessRunner implements Runner {
 		try {
 //		for (String aTerminatingProcess : executionSpecification
 //				.getTerminatingProcesses(processTeam)) {
-		for (String aTerminatingProcess : getTerminatingProcesses(processTeam)) {
-			TimedProcess aTimedProcess = nameToProcess.get(aTerminatingProcess);
-		
+			for (String aTerminatingProcess : getTerminatingProcesses(processTeam)) {
+				TimedProcess aTimedProcess = nameToProcess.get(aTerminatingProcess);
+
 				aTimedProcess.waitFor();
-			
-		}
+
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -671,7 +671,7 @@ public class BasicProcessRunner implements Runner {
 		}
 
 	}
-	
+
 	void terminateProcess(String aProcess) {
 		try {
 			processToOut.get(aProcess).getSemaphore().acquire();
@@ -688,8 +688,6 @@ public class BasicProcessRunner implements Runner {
 		TimedProcess timedProcess = nameToProcess.get(aProcess);
 		timedProcess.getProcess().destroy();
 	}
-	
-	
 
 	void terminateTeam() {
 		Set<String> aProcesses = nameToProcess.keySet();
@@ -712,58 +710,60 @@ public class BasicProcessRunner implements Runner {
 //			runner.end();
 		}
 	}
-	protected  String[] getExecutionCommand(Project aProject,
-			File aBuildFolder, String anEntryPoint, String[] anArgs) {
+
+	protected String[] getExecutionCommand(Project aProject, File aBuildFolder, String anEntryPoint, String[] anArgs) {
 
 //		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
 //		return BasicStaticConfigurationUtils.getExecutionCommand(aProject, null, aBuildFolder, anEntryPoint, anEntryPoint, anArgs);
-		return BasicLanguageDependencyManager.getMainClassFinder().getExecutionCommand(aProject, aBuildFolder, anEntryPoint, anArgs);
+		return BasicLanguageDependencyManager.getMainClassFinder().getExecutionCommand(aProject, aBuildFolder,
+				anEntryPoint, anArgs);
 	}
+
 	@Override
-	public RunningProject run(InputGenerator aDynamicInputProvider, String anEntryPoint, String input,
-			String[] args, int timeout) throws NotRunnableException {
+	public RunningProject run(InputGenerator aDynamicInputProvider, String anEntryPoint, String input, String[] args,
+			int timeout) throws NotRunnableException {
 //		String[] command = StaticConfigurationUtils.getExecutionCommand(folder,
 //		String[] command = StaticConfigurationUtils.getExecutionCommand(project, getFolder(),
 //				anEntryPoint, args); // added args
 //		String[] command = getExecutionCommand(project, getFolder(),
 //				anEntryPoint, args); // added args
-		String[] command = getExecutionCommand(project, getFolder(anEntryPoint),
-				anEntryPoint, args); // added args
+		String[] command = getExecutionCommand(project, getFolder(anEntryPoint), anEntryPoint, args); // added args
 		return run(aDynamicInputProvider, command, input, args, timeout);
 
 	}
-	
-	protected RunningProject createRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator, String anInput) {
+
+	protected RunningProject createRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator,
+			String anInput) {
 		return new BasicRunningProject(aProject, anOutputBasedInputGenerator, anInput);
 	}
-	protected RunningProject createRunningProject(Project aProject, 
-			InputGenerator anOutputBasedInputGenerator, 
+
+	protected RunningProject createRunningProject(Project aProject, InputGenerator anOutputBasedInputGenerator,
 			List<String> aProcesses, Map<String, String> aProcessToInput) {
- 
-	return new BasicRunningProject(project, anOutputBasedInputGenerator, processes, aProcessToInput);
-}
+
+		return new BasicRunningProject(project, anOutputBasedInputGenerator, processes, aProcessToInput);
+	}
+
 	protected String mainEntryPoint() {
 //		return  MainClassFinder.MAIN_ENTRY_POINT;
 		return null;
 	}
+
 	// move this to some util
-	public RunningProject runMainClass(Class aClass, String input,
-			String[] args, int timeout) throws NotRunnableException {
-        String[] command = {"java",  "-cp",  System.getProperty("java.class.path",aClass.getName())};
-       return run(null, command, input, args, timeout);
+	public RunningProject runMainClass(Class aClass, String input, String[] args, int timeout)
+			throws NotRunnableException {
+		String[] command = { "java", "-cp", System.getProperty("java.class.path", aClass.getName()) };
+		return run(null, command, input, args, timeout);
 
 	}
-	
-	public RunningProject run(InputGenerator anOutputBasedInputGenerator, String[] command, String input,
-			String[] args, int timeout) throws NotRunnableException {
+
+	public RunningProject run(InputGenerator anOutputBasedInputGenerator, String[] command, String input, String[] args,
+			int timeout) throws NotRunnableException {
 //		RunningProject retVal = new RunningProject(project, anOutputBasedInputGenerator, input);
 		RunningProject retVal = createRunningProject(project, anOutputBasedInputGenerator, input);
 		String aMainEntryPoint = mainEntryPoint();
-		String aProcessName = aMainEntryPoint == null?BasicProcessRunner.MAIN_ENTRY_POINT:aMainEntryPoint;
+		String aProcessName = aMainEntryPoint == null ? BasicProcessRunner.MAIN_ENTRY_POINT : aMainEntryPoint;
 
-		TimedProcess process = run(retVal, anOutputBasedInputGenerator, command, input, args,
-				timeout, 
-				aProcessName,
+		TimedProcess process = run(retVal, anOutputBasedInputGenerator, command, input, args, timeout, aProcessName,
 //				mainEntryPoint(),				
 //				MainClassFinder.MAIN_ENTRY_POINT, 
 				true);
@@ -772,42 +772,47 @@ public class BasicProcessRunner implements Runner {
 
 //	final Semaphore outputSemaphore = new Semaphore(1);
 //	final Semaphore errorSemaphore = new Semaphore(1);
-	
+
 	protected File getPermissionFile() {
 //		return JavaProjectToPermissionFile.getPermissionFile(project);
 		return null;
 	}
+
 	protected String getClassPath() {
 //		return GradingEnvironment.get().getClasspath();
 		return System.getProperty("java.class.path");
 	}
+
 	protected String[] maybeToExecutorCommand(String[] aCommand) {
 //		return ExecutorSelector.getExecutor().maybeToExecutorCommand(aCommand);
 		return aCommand;
 
 	}
+
 	@Override
 	public void terminateProcess() {
 		processObj.destroy();
 	}
-	protected  RunnerErrorOrOutStreamProcessor createRunnerOutputStreamProcessor(InputStream aProcessErrorOut, RunningProject aRunner, /*Semaphore aSemaphore,*/ String aProcessName, Boolean anOnlyProcess) {
-	  return new ABasicRunnerOutputStreamProcessor(
-			 aProcessErrorOut, aRunner, /*outputSemaphore,*/
-			aProcessName, anOnlyProcess);
+
+	protected RunnerErrorOrOutStreamProcessor createRunnerOutputStreamProcessor(InputStream aProcessErrorOut,
+			RunningProject aRunner, /* Semaphore aSemaphore, */ String aProcessName, Boolean anOnlyProcess) {
+		return new ABasicRunnerOutputStreamProcessor(aProcessErrorOut, aRunner, /* outputSemaphore, */
+				aProcessName, anOnlyProcess);
 	}
-	protected RunnerErrorOrOutStreamProcessor createRunnerErrorStreamProcessor (InputStream aProcessErrorOut, 
-			RunningProject aRunner, 
-			/*Semaphore aSemaphore, */
-			String aProcessName,
-			Boolean anOnlyProcess) {
-	return new ARunnerErrorStreamProcessor(
-			aProcessErrorOut, aRunner, /*errorSemaphore,*/
-			aProcessName, anOnlyProcess);
+
+	protected RunnerErrorOrOutStreamProcessor createRunnerErrorStreamProcessor(InputStream aProcessErrorOut,
+			RunningProject aRunner,
+			/* Semaphore aSemaphore, */
+			String aProcessName, Boolean anOnlyProcess) {
+		return new ARunnerErrorStreamProcessor(aProcessErrorOut, aRunner, /* errorSemaphore, */
+				aProcessName, anOnlyProcess);
 	}
-	protected RunnerInputStreamProcessor createRunnerInputStreamProcessor(OutputStream anInput, 
-			RunningProject aRunner,  String aProcessName, /*Semaphore aSemaphore,*/ Boolean anOnlyProcess) {
-		return new ARunnerInputStreamProcessor(anInput, aRunner, aProcessName,  anOnlyProcess);
+
+	protected RunnerInputStreamProcessor createRunnerInputStreamProcessor(OutputStream anInput, RunningProject aRunner,
+			String aProcessName, /* Semaphore aSemaphore, */ Boolean anOnlyProcess) {
+		return new ARunnerInputStreamProcessor(anInput, aRunner, aProcessName, anOnlyProcess);
 	}
+
 	protected void maybeSetInputAndArgs(String input, String[] args) {
 //		if (project != null && project instanceof ProjectWrapper) {
 //			SakaiProject sakaiProject = ((ProjectWrapper) project).getProject();
@@ -817,9 +822,9 @@ public class BasicProcessRunner implements Runner {
 	}
 
 	@Override
-	public TimedProcess run (RunningProject runner, InputGenerator anOutputBasedInputGenerator,
-			String[] aCommand, String input, String[] args, int timeout,
-			String aProcessName, boolean anOnlyProcess) throws NotRunnableException {
+	public TimedProcess run(RunningProject runner, InputGenerator anOutputBasedInputGenerator, String[] aCommand,
+			String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
+			throws NotRunnableException {
 		// final RunningProject runner = new RunningProject(project);
 //		if (project != null && project instanceof ProjectWrapper) {
 //			SakaiProject sakaiProject = ((ProjectWrapper) project).getProject();
@@ -831,14 +836,13 @@ public class BasicProcessRunner implements Runner {
 		TimedProcess process = null;
 		try {
 			if (anOnlyProcess)
-			runner.start();
+				runner.start();
 
-			BasicLanguageDependencyManager.getMainClassFinder().runPreIndividualCommand(runner, anOutputBasedInputGenerator, aCommand, input, args, timeout, aProcessName, anOnlyProcess);
+			BasicLanguageDependencyManager.getMainClassFinder().runPreIndividualCommand(runner,
+					anOutputBasedInputGenerator, aCommand, input, args, timeout, aProcessName, anOnlyProcess);
 
 			String classPath = getClassPath();
-			
-			
-	
+
 			ProcessBuilder builder;
 //			String builderPath;
 			if (aCommand.length == 0) { // this part should not execute, onlyif
@@ -850,36 +854,28 @@ public class BasicProcessRunner implements Runner {
 				// ProcessBuilder builder = new ProcessBuilder("java", "-cp",
 				// GradingEnvironment.get().getClasspath(), entryPoint);
 				if (aPermissionsFile != null) {
-				builder = new ProcessBuilder("java", 
-						"-cp", 
+					builder = new ProcessBuilder("java", "-cp",
 //						GradingEnvironment.get().getClasspath(), 
-						getClassPath(),
-						"-Djava.security.manager",
-						"-Djava.security.policy==\"" + aPermissionsFile.getAbsolutePath() + "\"",						
-						getEntryPoints().get(
-								getMainEntryPoint()
+							getClassPath(), "-Djava.security.manager",
+							"-Djava.security.policy==\"" + aPermissionsFile.getAbsolutePath() + "\"",
+							getEntryPoints().get(getMainEntryPoint()
 //						MainClassFinder.MAIN_ENTRY_POINT
-						));
+							));
 				} else {
-					builder = new ProcessBuilder("java", 
-							"-cp", 
+					builder = new ProcessBuilder("java", "-cp",
 //							GradingEnvironment.get().getClasspath(), 
 							getClassPath(),
 //							"-Djava.security.manager",
 //							"-Djava.security.policy==\"" + aPermissionsFile.getAbsolutePath() + "\"",						
-							getEntryPoints().get(
-									getMainEntryPoint()
+							getEntryPoints().get(getMainEntryPoint()
 //							MainClassFinder.MAIN_ENTRY_POINT
 							));
 				}
-				
-				  
-				Tracer.info(this,"Running process: java -cp \"" + classPath
-						+ "\" "
-						+ entryPoints.get(
+
+				Tracer.info(this, "Running process: java -cp \"" + classPath + "\" " + entryPoints.get(
 //								MainClassFinder.MAIN_ENTRY_POINT
-								getMainEntryPoint()
-								));
+						getMainEntryPoint()));
+
 //				System.out.println("Running process: java -cp \"" + classPath
 //						+ "\" "
 //						+ entryPoints.get(
@@ -889,10 +885,35 @@ public class BasicProcessRunner implements Runner {
 			} else {
 //				aCommand = ExecutorSelector.getExecutor().maybeToExecutorCommand(aCommand);
 				aCommand = maybeToExecutorCommand(aCommand);
+
 				if (aCommand != null) {
-				builder = new ProcessBuilder(aCommand);
-				Tracer.info(this,"Running command:"
-						+ Common.toString(aCommand, " "));
+					if (aCommand.length >= 3 && aCommand[aCommand.length - 2].equals(">")) {
+						
+						String[] aModifiedCommand = new String[aCommand.length - 2];
+						for (int anIndex = 0; anIndex < aModifiedCommand.length; anIndex++) {
+							aModifiedCommand[anIndex] = aCommand[anIndex];
+						}
+						File aFile = new File(aCommand[aCommand.length - 1]);
+//						if (!aFile.exists()) {
+							File aParentFile = aFile.getParentFile();
+							aParentFile.mkdirs();
+							aFile.delete();
+////							aFile.createNewFile();
+//						}
+						builder = new ProcessBuilder(aModifiedCommand);
+						System.out.println("Redirecting output to:" + aFile);
+						builder.redirectOutput(aFile);
+						System.out.println("Running modified command:" + Common.toString(aModifiedCommand, " "));
+						Tracer.info(this, "Running modified command:" + Common.toString(aModifiedCommand, " "));
+					}
+					else {
+
+					builder = new ProcessBuilder(aCommand);
+					System.out.println("Running command:" + Common.toString(aCommand, " "));
+					Tracer.info(this, "Running command:" + Common.toString(aCommand, " "));
+					}
+//					System.out.println("Running command:" + Common.toString(aCommand, " "));
+//					Tracer.info(this, "Running command:" + Common.toString(aCommand, " "));
 //				System.out.println("Running command:"
 //						+ Common.toString(aCommand, " "));
 				} else {
@@ -901,19 +922,20 @@ public class BasicProcessRunner implements Runner {
 			}
 			if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getForkInProjectFolder()) {
 				Tracer.info(this, "Running in project folder:" + folder);
-			builder.directory(folder);
+				System.out.println("Running in project folder:" + folder);
+
+				builder.directory(folder);
+			} else {
+				Tracer.info(this, "Running in project folder:" + System.getProperty("user.dir"));
+				System.out.println("Running in project folder:" + System.getProperty("user.dir"));
 			}
-			 Map<String, String> envs = builder.environment();
+			Map<String, String> envs = builder.environment();
 //				envs.put("Path", "/usr/bin");
 
-			String builderPath =  envs.get("Path");
+			String builderPath = envs.get("Path");
 			String systemPath = System.getenv("PATH");
-			String userPath = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
-					getUserPath();
-		
-		
-			
-			
+			String userPath = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getUserPath();
+
 //			if (folder != null) {
 //				Tracer.info(this,"Running in folder: "
 //						+ folder.getAbsolutePath());
@@ -924,40 +946,32 @@ public class BasicProcessRunner implements Runner {
 				envs.put("Path", userPath);
 
 			} else if (builderPath == null) {
-				Tracer.info(this, "Setting null builder path to system path:" + systemPath );
+				Tracer.info(this, "Setting null builder path to system path:" + systemPath);
 				envs.put("Path", systemPath);
 
 			}
-			
+
 			if (!systemPath.equals(builderPath)) {
 				Tracer.info(this, "System path is different:" + systemPath);
 //				if (builderPath == null) {
 //					envs.put("Path", systemPath);
 //				}
 			}
-			Tracer.info(this,"Running with Path: "
-					+ envs.get("Path"));
-		
+			Tracer.info(this, "Running with Path: " + envs.get("Path"));
+
 			process = new TimedProcess(builder, timeout);
 			runner.setCurrentTimeProcess(process);
-			
 
-			 processObj = process.start();
+			processObj = process.start();
 			if (folder != null)
-				UserProcessExecutionStarted.newCase(aCommand,
-						folder.getAbsolutePath(),
-						(entryPoints != null) ? entryPoints
-								.get(
+				UserProcessExecutionStarted.newCase(aCommand, folder.getAbsolutePath(),
+						(entryPoints != null) ? entryPoints.get(
 
-										getMainEntryPoint()
-										) : 
-											null,
+								getMainEntryPoint()) : null,
 						classPath, this);
 
-			
-			RunnerErrorOrOutStreamProcessor outRunnable = 
-					createRunnerOutputStreamProcessor(
-					process.getInputStream(), runner, /*outputSemaphore,*/
+			RunnerErrorOrOutStreamProcessor outRunnable = createRunnerOutputStreamProcessor(process.getInputStream(),
+					runner, /* outputSemaphore, */
 					aProcessName, anOnlyProcess);
 
 			Thread outThread = new Thread(outRunnable);
@@ -966,9 +980,9 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessOut(aProcessName, outRunnable);
 
 			outThread.start();
-			
-			RunnerErrorOrOutStreamProcessor errorRunnable = createRunnerErrorStreamProcessor(
-					process.getErrorStream(), runner, /*errorSemaphore,*/
+
+			RunnerErrorOrOutStreamProcessor errorRunnable = createRunnerErrorStreamProcessor(process.getErrorStream(),
+					runner, /* errorSemaphore, */
 					aProcessName, anOnlyProcess);
 			Thread errorThread = new Thread(errorRunnable);
 			errorThread.setName("Error Stream Runnable");
@@ -976,19 +990,20 @@ public class BasicProcessRunner implements Runner {
 			runner.setProcessErr(aProcessName, errorRunnable);
 
 			errorThread.start();
-			
 
 			// Write to the process
 			// This can be done after the process is started, so one can create
 			// a coordinator of various processes
 			// using the output of one process to influence the input of another
-			
-			RunnerInputStreamProcessor aProcessIn = createRunnerInputStreamProcessor(process.getOutputStream(), runner, aProcessName,  anOnlyProcess);
+
+			RunnerInputStreamProcessor aProcessIn = createRunnerInputStreamProcessor(process.getOutputStream(), runner,
+					aProcessName, anOnlyProcess);
 
 			runner.setProcessIn(aProcessName, aProcessIn);
 			processToIn.put(aProcessName, aProcessIn);
 			if (anOutputBasedInputGenerator == null) {
-				int anInputDelay = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getFirstInputDelay();
+				int anInputDelay = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+						.getFirstInputDelay();
 				Tracer.info(this, "Delaying input feed for ms:" + anInputDelay);
 				Thread.sleep(anInputDelay);
 				aProcessIn.newInput(input);
@@ -996,8 +1011,8 @@ public class BasicProcessRunner implements Runner {
 			} else if (input != null && !input.isEmpty()) {
 				aProcessIn.newInput(input); // not sure an empty input makes a difference but just in case
 			}
-			
-			//			OutputStreamWriter processIn = new OutputStreamWriter(
+
+			// OutputStreamWriter processIn = new OutputStreamWriter(
 //					process.getOutputStream());
 //			
 //			processIn.write(input);
@@ -1011,13 +1026,10 @@ public class BasicProcessRunner implements Runner {
 				try {
 					process.waitFor();
 //					if (entryPoints != null)
-					UserProcessExecutionFinished.newCase(
-							folder.getAbsolutePath(),
-							(entryPoints != null) ? entryPoints
-									.get(
+					UserProcessExecutionFinished.newCase(folder.getAbsolutePath(),
+							(entryPoints != null) ? entryPoints.get(
 //											MainClassFinder.MAIN_ENTRY_POINT
-											getMainEntryPoint()
-											) : null,
+									getMainEntryPoint()) : null,
 							classPath, this);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1028,19 +1040,15 @@ public class BasicProcessRunner implements Runner {
 					if (entryPoints != null)
 						entryPoint = entryPoints.get(
 //								MainClassFinder.MAIN_ENTRY_POINT
-								getMainEntryPoint()
-								);
-					UserProcessExecutionTimedOut.newCase(
-							folder.getAbsolutePath(),
+								getMainEntryPoint());
+					UserProcessExecutionTimedOut.newCase(folder.getAbsolutePath(),
 //							entryPoints.get(MainClassFinder.MAIN_ENTRY_POINT),
-							entryPoint,
-							classPath, this);
+							entryPoint, classPath, this);
 
-					System.out
-							.println("*** Timed out waiting for process to finish ***");
+					System.out.println("*** Timed out waiting for process to finish ***");
 //					result = null;
 					project.setInfinite(true);
-					
+
 					// avoiding hanging processes
 					// processIn.flush();
 					// processIn.close();
@@ -1048,8 +1056,8 @@ public class BasicProcessRunner implements Runner {
 				}
 				// }
 				if (BasicProjectExecution.isWaitForMethodConstructorsAndProcesses())
-				terminateProcess();
-				
+					terminateProcess();
+
 //				processObj.destroy();
 				// if (wait) {
 				// Wait for the output to finish
@@ -1072,14 +1080,15 @@ public class BasicProcessRunner implements Runner {
 
 		return process;
 	}
-	
+
 	protected void initializeExecutionState() {
 		executionSpecification = BasicExecutionSpecificationSelector.getBasicExecutionSpecification();
 	}
 
 	public Map<String, String> getEntryPoints() {
 		if (entryPoints == null) {
-			entryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(project, specifiedMainClass);
+			entryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(project,
+					specifiedMainClass);
 
 		}
 		return entryPoints;
@@ -1088,16 +1097,15 @@ public class BasicProcessRunner implements Runner {
 	public File getFolder() {
 		return getFolder(getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT));
 	}
-	
+
 	/**
 	 * This figures out what class is the "entry point", or, what class has
 	 * main(args)
 	 *
-	 * @param project
-	 *            The project to run
+	 * @param project The project to run
 	 * @return The class canonical name. i.e. "foo.bar.SomeClass"
-	 * @throws NotRunnableException
-	 * should really use the method below which checks the specified class
+	 * @throws NotRunnableException should really use the method below which checks
+	 *                              the specified class
 	 */
 	protected String getMainEntryPoint() {
 		if (specifiedMainClass != null)
@@ -1121,14 +1129,16 @@ public class BasicProcessRunner implements Runner {
 //		}
 //		return aRetVal;
 	}
+
 	public static String getMainEntryPoint(Project aProject, String specifiedMainClass) {
 		if (specifiedMainClass == null) {
-			String anEntryPoint  = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
+			String anEntryPoint = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
 			if (anEntryPoint != null && !anEntryPoint.isEmpty()) {
 				return anEntryPoint;
 			}
 		}
-		Map<String, String> anEntryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(aProject, specifiedMainClass);
+		Map<String, String> anEntryPoints = BasicLanguageDependencyManager.getMainClassFinder().getEntryPoints(aProject,
+				specifiedMainClass);
 //		String aRetVal = getEntryPoints().get(BasicProcessRunner.MAIN_ENTRY_POINT);
 		if (anEntryPoints == null) {
 			return null;
@@ -1143,18 +1153,20 @@ public class BasicProcessRunner implements Runner {
 					System.err.println("Returning first of multiple entry points:" + anEntryPoints.values());
 				}
 			} else {
-			
+
 //			return "main";
-			return BasicProcessRunner.MAIN_ENTRY_POINT;
+				return BasicProcessRunner.MAIN_ENTRY_POINT;
 			}
 		}
 		return aRetVal;
 	}
-    @Override
+
+	@Override
 	public String getSpecifiedMainClass() {
 		return specifiedMainClass;
 	}
-    @Override
+
+	@Override
 	public void setSpecifiedMainClass(String specifiedMainClass) {
 		this.specifiedMainClass = specifiedMainClass;
 	}
@@ -1170,6 +1182,7 @@ public class BasicProcessRunner implements Runner {
 	protected List<String> getTerminatingProcesses(String firstTeam) {
 		return executionSpecification.getTerminatingProcesses(firstTeam);
 	}
+
 	public String classWithEntryTagTarget(String anEntryTag) {
 		if (anEntryTag == null)
 			return "";
@@ -1186,11 +1199,12 @@ public class BasicProcessRunner implements Runner {
 //		}
 		return null; // this should never be executed
 	}
+
 	protected String searchForEntryTag(String aProcess) {
 		return searchForEntryTag(aProcess, BasicStaticConfigurationUtils.getBasicCommand());
-		
+
 	}
-	
+
 	protected String searchForEntryTag(String aProcess, List<String> basicCommand) {
 //		List<String> basicCommand = StaticConfigurationUtils.getBasicCommand(aProcess);
 
@@ -1216,11 +1230,11 @@ public class BasicProcessRunner implements Runner {
 		// }
 		String aClassWithEntryTag = null;
 
-		if (anEntryTag != null ) {
+		if (anEntryTag != null) {
 			aClassWithEntryTag = classWithEntryTagTarget(anEntryTag);
 			if (aClassWithEntryTag == null)
 				throw TagNotFound.newCase(anEntryTag, this);
-		} else if (anEntryTags != null ) {
+		} else if (anEntryTags != null) {
 			aClassWithEntryTag = classWithEntryTagsTarget(anEntryTags);
 			if (aClassWithEntryTag == null)
 				throw TagNotFound.newCase(anEntryTags, this);
@@ -1231,6 +1245,7 @@ public class BasicProcessRunner implements Runner {
 		}
 		return aClassWithEntryTag;
 	}
+
 	public String classWithEntryTagsTarget(List<String> anEntryTags) {
 		if (anEntryTags == null)
 			return "";
@@ -1248,6 +1263,7 @@ public class BasicProcessRunner implements Runner {
 //		}
 		return null; // this should never be executed
 	}
+
 	protected List<String> getStartTags(String aProcess) {
 		return executionSpecification.getStartTags(aProcess);
 	}
@@ -1268,5 +1284,5 @@ public class BasicProcessRunner implements Runner {
 		}
 		return anEntryPoint;
 	}
-	
+
 }

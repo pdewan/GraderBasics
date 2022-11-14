@@ -42,13 +42,19 @@ protected String[] getBasicTraceCommand( ) {
 //				Tracer.showInfo()?
 //						"| tee":
 //							">";
+		String aTraceFile = getRelativeTraceFileName();
+		if (!isCreateDockerContainer()) {
+			aTraceFile = getProjectDirectory() + "/" + aTraceFile;
+	
+		}
 		String[] command = {
 				"valgrind",
 				"--trace-children=yes",
 //				"./"+EXEC_NAME,
 				"./" + fullExecName,
 				redirection(),
-getRelativeTraceFileName()
+				aTraceFile
+//getRelativeTraceFileName()
 		};
 		return command;
 }

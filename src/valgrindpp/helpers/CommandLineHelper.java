@@ -19,6 +19,7 @@ public class CommandLineHelper {
 		
 		ProcessBuilder pb = new ProcessBuilder();
 		if (anExecutionDirectory != null && command[0] != DockerHelper.DOCKER_PATH) {
+			System.out.println("CLH Process Builder directory:" + anExecutionDirectory);
 			pb.directory(new File(anExecutionDirectory));
 		}
 		
