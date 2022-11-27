@@ -313,7 +313,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 //		File aTraceFile = getTraceFile(aProject);
 
 			setRelativeTraceFileName(getTraceFileRelativeName());
-
+// this should be project directory instead of execution directory if no docker container
 			traceExecutionFile = new File(executionDirectory + "/" + getRelativeTraceFileName());
 
 			traceExecutionDirectory = traceExecutionFile.getParentFile();

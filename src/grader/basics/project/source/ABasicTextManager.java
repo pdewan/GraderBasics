@@ -11,11 +11,15 @@ import java.util.Map;
 
 import grader.basics.BasicLanguageDependencyManager;
 import grader.basics.trace.source.SourceFileComputed;
+import valgrindpp.helpers.CompilerHelper;
 
 
 public class ABasicTextManager implements BasicTextManager{
     protected StringBuffer allSourcesText;
-	protected String sourceSuffix;
+    protected String[] allSourcesLines;
+    private Map<String, StringBuffer> fileToText ;
+	protected static String sourceSuffix;
+	protected static String sourceSuffix2;
 	protected File sourceFolder;
 	protected List<File> sourceFiles = new ArrayList();
 	
@@ -24,6 +28,11 @@ public class ABasicTextManager implements BasicTextManager{
     
     public ABasicTextManager(File aSourceFolder) {
     	sourceSuffix = BasicLanguageDependencyManager.getSourceFileSuffix();
+    	if (BasicLanguageDependencyManager.getLanguage() == BasicLanguageDependencyManager.C_LANGUAGE) {
+    		sourceSuffix2 = ".h";
+    	} else {
+    		sourceSuffix2 = sourceSuffix;
+    	}
     	sourceFolder = aSourceFolder;
     	allSourcesText = new StringBuffer();
     }
@@ -51,7 +60,25 @@ public class ABasicTextManager implements BasicTextManager{
         return allSourcesText;
     }
     @Override
+    public Map<String, String> getFileToText() {
+    	if (fileToText == null) {
+        	StringBuffer aSource = getAllSourcesText();
+        	return extractFileContents(aSource.toString());
+
+    	}
+//        if (!initializedSourceText)
+//
+////        if (allSourcesText == null)
+//            initializeAllSourcesText();
+    	
+        
+//        return fileToText;
+        return null;
+    }
+    @Override
     public void initializeAllSourcesText() {
+    	allSourcesText.setLength(0);
+//    	fileToText.clear();
     	if (sourceFolder == null) {
     		System.err.println("No source folder found in basic text manager");
     		return;
@@ -77,13 +104,13 @@ public class ABasicTextManager implements BasicTextManager{
     	
     	
     }
-    public static Map<String, StringBuffer> extractFileContents(String anAllSourcesText) {
+    public static Map<String, String> extractFileContents(String anAllSourcesText) {
     	String[] anAllSourcesLines = anAllSourcesText.split("\n");
     	return extractFileContents(anAllSourcesLines);
     	
     }
-    public static Map<String, StringBuffer> extractFileContents(String[] anAllSourcesLines) {
-    	Map<String, StringBuffer> aFileNameToContentsMap = new HashMap();
+    public static Map<String, String> extractFileContents(String[] anAllSourcesLines) {
+    	Map<String, String> aFileNameToContentsMap = new HashMap();
     	int aNextFileIndex = 0;
     	while (true) {
     		int size = fillNextFileContents(anAllSourcesLines, aNextFileIndex, aFileNameToContentsMap);
@@ -95,7 +122,7 @@ public class ABasicTextManager implements BasicTextManager{
     	}
     	return aFileNameToContentsMap;
     }
-    protected static int fillNextFileContents (String[] anAllSourcesLines, int aStartIndex, Map<String, StringBuffer> aFileNameToContentsMap ) {
+    protected static int fillNextFileContents (String[] anAllSourcesLines, int aStartIndex, Map<String, String> aFileNameToContentsMap ) {
     	int aContentsIndex = aStartIndex;
     	int aContentsStartIndex = 0;
     	int aContentsEndIndex = 0;
@@ -110,8 +137,8 @@ public class ABasicTextManager implements BasicTextManager{
     		if (!aNextLine.startsWith(BasicTextManager.SOURCE_PREFIX)) {
     			continue;
     		}
-    		aFileName = aNextLine.substring(BasicTextManager.SOURCE_PREFIX.length(), aNextLine.length() -1 );
-    		aFileNameToContentsMap.put(aFileName, aContentsBuffer);
+    		aFileName = aNextLine.substring(BasicTextManager.SOURCE_PREFIX.length(), aNextLine.length() );
+//    		aFileNameToContentsMap.put(aFileName, aContentsBuffer.toString());
     		aContentsStartIndex = aContentsIndex;
     		break;
     	}
@@ -124,24 +151,64 @@ public class ABasicTextManager implements BasicTextManager{
     			aContentsEndIndex = aContentsIndex;
     			break;
     		}
+    		if (aNextLine.endsWith("\r")) {
+    			aNextLine = aNextLine.substring(0, aNextLine.length() -1);
+    		}
     		aContentsBuffer.append(aNextLine + "\n");  
     		aContentsIndex++;
     		
     	}
+    	if (aFileName == null) {
+    		return -1;
+    	}
+    	aContentsBuffer.deleteCharAt(aContentsBuffer.length() - 1); // last new line
+		aFileNameToContentsMap.put(aFileName, aContentsBuffer.toString());
+
     	return aContentsEndIndex - aContentsStartIndex;
     }
-    
+    public static final int MAX_SOURCE_SIZE = 10000;
+    static StringBuffer stringBuffer = new StringBuffer(MAX_SOURCE_SIZE);
+    public static  String toString (Map<String, String> aFileNameToContents) {
+    	stringBuffer.setLength(0);
+    	for (String aKey:aFileNameToContents.keySet()) {
+    		String aFileName = aKey;
+    		File aFile = new File(aFileName);
+    		if (!isSourceFile(aFile)) {
+//    		if (!aFileName.endsWith(BasicLanguageDependencyManager.getSourceFileSuffix())) {
+        		continue;
+        	}
+    		stringBuffer.append(BasicTextManager.SOURCE_PREFIX + aKey + "\n");
+    		stringBuffer.append(aFileNameToContents.get(aKey));    
+    		stringBuffer.append("\n" + BasicTextManager.SOURCE_SUFFIX + "\n");
+  		
+    	}
+    	return stringBuffer.toString();
+    	
+    }
     protected void addSourceFile(File aFile) {
-    	if (!aFile.getName().endsWith(BasicLanguageDependencyManager.getSourceFileSuffix())) {
+    	if (!isSourceFile(aFile)) {
+//    	if (!aFile.getName().endsWith(sourceSuffix) && 
+//    			sourceSuffix!= sourceSuffix2 &&
+//    			!aFile.getName().endsWith(sourceSuffix2) 
+//    			) 
+    	
     		return;
     	}
+
+//    	if (!aFile.getName().endsWith(BasicLanguageDependencyManager.getSourceFileSuffix())) {
+//    		return;
+//    	}
     	try {
 			String contents = new String(Files.readAllBytes(aFile.toPath()));
-			String prefix = BasicTextManager.SOURCE_PREFIX + aFile.getName() + "\n";
+			String aRelativePath = CompilerHelper.toRelativePath(sourceFolder.getAbsolutePath(), aFile.getAbsolutePath());
+//			String prefix = BasicTextManager.SOURCE_PREFIX + aFile.getName() + "\n";
+			String prefix = BasicTextManager.SOURCE_PREFIX + aRelativePath + "\n";
+
 			allSourcesText.append(prefix);			
 			allSourcesText.append(contents);        
-			allSourcesText.append(BasicTextManager.SOURCE_SUFFIX + "\n");
+			allSourcesText.append("\n" + BasicTextManager.SOURCE_SUFFIX + "\n");
 			sourceFiles.add(aFile);
+//			fileToText.put(aFile.getName(), contents);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,10 +224,17 @@ public class ABasicTextManager implements BasicTextManager{
     	if (aFile.isDirectory()) {
     		addFolder(aFile);
     	}
-    	if (aFile.getName().endsWith(sourceSuffix)) {
+//    	if (aFile.getName().endsWith(sourceSuffix) || (sourceSuffix != sourceSuffix2) && aFile.getName().endsWith(sourceSuffix2)) {
+    	if (isSourceFile (aFile)) {	
     		addSourceFile(aFile);
     	}
     	
+    }
+    
+    protected static boolean isSourceFile (File aFile) {
+    	String aName = aFile.getName();
+    	return (aName.endsWith(sourceSuffix) ||
+    			((sourceSuffix != sourceSuffix2) && aName.endsWith(sourceSuffix2))); 
     }
     @Override
     public void setAllSourcesText(StringBuffer anAllSourcesText) {

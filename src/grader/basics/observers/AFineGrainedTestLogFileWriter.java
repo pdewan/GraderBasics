@@ -39,8 +39,10 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	List<String> unsortedTestScores=null;
 	List<String> unsortedFailFromPreReq=null;
 	
-	int sessionNumber=0;
+	private int sessionNumber=0;
 	
+	
+
 	File sessionDataFile;
 	public static final int SESSION_DATA_SESSION_NUMBER_INDEX=0;
 	public static final int SESSION_DATA_TOTAL_RUN_INDEX=1;
@@ -49,6 +51,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 	private GradableJUnitTest testedSuiteOrTest;
 	private String topLevelInfo;
 	private ALogSendingRunnable logSender;
+	
+	GradableJUnitSuite topLevelSuite;
 	
 	public AFineGrainedTestLogFileWriter() {
 		super();
@@ -71,12 +75,13 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 				(AbstractMap.SimpleEntry<GradableJUnitSuite, GradableJUnitTest>) idField.get(description);
 				
 			GradableJUnitSuite aTopLevelSuite = anEntry.getKey();
+			topLevelSuite = aTopLevelSuite;
 			Class aTopLevelSuiteClass = aTopLevelSuite.getJUnitClass();
 			GradableJUnitTest aTestOrSuiteSelected = anEntry.getValue();
 			Class aTestOrSuiteSelectedClass = aTestOrSuiteSelected.getJUnitClass();
 
 			testedSuiteOrTest=aTestOrSuiteSelected;
-			topLevelInfo = toFileName(aTopLevelSuite);
+			setTopLevelInfo(toFileName(aTopLevelSuite));
 			
 			unsortedExtraCreditTests = new ArrayList<String>();
 			
@@ -99,9 +104,9 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 				logFilePath = fileLoc + logFileName;
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
 				
-				if(logSender==null) {
-					logSender = new ALogSendingRunnable();
-					Thread logSendingThread = new Thread(logSender);
+				if(getLogSender()==null) {
+					setLogSender(new ALogSendingRunnable());
+					Thread logSendingThread = new Thread(getLogSender());
 					logSendingThread.setName("Log Sending");
 					logSendingThread.start();
 				}	
@@ -216,7 +221,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 			
 			try {
 //				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
-				logSender.addToQueue(fullTrace.toString(), topLevelInfo, numTotalRuns);
+				getLogSender().addToQueue(fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
 			}catch(Exception e) {
 //				System.err.println("Error resolving local checks server sending");
 //				System.err.println("Thrown message:\n"+e.getMessage());
@@ -318,6 +323,26 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		String score = aTest.getDisplayedScore()+"";
 		String maxScore = aTest.getComputedMaxScore()+"";
 		return name+"-("+score+"/"+maxScore+")";
+	}
+	
+	protected int getSessionNumber() {
+		return sessionNumber;
+	}
+
+	public ALogSendingRunnable getLogSender() {
+		return logSender;
+	}
+
+	public void setLogSender(ALogSendingRunnable logSender) {
+		this.logSender = logSender;
+	}
+
+	public String getTopLevelInfo() {
+		return topLevelInfo;
+	}
+
+	public void setTopLevelInfo(String topLevelInfo) {
+		this.topLevelInfo = topLevelInfo;
 	}
 	
 }

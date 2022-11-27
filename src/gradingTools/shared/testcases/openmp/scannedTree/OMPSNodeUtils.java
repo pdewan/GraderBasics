@@ -37,7 +37,7 @@ import gradingTools.shared.testcases.openmp.scannedTree.SNode;
 
 public class OMPSNodeUtils extends OpenMPUtils {
 
-	public static RootOfFileSNode getSNode(String aFileName, StringBuffer aFileBuffer) {
+	public static RootOfFileSNode getSNode(String aFileName, String aFileBuffer) {
 		String[] aFileLines = aFileBuffer.toString().split("\n");
 		return getSNode(aFileName, aFileLines);
 	}
@@ -1056,9 +1056,9 @@ public class OMPSNodeUtils extends OpenMPUtils {
 	
 	public static RootOfProgramSNode getRootOfProgramSNode(String aSource) {
 		RootOfProgramSNode retVal = new ARootOfProgramSNode();
-		Map<String, StringBuffer> aFileNameToContents = ABasicTextManager.extractFileContents(aSource);
+		Map<String, String> aFileNameToContents = ABasicTextManager.extractFileContents(aSource);
 		for (String aFileName:aFileNameToContents.keySet()) {
-			StringBuffer aFileContents = aFileNameToContents.get(aFileName);
+			String aFileContents = aFileNameToContents.get(aFileName);
 //			List<OpenMPPragma> anOpenMPPragmas = OpenMPUtils.getOpemMPPragmas(aFileContents);
 			System.out.println("Processing file:" + aFileName);
 			RootOfFileSNode anSNode = OMPSNodeUtils.getSNode(aFileName, aFileContents);

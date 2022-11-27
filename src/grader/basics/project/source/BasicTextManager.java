@@ -2,6 +2,7 @@ package grader.basics.project.source;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public interface BasicTextManager {
 
@@ -15,7 +16,7 @@ public interface BasicTextManager {
 	int MAX_FILE_NAME_LENGTH = 100;
 	public StringBuffer getAllSourcesText();
 
-    public void setAllSourcesText(StringBuffer anAllSourcesText);
+//    public void setAllSourcesText(String anAllSourcesText);
 
     void writeAllSourcesText(String aFileName);
     public void initializeAllSourcesText();
@@ -23,7 +24,9 @@ public interface BasicTextManager {
 	List<File> getSourceFiles();
 
 	void setSourceFiles(List<File> sourceFiles);
+	 public Map<String, String> getFileToText();
 
+	void setAllSourcesText(StringBuffer anAllSourcesText);
 
 
 }

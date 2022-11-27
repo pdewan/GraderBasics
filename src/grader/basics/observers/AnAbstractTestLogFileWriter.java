@@ -125,7 +125,10 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 			e.printStackTrace();
 		};
 	}
-	
+	Date lastDate;
+	protected Date getLastDate() {
+		return lastDate;
+	}
 	public void composeTrace() {
 		fullTrace.setLength(0);
 		composePassString();
@@ -134,6 +137,7 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 		composeUntestedString();
 		fullTrace.append(""+numTotalRuns);
 		Date aDate = new Date(System.currentTimeMillis());
+		lastDate = aDate;
 		fullTrace.append("," + aDate);
 		fullTrace.append("," + currentPassPercentage);
 		fullTrace.append("," + (currentPassPercentage - previousPassPercentage));
