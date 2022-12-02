@@ -146,6 +146,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter{
 		if(sessionDataFile.exists()) {
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(sessionDataFile));
+//				System.out.println("abs path" + sessionDataFile.getAbsolutePath());
 				String [] firstLine = br.readLine().split(NAME_SEPARATOR);
 				br.close();
 				sessionNumber = Integer.parseInt(firstLine[SESSION_DATA_SESSION_NUMBER_INDEX])+1;

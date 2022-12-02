@@ -372,12 +372,9 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		}		
 
 	}
-	
-
-			
-	protected Map<String, String> getDiffMap() {
-		Map<String, String> aCurrentSourcesMap = getCurrentSourcesMap();
-		Map<String, String> aLastSourcesMap = getLastSourcesMap();
+	public static Map<String, String> getDiffMap(Map<String, String> aCurrentSourcesMap, Map<String, String> aLastSourcesMap) {
+//		Map<String, String> aCurrentSourcesMap = getCurrentSourcesMap();
+//		Map<String, String> aLastSourcesMap = getLastSourcesMap();
 		
 
 		Set<String> aNewFiles = subtract(aCurrentSourcesMap.keySet(), aLastSourcesMap.keySet());
@@ -406,6 +403,42 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		}
 		return retVal;
 		// it will be nice to find renamed files
+		
+
+	}
+
+			
+	protected Map<String, String> getDiffMap() {
+		Map<String, String> aCurrentSourcesMap = getCurrentSourcesMap();
+		Map<String, String> aLastSourcesMap = getLastSourcesMap();
+		
+return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
+//		Set<String> aNewFiles = subtract(aCurrentSourcesMap.keySet(), aLastSourcesMap.keySet());
+//		
+//		Set<String> aDeletedFiles = subtract(aLastSourcesMap.keySet(), aCurrentSourcesMap.keySet());
+//		Set<String> aCommonFiles = intersect (aCurrentSourcesMap.keySet(), aLastSourcesMap.keySet());
+//		
+//		Map<String, String> retVal = new HashMap();
+//		for (String aDeleted:aDeletedFiles) {
+//			retVal.put(aDeleted, DELETED_FILE);
+//		}
+//		for (String key:aNewFiles) {
+//			retVal.put(key, aCurrentSourcesMap.get(key).toString());
+//		}
+//
+//		for (String key:aCommonFiles) {
+////			if (key.contains("slack")) {
+////				System.out.println("found slack");
+////			}
+//			String aCurrentFile = aCurrentSourcesMap.get(key);
+//			String anOriginalFile = aLastSourcesMap.get(key);
+//			String aDiff = toDelta (anOriginalFile, aCurrentFile );
+//			if (aDiff == EMPTY_STRING)
+//				continue;
+//			retVal.put(key, aDiff);			
+//		}
+//		return retVal;
+//		// it will be nice to find renamed files
 		
 
 	}
