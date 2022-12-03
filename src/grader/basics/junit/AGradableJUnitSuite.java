@@ -10,6 +10,8 @@ import java.util.Set;
 
 import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.observers.ASourceAndTestLogWriter;
+import grader.basics.observers.AnAbstractTestLogFileWriter;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 import gradingTools.logs.models.MetricsUtils;
@@ -312,6 +314,13 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public List<String> workTimeMetrics() {
 		return MetricsUtils.testingPeriodMetrics();
 	}
+	public List<String[]> showSessions() {
+		String aFileName = AnAbstractTestLogFileWriter.toFileName(this);
+		
+		List<String[]> aSessions = ASourceAndTestLogWriter.getInstance().readAllSessions(this);
+		return aSessions;
+	}
+
 
 	@Visible(false)
 	public TestCaseResult test() throws NotAutomatableException,

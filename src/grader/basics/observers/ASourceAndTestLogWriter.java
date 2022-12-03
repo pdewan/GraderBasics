@@ -22,6 +22,7 @@ import javax.print.attribute.HashAttributeSet;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 
+import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
@@ -30,10 +31,13 @@ import grader.basics.vetoers.AConsentFormVetoer;
 import name.fraser.neil.plaintext.diff_match_patch;
 import name.fraser.neil.plaintext.diff_match_patch.Diff;
 import util.misc.Common;
+import util.models.AListenableVector;
 
 public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	static final String SOURCE_LOG_FILE_NAME_MODIFIER = "_sources_log";
 	static final String SOURCE_LOG_FILE_NAME_SUFFIX = ".txt";
+	static final String REPLAYED_SOURCES_FILE_NAME_MODIFIER = "_replayed_sources";
+	static final String REPLAYED_SOURCES_FILE_NAME_SUFFIX = ".txt";
 	static final String LAST_SOURCES_FILE_NAME_MODIFIER = "_last_sources";
 	static final String LAST_SOURCES_FILE_NAME_SUFFIX = ".txt";
 	static final String REPLAYED_SOURCE_FILE_NAME_MODIFIER = "_replayed";
@@ -44,7 +48,9 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	List<String> currentSourcesLines;
 
 	Map<String, String> lastSourcesMap;
+	int lastSourcesLength;
 	Map<String, String> currentSourcesMap;
+	int currentSourcesLength;
 	Map<String, String> diffMap;
 	String lastSourceFileName;
 	String sourceLogFileName;
@@ -64,12 +70,13 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	public  String toLogEntry(String aText) {
 		StringBuffer retVal = new StringBuffer(ABasicTextManager.MAX_SOURCE_SIZE);
 		int aSessionNumber = getSessionNumber();
+		int aLengthChange = currentSourcesLength - lastSourcesLength;
 		retVal.append(SESSION_START + "\n" + aSessionNumber + ",");		
 		Date aDate = getLastDate();
 		if (aDate == null) {
 			aDate = new Date (System.currentTimeMillis());
 		}
-		retVal.append(aDate.toString() + "\n");
+		retVal.append(aDate.toString() + "," + aLengthChange + "\n");
 		retVal.append(aText);
 		retVal.append("\n");
 		retVal.append(SESSION_END);
@@ -161,14 +168,41 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		}
 	}
 	protected String getSourceLogFileName() {
-		if (sourceLogFileName == null) {
-			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(topLevelSuite)
-					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
-		}
-		return sourceLogFileName;
+		return getSourceLogFileName(topLevelSuite);
+//		if (sourceLogFileName == null) {
+//			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(topLevelSuite)
+//					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
+//		}
+//		return sourceLogFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 	}
+	protected String getSourceLogFileName(GradableJUnitSuite aTopLevelSuite) {
+		if (sourceLogFileName == null) {
+			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
+		}
+           		return sourceLogFileName;
+//		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+	}
+	
+//	protected String getSourceLogFileNameStatic() {
+//		if (sourceLogFileName == null) {
+//			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(topLevelSuite)
+//					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
+//		}
+//		return sourceLogFileName;
+////		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+//	}
 
+	protected String getReplayedSourcesFileName(GradableJUnitSuite aTopLevelSuite) {
+		if (replayedSourceFileName == null) {
+			replayedSourceFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
+					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+					+ REPLAYED_SOURCE_FILE_NAME_MODIFIER + REPLAYED_SOURCE_FILE_NAME_SUFFIX;
+		}
+		return lastSourceFileName;
+//		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+	}
 	protected String getReplayedSourcesFileName() {
 		if (replayedSourceFileName == null) {
 			replayedSourceFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
@@ -179,15 +213,26 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 	}
 
-	protected String getLastSourcesFileName() {
+	protected String getLastSourcesFileName(GradableJUnitSuite aTopLevelSuite) {
 		if (lastSourceFileName == null) {
 			lastSourceFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
-					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(topLevelSuite)
+					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
 					+ LAST_SOURCES_FILE_NAME_MODIFIER + LAST_SOURCES_FILE_NAME_SUFFIX;
 		}
 		return lastSourceFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 	}
+	protected String getLastSourcesFileName() {
+		return getLastSourcesFileName(topLevelSuite);
+//		if (lastSourceFileName == null) {
+//			lastSourceFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
+//					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+//					+ LAST_SOURCES_FILE_NAME_MODIFIER + LAST_SOURCES_FILE_NAME_SUFFIX;
+//		}
+//		return lastSourceFileName;
+////		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
+	}
+
 
 	protected List<String> getLastSourcesLines() {
 		if (lastSourcesLines == null) {
@@ -208,9 +253,17 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		return lastSourcesLines;
 
 	}
+	public static int getLength(Map<String, String> aKeyToString) {
+		int retVal = 0;
+		for (String key:aKeyToString.keySet()) {
+			retVal += aKeyToString.get(key).length();
+		}
+		return retVal;
+	}
 	protected Map<String, String> getCurrentSourcesMap() {
 		if (currentSourcesMap == null) {
 			currentSourcesMap = getProject().getTextManager().getFileToText();
+			currentSourcesLength = getLength(currentSourcesMap);
 		}
 		return currentSourcesMap;
 	}
@@ -242,17 +295,18 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 //		
 //	}
 	static final Map<String, String> emptyMap = new HashMap<>();
+
 	protected Map<String, String> getLastSourcesMap() {
 		if (lastSourcesMap == null) {
-		List<String> aLastSourceLines = getLastSourcesLines();
-		if (aLastSourceLines.isEmpty()) {
-			return emptyMap;
+			List<String> aLastSourceLines = getLastSourcesLines();
+			if (aLastSourceLines.isEmpty()) {
+				return emptyMap;
+			}
+			String[] aLastSourceLinesArray = lastSourcesLines.toArray(emptyStrings);
+			lastSourcesMap = ABasicTextManager.extractFileContents(aLastSourceLinesArray);
+			lastSourcesLength = getLength(lastSourcesMap);
 		}
-		String[] aLastSourceLinesArray = lastSourcesLines.toArray(emptyStrings);
-		lastSourcesMap = 
-				ABasicTextManager.extractFileContents(aLastSourceLinesArray);
-		}
-		return lastSourcesMap;		
+		return lastSourcesMap;
 	}
 	
 	protected static final String DELETED_FILE = "//@#$DELETED FILE&^%$";
@@ -313,15 +367,16 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 ////		while true
 //	}
 	
-	public static int readNextSession(BufferedReader aBufferedReader, StringBuffer retVal) {
+	public static String[] readNextSession(BufferedReader aBufferedReader, StringBuffer retVal) {
 //    	StringBuffer aCurrentSessionText = new StringBuffer(ABasicTextManager.MAX_SOURCE_SIZE);
 		boolean readData = false;
 		int aSessionNumber = 0;
+		String[] aSessionAndDate = null;
 		try {
 //			aBufferedReader.readLine(); //SESSION_START
 		String aNextLine = aBufferedReader.readLine();
 		if (aNextLine == null) {
-			return -1;
+			return null;
 		}
 		while (!aNextLine.equals(SESSION_START)) {
 			aNextLine = aBufferedReader.readLine();
@@ -330,17 +385,18 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 //			return -1;
 //		}
 		aNextLine = aBufferedReader.readLine();
-		String[] aSessionAndDate = aNextLine.split(",");
-		aSessionNumber = Integer.parseInt(aSessionAndDate[0 ]);
+		aSessionAndDate = aNextLine.split(",");
+//		aSessionNumber = Integer.parseInt(aSessionAndDate[0 ]);
 		while (true) {
 		
 			    aNextLine = aBufferedReader.readLine();
 
 				if (aNextLine == null) {
-					return -1;
+					return null;
 				}
 				else if (aNextLine.equals(SESSION_END)) {
-					return aSessionNumber;
+//					return aSessionNumber;
+					return aSessionAndDate;
 				} else {
 					retVal.append(aNextLine);
 					retVal.append("\n");
@@ -349,7 +405,7 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		}
 		} catch (IOException e) {
 			e.printStackTrace();
-			return -1;
+			return null;
 		}
 	}
 	
@@ -443,6 +499,38 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 
 	}
 //	
+	public  List<String[]> readAllSessions() {
+		return readAllSessions(topLevelSuite);
+	}
+
+	public  List<String[]> readAllSessions(GradableJUnitSuite aTopLevelSuite) {
+		List<String[]> retVal = new AListenableVector<>();
+		try {
+			BufferedReader aBufferedReader;
+
+			aBufferedReader = new BufferedReader(new FileReader(getSourceLogFileName(aTopLevelSuite)));
+		
+		StringBuffer aNextSessionContents = new StringBuffer(ABasicTextManager.MAX_SOURCE_SIZE);
+
+	
+			
+			while (true) {
+				aNextSessionContents.setLength(0);
+				
+				String[] aSessionAndDate =readNextSession(aBufferedReader, aNextSessionContents);
+
+				if (aSessionAndDate == null) {
+					return retVal;
+				}
+				retVal.add(aSessionAndDate);
+				
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return retVal;
+		}
+	}
 	public static String replayToSessionString(String aFile, int aSessionNumber) {
 		Map<String, String> aFileToSources = replayToSessionMap(aFile, aSessionNumber);
 		if (aFileToSources == null) {
@@ -451,12 +539,18 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 		}
 		return ABasicTextManager.toString(aFileToSources);
 	}
+	public  String replayToSessioString(GradableJUnitSuite aTopLevelSuite, int aSessionNumber) {
+		return replayToSessionString(getSourceLogFileName(aTopLevelSuite), aSessionNumber);
+	}
 	
+
 
 	public  String replayToSessioString(int aSessionNumber) {
 		return replayToSessionString(getSourceLogFileName(), aSessionNumber);
 	}	
-	
+	public static int getSessionNumber (String[] aSessionAndDate) {
+		return Integer.parseInt(aSessionAndDate[0]);
+	}
 	public static Map<String, String> replayToSessionMap(String aFile, int aSessionNumber) {
 		BufferedReader aBufferedReader;
 		try {
@@ -470,15 +564,26 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 
 		try {
 			int aNumMerges = 0;
+			int aPreviousSession = -1;
 			while (true) {
 				aNextSessionContents.setLength(0);
-
-				int aNextSession = readNextSession(aBufferedReader, aNextSessionContents);
-
-				if (aNextSession == -1) {
+				
+				String[] aSessionAndDate =readNextSession(aBufferedReader, aNextSessionContents);
+				if (aSessionAndDate == null) {
 					System.err.println("Log file ended before session " + aSessionNumber);
 					return retVal;
 				}
+				int aNextSession = getSessionNumber(aSessionAndDate);
+				aPreviousSession = aNextSession;
+
+//				if (aNextSession == -1) {
+//					System.err.println("Log file ended before session " + aSessionNumber);
+//					return retVal;
+//				}
+//				if (aPreviousSession != -1 && aNextSession != aPreviousSession + 1) {
+//					System.err.println("Session " + aPreviousSession + " succeeded by non consecutive session " + aNextSession);
+//					return retVal;
+//				}
 				
 				Map<String, String> aNextSessionMap = ABasicTextManager
 						.extractFileContents(aNextSessionContents.toString());
