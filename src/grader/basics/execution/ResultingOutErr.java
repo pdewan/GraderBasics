@@ -84,7 +84,7 @@ public class ResultingOutErr {
 			if (out != null && !out.isEmpty()) {
 				String[] aRawLines = out.split("\n");
 				for (String aRawLine:aRawLines) {
-					if (Tracer.isTrace(aRawLine)) continue;
+					//if (Tracer.isTrace(aRawLine)) continue;
  					outputLinesList.add(aRawLine);
 				}
 			}
