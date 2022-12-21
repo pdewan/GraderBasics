@@ -1,6 +1,7 @@
 package gradingTools.logs.models;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import grader.basics.junit.BasicJUnitUtils;
 import grader.basics.junit.GradableJUnitTest;
+import grader.basics.observers.AnAbstractTestLogFileWriter;
 import grader.basics.project.CurrentProjectHolder;
 import gradingTools.logs.LocalChecksLogData;
 import gradingTools.logs.localChecksStatistics.collectors.Collector;
@@ -27,6 +29,8 @@ import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.Dec
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DecreasingAttemptsCollectorV2;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.TotalTimeCollector;
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
+import gradingTools.logs.localChecksStatistics.compiledLogGenerator.CollectorManager;
+import gradingTools.logs.localChecksStatistics.compiledLogGenerator.LocalLogDataAnalyzer;
 
 public class MetricsUtils {
 	public static final int BREAK_TIME = 300;
@@ -203,8 +207,14 @@ public class MetricsUtils {
 
 	static StringBuffer stringBuffer = new StringBuffer();
 	
-	public static TestMetrics progressMetrics(GradableJUnitTest aJUnitTest) {
-		return null;
+//	public static TestMetrics progressMetrics(GradableJUnitTest aJUnitTest) {
+//		return null;
+//	}
+	public static List<TestMetrics> progressMetrics(String anAssignmentNumber) {
+		Map<String, TestMetrics> aTestMetricsMap = new HashMap<>();
+		fillTestMetricsMap(aTestMetricsMap);
+		List<TestMetrics> aListMetrics = new ArrayList(aTestMetricsMap.values());
+		return aListMetrics;
 	}
 
 	public static List<TestMetrics> progressMetrics() {
@@ -227,13 +237,25 @@ public class MetricsUtils {
 ////		return stringBuffer.toString();
 //		return aData;
 	}
+	
+	private static final String fineGrainedSuffix = "FineGrained.csv";
 
-	public static List<String> testingPeriodMetrics() {
+	public static List<String> testingPeriodMetrics(GradableJUnitTest aTest, String anAssignmentNumber) {
+		try {
 		File directory = CurrentProjectHolder.getProjectLocation();
 		if (!directory.exists()) {
 			return noOutputList;
 		}
-		String anAssignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
+//		String aFileName = AnAbstractTestLogFileWriter.toFileName(aTest);
+//		String aFullFileName = directory.getAbsolutePath() + "/" + 
+//		LocalLogDataAnalyzer.getLocalChecksLogsPath() + "/" + aFileName + fineGrainedSuffix;
+//		File aLogFile = new File (aFullFileName);
+		
+//		List<String> aData = LocalLogDataAnalyzer.
+//		runEvaluation(aLogFile, directory, new CollectorManager( testingPeriodCollectors), true, null);
+//		String anAssignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
+//		String anAssignmentNumber = AnAbstractTestLogFileWriter.toAssignmentNumber(aTopTest)
+
 		List<String> aData = LocalChecksLogData.getData(directory, anAssignmentNumber, testingPeriodCollectors);
 
 //		stringBuffer.setLength(0);
@@ -242,5 +264,9 @@ public class MetricsUtils {
 //		}
 //		return stringBuffer.toString();
 		return aData;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

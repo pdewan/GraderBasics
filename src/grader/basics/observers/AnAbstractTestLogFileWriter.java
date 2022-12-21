@@ -361,7 +361,27 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 
     }
 	
-
+	public static int assignmentLength = "Assignment".length();
+	public static String toAssignmentNumber(GradableJUnitTest aTopTest) {
+		String anAssignmentName = toAssignmentName(aTopTest);
+		if (anAssignmentName == null) {
+			return null;
+		}
+		String anAssignmentNumber = anAssignmentName.
+				substring(assignmentLength, anAssignmentName.length());
+		return anAssignmentNumber;
+		
+		
+	}
+	public static String toAssignmentName(GradableJUnitTest aTopTest) {
+		String aClassName = aTopTest.getJUnitClass().getName();
+		String[] aClassParts = aClassName.split("\\.");
+		if (aClassParts.length <= 3) {
+			return null;
+		}
+		String anAssignmentName = aClassParts[2];
+		return anAssignmentName;
+	}
 	public static String toFileName (GradableJUnitTest aTest) {
 		String aClassName = aTest.getJUnitClass().getName();
 		String[] aClassParts = aClassName.split("\\.");

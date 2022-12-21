@@ -21,7 +21,9 @@ public class LocalLogDataAnalyzer {
 								localChecksCheckerDataPath=logsPath+"/LocalChecksAnalysis.csv",
 								localChecksCheckerDataHeader = "Log Checked,Date,Collectors Used\n";
 	public static final String ALL_ASSIGNMENTS = "AllAssignments";
-
+	public static final String getLocalChecksLogsPath() {
+		return logsPath;
+	}
 	public static List<String> getData(File eclipseDirectory, String assignmentNumber, CollectorManager cm, boolean printOutput, String [] desiredTests) {
 		File logsDirectory = new File(eclipseDirectory.getAbsolutePath()+logsPath);
 		if(!logsDirectory.exists()|| logsDirectory.isFile())

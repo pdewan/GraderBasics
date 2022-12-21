@@ -312,7 +312,8 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		return MetricsUtils.progressMetrics();
 	}
 	public List<String> workTimeMetrics() {
-		return MetricsUtils.testingPeriodMetrics();
+		return MetricsUtils.
+				testingPeriodMetrics( this, AnAbstractTestLogFileWriter.toAssignmentNumber(this));
 	}
 	public List<String[]> showSessions() {
 		String aFileName = AnAbstractTestLogFileWriter.toFileName(this);

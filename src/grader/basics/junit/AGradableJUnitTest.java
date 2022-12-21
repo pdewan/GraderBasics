@@ -18,6 +18,7 @@ import org.junit.runners.model.InitializationError;
 import bus.uigen.attributes.AttributeNames;
 import bus.uigen.introspect.Attribute;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.observers.AnAbstractTestLogFileWriter;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 import util.annotations.Explanation;
@@ -81,6 +82,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public AGradableJUnitTest (Class aJUnitClass) {
 		init();
 		setJUnitClass(aJUnitClass);	
+		BasicJUnitUtils.setLastAssignmentNumber(AnAbstractTestLogFileWriter.toAssignmentNumber(this));
 	}
 	
 //	public AJUnitTestToGraderTestCase () {
