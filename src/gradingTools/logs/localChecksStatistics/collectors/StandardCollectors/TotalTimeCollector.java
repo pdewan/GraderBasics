@@ -2,6 +2,7 @@ package gradingTools.logs.localChecksStatistics.collectors.StandardCollectors;
 
 import java.text.ParseException;
 
+import grader.basics.interval.IntervalDriver;
 import gradingTools.logs.localChecksStatistics.collectors.AbstractCollector;
 
 public class TotalTimeCollector extends AbstractCollector{
@@ -30,8 +31,9 @@ public class TotalTimeCollector extends AbstractCollector{
 			initial=date;
 		last =date;
 		
-		try {
-			results[0]=Long.toString(secondsBetween(initial,last));
+		try {						
+//			results[0]=Long.toString(secondsBetween(initial,last));
+			results[0]= hoursBetween(initial, last);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("Invalid formatting");

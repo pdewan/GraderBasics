@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import grader.basics.interval.IntervalDriver;
 import gradingTools.logs.localChecksStatistics.dataStorage.SuiteMapping;
 
 public abstract class AbstractCollector implements Collector {
@@ -185,6 +186,13 @@ public abstract class AbstractCollector implements Collector {
 		Date second=dateFormat.parse(date2);
 		long secondsBetween=TimeUnit.SECONDS.convert(second.getTime()-first.getTime(), TimeUnit.MILLISECONDS);
 		return secondsBetween;
+	}
+	
+	protected String hoursBetween(String date1, String date2) throws ParseException{
+		long aSecondsBetween = secondsBetween(date1,date2);
+		long aMilliseconds = aSecondsBetween*1000;
+		String anHours = IntervalDriver.format(aMilliseconds);
+		return anHours;
 	}
 	
 	protected Date parseDate(String date) throws ParseException{

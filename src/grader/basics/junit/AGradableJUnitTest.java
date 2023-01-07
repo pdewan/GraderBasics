@@ -82,7 +82,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public AGradableJUnitTest (Class aJUnitClass) {
 		init();
 		setJUnitClass(aJUnitClass);	
-		BasicJUnitUtils.setLastAssignmentNumber(AnAbstractTestLogFileWriter.toAssignmentNumber(this));
+//		BasicJUnitUtils.setLastAssignmentNumber(AnAbstractTestLogFileWriter.toAssignmentNumber(this));
 	}
 	
 //	public AJUnitTestToGraderTestCase () {

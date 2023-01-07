@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import drivers.WorkTimeDriverPD;
 import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.observers.ASourceAndTestLogWriter;
@@ -310,6 +311,9 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 //	@PreferredWidgetClass(javax.swing.JTextArea.class)
 	public List<TestMetrics> testSpecificMetrics() {
 		return MetricsUtils.progressMetrics();
+	}
+	public static void testLogAnalyzer() {
+		WorkTimeDriverPD.main(null);
 	}
 	public List<String> workTimeMetrics() {
 		return MetricsUtils.

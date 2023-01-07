@@ -63,13 +63,20 @@ public class MetricsUtils {
 //			new TotalAttemptsCollector(),
 //			new AttemptsCollectorV2(),
 //	};
-	static Collector[] allCollectors = { dateFirstTested, dateLastTested, totalTime, breakTime, workTimeCollector, totalAttempts,
+	static Collector[] allCollectors = { dateFirstTested, dateLastTested, totalTime, 
+			breakTime, workTimeCollector, totalAttempts,
 			totalAttemptsV2, };
 
 //	static Collector[] testingPeriodCollectors = { dateFirstTested, dateLastTested, fixedWorkTimeCollector, contextWorkTimeCollector
 //
 //	};
-	static Collector[] testingPeriodCollectors = { dateFirstTested, dateLastTested 
+//	static Collector[] testingPeriodCollectors = { dateFirstTested, dateLastTested 
+//
+//	};
+	
+	static Collector[] testingPeriodCollectors = { 
+			dateFirstTested, dateLastTested, workTimeCollector, totalTime, fixedWorkTimeCollector, fixedTestTimeCollector,
+			contextTestTimeCollector,  contextWorkTimeCollector
 
 	};
 	static Collector[] workTimeCollectors = { workTimeCollector };
