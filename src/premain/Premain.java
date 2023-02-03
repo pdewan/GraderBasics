@@ -3,6 +3,8 @@ package premain;
 import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import grader.byteman.injector.AnInjector;
@@ -16,7 +18,9 @@ import grader.byteman.injector.target.custom.FileSourceInjectionTargeter;
  */
 public class Premain
 {
-
+	
+	private static Map<String, String> definedNames = new HashMap<>();
+	
     // The premain() will run before main if the arguments to the
     // JVM are correct. In this manner students can run the tests,
     // which will call this premain, but should never knowe this is
@@ -33,6 +37,8 @@ public class Premain
 			Scanner scan = new Scanner(new File("./injectionTarget.txt"));
 			while(scan.hasNext()){
 				ClassInjectionData data = new ClassInjectionData(scan.nextLine());
+				definedNames.put(data.getClassName(), data.getDisplayName());
+				
 				try {
 					injector.registerTarget(new FileSourceInjectionTargeter(data));
 				} catch (ClassNotFoundException e) {
@@ -44,6 +50,13 @@ public class Premain
         }catch(IllegalArgumentException | IOException e) {
 			e.printStackTrace();
 		}
+        
+        System.out.println("DN: "+definedNames);
     }
 
+    
+    public static Map<String,String> getDisplayNameMapping(){
+    	return definedNames;
+    }
+  
 }

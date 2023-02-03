@@ -1,8 +1,10 @@
 package byteman.tools;
 
 import grader.byteman.injector.target.custom.EnterExitInjectionSite;
+import premain.Premain;
 
 public class InjectedCode implements EnterExitInjectionSite{
+
 
 	@Override
 	public void atEnter(String clazz, String method, Object[] params) {
@@ -29,7 +31,9 @@ public class InjectedCode implements EnterExitInjectionSite{
 			}
 		}
 		
-		System.out.println("GR*** Thread: "+current.getName()+" has called "+clazz+"."+method+" from "+caller+" with params: "+sb.toString());
+		String clazzName = determineClass(clazz);
+		
+		System.out.println("GR*** Thread: "+current.getName()+" has called "+clazzName+"."+method+" from "+caller+" with params: "+sb.toString());
 	}
 
 	@Override
@@ -37,7 +41,8 @@ public class InjectedCode implements EnterExitInjectionSite{
 		if(returned.getClass().isArray()) {
 			atExit(clazz,method,arrayPrinter(returned));
 		}else {
-			System.out.println("GR*** "+Thread.currentThread().getName()+" has exited "+method+" in class "+clazz+" and returned: "+returned);
+			String clazzName = determineClass(clazz);
+			System.out.println("GR*** "+Thread.currentThread().getName()+" has exited "+method+" in class "+clazzName+" and returned: "+returned);
 			
 		}
 	}
@@ -48,7 +53,8 @@ public class InjectedCode implements EnterExitInjectionSite{
 		for(int i=1;i<params.length;i++) {
 			sb.append(params[i].toString()+" ");
 		}
-		System.out.println("GR*** "+Thread.currentThread().getName()+" has made an instance of class "+clazz+" with params: "+sb.toString());
+		String clazzName = determineClass(clazz);
+		System.out.println("GR*** "+Thread.currentThread().getName()+" has made an instance of class "+clazzName+" with params: "+sb.toString());
 	
 	}
 	
@@ -61,8 +67,17 @@ public class InjectedCode implements EnterExitInjectionSite{
 		if(params.length>0)
 			sb.deleteCharAt(sb.length()-1);
 		sb.append(']');
-		System.out.println("GR*** "+Thread.currentThread().getName()+" has exited "+method+" in class "+clazz+"and returned: "+sb.toString());
+		String clazzName = determineClass(clazz);
+		System.out.println("GR*** "+Thread.currentThread().getName()+" has exited "+method+" in class "+clazzName+"and returned: "+sb.toString());
 		
+	}
+	
+	private String determineClass(String clazz) {
+		String clazzName = Premain.getDisplayNameMapping().get(clazz);
+		if(clazzName==null) {
+			clazzName = clazz;
+		}
+		return clazzName;
 	}
 
 }
