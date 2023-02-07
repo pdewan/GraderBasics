@@ -68,6 +68,15 @@ public class InjectionTargeter {
 		for(String className:aClassToConfiguredTags.keySet()) {
 			try {
 				Class<?> clazz = Class.forName(className);
+				List<String> aTags = aClassToConfiguredTags.get(className);
+				StringBuffer aTagsString = new StringBuffer();
+				for (int index = 0; index < aTags.size();  index++) {
+					if (index != 0) {
+						aTagsString.append("+");
+					}
+					aTagsString.append("@" + aTags.get(index));
+				}
+				nameMap.put(className, aTagsString.toString());
 				if(clazz.isInterface()) continue;
 				addClasses(injectedCode,clazz);
 			}catch(ClassNotFoundException e) {
