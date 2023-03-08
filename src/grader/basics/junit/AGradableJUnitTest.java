@@ -223,7 +223,19 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore,
 				score);
 	}
+	protected void printResult() {
+		System.err.println("Test Result:" + 
+				getSimpleName() + "," +
+				status + "," +
+				score + "," +
+				maxScore + "," +
+				message + 
+				"\n"
+				);
+		
+	}
 	protected void showResult (TestCaseResult aTestCaseResult) {
+//		String aTestName = getName();
 		String oldStatus = status;
 		String oldMessage = message;
 		double oldScore = score;
@@ -239,6 +251,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 
 		propertyChangeSupport.firePropertyChange("Message", oldMessage, message);
 		showColor();
+		printResult();
+		
 //		showScore();
 //		Color oldColor = color;
 //		Color color = computeColor();
@@ -304,7 +318,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			
 			long anElapsedTime = System.currentTimeMillis() - date.getTime();
 			
-			System.out.println("Test execution time (ms):" + anElapsedTime);
+			System.err.println("Test execution time (ms):" + anElapsedTime);
 
 			testCaseResult = runListener.getTestCaseResult();
 			failure = runListener.getFailure();

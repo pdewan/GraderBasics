@@ -12,7 +12,9 @@ import java.rmi.server.UnicastRemoteObject;
 public class BytemanRegistryFactory {
 
 	private static Registry registry;
-	private static final int registryPort = 50505;
+//	private static final int registryPort = 50505;
+	private static final int registryPort = 4099;
+
 	private static boolean serverIsSet=false;
 	public static final String BYTEMAN_SERVER_NAME = "btm_server";
 	private static BytemanDataServerProxy proxy;
@@ -23,10 +25,18 @@ public class BytemanRegistryFactory {
 			try {
 				if(creator) {
 					try {
+//						registry = LocateRegistry.createRegistry(registryPort);
 						registry = LocateRegistry.createRegistry(registryPort);
+
 					}catch(ExportException e) {
+						e.printStackTrace();
 						registry = LocateRegistry.getRegistry(registryPort);
-						serverIsSet=true;
+						try {
+							registry.lookup(BYTEMAN_SERVER_NAME);
+							serverIsSet=true;
+						} catch (Exception e2) {
+						serverIsSet=false;
+						}
 					}
 				}else {
 					registry = LocateRegistry.getRegistry(registryPort);
@@ -53,8 +63,12 @@ public class BytemanRegistryFactory {
 			return (BytemanDataServerProxy)registry.lookup(BYTEMAN_SERVER_NAME);
 		}
 		proxy = new BytemanDataServer();
-		UnicastRemoteObject.exportObject(proxy, registryPort);
-		registry.bind(BYTEMAN_SERVER_NAME, proxy);
+//		UnicastRemoteObject.unexportObject(proxy, true);
+
+//		UnicastRemoteObject.exportObject(proxy, registryPort);
+		UnicastRemoteObject.exportObject(proxy, 0);
+
+		registry.rebind(BYTEMAN_SERVER_NAME, proxy);
 		serverIsSet = true;
 		return proxy;
 	}

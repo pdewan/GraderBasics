@@ -122,6 +122,19 @@ public class BasicJUnitUtils {
 		aGradable.testAll();
 		ObjectEditor.treeEdit(aGradable);
 	}
+	
+	public static GradableJUnitSuite testAll(Class<?> aJUnitSuiteClass) {
+		GraderBasicsTraceUtility.setTracing();
+		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
+		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
+		for (RunListener listener : TestLogFileWriterFactory.getFileWriter())
+			RunNotifierFactory.getOrCreateRunNotifier().addListener(listener);
+		aGradable.testAll();
+		return aGradable;
+//		ObjectEditor.treeEdit(aGradable);
+	}
+	
+	
 
 	static String lastAssignmentNumber = "-1";
 

@@ -363,6 +363,7 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	
 	public static int assignmentLength = "Assignment".length();
 	public static String toAssignmentNumber(GradableJUnitTest aTopTest) {
+		try {
 		String anAssignmentName = toAssignmentName(aTopTest);
 		if (anAssignmentName == null) {
 			return null;
@@ -370,6 +371,12 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 		String anAssignmentNumber = anAssignmentName.
 				substring(assignmentLength, anAssignmentName.length());
 		return anAssignmentNumber;
+		} catch (Exception e) {
+			System.out.println("Test:" + aTopTest + "test class " + aTopTest.getSimpleName());
+			e.printStackTrace();
+			return "0";
+			
+		}
 		
 		
 	}

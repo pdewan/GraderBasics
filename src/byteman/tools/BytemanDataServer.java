@@ -10,7 +10,9 @@ public class BytemanDataServer implements BytemanDataServerProxy{
 	private static final long serialVersionUID = -9189666880348789699L;
 	private Map<String, List<BytemanData>> dataSet = new HashMap<>();
 	private Map<String, Map<String, Object>> returnValues = new HashMap<>();
-	
+	public  BytemanDataServer() {
+		super();
+	}
 	@Override
 	public void addClassData(BytemanData data) throws RemoteException {
 		if(!dataSet.containsKey(data.getTargetedClass().getName())) {
