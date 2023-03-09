@@ -7,18 +7,18 @@ public class MethodAccessModifierRatioCheck extends CheckStyleWarningsRatioTestC
 	public static final String MESSAGE = "Access Modifiers Used";
 //	public static final String INFO_NAME = "and needs access";
 
-	public MethodAccessModifierRatioCheck(String aMessage) {
-		super(null, aMessage);
-	}
+//	public MethodAccessModifierRatioCheck(String aMessage) {
+//		super(null, aMessage);
+//	}
 
 	public MethodAccessModifierRatioCheck() {
 		super(null, MESSAGE);
 	}
 
-	public MethodAccessModifierRatioCheck(double aPenaltyPerMistake) {
-		super(null, MESSAGE, aPenaltyPerMistake);
-
-	}
+//	public MethodAccessModifierRatioCheck(double aPenaltyPerMistake) {
+//		super(null, MESSAGE, aPenaltyPerMistake);
+//
+//	}
 
 	@Override
 	protected String warningName() {

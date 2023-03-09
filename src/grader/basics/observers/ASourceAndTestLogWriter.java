@@ -22,6 +22,7 @@ import javax.print.attribute.HashAttributeSet;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.project.CurrentProjectHolder;
@@ -635,6 +636,9 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 	
 
 	protected void writeLogData() {
+		if (!BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
+			return;
+		}
 		if (!isAppended) {
 			appendChanges();
 			writeLastSourcesText();

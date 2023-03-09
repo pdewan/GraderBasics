@@ -23,6 +23,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.project.CurrentProjectHolder;
@@ -421,6 +422,9 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	}
 	
 	protected boolean maybeReadLastLineOfLogFile(String aLogFileName) {
+		if (!BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
+			return true;
+		}
 		try {
 		File aFile = new File(aLogFileName);
 		if (!aFile.exists()) {

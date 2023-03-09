@@ -1110,6 +1110,15 @@ protected String requirementsLocation = null;
 	public void setCreateDockerContainer(boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.CREATE_DOCKER_CONTAINER, newVal);		
 	}
+	@Override
+	public boolean getLogTestData() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.LOG_TEST_DATA, 
+				BasicStaticConfigurationUtils.DEFAULT_LOG_TEST_DATA);
+	}
+	@Override
+	public void setLogTestData(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.LOG_TEST_DATA, newVal);		
+	}
 	
 	@Override
 	public boolean getInstrumentUsingValgrind() {

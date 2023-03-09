@@ -206,7 +206,9 @@ public class BasicStaticConfigurationUtils {
 	public static final Boolean DEFAULT_CREATE_DOCKER_CONTAINER = true;
 	public static final String INSTRUMENT_USING_VALGRIND = "instrumentUsingValgrind";
 	public static final Boolean DEFAULT_INSTRUMENT_USING_VALGRIND = true;
-	
+	public static final String LOG_TEST_DATA = "logTestData";	
+	public static final Boolean DEFAULT_LOG_TEST_DATA = true;
+
 	
 
 

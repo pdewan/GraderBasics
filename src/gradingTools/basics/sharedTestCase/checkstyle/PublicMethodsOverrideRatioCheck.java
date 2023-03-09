@@ -10,20 +10,20 @@ public class PublicMethodsOverrideRatioCheck extends CheckStyleWarningsRatioTest
 	public static final String MESSAGE = "Public Methods Override";
 	public static final double DEFAULT_PENALTY_PER_MISTAKE = 0.1;
 
-	public PublicMethodsOverrideRatioCheck(String aMessage) {
-		super(null, aMessage);
-//		penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
-	}
-
+//	public PublicMethodsOverrideRatioCheck(String aMessage) {
+//		super(null, aMessage);
+////		penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
+//	}
+//
 	public PublicMethodsOverrideRatioCheck() {
 		super(null, MESSAGE);
 //		penaltyPerMistake = DEFAULT_PENALTY_PER_MISTAKE;
 	}
 
-	public PublicMethodsOverrideRatioCheck(double aPenaltyPerMistake) {
-		super(null, MESSAGE, aPenaltyPerMistake);
-
-	}
+//	public PublicMethodsOverrideRatioCheck(double aPenaltyPerMistake) {
+//		super(null, MESSAGE, aPenaltyPerMistake);
+//
+//	}
 
 	@Override
 	protected String warningName() {

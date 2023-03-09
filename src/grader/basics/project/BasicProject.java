@@ -822,16 +822,23 @@ public class BasicProject implements Project {
 		String retVal = EMPTY_STRING;
 		String aCheckstyleConfigurationName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
 				.getCheckStyleConfiguration();
+		File aCheckstyleConfigurationFile = new File(aCheckstyleConfigurationName);
+		String aLocalConfigurationFileName = aCheckstyleConfigurationName;
+		if (aCheckstyleConfigurationFile.exists()) {
+			aLocalConfigurationFileName = aCheckstyleConfigurationFile.getName();
+		}
 		if (aCheckstyleConfigurationName != null) {
-			String[] aPair = aCheckstyleConfigurationName.split("\\.");
+			String[] aPair = aLocalConfigurationFileName.split("\\.");
 			retVal = aPair[0] + "_";
 		}
 		return retVal;
 	}
 
 	public String createLocalCheckStyleOutputFileName() {
+		String aPrefix = getCheckstyleConfigurationPrefix();
+//		return getCheckstyleConfigurationPrefix() + DEFAULT_CHECK_STYLE_FILE_PREFIX + DEFAULT_CHECK_STYLE_FILE_SUFFIX;
+		return aPrefix + DEFAULT_CHECK_STYLE_FILE_PREFIX + DEFAULT_CHECK_STYLE_FILE_SUFFIX;
 
-		return getCheckstyleConfigurationPrefix() + DEFAULT_CHECK_STYLE_FILE_PREFIX + DEFAULT_CHECK_STYLE_FILE_SUFFIX;
 	}
 
 	protected boolean checkForDefaultFolder() {
@@ -861,8 +868,9 @@ public class BasicProject implements Project {
 		}
 
 //		return createLocalCheckStyleFileName();
-
-		return aParentFolder + "/" + createLocalCheckStyleOutputFileName();
+		String aLocalFileName = createLocalCheckStyleOutputFileName();
+		return aParentFolder + "/" + aLocalFileName;
+//		return aParentFolder + "/" + createLocalCheckStyleOutputFileName();
 	}
 
 	protected String checkStyleFileName = null;
@@ -1026,13 +1034,19 @@ public class BasicProject implements Project {
 			if (aCheckstyleGeneratedFileName == null) {
 				return null;
 			}
-			String aConfigurationFileName = findCheckstyleConfigurationParentFolder() + "/"
-					+ BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
+			String aSpecifiedConfigurationFileName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
+			String aConfigurationFileName = aSpecifiedConfigurationFileName;
+			File aSpecifiedConfigurationFile = new File(aSpecifiedConfigurationFileName);
+			if (!aSpecifiedConfigurationFile.exists()) {
+//			String aConfigurationFileName = findCheckstyleConfigurationParentFolder() + "/"
+//					+ BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
+			aConfigurationFileName = findCheckstyleConfigurationParentFolder() + "/" + aSpecifiedConfigurationFileName;
 			File aFile = new File(aConfigurationFileName);
 			if (!aFile.exists()) {
 				System.err.println("Did not find file:" + aFile.getAbsolutePath());
 				System.err.println("Download " + aFile.getName() + " and add it to directory " + aFile.getParent());
 				return null;
+			}
 			}
 			symbolTable = CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName,
 					aCheckstyleGeneratedFileName);

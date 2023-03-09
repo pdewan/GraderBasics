@@ -149,5 +149,7 @@ public interface BasicExecutionSpecification {
 	boolean getCreateDockerContainer();
 	void setCreateDockerContainer(boolean newVal);
 	boolean getInstrumentUsingValgrind();
-	void setInstrumentUsingValgrind(boolean newVal);	
+	void setInstrumentUsingValgrind(boolean newVal);
+	boolean getLogTestData();
+	void setLogTestData(boolean newVal);	
 }
