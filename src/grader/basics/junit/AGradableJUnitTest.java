@@ -224,7 +224,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 				score);
 	}
 	protected void printResult() {
-		System.err.println("Test Result:" + 
+		System.out.println("Test Result:" + 
 				getSimpleName() + "," +
 				status + "," +
 				score + "," +
