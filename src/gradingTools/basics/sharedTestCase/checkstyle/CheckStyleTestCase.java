@@ -308,8 +308,8 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 
 //    @Override
     public TestCaseResult test(Project aProject, boolean autoGrade) throws NotAutomatableException, NotGradableException {
-        if (aProject.getClassesManager().isEmpty())
-            throw new NotGradableException();
+//        if (aProject.getClassesManager().isEmpty())
+//            throw new NotGradableException();
         String aTypeTag = typeTag();
         try {
         String aCheckStyleText = aProject.getCheckstyleText();

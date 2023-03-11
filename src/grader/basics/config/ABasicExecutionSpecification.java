@@ -1121,6 +1121,16 @@ protected String requirementsLocation = null;
 	}
 	
 	@Override
+	public boolean getLoadClasses() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.LOAD_CLASSES, 
+				BasicStaticConfigurationUtils.DEFAULT_LOAD_CLASSES);
+	}
+	@Override
+	public void setLoadClasses(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.LOAD_CLASSES, newVal);		
+	}
+	
+	@Override
 	public boolean getInstrumentUsingValgrind() {
 		return getBooleanProperty(BasicStaticConfigurationUtils.INSTRUMENT_USING_VALGRIND, 
 				BasicStaticConfigurationUtils.DEFAULT_INSTRUMENT_USING_VALGRIND);

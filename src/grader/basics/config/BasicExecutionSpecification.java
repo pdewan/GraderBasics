@@ -151,5 +151,7 @@ public interface BasicExecutionSpecification {
 	boolean getInstrumentUsingValgrind();
 	void setInstrumentUsingValgrind(boolean newVal);
 	boolean getLogTestData();
-	void setLogTestData(boolean newVal);	
+	void setLogTestData(boolean newVal);
+	boolean getLoadClasses();
+	void setLoadClasses(boolean newVal);	
 }

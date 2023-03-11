@@ -116,7 +116,7 @@ public class BasicProject implements Project {
 
 				Tracer.info(this, "Assuming src folder is:" + sourceFolder);
 				if (!projectFolder.equals(sourceFolder)) {
-				this.projectFolder = sourceFolder.getParentFile();
+					this.projectFolder = sourceFolder.getParentFile();
 				}
 				SourceFolderAssumed.newCase(sourceFolder.getAbsolutePath(), this);
 			} else {
@@ -253,7 +253,7 @@ public class BasicProject implements Project {
 //            aDirectory = new File(aLocation);
 			throw new FileNotFoundException("No directory given");
 		}
-		
+
 		if (aSourceFilePattern == null) {
 			sourceFilePattern = EMPTY_STRING;
 		} else {
@@ -265,15 +265,14 @@ public class BasicProject implements Project {
 //    	project = aProject;
 //    	BasicConfigurationManagerSelector.getConfigurationManager().createProjectConfiguration(aDirectory);
 //    	BasicConfigurationManagerSelector.getConfigurationManager().setProjectDirectory(aDirectory);
-		
-	
+
 		projectFolder = aDirectory;
 		File[] aFiles = aDirectory.listFiles();
 		if (aFiles.length == 1 && aFiles[0].getName().equals(aDirectory.getName())) {
 			// zipping issue;
 			projectFolder = aFiles[0];
 		}
-		
+
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, Project.SOURCE);
 //
@@ -357,10 +356,11 @@ public class BasicProject implements Project {
 			if (objectFolder == null) {
 				objectFolder = buildFolder;
 			}
-
+			if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLoadClasses()) {
 //         	CurrentProjectHolder.setProject(this); // so that classesManager can find it
-			Tracer.info(this, "Creating classes manager");
-			classesManager = createClassesManager(buildFolder);
+				Tracer.info(this, "Creating classes manager");
+				classesManager = createClassesManager(buildFolder);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -698,19 +698,16 @@ public class BasicProject implements Project {
 
 	protected boolean cannotInitializeCheckstyle = false;
 	protected File checkstyleOutFolder = null;
-	
+
 	protected File valgrindTraceFolder = null;
 	protected File valgrindConfigurationFolder = null;
-
-
 
 //	boolean checkCheckstyle = true;
 	static boolean checkCheckstyleFolder = true;
 
 	static boolean checkEclipseFolder = false;
-	
-	static boolean checkEclipseOrCheckstyleFolder = false;
 
+	static boolean checkEclipseOrCheckstyleFolder = false;
 
 	public static boolean isCheckEclipseOrEclipseFolder() {
 		return checkEclipseOrCheckstyleFolder;
@@ -735,6 +732,7 @@ public class BasicProject implements Project {
 	public static void setCheckCheckstyleFolder(boolean checkCheckstyleFolder) {
 		BasicProject.checkCheckstyleFolder = checkCheckstyleFolder;
 	}
+
 //	protected boolean eclipseFolderExists = true;
 	public File getCheckstyleOutFolder() {
 		if (checkstyleOutFolder == null) {
@@ -745,8 +743,8 @@ public class BasicProject implements Project {
 			File anEclipseFolder = new File(getProjectFolder().getAbsoluteFile() + "/Logs/Eclipse");
 			File aCheckStyleAllFile = new File(
 					getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/CheckStyle_All.csv");
-			File aReturnFolder = new File (getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/");
-			
+			File aReturnFolder = new File(getProjectFolder().getAbsoluteFile() + "/Logs/LocalChecks/");
+
 			if (isCheckEclipseOrEclipseFolder() && (anEclipseFolder.exists() || aCheckStyleAllFile.exists())) {
 				if (!aReturnFolder.exists()) {
 					aReturnFolder.mkdir();
@@ -754,10 +752,10 @@ public class BasicProject implements Project {
 				checkstyleOutFolder = aReturnFolder;
 				return aReturnFolder;
 			}
-			
-			//			if (!anEclipseFolder.exists() ) {
 
-			if (!anEclipseFolder.exists() && !GradingMode.getGraderRun()  && isCheckEclipseFolder() ) {
+			// if (!anEclipseFolder.exists() ) {
+
+			if (!anEclipseFolder.exists() && !GradingMode.getGraderRun() && isCheckEclipseFolder()) {
 //				eclipseFolderExists = false;
 				System.err.println("File does not exist:" + anEclipseFolder);
 				System.err.println("Please run the checkstle plugin on your project");
@@ -765,7 +763,7 @@ public class BasicProject implements Project {
 				return null;
 //			checkstyleOutFolder null;
 			}
-			if (!aCheckStyleAllFile.exists() && !GradingMode.getGraderRun()  && isCheckCheckstyleFolder() ) {
+			if (!aCheckStyleAllFile.exists() && !GradingMode.getGraderRun() && isCheckCheckstyleFolder()) {
 //				System.err.println("File does not exist:" + aCheckStyleAllFile);
 				System.err.println("Please run the checkstle plugin on your project");
 
@@ -773,19 +771,21 @@ public class BasicProject implements Project {
 
 //			return null;
 			}
-			if (!aCheckStyleAllFile.exists() && !GradingMode.getGraderRun() ) {
+			if (!aCheckStyleAllFile.exists() && !GradingMode.getGraderRun()) {
 				checkstyleOutFolder = new File(".");
 				return checkstyleOutFolder;
 			}
-			
+
 			checkstyleOutFolder = aCheckStyleAllFile.getParentFile();
 		}
 		return checkstyleOutFolder;
 
 	}
+
 	public File getValgrindTraceFolder() {
 		if (valgrindTraceFolder == null) {
-			String aTraceFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindTraceDirectory();
+			String aTraceFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+					.getValgrindTraceDirectory();
 			if (aTraceFolder == null) {
 				aTraceFolder = "Logs/Valgrind";
 			}
@@ -797,9 +797,11 @@ public class BasicProject implements Project {
 		return valgrindTraceFolder;
 
 	}
+
 	public File getValgrindConfigurationFolder() {
 		if (valgrindConfigurationFolder == null) {
-			String aFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindConfigurationDirectory();
+			String aFolder = BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
+					.getValgrindConfigurationDirectory();
 			if (aFolder == null) {
 				aFolder = "Logs/Valgrind";
 			}
@@ -811,8 +813,6 @@ public class BasicProject implements Project {
 		return valgrindConfigurationFolder;
 
 	}
-
-	
 
 	public static final String DEFAULT_CHECK_STYLE_FILE_PREFIX = "checks";
 
@@ -876,9 +876,6 @@ public class BasicProject implements Project {
 	protected String checkStyleFileName = null;
 	protected File valgrindTraceFile = null;
 
-	
-
-
 	public String getCheckStyleOutputFileName() {
 		if (cannotInitializeCheckstyle) {
 			return null;
@@ -941,8 +938,6 @@ public class BasicProject implements Project {
 	protected File getCheckStyleConfigurationDefaultFolder() {
 		return getCheckstyleOutFolder();
 	}
-	
-
 
 	public String findCheckstyleConfigurationParentFolder() {
 		String aDefaultFolder = getCheckStyleConfigurationDefaultFolder().getAbsolutePath();
@@ -1034,19 +1029,21 @@ public class BasicProject implements Project {
 			if (aCheckstyleGeneratedFileName == null) {
 				return null;
 			}
-			String aSpecifiedConfigurationFileName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
+			String aSpecifiedConfigurationFileName = BasicExecutionSpecificationSelector
+					.getBasicExecutionSpecification().getCheckStyleConfiguration();
 			String aConfigurationFileName = aSpecifiedConfigurationFileName;
 			File aSpecifiedConfigurationFile = new File(aSpecifiedConfigurationFileName);
 			if (!aSpecifiedConfigurationFile.exists()) {
 //			String aConfigurationFileName = findCheckstyleConfigurationParentFolder() + "/"
 //					+ BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getCheckStyleConfiguration();
-			aConfigurationFileName = findCheckstyleConfigurationParentFolder() + "/" + aSpecifiedConfigurationFileName;
-			File aFile = new File(aConfigurationFileName);
-			if (!aFile.exists()) {
-				System.err.println("Did not find file:" + aFile.getAbsolutePath());
-				System.err.println("Download " + aFile.getName() + " and add it to directory " + aFile.getParent());
-				return null;
-			}
+				aConfigurationFileName = findCheckstyleConfigurationParentFolder() + "/"
+						+ aSpecifiedConfigurationFileName;
+				File aFile = new File(aConfigurationFileName);
+				if (!aFile.exists()) {
+					System.err.println("Did not find file:" + aFile.getAbsolutePath());
+					System.err.println("Download " + aFile.getName() + " and add it to directory " + aFile.getParent());
+					return null;
+				}
 			}
 			symbolTable = CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName,
 					aCheckstyleGeneratedFileName);
