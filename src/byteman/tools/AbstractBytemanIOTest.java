@@ -2,6 +2,7 @@ package byteman.tools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import byteman.tools.exampleTestCases.BytemanClassRegistryProvided;
 import byteman.tools.exampleTestCases.BytemanRegistry;
@@ -21,25 +22,45 @@ import util.trace.Tracer;
 public abstract class AbstractBytemanIOTest extends PassFailJUnitTestCase{
 
 	
-	protected abstract Class<?> getTarget();
+//	protected abstract Class<?> getTarget();
 	protected abstract Object[] getArgs();
 	protected abstract String [] getRegexes();
 	protected abstract String [] getInputs();
 	
-	private BytemanRegistry registry;
+//	private BytemanRegistry registry;
+//	
+//	protected BytemanRegistry getRegistry() {
+//		if(registry==null) {
+//			registry = ((BytemanClassRegistryProvided)JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(BytemanClassRegistryProvided.class)).getRegistry();
+//		}
+//		return registry;
+//	}
 	
-	protected BytemanRegistry getRegistry() {
-		if(registry==null) {
-			registry = ((BytemanClassRegistryProvided)JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(BytemanClassRegistryProvided.class)).getRegistry();
+	protected abstract Set<String> getTags();
+
+	Class target;
+	protected Class<?> getTarget() {
+		if (target == null) {
+		try {
+			Set<String> aTags = getTags();
+			String aClassName = InjectionTargeterFactory.getInjectionTargeter().getClassName(aTags);
+			target = Class.forName(aClassName);
+		} catch (Exception e) {
+			e.printStackTrace();
+//			return null;
 		}
-		return registry;
+		}
+		return target;
+		
 	}
 	
 	@Override
 	public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 		try {
-			if(getRegistry()==null) 
-				return fail("Prereq tests did not pass");
+//			if(getRegistry()==null) 
+//				return fail("Prereq tests did not pass");
+			BytemanConfigurationWriterFactory.writeConfiguration(project);
+//			InjectionTargeterFactory.getOrCreateInitializedInjectionTargeter(project);
 			
 			String anOut = getTraceOut();
 

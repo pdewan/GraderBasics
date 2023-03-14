@@ -1,5 +1,7 @@
 package byteman.tools;
 
+import java.util.Set;
+
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
@@ -7,7 +9,8 @@ import grader.basics.project.Project;
 
 public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 	
-	protected abstract Class<?> getTarget();
+//	protected abstract Class<?> getTarget();
+//	protected abstract Set<String> getTags();
 	protected abstract String getMethodName();
 	protected abstract Object[] getArgs();
 	protected abstract String [] getRegexes();
@@ -17,6 +20,21 @@ public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 	protected String [] getInputs() {
 		return new String[] {""};
 	}
+	
+//	Class target;
+//	protected Class<?> getTarget() {
+//		if (target == null) {
+//		try {
+//			String aClassName = InjectionTargeterFactory.getInjectionTargeter().getClassName(getTags());
+//			target = Class.forName(aClassName);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+////			return null;
+//		}
+//		}
+//		return target;
+//		
+//	}
 	
 	
 	@Override

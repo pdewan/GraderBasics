@@ -1,5 +1,9 @@
 package byteman.tools.exampleTestCases.factorial;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import byteman.tools.AbstractBytemanUnitTest;
 
 public class FactorialSolutionTest extends AbstractBytemanUnitTest{
@@ -9,11 +13,21 @@ public class FactorialSolutionTest extends AbstractBytemanUnitTest{
 	String [] regexs = {
 	};
 
+//	@Override
+//	protected Class<?> getTarget() {
+//		return getRegistry().getFactorial();
+//	}
+	
+	String[] factorialTagsArray = {
+			"Factorial"
+	};
+	
+	Set<String> factorialTagsSet = new HashSet(Arrays.asList(factorialTagsArray));
 	@Override
-	protected Class<?> getTarget() {
-		return getRegistry().getFactorial();
+	protected Set<String> getTags() {
+		// TODO Auto-generated method stub
+		return factorialTagsSet;
 	}
-
 
 	@Override
 	protected String getMethodName() {

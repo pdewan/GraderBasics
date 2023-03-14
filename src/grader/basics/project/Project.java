@@ -113,6 +113,8 @@ public interface Project {
 
 	SymbolTable getSymbolTable();
 
+	File getCheckstyleConfigurationFile();
+
 
 //	RunningProject launchInteractive(String[] args) throws NotRunnableException;
 }

@@ -8,9 +8,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import org.eclipse.jdt.internal.corext.refactoring.changes.CreateCompilationUnitChange;
 
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
@@ -24,6 +28,9 @@ public class InjectionTargeter {
 	private Map<String, Object> nameMap;
 
 	private static Class<? extends EnterExitInjectionSite> DEFAULT_INJECTION = null;
+	
+	private Map<String, List<String>> classToConfiguredTags;
+	private Map<Set<String>, String> configuredTagsToClass;
 
 	public InjectionTargeter(Map<String, Object> nameMap) throws IOException {
 		setNameMap(nameMap);
@@ -34,6 +41,8 @@ public class InjectionTargeter {
 	public InjectionTargeter() throws IOException {
 		this(new HashMap<>());
 	}
+	
+	
 
 	/**
 	 * Adds all declared methods within the class
@@ -67,10 +76,30 @@ public class InjectionTargeter {
 		}
 		return failed;
 	}
-
-	public boolean addFromRegistry(String aConfigurationFileFullName,
+	
+	public boolean sameTags (String[] aTags1, String[] aTags2) {
+		Set<String> aTags1Set = new HashSet(Arrays.asList(aTags1));
+		Set<String> aTags2Set = new HashSet(Arrays.asList(aTags2));
+		return aTags1Set.equals(aTags2Set);		
+	}
+	
+	protected Map<Set<String>, String> createConfiguredTagsToClass(Map<String, List<String>> aClassToConfiguredTags) {
+		Map<Set<String>, String> retVal = new HashMap();
+		for (String aClassName:aClassToConfiguredTags.keySet()) {
+			List<String> aTags = aClassToConfiguredTags.get(aClassName);
+			retVal.put(new HashSet(aTags), aClassName);
+		}
+		return retVal;
+	}
+	public String getClassName(Set<String> aTags) {
+		return configuredTagsToClass.get(aTags);
+	}
+	
+	public boolean addFromClassTagMapping(Map<String, List<String>> aClassToConfiguredTags,
 			Class<? extends EnterExitInjectionSite> injectedCode) {
-		Map<String, List<String>> aClassToConfiguredTags = processConfigurationFileName(aConfigurationFileFullName);
+		classToConfiguredTags = aClassToConfiguredTags;
+		configuredTagsToClass = createConfiguredTagsToClass(aClassToConfiguredTags);
+//		Map<String, List<String>> aClassToConfiguredTags = processConfigurationFileName(aConfigurationFileFullName);
 		boolean failed = false;
 		for (String className : aClassToConfiguredTags.keySet()) {
 			try {
@@ -93,6 +122,40 @@ public class InjectionTargeter {
 			}
 		}
 		return failed;
+	}
+	
+	public boolean addFromCheckstyleConfiguration(File aConfigurationFile,
+			Class<? extends EnterExitInjectionSite> injectedCode) {
+		Map<String, List<String>> aClassToConfiguredTags = processCheckstyleConfiguration(aConfigurationFile);
+		return addFromClassTagMapping(aClassToConfiguredTags, injectedCode);
+	}
+
+	public boolean addFromRegistry(String aConfigurationFileFullName,
+			Class<? extends EnterExitInjectionSite> injectedCode) {
+		Map<String, List<String>> aClassToConfiguredTags = processConfigurationFileName(aConfigurationFileFullName);
+		return addFromClassTagMapping(aClassToConfiguredTags, injectedCode);
+//		boolean failed = false;
+//		for (String className : aClassToConfiguredTags.keySet()) {
+//			try {
+//				Class<?> clazz = Class.forName(className);
+//				List<String> aTags = aClassToConfiguredTags.get(className);
+//				StringBuffer aTagsString = new StringBuffer();
+//				for (int index = 0; index < aTags.size(); index++) {
+//					if (index != 0) {
+//						aTagsString.append("+");
+//					}
+//					aTagsString.append("@" + aTags.get(index));
+//				}
+//				nameMap.put(className, aTagsString.toString());
+//				if (clazz.isInterface())
+//					continue;
+//				addClasses(injectedCode, clazz);
+//			} catch (ClassNotFoundException e) {
+//				failed = true;
+//				System.err.println("Class: " + className + " not found");
+//			}
+//		}
+//		return failed;
 	}
 
 	private Map<String, List<String>> processConfigurationFileName(String aConfigurationFileFullName) {
@@ -150,7 +213,7 @@ public class InjectionTargeter {
 	}
 
 	private String[] lineToTags(String aLine) {
-		String[] aTagsList = aLine.trim().split("+");
+		String[] aTagsList = aLine.trim().split("\\+");
 		String[] retVal = new String[aTagsList.length];
 		for (int index = 0; index < retVal.length; index++) {
 			retVal[index] = segmentToTag(aTagsList[index]);
@@ -180,13 +243,33 @@ public class InjectionTargeter {
 		System.out.println("Class by Super Type" + aClass);		
 		System.out.println(aProject);
 	}
+	/*
+	 * 			<property name="expectedTypes" value="
+			
+					
+			@DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.RMI,
+			@DistributedTags.CLIENT_OUT_COUPLER+@DistributedTags.RMI+@DistributedTags.GIPC,
+			@DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.GIPC,
+			@DistributedTags.SERVER_CONFIGURER+@DistributedTags.RMI+@DistributedTags.GIPC,
+			@DistributedTags.REGISTRY+@DistributedTags.RMI,
+			@DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.RMI,
+			@DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.GIPC,
+			@DistributedTags.CLIENT_CONFIGURER+@DistributedTags.RMI+@DistributedTags.GIPC,
+			@DistributedTags.SERVER+@DistributedTags.RMI+@DistributedTags.GIPC,
+			@DistributedTags.CLIENT+@DistributedTags.RMI+@DistributedTags.GIPC,
+			@DistributedTags.CLIENT_REMOTE_OBJECT+@DistributedTags.RMI+@DistributedTags.GIPC,
+			@DistributedTags.SERVER_REMOTE_OBJECT+@DistributedTags.RMI+@DistributedTags.GIPC,
+			
+			
+		"/>
+	 */
 
-	private Map<String, List<String>> processUNCChecksConfiguratio(String aConfigurationFileFullName) {
+	private Map<String, List<String>> processCheckstyleConfiguration(File aConfigurationFile) {
 		Map<String, List<String>> aClassToConfiguredTags = new HashMap<>();
 		Scanner aScanner;
 		try {
-			aScanner = new Scanner(new File(aConfigurationFileFullName));
-			// skip all lines util we reach the expected types line
+			aScanner = new Scanner(aConfigurationFile);
+			// skip all lines until we reach the expected types line
 			moveToStartOfTagsList(aScanner);
 			List<String[]> aTagsList = new ArrayList();
 			while (aScanner.hasNext()) {
@@ -195,6 +278,7 @@ public class InjectionTargeter {
 				if (aLine.contains("\"/>")) {
 					break;
 				}
+				// skip any spurious blank line
 				if (!aLine.contains("@")) {
 					continue;
 				}
@@ -206,8 +290,13 @@ public class InjectionTargeter {
 
 			
 			for (String[] aTags:aTagsList) {
+				String[] anOriginalTags = Arrays.copyOf(aTags, aTags.length);
 				Class aClass = BasicProjectIntrospection.findClassByTags(aTags);
-				aClassToConfiguredTags.put(aClass.getName(), Arrays.asList(aTags));
+				if (aClass == null) {
+					System.err.println("No class found for tags:" + Arrays.asList(aTags));
+					continue;
+				}
+				aClassToConfiguredTags.put(aClass.getName(), Arrays.asList(anOriginalTags));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

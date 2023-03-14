@@ -1,6 +1,5 @@
 package byteman.tools.exampleTestCases.factorial;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,12 +7,9 @@ import java.util.Set;
 import byteman.tools.AbstractBytemanUnitTest;
 import byteman.tools.InjectionTargeterFactory;
 
+public abstract class AbstractRecursiveFactorialTest extends AbstractBytemanUnitTest{
 
-public class RecursiveFactorialTest 
-//	extends AbstractRecursiveFactorialTest
-	extends AbstractBytemanUnitTest
-	{
-int value = 5;
+	int value = 5;
 	
 	String [] regexs = {
 		".*called.*factorial.*from.*factorial.*",

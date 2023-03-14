@@ -1,6 +1,8 @@
 package byteman.tools.exampleTestCases.mergeSort;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import byteman.tools.AbstractBytemanUnitTest;
 
@@ -29,10 +31,10 @@ public class MergeSortRecursionTest extends AbstractBytemanUnitTest{
 	};
 	
 	
-	@Override
-	protected Class<?> getTarget() {
-		return getRegistry().getMergeSort();
-	}
+//	@Override
+//	protected Class<?> getTarget() {
+//		return getRegistry().getMergeSort();
+//	}
 
 
 	@Override
@@ -72,5 +74,15 @@ public class MergeSortRecursionTest extends AbstractBytemanUnitTest{
 	protected String getExpectedResult() {
 		return Arrays.asList(this.solution).toString();
 	}
+	String[] tagsArray = {
+			"MergeSort"
+	};
+	Set<String> tagsSet = new HashSet(Arrays.asList(tagsArray));
+	@Override
+	protected Set<String> getTags() {
+		// TODO Auto-generated method stub
+		return tagsSet;
+	}
+	
 	
 }
