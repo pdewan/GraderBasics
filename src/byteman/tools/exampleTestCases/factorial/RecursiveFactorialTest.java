@@ -104,6 +104,16 @@ int value = 5;
 	protected Object[] getArgs() {
 		return new Object[] {value};
 	}
+	
+	@Override
+	protected Object[] getConstructorArgs() {
+		return new Object[] {System.currentTimeMillis()};
+	}
+	
+	@Override
+	protected Class[] getConstructorArgTypes() {
+		return new Class[] {Long.TYPE};
+	}
 
 	@Override
 	protected Class[] getArgTypes() {

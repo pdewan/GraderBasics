@@ -21,7 +21,19 @@ public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 		return new String[] {""};
 	}
 	protected  Class[] getArgTypes() {
-		return null;
+		Object[] anArgs = getArgs();
+		Class[] anArgTypes = new Class[anArgs.length];
+		for (int i = 0; i < anArgs.length; i++) {
+			anArgTypes[i] = anArgs[i].getClass();
+		}
+		return anArgTypes;
+	}
+	protected  Class[] getConstructorArgTypes() {
+		return emptyClassArray;
+	}
+	
+	protected  Object[] getConstructorArgs() {
+		return emptyObjectArray;
 	}
 	
 //	Class target;
@@ -62,14 +74,25 @@ public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 	
 	@Override 
 	protected String getTraceOut() {
-		Class[] anArgTypes = getArgTypes() ;
-		if (anArgTypes == null) {
-		if(!exportData(getTarget(),getMethodName(), getArgs())) 
+		if (!exportData(
+				getTarget(), 
+				getConstructorArgs(), 
+				getMethodName(), 
+				getArgs(), 
+				getConstructorArgTypes(), 
+				getArgTypes())) {
 			throw new IllegalArgumentException("Error exporting data");
-		} else if(!exportData(getTarget(), getMethodName(), getArgs(), anArgTypes)) {
-			throw new IllegalArgumentException("Error exporting data");
-			
 		}
+		
+		
+//		Class[] anArgTypes = getArgTypes() ;
+//		if (anArgTypes == null) {
+//		if(!exportData(getTarget(),getMethodName(), getArgs())) 
+//			throw new IllegalArgumentException("Error exporting data");
+//		} else if(!exportData(getTarget(), getMethodName(), getArgs(), anArgTypes)) {
+//			throw new IllegalArgumentException("Error exporting data");
+//			
+//		}
 		return runMain(MethodTester.class,new String[] {getTarget().getName()});
 	}
 	
