@@ -7,12 +7,15 @@ import java.util.Set;
 
 import byteman.tools.AbstractBytemanUnitTest;
 import byteman.tools.InjectionTargeterFactory;
+import grader.basics.testcase.PassFailJUnitTestCase;
+import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 
 
 public class RecursiveFactorialTest 
 //	extends AbstractRecursiveFactorialTest
 	extends AbstractBytemanUnitTest
 	{
+	
 int value = 5;
 	
 	String [] regexs = {
@@ -26,9 +29,42 @@ int value = 5;
 		".*exited factorial.*24.*",
 		".*exited factorial.*120.*",
 	};
-	String[] factorialTagsArray = {
+	Object[] returnValues = {
+			1,
+			2,
+			6,
+			24,
+			120
+	};
+	
+	private String[] factorialTagsArray = {
 			"Factorial"
 	};
+	private Class[] PRECEDING_TESTS = {
+			FactorialIsRecursive.class
+	};
+	
+//	@Override
+//	protected Class[] precedingTests() {
+//		return PRECEDING_TESTS;
+//	}
+	
+//	@Override
+//	protected  CheckstyleMethodCalledTestCase checkStyleMethodCalledTest() {
+////		List<PassFailJUnitTestCase> aPrecedingInstances =
+//		return (CheckstyleMethodCalledTestCase) getPrecedingTestInstances().get(0);
+//	}
+	
+	@Override
+	protected int numExpectedCalls() {
+//		return 5;
+		return -1;
+	}
+	
+	protected Object[] expectedReturnValues() {
+		return returnValues;
+	}
+
 	
 	Set<String> factorialTagsSet = new HashSet(Arrays.asList(factorialTagsArray));
 	@Override
@@ -69,6 +105,11 @@ int value = 5;
 		return new Object[] {value};
 	}
 
+	@Override
+	protected Class[] getArgTypes() {
+		return new Class[] {Integer.TYPE};
+	}
+	
 
 	@Override
 	protected String[] getRegexes() {

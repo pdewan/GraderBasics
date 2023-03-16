@@ -35,6 +35,14 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	        callingMethod = aCallingMethod;
 	        
 	  }
+	 
+	 public String getCallingMethodSignature() {
+		 return callingMethod;
+	 }
+	 
+	 public String getCalledMethodSignature() {
+		 return calledMethod;
+	 }
 //	 [MissingMethodCall]
 	
 	@Override

@@ -40,6 +40,17 @@ public class BytemanMethodData implements Serializable {
 		}
 	}
 	
+	public BytemanMethodData(String name, Object[] anArguments, Class[] anArgTypes) {
+		methodName = name;
+		arguments = Arrays.asList(anArguments);
+		argTypes = anArgTypes;
+//		argTypes = new Class<?>[arguments.length];
+//		for(int i=0;i<arguments.length;i++) {
+//			argTypes[i] = arguments[i].getClass();
+//			this.arguments.add(arguments[i]);
+//		}
+	}
+	
 	public String getMethodName() {
 		return methodName;
 	}

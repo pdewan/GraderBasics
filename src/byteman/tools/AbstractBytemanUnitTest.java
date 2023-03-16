@@ -20,6 +20,9 @@ public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 	protected String [] getInputs() {
 		return new String[] {""};
 	}
+	protected  Class[] getArgTypes() {
+		return null;
+	}
 	
 //	Class target;
 //	protected Class<?> getTarget() {
@@ -59,8 +62,14 @@ public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 	
 	@Override 
 	protected String getTraceOut() {
+		Class[] anArgTypes = getArgTypes() ;
+		if (anArgTypes == null) {
 		if(!exportData(getTarget(),getMethodName(), getArgs())) 
 			throw new IllegalArgumentException("Error exporting data");
+		} else if(!exportData(getTarget(), getMethodName(), getArgs(), anArgTypes)) {
+			throw new IllegalArgumentException("Error exporting data");
+			
+		}
 		return runMain(MethodTester.class,new String[] {getTarget().getName()});
 	}
 	
@@ -76,9 +85,49 @@ public abstract class AbstractBytemanUnitTest extends AbstractBytemanIOTest{
 		}
 		return true;
 	}
+	protected boolean exportData(Class<?> target, 
+			Object [] targetConstructorArgs,
+			String methodName, 
+			Object [] methodArgs,
+			Class [] targetConstructorArgTypes,
+			Class [] targetMethodArgTypes
+			) {
+		try {
+			BytemanDataServerProxy proxy = BytemanRegistryFactory.getAndPossiblySetServerProxy();
+			BytemanData data = new BytemanData(target,new BytemanMethodData(methodName,methodArgs, targetMethodArgTypes));
+//			data.setConstructorArgs(targetConstructorArgs);
+			if (targetConstructorArgs == null || targetConstructorArgs.length == 0) {
+				data.setConstructorArgs(targetConstructorArgs);
+			} else {
+				data.setConstructorArgs(targetConstructorArgTypes, targetConstructorArgs);
+			}
+			proxy.addClassData(data);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 
 	protected boolean exportData(Class<?> target, String methodName, Object ... methodArgs) {
 		return exportData(target,new Object[]{},methodName,methodArgs);
+	}
+	
+	Object[] emptyObjectArray = {};
+	Class[] emptyClassArray = {};
+
+	protected boolean exportData(
+			Class<?> target, 
+			String methodName, 
+			Object[] methodArgs,
+			Class[] methodArgTypes) {
+		return exportData(target,
+				emptyObjectArray,
+				methodName,
+				methodArgs,
+				emptyClassArray,
+				methodArgTypes);
 	}
 
 }

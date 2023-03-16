@@ -20,8 +20,15 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 
 	protected boolean foundType;
 	protected String typeTag;
+	
+//	public static String removeEscapes(String aPossiblyEscapedString) {
+//		return aPossiblyEscapedString.replace("\\", "");
+//	}
 //	 protected String typeName;
 
+	public String getTypeName() {
+		return typeTag();
+	}
 
     public CheckStyleTestCase(String aTypeTag, String aName) {
 //        super(aName);

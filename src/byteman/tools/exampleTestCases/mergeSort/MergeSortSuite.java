@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	MergeSortIsRecursive.class,
 	MergeSortSolutionTest.class,
 	MergeSortRecursionTest.class
 	
