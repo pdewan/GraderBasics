@@ -3,11 +3,11 @@ package byteman.tools;
 import grader.basics.project.Project;
 
 public class BytemanConfigurationWriterFactory {
-//	static BytemanConfigurationWriter bytemanConfigurationWriter = 
-//			new ClassRegistryBytemanConfigurationWriter();
-	
 	static BytemanConfigurationWriter bytemanConfigurationWriter = 
-			new CheckstyleConfigurationBytemanConfigurationWriter();
+			new ClassRegistryBytemanConfigurationWriter();
+	
+//	static BytemanConfigurationWriter bytemanConfigurationWriter = 
+//			new CheckstyleConfigurationBytemanConfigurationWriter();
 
 	public static BytemanConfigurationWriter getBytemanConfigurationWriter() {
 		return bytemanConfigurationWriter;

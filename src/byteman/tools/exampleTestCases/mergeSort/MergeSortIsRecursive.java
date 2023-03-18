@@ -6,8 +6,8 @@ public class MergeSortIsRecursive extends CheckstyleMethodCalledTestCase {
 
 	public MergeSortIsRecursive() {
 		super("MergeSort",
-				"sort:Integer\\[\\]->Integer\\[\\]",
-				"sort:Integer\\[\\]->Integer\\[\\]"
+				"sort:int\\[\\]->int\\[\\]",
+				"sort:int\\[\\]->int\\[\\]"
 				);
 		// TODO Auto-generated constructor stub
 	}

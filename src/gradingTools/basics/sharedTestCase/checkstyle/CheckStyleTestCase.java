@@ -3,6 +3,7 @@ package gradingTools.basics.sharedTestCase.checkstyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 
@@ -198,7 +199,37 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     		aSucceededLines =	matchedLines(aCheckStyleLines, aPositiveFilter);
     	}
     	
+    	maybeProcessFailedLines(aFailedLines);
+    	maybeProcessSucceededLines(aSucceededLines);
+
+    	
+    	
     	return test(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);    	
+    }
+    
+	protected void maybeProcessSucceededLine (String aSucceededLine) {
+//		if (callingTypeName != null) {
+//			return;
+//		}
+//		Matcher matcher = pattern.matcher(aSucceededLine);
+//		
+//        if(matcher.find()) {
+////            System.out.println("found: " + matcher.group(1));
+//            callingTypeName = matcher.group(1).split(":")[0];
+//        }
+	}
+    
+    protected void maybeProcessSucceededLines (List<String> aSucceededLines) {
+    	if (aSucceededLines != null ) {
+    		for (int i = 0; i < aSucceededLines.size(); i++) {
+    		String aSucceededLine = aSucceededLines.get(i);
+    		maybeProcessSucceededLine(aSucceededLine);
+    		}
+    	}
+    }
+    
+    protected void maybeProcessFailedLines (List<String> aFailedLines) {
+    	
     }
     
     protected TestCaseResult classFractionResult (Project aProject, String[] aCheckStyleLines, List<String> aMatchedLines, boolean autoGrade) {

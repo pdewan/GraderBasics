@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class InjectionTargeter {
 	private Map<String, Object> nameMap;
 
 	private static Class<? extends EnterExitInjectionSite> DEFAULT_INJECTION = null;
-	
+
 	private Map<String, List<String>> classToConfiguredTags;
 	private Map<Set<String>, String> configuredTagsToClass;
 
@@ -41,8 +42,6 @@ public class InjectionTargeter {
 	public InjectionTargeter() throws IOException {
 		this(new HashMap<>());
 	}
-	
-	
 
 	/**
 	 * Adds all declared methods within the class
@@ -50,10 +49,64 @@ public class InjectionTargeter {
 	 * @param clazz
 	 * @return
 	 */
+//	public boolean addClasses(Class<? extends EnterExitInjectionSite> injectedCode, Class<?>... clazzez) {
+//		for (Class<?> clazz : clazzez)
+//			if (!addMethods(injectedCode, clazz, clazz.getDeclaredMethods()))
+////			if (!addMethods(injectedCode, clazz, clazz.getMethods()))
+//
+//				return false;
+//		return true;
+//	}
+
+//	public void addDerivedTypes(Set<Class> aDerivedClasses, Class aClass) {
+//		if (aClass == null) {
+//			return;
+//		}
+//		aDerivedClasses.add(aClass);
+//
+//		addDerivedTypes(aDerivedClasses, aClass.getSuperclass());
+//	}
+//
+//	public void addDerivedTypes(Set<Class> aDerivedClasses, Class... aClasses) {
+//		for (Class aClass : aClasses) {
+//			addDerivedTypes(aDerivedClasses, aClass);
+//		}
+//	}
+
 	public boolean addClasses(Class<? extends EnterExitInjectionSite> injectedCode, Class<?>... clazzez) {
-		for (Class<?> clazz : clazzez)
-			if (!addMethods(injectedCode, clazz, clazz.getDeclaredMethods()))
+		Set<Class> aDerivedClasses = new HashSet();
+//		addDerivedTypes(aDerivedClasses, clazzez);
+		for (Class<?> clazz : clazzez) {
+			if (!addClass(injectedCode, clazz)) {
 				return false;
+			}
+			;
+		}
+		return true;
+	}
+
+	protected Set<Class> classesAdded = new HashSet();
+
+	public boolean addClass(Class<? extends EnterExitInjectionSite> injectedCode, Class<?> aClass) {
+
+		if (classesAdded.contains(aClass) 
+//				|| Modifier.isAbstract( aClass.getModifiers() )
+				) 
+		{
+			return true;
+		}
+		System.out.println("Adding class:" + aClass);
+		if (!addMethods(injectedCode, aClass, aClass.getDeclaredMethods())) {
+
+			return false;
+		}
+		classesAdded.add(aClass);
+
+//		Class aSuperClass = aClass.getSuperclass();
+//		if (aSuperClass != null) {
+//			addClass(injectedCode, aSuperClass);
+//		}
+
 		return true;
 	}
 
@@ -76,25 +129,26 @@ public class InjectionTargeter {
 		}
 		return failed;
 	}
-	
-	public boolean sameTags (String[] aTags1, String[] aTags2) {
+
+	public boolean sameTags(String[] aTags1, String[] aTags2) {
 		Set<String> aTags1Set = new HashSet(Arrays.asList(aTags1));
 		Set<String> aTags2Set = new HashSet(Arrays.asList(aTags2));
-		return aTags1Set.equals(aTags2Set);		
+		return aTags1Set.equals(aTags2Set);
 	}
-	
+
 	protected Map<Set<String>, String> createConfiguredTagsToClass(Map<String, List<String>> aClassToConfiguredTags) {
 		Map<Set<String>, String> retVal = new HashMap();
-		for (String aClassName:aClassToConfiguredTags.keySet()) {
+		for (String aClassName : aClassToConfiguredTags.keySet()) {
 			List<String> aTags = aClassToConfiguredTags.get(aClassName);
 			retVal.put(new HashSet(aTags), aClassName);
 		}
 		return retVal;
 	}
+
 	public String getClassName(Set<String> aTags) {
 		return configuredTagsToClass.get(aTags);
 	}
-	
+
 	public boolean addFromClassTagMapping(Map<String, List<String>> aClassToConfiguredTags,
 			Class<? extends EnterExitInjectionSite> injectedCode) {
 		classToConfiguredTags = aClassToConfiguredTags;
@@ -123,7 +177,7 @@ public class InjectionTargeter {
 		}
 		return failed;
 	}
-	
+
 	public boolean addFromCheckstyleConfiguration(File aConfigurationFile,
 			Class<? extends EnterExitInjectionSite> injectedCode) {
 		Map<String, List<String>> aClassToConfiguredTags = processCheckstyleConfiguration(aConfigurationFile);
@@ -171,15 +225,26 @@ public class InjectionTargeter {
 					aScanner.close();
 					return null;
 				}
-				String aClass = aLineTokens[0];
-				String aTag = aLineTokens[1];
-				List<String> aTags = aClassToConfiguredTags.get(aClass);
-				if (aTags == null) {
-					aTags = new ArrayList<>();
-					aClassToConfiguredTags.put(aClass, aTags);
-				}
-				if (!aTags.contains(aTag)) {
-					aTags.add(aTag);
+				String aClassName = aLineTokens[0];
+				try {
+					Class aClass = Class.forName(aClassName);
+					if (aClass.isInterface()) {
+						continue;
+					}
+
+					String aTag = aLineTokens[1];
+					List<String> aTags = aClassToConfiguredTags.get(aClassName);
+					if (aTags == null) {
+						aTags = new ArrayList<>();
+						aClassToConfiguredTags.put(aClassName, aTags);
+					}
+					if (!aTags.contains(aTag)) {
+						aTags.add(aTag);
+					}
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
 				}
 			}
 			aScanner.close();
@@ -221,6 +286,7 @@ public class InjectionTargeter {
 		return retVal;
 
 	}
+
 //	public static void testClassSearch() {
 ////		String[] aTags = BasicClassDescription.getTags(TaggedClass.class);
 ////		System.out.println("Tags" + Arrays.toString(aTags));
@@ -237,31 +303,47 @@ public class InjectionTargeter {
 //		System.out.println("Tags" + Arrays.toString(aTags));
 //		CurrentProjectHolder.setProject(".java");
 		Project aProject = CurrentProjectHolder.getCurrentProject();
-		Class aClass = BasicProjectIntrospection.findClassByTags("Tag1", "Tag2");		
-		System.out.println("Class by Tag" + aClass);		
+		Class aClass = BasicProjectIntrospection.findClassByTags("Tag1", "Tag2");
+		System.out.println("Class by Tag" + aClass);
 //		aClass = BasicProjectIntrospection.findClassByExistingSupertype(aProject, TaggedInterface.class);				
-		System.out.println("Class by Super Type" + aClass);		
+		System.out.println("Class by Super Type" + aClass);
 		System.out.println(aProject);
 	}
 	/*
-	 * 			<property name="expectedTypes" value="
-			
-					
-			@DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.RMI,
-			@DistributedTags.CLIENT_OUT_COUPLER+@DistributedTags.RMI+@DistributedTags.GIPC,
-			@DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.GIPC,
-			@DistributedTags.SERVER_CONFIGURER+@DistributedTags.RMI+@DistributedTags.GIPC,
-			@DistributedTags.REGISTRY+@DistributedTags.RMI,
-			@DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.RMI,
-			@DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.GIPC,
-			@DistributedTags.CLIENT_CONFIGURER+@DistributedTags.RMI+@DistributedTags.GIPC,
-			@DistributedTags.SERVER+@DistributedTags.RMI+@DistributedTags.GIPC,
-			@DistributedTags.CLIENT+@DistributedTags.RMI+@DistributedTags.GIPC,
-			@DistributedTags.CLIENT_REMOTE_OBJECT+@DistributedTags.RMI+@DistributedTags.GIPC,
-			@DistributedTags.SERVER_REMOTE_OBJECT+@DistributedTags.RMI+@DistributedTags.GIPC,
-			
-			
-		"/>
+	 * <property name="expectedTypes" value="
+	 * 
+	 * 
+	 * @DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.RMI,
+	 * 
+	 * @DistributedTags.CLIENT_OUT_COUPLER+@DistributedTags.RMI+@DistributedTags.
+	 * GIPC,
+	 * 
+	 * @DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.GIPC,
+	 * 
+	 * @DistributedTags.SERVER_CONFIGURER+@DistributedTags.RMI+@DistributedTags.
+	 * GIPC,
+	 * 
+	 * @DistributedTags.REGISTRY+@DistributedTags.RMI,
+	 * 
+	 * @DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.RMI,
+	 * 
+	 * @DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.GIPC,
+	 * 
+	 * @DistributedTags.CLIENT_CONFIGURER+@DistributedTags.RMI+@DistributedTags.
+	 * GIPC,
+	 * 
+	 * @DistributedTags.SERVER+@DistributedTags.RMI+@DistributedTags.GIPC,
+	 * 
+	 * @DistributedTags.CLIENT+@DistributedTags.RMI+@DistributedTags.GIPC,
+	 * 
+	 * @DistributedTags.CLIENT_REMOTE_OBJECT+@DistributedTags.RMI+@DistributedTags.
+	 * GIPC,
+	 * 
+	 * @DistributedTags.SERVER_REMOTE_OBJECT+@DistributedTags.RMI+@DistributedTags.
+	 * GIPC,
+	 * 
+	 * 
+	 * "/>
 	 */
 
 	private Map<String, List<String>> processCheckstyleConfiguration(File aConfigurationFile) {
@@ -288,8 +370,7 @@ public class InjectionTargeter {
 			}
 //			Map<String, List<String>> aClassToConfiguredTags = new HashMap<>();
 
-			
-			for (String[] aTags:aTagsList) {
+			for (String[] aTags : aTagsList) {
 				String[] anOriginalTags = Arrays.copyOf(aTags, aTags.length);
 				Class aClass = BasicProjectIntrospection.findClassByTags(aTags);
 				if (aClass == null) {
@@ -301,7 +382,7 @@ public class InjectionTargeter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return aClassToConfiguredTags;
 	}
 

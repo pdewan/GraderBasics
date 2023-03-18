@@ -6,8 +6,8 @@ public class FactorialIsRecursive extends CheckstyleMethodCalledTestCase {
 
 	public FactorialIsRecursive() {
 		super("@Factorial",
-				"factorial:Integer->Integer",
-				"factorial:Integer->Integer"
+				"factorial:int->int",
+				"factorial:int->int"
 				);
 		// TODO Auto-generated constructor stub
 	}

@@ -44,21 +44,21 @@ int value = 5;
 			FactorialIsRecursive.class
 	};
 	
-//	@Override
-//	protected Class[] precedingTests() {
-//		return PRECEDING_TESTS;
-//	}
+	@Override
+	protected Class[] precedingTests() {
+		return PRECEDING_TESTS;
+	}
 	
-//	@Override
-//	protected  CheckstyleMethodCalledTestCase checkStyleMethodCalledTest() {
-////		List<PassFailJUnitTestCase> aPrecedingInstances =
-//		return (CheckstyleMethodCalledTestCase) getPrecedingTestInstances().get(0);
-//	}
+	@Override
+	protected  CheckstyleMethodCalledTestCase checkStyleMethodCalledTest() {
+//		List<PassFailJUnitTestCase> aPrecedingInstances =
+		return (CheckstyleMethodCalledTestCase) getPrecedingTestInstances().get(0);
+	}
 	
 	@Override
 	protected int numExpectedCalls() {
-//		return 5;
-		return -1;
+		return 5;
+//		return -1;
 	}
 	
 	protected Object[] expectedReturnValues() {

@@ -16,11 +16,14 @@ public class MethodTester {
 		}
 		
 		try {
+			System.out.println(MethodTester.class + ":class loader:" + MethodTester.class.getClassLoader());
+
 			BytemanDataServerProxy proxy = BytemanRegistryFactory.getBytemanDataServerProxy();
 			//BytemanDataServerProxy clientProxy = BytemanRegistryFactory.getBytemanDataServerProxy(args[1]);
 			
 			for(BytemanData btmData:proxy.getClassData(args[0])) {
 				Class<?> clazz = btmData.getTargetedClass();
+				System.out.println(clazz + ":class loader:" + clazz.getClassLoader());
 				
 				Constructor<?> con = clazz.getConstructor(btmData.getConTypes());
 				Object obj = con.newInstance(btmData.getConArgs());

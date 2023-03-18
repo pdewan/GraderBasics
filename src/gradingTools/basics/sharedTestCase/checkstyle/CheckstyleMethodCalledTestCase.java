@@ -1,6 +1,8 @@
 package gradingTools.basics.sharedTestCase.checkstyle;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -13,19 +15,15 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 
 	 protected String calledMethod;
 	 protected String callingMethod;
-	 public static final String WARNING_NAME = "has not made expected call";
-		public static final String INFO_NAME = "has made expected call";
-//	 protected String typeTag;
-//	 protected String typeName;
+//	 public static final String WARNING_NAME = "has not made expected call";
+//	 public static final String INFO_NAME = "has made expected call";
+	 public static final String WARNING_NAME = "MissingMethodCall";
+
 	 public CheckstyleMethodCalledTestCase(String aType, String aCalledMethod) {
-		 this(aType, "", aCalledMethod);
-//	        super(aType, aCalledMethod);
-////	        super(aType, aType + "!" + aMethod);
-//
-//	        typeTag = aType;
-//	        method = aCalledMethod;
-	        
+		 this(aType, "", aCalledMethod);	        
 	  }
+	 
+	 
 	 public CheckstyleMethodCalledTestCase(String aType, String aCallingMethod, String aCalledMethod) {
 	        super(aType, aCalledMethod);
 //	        super(aType, aType + "!" + aMethod);
@@ -35,6 +33,10 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	        callingMethod = aCallingMethod;
 	        
 	  }
+	 
+	 protected   String warningName() {
+	    	return WARNING_NAME;
+	    }
 	 
 	 public String getCallingMethodSignature() {
 		 return callingMethod;
@@ -47,27 +49,68 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	
 	@Override
 	public String negativeRegexLineFilter() {
-//		return "(.*)" + getActualType() + "(.*)" + WARNING_NAME + "(.*)" + method + "(.*)";
 		return ".*" + "WARN" + ".*"  + callingMethod + ".*" + typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
 
 
-		
-//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-//		return "(.*)" + getActualType() + "(.*)not made expected call(.*)\\Q" + method + "\\E(.*)";
-//		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
-
 	}
+	// [INFO] D:\dewan_backup\Java\PLTeaching\PL_Java\.\src\byteman\examples\BytemanMerge.java:1: Method:sort:int[]->int[] in class byteman.examples.BytemanMerge:[@MergeSort] has made expected call sort:int[]->int[]. Good! [MissingMethodCall]
+//	String patternString = ".* in class (.*):.*";
+	
+//	Pattern pattern = Pattern.compile(patternString);
+	String callingTypeName = null;
+	String callingTypeFileName = null;
+//	String callingTypeShortFileName = null;
+	public String getCallingTypeName() {
+		return callingTypeName;
+	}
+	
+	public String getCallingTypeFileName() {
+		return callingTypeFileName;
+	}
+	
+	
+	protected void maybeProcessSucceededLine (String aSucceededLine) {
+		if (callingTypeName != null && callingTypeFileName != null) {
+			return;
+		}
+		int aFileNameEnd = aSucceededLine.indexOf(": Method");
+		callingTypeFileName = aSucceededLine.substring("[INFO] ".length(), aFileNameEnd);
+		final String typeNamePrefix = " in class ";
+		final String typeNameSuffix = ":";
+		int aPrefixStart = aSucceededLine.indexOf(typeNamePrefix);
+		int aSuffixStart = aSucceededLine.indexOf(typeNameSuffix, aPrefixStart);
+		
+		callingTypeName = aSucceededLine.substring(aPrefixStart + typeNamePrefix.length(),aSuffixStart );
+
+//		Matcher matcher = pattern.matcher(aSucceededLine);
+		
+//        if(matcher.find()) {
+////            System.out.println("found: " + matcher.group(1));
+//            callingTypeName = matcher.group(1).split(":")[0];
+//        }
+	}
+
+//	protected void maybeProcessSucceededLines (List<String> aSucceededLines) {
+//    	if (aSucceededLines != null ) {
+//    		for (int i = 0; i < aSucceededLines.size(); i++) {
+//    		String aSucceededLine = aSucceededLines.get(i);
+//    		maybeProcessSucceededLine(aSucceededLine);
+//    		}
+//    	}
+//    }
+	
+	public String getActualCallingTypeName() {
+		return callingTypeName;
+	}
+    
+    protected void maybeProcessFailedLines (List<String> aFailedLines) {
+    	
+    }
+	
 	@Override
 	public String positiveRegexLineFilter() {
 		return ".*" + "INFO" + ".*" + callingMethod + ".*" +typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
 		
-//		return ".*" + "INFO" + ".*" +typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
-
-		
-//		return "(.*)" + getActualType() + "(.*)" + INFO_NAME + "(.*)" + method + "(.*)Good(.*)";
-//		return "(.*)Signature(.*)" + method + "(.*)" + type + "(.*)";
-//		return "(.*)" + getActualType() + "(.*)made expected call(.*)\\Q" + method + "\\E(.*)";
-//		return "(.*)" + getActualType() + " has not made expected call(.*)" + method + "(.*)";
 
 	}
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {

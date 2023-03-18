@@ -1,5 +1,6 @@
 package byteman.tools;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import gradingTools.utils.RunningProjectUtils;
 import unc.checks.ComprehensiveVisitCheck;
 import unc.symbolTable.STMethod;
 import util.trace.Tracer;
+
 
 public abstract class AbstractBytemanIOTest extends PassFailJUnitTestCase{
 
@@ -83,7 +85,93 @@ GR*** main has exited factorial(java.lang.Integer) java.lang.Integer in class @F
 GR*** main has exited factorial(java.lang.Integer) java.lang.Integer in class @Factorial and returned: 6
 GR*** main has exited factorial(java.lang.Integer) java.lang.Integer in class @Factorial and returned: 24
 GR*** main has exited factorial(java.lang.Integer) java.lang.Integer in class @Factorial and returned: 120
+GR*** Thread: main has called @MergeSort.divide(int[],int,int) int from byteman.examples.BytemanMerge.sort(BytemanMerge.java:16) with params: [5,14] 0 1 
+GR*** Thread: main has called @MergeSort.divide(int[],int,int) int from byteman.examples.BytemanMerge.sort(BytemanMerge.java:16) with params: [7,12] 0 1 
+GR*** main has exited divide(int[],int,int) int in class @MergeSort and returned: [7]	
 	 */
+	static final String INFO_PREFIX = "GR*** ";
+	static final String THREAD_PREFIX = "Thread: ";
+	static final String CALLED_INDICATOR = "has called ";
+	static final String EXITED_INDICATOR = "has exited ";
+	
+	protected static String getCalledMethodSignature(STMethod aCalledMethod) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(aCalledMethod.getName());
+		sb.append("(");
+		String[] aParamTypes = aCalledMethod.getParameterTypes();
+		for(int i=1;i<aParamTypes.length;i++) {
+			if (i != 0) {
+				sb.append (",");
+			}
+			sb.append(aParamTypes[i]);			
+		}
+		sb.append(")");
+		sb.append(" ");
+		String aReturnType = aCalledMethod.getReturnType();
+		sb.append(aReturnType);
+		return sb.toString();
+	}
+
+	
+	protected String getThreadName() {
+		return ".*";
+	}
+	
+	protected String getCallingMethodSpecification(String aCallingTypeFileName, String aCallingTypeName, STMethod aCallingMethod) {
+		String[] aCallingTypeFileNameParts = aCallingTypeFileName.split("[/\\]");
+		String aShortFileName = aCallingTypeFileNameParts[aCallingTypeFileNameParts.length - 1];
+		return null;
+	}
+	public static Object[] toObjectArray(Object o) {
+		if(!o.getClass().isArray()) return null;
+		if(!o.getClass().getComponentType().isPrimitive()) return (Object [])o;
+		int arrlen = Array.getLength(o);
+		Object [] retval = new Object[arrlen];
+		for(int i=0;i<arrlen;i++) {
+			retval[i]=Array.get(o, i);
+		}
+		return retval;
+	}
+	public static String arrayPrinter(Object o) {
+		StringBuilder sb = new StringBuilder();
+		if(!o.getClass().isArray()) {
+			sb.append(o.toString());
+		}else {
+			sb.append('[');
+			Object [] arr = toObjectArray(o);
+			for(int i=0;i<9&&i<arr.length;i++) {
+				sb.append(arrayPrinter(arr[i]));
+				sb.append(',');
+			}
+			if(arr.length>0)
+				sb.deleteCharAt(sb.length()-1);
+			if(arr.length == 11) {
+				sb.append(","+arr[10]);
+			}else if(arr.length>10) {
+				sb.append(", ... ");
+				sb.append(arr[arr.length-1]);
+			}
+			
+			sb.append(']');
+		}
+		return sb.toString();
+	}	
+	
+	protected String getActualParametersSpecification() {
+		Object[] params = getArgs();
+		StringBuilder sb = new StringBuilder();
+		for(int i=1;i<params.length;i++) {
+			if(params[i].getClass().isArray()) {
+				sb.append(arrayPrinter(params[i]));
+			}else {
+				sb.append(params[i].toString());
+			}
+			sb.append(' ');
+		}
+		return sb.toString();
+//		Class[] aActualArgTypes
+		
+	}
 	
 	protected String[] toRegexes() {
 		CheckstyleMethodCalledTestCase aCheckstyleMethodCalledTest = checkStyleMethodCalledTest();
@@ -97,8 +185,10 @@ GR*** main has exited factorial(java.lang.Integer) java.lang.Integer in class @F
 		}
 		String aCallingMethodSignature = aCheckstyleMethodCalledTest.getCallingMethodSignature();
 		
+		String aCallingTypeFileName = aCheckstyleMethodCalledTest.getCallingTypeFileName();
 		String aCallingType = aCheckstyleMethodCalledTest.getTypeName();
 		String aCalledType = aCallingType;
+		String anActualCalledType = aCheckstyleMethodCalledTest.getCallingTypeName();
 		String aCalledMethodSpecification =  aCheckstyleMethodCalledTest.getCalledMethodSignature();
 		String[] aCalledMethodParts = aCalledMethodSpecification.split("!");
 		String aCalledMethodSignature = aCalledMethodParts[0];
@@ -113,6 +203,7 @@ GR*** main has exited factorial(java.lang.Integer) java.lang.Integer in class @F
 				createMethodFromSignature(aCallingMethodSignature);
 		STMethod aCalledMethod = ComprehensiveVisitCheck.
 				createMethodFromSignature(aCalledMethodSignature);
+		
 		return null;
 
 	}

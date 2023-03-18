@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 
 import byteman.tools.exampleTestCases.factorial.FactorialSuite;
 import byteman.tools.exampleTestCases.mergeSort.MergeSortSuite;
+import byteman.tools.exampleTestCases.misc.MiscTest;
 import byteman.tools.exampleTestCases.mvcSummer.MVCSummerSuite;
 import grader.basics.junit.BasicJUnitUtils;
 
@@ -14,7 +15,8 @@ import grader.basics.junit.BasicJUnitUtils;
 //	BytemanClassRegistryProvided.class,
 	MergeSortSuite.class,
 	FactorialSuite.class,
-	MVCSummerSuite.class
+	MVCSummerSuite.class,
+	MiscTest.class
 })
 public class BytemanTest {
 
