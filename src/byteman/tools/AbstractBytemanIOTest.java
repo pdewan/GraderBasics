@@ -256,13 +256,15 @@ GR*** main has exited divide(int[],int,int) int in class @MergeSort and returned
 		if(args == null) {
 			args = new String[0];
 		}
-		
+//		String jarLocation = "./Logs/LocalChecks/agent.jar";
 		Tracer.showInfo(true);
 		CurrentProjectHolder.setProject(".java");
 		Project aProject = CurrentProjectHolder.getCurrentProject();
 		List<String> aCommand = BasicStaticConfigurationUtils.getBasicCommand();
 		List<String> aModifiedCommand = new ArrayList<>(aCommand);
 		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar");
+//		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar=script:thread.btm,boot:./Logs/LocalChecks/agent.jar -Dorg.jboss.byteman.transform.all");
+
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderBasicCommand(aModifiedCommand);
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setForkInProjectFolder(false);
 		
