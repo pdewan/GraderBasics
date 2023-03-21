@@ -15,6 +15,7 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestC
 public class MiscTest 
 //	extends AbstractRecursiveFactorialTest
 	extends AbstractBytemanUnitTest
+	//Thread: main has called @MiscClass.size() int
 	{
 	String [] regexs = {
 			".*called.*size.*",
@@ -75,7 +76,7 @@ public class MiscTest
 	@Override
 	protected boolean testMethodReturnMatches(Object returnValue) {
 		if(returnValue instanceof Integer) {
-			return ((Integer)returnValue).intValue() == 120;		
+			return ((Integer)returnValue).intValue() == 0;		
 		}
 		return false;
 	}

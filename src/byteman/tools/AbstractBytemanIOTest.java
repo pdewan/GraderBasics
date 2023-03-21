@@ -252,18 +252,36 @@ GR*** main has exited divide(int[],int,int) int in class @MergeSort and returned
 		return runMain(getTarget(),(String[])getArgs());
 	}
 	
+	protected void modifyForAgentPremain(List<String> aModifiedCommand ) {
+		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar");
+
+	}
+	protected void modifyForBytemanRules(List<String> aModifiedCommand ) {
+		aModifiedCommand.add(1,"-javaagent:D:/Program Files/byteman-download-4.0.20/lib/byteman.jar=script:threads.btm,script:factorial.btm,script:factorialEntry.btm,script:factorialExit.btm,boot:D:/Program Files/byteman-download-4.0.20/lib/byteman.jar");
+
+//		aModifiedCommand.add(1,"-javaagent:D:/Program Files/byteman-download-4.0.20/lib/byteman.jar=script:threads.btm,script:factorial.btm,script:factorialEntry.btm,script:factorialExit.btm,script:barWrite.btm,boot:D:/Program Files/byteman-download-4.0.20/lib/byteman.jar");
+		aModifiedCommand.add(2,"-Dorg.jboss.byteman.transform.all");
+
+	}
 	protected String runMain(Class<?> target, String [] args) {
 		if(args == null) {
 			args = new String[0];
 		}
+		// D:/"Program Files"/byteman-download-4.0.20/lib/byteman.jar
 //		String jarLocation = "./Logs/LocalChecks/agent.jar";
 		Tracer.showInfo(true);
 		CurrentProjectHolder.setProject(".java");
 		Project aProject = CurrentProjectHolder.getCurrentProject();
 		List<String> aCommand = BasicStaticConfigurationUtils.getBasicCommand();
 		List<String> aModifiedCommand = new ArrayList<>(aCommand);
-		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar");
-//		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar=script:thread.btm,boot:./Logs/LocalChecks/agent.jar -Dorg.jboss.byteman.transform.all");
+//		modifyForAgentPremain(aModifiedCommand);
+		modifyForBytemanRules(aModifiedCommand);
+//		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar");
+//		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar=script:threads.btm,boot:./Logs/LocalChecks/agent.jar -Dorg.jboss.byteman.transform.all");
+//		aModifiedCommand.add(1,"-javaagent:D:/Program Files/byteman-download-4.0.20/lib/byteman.jar=script:threads.btm,boot:D:/Program Files/byteman-download-4.0.20/lib/byteman.jar");
+
+//		aModifiedCommand.add(1,"-javaagent:./Logs/LocalChecks/agent.jar=script:thread.btm,boot:./Logs/LocalChecks/agent.jar");
+		aModifiedCommand.add(2,"-Dorg.jboss.byteman.transform.all");
 
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setGraderBasicCommand(aModifiedCommand);
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setForkInProjectFolder(false);
