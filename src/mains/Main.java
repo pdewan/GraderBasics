@@ -1,4 +1,4 @@
-package gradingTools.logs.bulkLogProcessing.mains;
+package mains;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -38,7 +38,7 @@ public class Main {
 	}
 	
 	private static void attemptsAndTimings() throws Exception {
-		final File rawFolder = new File("I:\\Research\\Log_Parsing\\ClassFolders\\Comp301\\Summer20");
+//		final File rawFolder = new File("I:\\Research\\Log_Parsing\\ClassFolders\\Comp301\\Summer20");
 		final String pathing = "Assignment "+AbstractIntervalReplayerBasedCollector.numberReplace+"_named/Assignment "+AbstractIntervalReplayerBasedCollector.numberReplace;
 		Collector [] collectors = {
 				

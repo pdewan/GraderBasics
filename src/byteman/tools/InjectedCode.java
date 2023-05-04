@@ -1,46 +1,47 @@
 package byteman.tools;
 
-import grader.byteman.injector.target.custom.EnterExitInjectionSite;
 import premain.Premain;
 
 public class InjectedCode implements EnterExitInjectionSite {
 	@Override
 	public String arrayPrinter(Object o) {
-		StringBuilder sb = new StringBuilder();
-		if (!o.getClass().isArray()) {
-			sb.append(o.toString());
-		} else {
-			sb.append('[');
-			Object[] arr = toObjectArray(o);
-			for (int i = 0; i < 9 && i < arr.length; i++) {
-				sb.append(arrayPrinter(arr[i]));
-				sb.append(',');
-			}
-			if (arr.length > 0)
-				sb.deleteCharAt(sb.length() - 1);
-			if (arr.length == 10) {
-				sb.append("," + arr[9]);
-			} else if (arr.length == 11) {
-				sb.append("," + arr[10]);
-			} else if (arr.length > 10) {
-				sb.append(", ... ");
-				sb.append(arr[arr.length - 1]);
-			}
-
-			sb.append(']');
-		}
-		return sb.toString();
+		return BytemanMisc.arrayPrinter(o);
+//		StringBuilder sb = new StringBuilder();
+//		if (!o.getClass().isArray()) {
+//			sb.append(o.toString());
+//		} else {
+//			sb.append('[');
+//			Object[] arr = toObjectArray(o);
+//			for (int i = 0; i < 9 && i < arr.length; i++) {
+//				sb.append(arrayPrinter(arr[i]));
+//				sb.append(',');
+//			}
+//			if (arr.length > 0)
+//				sb.deleteCharAt(sb.length() - 1);
+//			if (arr.length == 10) {
+//				sb.append("," + arr[9]);
+//			} else if (arr.length == 11) {
+//				sb.append("," + arr[10]);
+//			} else if (arr.length > 10) {
+//				sb.append(", ... ");
+//				sb.append(arr[arr.length - 1]);
+//			}
+//
+//			sb.append(']');
+//		}
+//		return sb.toString();
 	}
 
 	@Override
 	public void atEnter(String clazz, String method, Object[] params) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 1; i < params.length; i++) {
-			if (params[i].getClass().isArray()) {
-				sb.append(arrayPrinter(params[i]));
-			} else {
-				sb.append(params[i].toString());
-			}
+			BytemanMisc.addString(sb, params[i]);
+//			if (params[i].getClass().isArray()) {
+//				sb.append(arrayPrinter(params[i]));
+//			} else {
+//				sb.append(params[i].toString());
+//			}
 			sb.append(' ');
 		}
 		// Stack Trace to get calling method
@@ -66,7 +67,8 @@ public class InjectedCode implements EnterExitInjectionSite {
 	@Override
 	public void atExit(String clazz, String method, Object returned) {
 		if (returned.getClass().isArray()) {
-			atExit(clazz, method, arrayPrinter(returned));
+//			atExit(clazz, method, arrayPrinter(returned));
+			atExit(clazz, method, BytemanMisc.arrayPrinter(returned));
 		} else {
 			String clazzName = determineClass(clazz);
 			System.out.println("GR*** " + Thread.currentThread().getName() + " has exited " + method + " in class "
@@ -103,7 +105,9 @@ public class InjectedCode implements EnterExitInjectionSite {
 	}
 
 	private String determineClass(String clazz) {
-		String clazzName = Premain.getDisplayNameMapping().get(clazz);
+//		String clazzName = Premain.getDisplayNameMapping().get(clazz);
+		String clazzName = NameDefiner.getDisplayNameMapping().get(clazz);
+
 		if (clazzName == null) {
 			clazzName = clazz;
 		}

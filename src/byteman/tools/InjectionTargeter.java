@@ -20,8 +20,7 @@ import org.eclipse.jdt.internal.corext.refactoring.changes.CreateCompilationUnit
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
-import grader.byteman.injector.target.custom.ClassInjectionData;
-import grader.byteman.injector.target.custom.EnterExitInjectionSite;
+
 
 public class InjectionTargeter {
 	private Map<ClassInjectionData, ClassInjectionData> injectionData;

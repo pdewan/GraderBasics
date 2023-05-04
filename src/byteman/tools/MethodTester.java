@@ -14,6 +14,7 @@ public class MethodTester {
 			System.out.println("Not enough args");
 			System.exit(4);
 		}
+		InjectionTargetFileReader.readFile("./injectionTarget.txt", false);
 		
 		try {
 //			System.out.println(MethodTester.class + ":class loader:" + MethodTester.class.getClassLoader());
