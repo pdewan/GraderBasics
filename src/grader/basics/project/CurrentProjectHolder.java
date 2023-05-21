@@ -44,6 +44,11 @@ public class CurrentProjectHolder {
 			e.printStackTrace();
 		}
 	}
+	public static Project createCurrentProject (String aSourceFilePattern) throws FileNotFoundException {
+		
+			return new BasicProject(aSourceFilePattern);
+		
+	}
 	public static Project createCurrentProject() {
 //		String aProjectLocation = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getGradableProjectLocation();
 //		setProjectLocation(new File(aProjectLocation));

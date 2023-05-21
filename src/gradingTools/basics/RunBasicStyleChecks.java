@@ -12,7 +12,7 @@ public class RunBasicStyleChecks {
 	public static void main(String[] args) {
 		if (args.length < 2) {
 			System.err.println(
-					"Please enter abosulte names of the source code folder followed by the check style configuration file name");
+					"Please enter absolute names of the source code folder followed by the check style configuration file name");
 			System.exit(-1);
 		}
 		File aSourceFolder = new File(args[0]);

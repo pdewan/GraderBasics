@@ -159,7 +159,7 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		if (!aNextText.isEmpty()) {
 			String aNextLogEntry = toLogEntry(aNextText);
 			try {
-//				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
+//				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
 				getLogSender().addToQueue(aNextLogEntry, getTopLevelInfo(), numTotalRuns);
 			}catch(Exception e) {
 //				System.err.println("Error resolving local checks server sending");

@@ -7,6 +7,7 @@ import java.util.AbstractMap;
 import org.apache.commons.collections.keyvalue.AbstractKeyValue;
 import org.apache.commons.collections.map.AbstractHashedMap;
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 
 import util.annotations.Label;
 import util.annotations.StructurePattern;
@@ -109,7 +110,7 @@ public class AGradableJUnitTopLevelSuite extends AGradableJUnitSuite {
 	
 	protected void testRunEnded(GradableJUnitTest aTest) {
 		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(null);
-//		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(aTest);
+//		RunNotifierFactory.getOrCreateRunNotifier().fireTestRunFinished(test);
 
 
 

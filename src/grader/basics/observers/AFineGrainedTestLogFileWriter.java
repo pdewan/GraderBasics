@@ -17,7 +17,7 @@ import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.observers.logSending.ALogSendingRunnable;
-import grader.basics.observers.logSending.LogSender;
+import grader.basics.observers.logSending.LocalChecksLogSender;
 import grader.basics.vetoers.AConsentFormVetoer;
 
 public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
@@ -220,7 +220,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 			numTotalRuns++;
 
 			try {
-//				LogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
+//				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
 				getLogSender().addToQueue(fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
 			} catch (Exception e) {
 //				System.err.println("Error resolving local checks server sending");

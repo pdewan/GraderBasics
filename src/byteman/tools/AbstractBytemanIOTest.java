@@ -277,8 +277,11 @@ GR*** main has exited divide(int[],int,int) int in class @MergeSort and returned
 		// D:/"Program Files"/byteman-download-4.0.20/lib/byteman.jar
 //		String jarLocation = "./Logs/LocalChecks/agent.jar";
 		Tracer.showInfo(true);
-		CurrentProjectHolder.setProject(".java");
-		Project aProject = CurrentProjectHolder.getCurrentProject();
+//		CurrentProjectHolder.setProject(".java");
+//		Project aProject = CurrentProjectHolder.getCurrentProject();
+		try {
+		Project aProject = CurrentProjectHolder.createCurrentProject(".java");
+		
 		List<String> aCommand = BasicStaticConfigurationUtils.getBasicCommand();
 		List<String> aModifiedCommand = new ArrayList<>(aCommand);
 //		modifyForAgentPremain(aModifiedCommand);
@@ -297,6 +300,10 @@ GR*** main has exited divide(int[],int,int) int in class @MergeSort and returned
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setEntryPoint(null);
 		
 		return anOut;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	protected List<String> cleanResult(String out){

@@ -14,18 +14,20 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Calendar;
 
-public class LogSender {
+import analyzer.extension.timerTasks.LogNameManager;
+
+public class LocalChecksLogSender {
 	private static final String reportURL="https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
-	private static final String uuidFile="LogsUUID.txt";
-	private static final File fileStore;
-	
-	static {
-		File searchLoc = new File(System.getProperty("user.home")+"/helper-config/");
-		if(searchLoc.exists())
-			fileStore=new File(System.getProperty("user.home")+"/helper-config/"+uuidFile);
-		else
-			fileStore=new File("./Logs/LocalChecks/"+uuidFile);
-	}
+//	private static final String uuidFile="LogsUUID.txt";
+//	private static final File fileStore;
+//	
+//	static {
+//		File searchLoc = new File(System.getProperty("user.home")+"/helper-config/");
+//		if(searchLoc.exists())
+//			fileStore=new File(System.getProperty("user.home")+"/helper-config/"+uuidFile);
+//		else
+//			fileStore=new File("./Logs/LocalChecks/"+uuidFile);
+//	}
 	
 	public static void sendToServer(SendingData sd) throws Exception {
 		sendToServer(sd.getLog(),sd.getAssignment(),sd.getIteration());
@@ -36,7 +38,9 @@ public class LogSender {
 		
 		message.put("log_id",System.currentTimeMillis()+"-"+sessionId);
 		message.put("session_id",Integer.toString(sessionId));
-		message.put("machine_id",getHashMachineId());
+		message.put("machine_id",LogNameManager.getLoggedName());
+
+//		message.put("machine_id",getHashMachineId());
 		message.put("log_type","LocalChecksLog");
 		message.put("course_id",assignment);
 		//message.put("course_id",determineSemester());
@@ -54,46 +58,46 @@ public class LogSender {
 		
 	}
 	
-	private static String getHashMachineId() throws Exception {
-		String machineId;
-		if(fileStore.exists()) {	
-			BufferedReader br = new BufferedReader(new FileReader(fileStore));
-			machineId = br.readLine();
-			br.close();
-		}else {
-			InetAddress localHost = InetAddress.getLocalHost();
-			NetworkInterface network = NetworkInterface.getByInetAddress(localHost);
-			try {
-				machineId=byteToHexString(network.getHardwareAddress());
-				MessageDigest digest = MessageDigest.getInstance("SHA-256");
-				machineId=byteToHexString(digest.digest(machineId.getBytes(StandardCharsets.UTF_8)));
-			}catch(Exception e) {
-				System.err.println("Warning: Cannot determine hardware addr generating id for assignment...");
-				System.err.println("Thrown message:\n"+e.getMessage());
-				machineId = "R-"+getRandomID();
-			}
-			fileStore.createNewFile();
-			FileWriter fw = new FileWriter(fileStore);
-			fw.write(machineId);
-			fw.close();
-			fileStore.setWritable(false);
-		}
-		return machineId;
-	}
-	
-	
-	private static String getRandomID(){
-		String val = Double.toString(Math.random())+Double.toString(Math.random())+Double.toString(Math.random());
-		return val.replaceAll("0.", "");
-	}
-	
-	
-	private static String byteToHexString(byte [] arr) {
-		StringBuilder sb = new StringBuilder();
-		for(byte b:arr) 
-			sb.append(Integer.toHexString(Byte.toUnsignedInt(b)));
-		return sb.toString();
-	}
+//	private static String getHashMachineId() throws Exception {
+//		String machineId;
+//		if(fileStore.exists()) {	
+//			BufferedReader br = new BufferedReader(new FileReader(fileStore));
+//			machineId = br.readLine();
+//			br.close();
+//		}else {
+//			InetAddress localHost = InetAddress.getLocalHost();
+//			NetworkInterface network = NetworkInterface.getByInetAddress(localHost);
+//			try {
+//				machineId=byteToHexString(network.getHardwareAddress());
+//				MessageDigest digest = MessageDigest.getInstance("SHA-256");
+//				machineId=byteToHexString(digest.digest(machineId.getBytes(StandardCharsets.UTF_8)));
+//			}catch(Exception e) {
+//				System.err.println("Warning: Cannot determine hardware addr generating id for assignment...");
+//				System.err.println("Thrown message:\n"+e.getMessage());
+//				machineId = "R-"+getRandomID();
+//			}
+//			fileStore.createNewFile();
+//			FileWriter fw = new FileWriter(fileStore);
+//			fw.write(machineId);
+//			fw.close();
+//			fileStore.setWritable(false);
+//		}
+//		return machineId;
+//	}
+//	
+//	
+//	private static String getRandomID(){
+//		String val = Double.toString(Math.random())+Double.toString(Math.random())+Double.toString(Math.random());
+//		return val.replaceAll("0.", "");
+//	}
+//	
+//	
+//	private static String byteToHexString(byte [] arr) {
+//		StringBuilder sb = new StringBuilder();
+//		for(byte b:arr) 
+//			sb.append(Integer.toHexString(Byte.toUnsignedInt(b)));
+//		return sb.toString();
+//	}
 	
 	@SuppressWarnings("unused")
 	private static String determineSemester() {
