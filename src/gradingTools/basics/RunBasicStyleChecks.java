@@ -1,6 +1,8 @@
 package gradingTools.basics;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +60,16 @@ public class RunBasicStyleChecks {
 		}
 		return retVal;
 	}
+	
+//	public static List<String> toStrings(STNameable[] aTags) {
+//	List<String> retVal = new ArrayList();
+////	StringBuilder retVal = new StringBuilder();
+//	for (STNameable aTag:aTags) {
+//		retVal.add(aTag.getName());
+//		
+//	}
+//	return retVal;
+//}
 //	public static String toJSONString(STNameable[] aTags) {
 //		if (aTags == null || aTags.length == 0)) {
 //			return "";
@@ -70,61 +82,156 @@ public class RunBasicStyleChecks {
 //		}
 //		return retVal;
 //	}
-	public static void toJSONObject (Project aProject) {
+	public static JSONObject toJSONObject (STType anSTType) {
+		JSONObject aClassJSON = new JSONObject();			
+		JSONArray aMethodsJSON = new JSONArray();
+		JSONArray aVariablesJSON = new JSONArray();
+		aClassJSON.put("methods", aMethodsJSON);
+		aClassJSON.put("variables", aVariablesJSON);
+		STNameable[] anAllTags = anSTType.getAllTags();
+		JSONArray aTypeTags = toJSONArray(anAllTags);
+		
+		aClassJSON.put("tags", aTypeTags);
+		aClassJSON.put("name", anSTType.getName());
+		List<STVariable> aVariables = anSTType.getDeclaredSTGlobals();
+		for (STVariable aVariable:aVariables) {
+			JSONObject aVariableJSON = toJSONObject(aVariable);
+			aVariablesJSON.put(aVariableJSON);
+		}
+		STMethod[] aMethods = anSTType.getDeclaredMethods();
+		for (STMethod aMethod:aMethods) {
+			JSONObject aMethodJSON = toJSONObject(aMethod, aTypeTags);
+			aMethodsJSON.put(aMethodJSON);
+		}
+
+//		for (STVariable aVariable:aVariables) {
+//			JSONObject aVariableJSON = toJSONObject(aVariable);
+//			aVariablesJSON.put(aVariableJSON);
+//		}
+		return aClassJSON;
+	}
+	
+	public static JSONObject toJSONObject (STMethod anSTMethod,  JSONArray aTypeTags) {
+		
+		DetailAST aMethodAST = anSTMethod.getAST();
+		JSONObject aMethodJSON = toJSONObject(aMethodAST);
+		STNameable[] aMethodTags = anSTMethod.getTags();
+		JSONArray aMethodJSONTags = toJSONArray(aMethodTags);
+//		if (aMethodJSONTags.length() > 0) {
+		aMethodJSON.put("methodTags", aMethodJSONTags);	
+		aMethodJSON.put("declaringTypeTags", aTypeTags);	
+		return aMethodJSON;
+	}
+	
+	public static JSONObject toJSONObject (STVariable aVariable) {
+		JSONObject aVariableJSON = toJSONObject(aVariable.getAST());
+		STType aVariableType = aVariable.getDeclaringSTType();
+		STNameable[] anAllTypeTags = aVariableType.getAllTags();
+		JSONArray aDeclaringTypeTags = toJSONArray(anAllTypeTags) ;
+		aVariableJSON.put("typeTags", aDeclaringTypeTags);
+		return aVariableJSON;
+	}
+	
+	public static void writeToFile(JSONObject aJSONObject, String aFileName) {
+		try {
+			FileWriter file = new FileWriter(aFileName);
+			file.write(aJSONObject.toString());
+			file.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+	
+	public static void writeToFile(JSONObject aJSONObject) {
+		writeToFile(aJSONObject, "projects.json");
+	}
+	
+	public static void writeJSONSymbolTable(Project aProject) {
+		JSONObject aJSONObject = toJSONObject(aProject);
+		writeToFile(aJSONObject);
+	}
+	public static void writeJSONSymbolTable(Project aProject, String aFileName) {
+		JSONObject aJSONObject = toJSONObject(aProject);
+		writeToFile(aJSONObject, aFileName);
+	}
+
+	public static JSONObject toJSONObject (Project aProject) {
 		SymbolTable aSymbolTable = aProject.getSymbolTable();
+		JSONObject aProjectJSON = new JSONObject();
+		aProjectJSON.put("name", aProject.getProjectFolder());
+		JSONArray aClassesJSON = new JSONArray();
+		aProjectJSON.put("classes", aClassesJSON);
 		Collection<STType> anSTTypes = aSymbolTable.getAllSTTypes();
 		for (STType anSTType:anSTTypes) {
 			if (anSTType instanceof AnSTTypeFromClass) {
 				continue;
-			}
-			JSONObject aClassJSON = new JSONObject();
-			
-			JSONArray aMethodsJSON = new JSONArray();
-			JSONArray aVariablesJSON = new JSONArray();
-			STNameable[] anAllTags = anSTType.getAllTags();
-			JSONArray aTypeTags = toJSONArray(anAllTags);
-			aClassJSON.put("tags", aTypeTags);
-			aClassJSON.put("name", anSTType.getName());
-			List<STVariable> aVariables = anSTType.getDeclaredSTGlobals();
-			aClassJSON.put("Variables", aMethodsJSON);
-
-			String aClassName = anSTType.getName();
-			
-////			STNameable[] anAllComputedTags = anSTType.getAllComputedTags();
-//			STNameable[] aTags = anSTType.getTags();
-//			STNameable[] aComputedTags = anSTType.getComputedTags();
-//			STNameable[] adeclaredTags = anSTType.getConfiguredTags();
-//			STNameable[] aDerivedTags = anSTType.getDerivedTags();
-
-
-
-
-			STMethod[] anSTMethods = anSTType.getDeclaredMethods();
-			if (anSTMethods.length > 0) {
-				aClassJSON.put("methods", aMethodsJSON);
-			}
-			
-			for (STMethod anSTMethod:anSTMethods) {
-				DetailAST aMethodAST = anSTMethod.getAST();
-				JSONObject aJSONObject = toJSONObject(aMethodAST);
-				aJSONObject.put("className", aClassName);
-				if (aTypeTags.length() > 0) {
-					aJSONObject.put("classTags", aTypeTags);					
-				}
-				STNameable[] aMethodTags = anSTMethod.getTags();
-				JSONArray aMethodJSONTags = toJSONArray(aMethodTags);
-				if (aMethodJSONTags.length() > 0) {
-					aJSONObject.put("methodTags", aTypeTags);					
-
-				}
-			
-			}
-			DetailAST anAST = anSTType.getAST();
-			if (anAST == null) {
-				continue;
-			}
-			RunBasicStyleChecks.toJSOnArray(anSTType.getAST()); 
+			}		
+			JSONObject aClassJSON = toJSONObject(anSTType);	
+			aClassesJSON.put(aClassJSON);
+//			JSONArray aMethodsJSON = new JSONArray();
+//			JSONArray aVariablesJSON = new JSONArray();
+//			aClassJSON.put("methods", aMethodsJSON);
+//			aClassJSON.put("variables", aVariablesJSON);
+//			STNameable[] anAllTags = anSTType.getAllTags();
+//			JSONArray aTypeTags = toJSONArray(anAllTags);
+//			aClassJSON.put("tags", aTypeTags);
+//			aClassJSON.put("name", anSTType.getName());
+//			List<STVariable> aVariables = anSTType.getDeclaredSTGlobals();
+//			for (STVariable aVariable:aVariables) {
+//				JSONObject aVariableJSON = toJSONObject(aVariable.getAST());
+//				STType aVariableType = aVariable.getDeclaringSTType();
+//				STNameable[] anAllTypeTags = anSTType.getAllTags();
+////				if (anAllTypeTags.length > 0) {
+//					JSONArray aDeclaringTypeTags = toJSONArray(anAllTypeTags) ;
+//					aVariableJSON.put("typeTags", aDeclaringTypeTags);					
+////				}
+//				aVariablesJSON.put(aVariableJSON);
+//
+////				String aName = aVariable.getName();
+////				STType anAssignment = aVariable.get
+//			}
+//			aClassJSON.put("Variables", aVariablesJSON);
+//
+//			String aClassName = anSTType.getName();
+//			
+//////			STNameable[] anAllComputedTags = anSTType.getAllComputedTags();
+////			STNameable[] aTags = anSTType.getTags();
+////			STNameable[] aComputedTags = anSTType.getComputedTags();
+////			STNameable[] adeclaredTags = anSTType.getConfiguredTags();
+////			STNameable[] aDerivedTags = anSTType.getDerivedTags();
+//
+//
+//
+//
+//			STMethod[] anSTMethods = anSTType.getDeclaredMethods();
+////			if (anSTMethods.length > 0) {
+//				aClassJSON.put("methods", aMethodsJSON);
+////			}
+//				aClassesJSON.put(aClassJSON);
+//			
+//			for (STMethod anSTMethod:anSTMethods) {
+//				DetailAST aMethodAST = anSTMethod.getAST();
+//				JSONObject aMethodJSON = toJSONObject(aMethodAST);
+//				aMethodJSON.put("className", aClassName);
+////				if (aTypeTags.length() > 0) {
+//					aMethodJSON.put("classTags", aTypeTags);					
+////				}
+//				STNameable[] aMethodTags = anSTMethod.getTags();
+//				JSONArray aMethodJSONTags = toJSONArray(aMethodTags);
+////				if (aMethodJSONTags.length() > 0) {
+//					aMethodJSON.put("methodTags", aMethodTags);				
+//
+////				}
+//				aMethodsJSON.put(aMethodJSON);
+//			
+//			}
+//			DetailAST anAST = anSTType.getAST();
+//			if (anAST == null) {
+//				continue;
+//			}
+//			RunBasicStyleChecks.toJSOnArray(anSTType.getAST()); 
 		}
+		return aProjectJSON;
 	}
 	public static JSONArray toJSOnArray(DetailAST aDetailAST) {
 		int aTokenType = aDetailAST.getType();
