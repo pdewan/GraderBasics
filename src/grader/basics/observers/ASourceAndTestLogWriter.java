@@ -55,6 +55,8 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	Map<String, String> diffMap;
 	String lastSourceFileName;
 	String sourceLogFileName;
+	String sourceLogFileShortName;
+
 	String replayedSourceFileName;
 	boolean isAppended;
 	String[] emptyStrings = {};
@@ -159,8 +161,9 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		if (!aNextText.isEmpty()) {
 			String aNextLogEntry = toLogEntry(aNextText);
 			try {
+				String aSourceFileName = getSourceLogFileName();
 //				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
-				getLogSender().addToQueue(aNextLogEntry, getTopLevelInfo(), numTotalRuns);
+				getLogSender().addToQueue(false, aSourceFileName, aNextLogEntry, getTopLevelInfo(), numTotalRuns);
 			}catch(Exception e) {
 //				System.err.println("Error resolving local checks server sending");
 //				System.err.println("Thrown message:\n"+e.getMessage());
@@ -647,6 +650,7 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 	}
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
+//		String aSourceFileName = getSourceLogFileName();
 		super.testRunFinished(aResult);
 		writeLogData();
 	}

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
 import grader.basics.assignment.AssignmentDataHolder;
 import grader.basics.config.BasicExecutionSpecificationSelector;
@@ -19,6 +20,7 @@ import grader.basics.file.zipfile.AZippedRootFolderProxy;
 import grader.basics.junit.AGradableJUnitTopLevelSuite;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
+import grader.basics.observers.logSending.ALogSendingRunnable;
 import grader.basics.requirements.interpreter.specification.ACSVRequirementsSpecification;
 import grader.basics.requirements.interpreter.specification.CSVRequirementsSpecification;
 import grader.basics.testcase.PassFailJUnitTestCase;
@@ -287,7 +289,12 @@ public class AnInterpretingGradableJUnitTopLevelSuite extends AGradableJUnitTopL
 //		System.out.println(aRequirementsFile);
 		CSVRequirementsSpecification aSpecification = new ACSVRequirementsSpecification(aRequirementsFile);
 		GradableJUnitSuite aTopLevelSuite = new AnInterpretingGradableJUnitTopLevelSuite(assignmentsDataFolderProxy, aSpecification);
-		ObjectEditor.treeEdit(aTopLevelSuite);
+		OEFrame anOEFrame = ObjectEditor.treeEdit(aTopLevelSuite);
+		anOEFrame.setAutoExitEnabled(false);
+
+		anOEFrame.addWindowListener(ALogSendingRunnable.getInstance());
+
+
 	}
 	@Visible(false)
 	public static void runSpecifiedTests(URL anAssignmentDataFolderName ) {

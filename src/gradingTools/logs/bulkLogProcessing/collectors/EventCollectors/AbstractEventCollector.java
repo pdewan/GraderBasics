@@ -56,6 +56,12 @@ public abstract class AbstractEventCollector extends AbstractCollector{
 		String formatted = eventDateFormat.format(conv);
 		return formatted;
 	}
+	private static final SimpleDateFormat eventDateFormatHH=new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+	protected String convertDateHH(String date) throws ParseException {
+		Date conv = dateFormat.parse(date);
+		String formatted = eventDateFormat.format(conv);
+		return formatted;
+	}
 	
 	@Override
 	protected String getHeaderPhrase() {

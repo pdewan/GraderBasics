@@ -1,10 +1,11 @@
 package logAnalyzer.drivers;
 
-import drivers.LAListenableDriverPD;
+//import drivers.LAListenableDriverPD;
 
 public class LogAnalyzerDriverGB {
 	public static void main (String[] args) {
-		LAListenableDriverPD.main(args);
+		System.err.println("Log Analyzer Driver GB not included");
+//		LAListenableDriverPD.main(args);
 	}
 
 }

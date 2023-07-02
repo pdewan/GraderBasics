@@ -20,11 +20,13 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runners.Suite;
 
+import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
 import bus.uigen.attributes.AttributeNames;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.execution.GradingMode;
 import grader.basics.observers.TestLogFileWriterFactory;
+import grader.basics.observers.logSending.ALogSendingRunnable;
 import grader.basics.project.BasicProjectIntrospection;
 //import grader.junit.GraderTestCase;
 import grader.basics.project.CurrentProjectHolder;
@@ -305,7 +307,10 @@ public class BasicJUnitUtils {
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		for (RunListener listener : TestLogFileWriterFactory.getFileWriter())
 			RunNotifierFactory.getOrCreateRunNotifier().addListener(listener);
-		ObjectEditor.treeEdit(aGradable);
+		OEFrame anOEFrame = ObjectEditor.treeEdit(aGradable);
+		anOEFrame.setAutoExitEnabled(false);
+		anOEFrame.getFrame().addWindowListener(ALogSendingRunnable.getInstance());
+//		anOEFrame.addWindowListener(null);
 		return aGradable;
 	}
 

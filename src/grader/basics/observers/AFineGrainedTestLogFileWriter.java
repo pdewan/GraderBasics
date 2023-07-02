@@ -105,7 +105,9 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
 				if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
 					if (getLogSender() == null) {
-						setLogSender(new ALogSendingRunnable());
+						setLogSender(ALogSendingRunnable.getInstance());
+
+//						setLogSender(new ALogSendingRunnable());
 						Thread logSendingThread = new Thread(getLogSender());
 						logSendingThread.setName("Log Sending");
 						logSendingThread.start();
@@ -201,7 +203,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 			System.err.println(e);
 		}
 	}
-
+	
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
 		try {
@@ -220,8 +222,10 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 			numTotalRuns++;
 
 			try {
+//				String aLogFileName = getLogFileName();
+				String aLogFileName = getLogFilePath();
 //				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
-				getLogSender().addToQueue(fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
+				getLogSender().addToQueue(true, aLogFileName, fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
 			} catch (Exception e) {
 //				System.err.println("Error resolving local checks server sending");
 //				System.err.println("Thrown message:\n"+e.getMessage());

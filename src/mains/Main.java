@@ -23,6 +23,8 @@ import gradingTools.logs.bulkLogProcessing.tools.files.LogWriter;
 public class Main {
 
 	private static final int breakTime=(int)(10*60);
+	private static final int kenBreakTime= (int)(1.5*60*60);
+
 	
 	public static void main(String[] args) {
 		try {

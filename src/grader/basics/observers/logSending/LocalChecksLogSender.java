@@ -1,11 +1,14 @@
 package grader.basics.observers.logSending;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -17,7 +20,16 @@ import java.util.Calendar;
 import analyzer.extension.timerTasks.LogNameManager;
 
 public class LocalChecksLogSender {
+	private static long totalLogSizeSent = 0;
+	private static long totalTimeTaken = 0;
+	private static long totalSends = 0;
+	private static final String TIME_STATISTICS_FILE_NAME = "timeStatistics.csv";
+
 	private static final String reportURL="https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
+	private static String lastLogFilePath = null;
+	
+	private static File lastLogDirectory = null;
+	
 //	private static final String uuidFile="LogsUUID.txt";
 //	private static final File fileStore;
 //	
@@ -28,15 +40,54 @@ public class LocalChecksLogSender {
 //		else
 //			fileStore=new File("./Logs/LocalChecks/"+uuidFile);
 //	}
-	
-	public static void sendToServer(SendingData sd) throws Exception {
-		sendToServer(sd.getLog(),sd.getAssignment(),sd.getIteration());
+	public static void appendStatistics()  {
+		appendStatistics(totalSends + "," + totalLogSizeSent + "," + totalTimeTaken);
+	}
+
+	public static void appendStatistics(final String aStats)  {
+		PrintWriter out = null;
+		try {
+		if (lastLogDirectory == null) {
+			return;
+		}
+		File aStatsFile = new File(lastLogDirectory, TIME_STATISTICS_FILE_NAME);
+		
+		
+		    out = new PrintWriter(new BufferedWriter(new FileWriter(aStatsFile, true)));
+		    out.println(aStats);
+		} catch (IOException e) {
+		    System.err.println(e);
+		} finally {
+		    if (out != null) {
+		        out.close();
+		    }
+		}
 	}
 	
-	public static void sendToServer(String log, String assignment, int sessionId) throws Exception{		
+	public static void sendToServer(SendingData sd) throws Exception {
+		sendToServer(sd.isTests(), sd.getLogFileName(), sd.getLog(),sd.getAssignment(),sd.getIteration());
+	}
+	
+	private static void maybeUpdateLogDirectory(String aLogFilePath) {
+		if (aLogFilePath.equals(lastLogFilePath)) {
+			return;
+		}
+		File aLogFile = new File(aLogFilePath);
+		lastLogFilePath = aLogFilePath;
+		lastLogDirectory = aLogFile.getParentFile();
+	}
+	
+	public static void sendToServer(boolean anIsTests, String aLogFilePath, String log, String assignment, int sessionId) throws Exception{		
+		if (anIsTests) {
+			maybeUpdateLogDirectory(aLogFilePath);
+		}
+		File aFile = new File(aLogFilePath);
+		long aStartTime = System.currentTimeMillis();
 		JSONObject message = new JSONObject();
-		
-		message.put("log_id",System.currentTimeMillis()+"-"+sessionId);
+		String aLogId = anIsTests + " " + LogNameManager.getLoggedName()+" "+ " "+sessionId + " " + System.currentTimeMillis()+ " " + aFile.getName();
+//		message.put("log_id",System.currentTimeMillis()+"-"+sessionId);
+		message.put("log_id",aLogId);
+
 		message.put("session_id",Integer.toString(sessionId));
 		message.put("machine_id",LogNameManager.getLoggedName());
 
@@ -55,6 +106,11 @@ public class LocalChecksLogSender {
 			Thread.sleep(5000);
 			post(message,reportURL);
 		}
+		long anEndTime = System.currentTimeMillis();
+		long aSendTime = anEndTime - aStartTime;
+		totalSends++;
+		totalLogSizeSent += log.length();
+		totalTimeTaken += aSendTime;
 		
 	}
 	

@@ -90,7 +90,12 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	}
 	
 	//Override the following methods to change output format
-	
+	public String getLogFileName() {
+		return logFileName;
+	}
+	public String getLogFilePath() {
+		return logFilePath;
+	}
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
 		super.testRunFinished(aResult);

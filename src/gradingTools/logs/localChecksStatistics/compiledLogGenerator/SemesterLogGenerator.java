@@ -140,7 +140,7 @@ public class SemesterLogGenerator {
 		return true;
 	
 	}
-	
+	//equivalent
 	public void readDataOneAssignment(File location, File output) throws IOException, ParseException{
 		int assignmentIndex = Integer.parseInt(location.getName().substring(location.getName().toLowerCase().indexOf("assignment")+"assignment".length()+1));
 		LogReader logReader = new LogReader(location);
@@ -149,7 +149,7 @@ public class SemesterLogGenerator {
 	}
 
 	
-	// modularized version of Andrew's code
+	// modularized version of Andrew's and Ken's code in EventGenerator
 public void readData(File location, File output) throws IOException, ParseException{
 		
 		LogReader logReader = new LogReader(location);
