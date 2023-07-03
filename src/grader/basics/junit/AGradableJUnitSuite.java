@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import analyzer.extension.timerTasks.LogNameManager;
 //import drivers.WorkTimeDriverPD;
 import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
@@ -319,6 +320,12 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public List<String> workTimeMetrics() {
 		return MetricsUtils.
 				testingPeriodMetrics( this, AnAbstractTestLogFileWriter.toAssignmentNumber(this));
+	}
+	public String loggedName() {
+		return LogNameManager.getLoggedName();
+	}
+	public void newLoggedName(String newVal) {
+		 LogNameManager.setLoggedName(newVal);
 	}
 	public List<String[]> showSessions() {
 		String aFileName = AnAbstractTestLogFileWriter.toFileName(this);

@@ -41,7 +41,9 @@ public class LocalChecksLogSender {
 //			fileStore=new File("./Logs/LocalChecks/"+uuidFile);
 //	}
 	public static void appendStatistics()  {
+		if (totalSends > 0) {
 		appendStatistics(totalSends + "," + totalLogSizeSent + "," + totalTimeTaken);
+		}
 	}
 
 	public static void appendStatistics(final String aStats)  {
@@ -100,7 +102,9 @@ public class LocalChecksLogSender {
 		logJSON.put("json", log);
 		
 		message.put("log", logJSON);
-		
+		if (log.length() == 0) {
+			return;
+		}
 		JSONObject ret = post(message,reportURL);
 		if(ret==null) {
 			Thread.sleep(5000);
