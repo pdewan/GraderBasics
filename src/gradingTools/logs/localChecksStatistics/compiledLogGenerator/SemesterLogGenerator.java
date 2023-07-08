@@ -14,7 +14,7 @@ import gradingTools.logs.localChecksStatistics.dataStorage.selectYearMapping.Yea
 import gradingTools.logs.localChecksStatistics.tools.LogReader;
 import gradingTools.logs.localChecksStatistics.tools.LogWriter;
 import gradingTools.logs.localChecksStatistics.tools.TestingData;
-
+// reads raw logs, passes to collectors, and combines results
 public class SemesterLogGenerator {
 
 	private static final String [] nameHeader={	

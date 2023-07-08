@@ -31,5 +31,14 @@ public class LogWriter {
 			writeTo.write("\n");
 		}		
 	}
+	
+	public static void writeToFileMultipleLines(FileWriter writeTo,
+			List<String> dataToWrite) throws IOException{
+		for(String  data:dataToWrite){
+				writeTo.write(data);
+			writeTo.write("\n");
+		}		
+	}
+
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import gradingTools.logs.bulkLogProcessing.collectors.Collector;
 import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.AttemptsCollectorV2;
 import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.WorkTimeCollector;
+import gradingTools.logs.localChecksStatistics.tools.LogWriter;
 
 public class LocalChecksLogData {
 	private static CollectorManager collectors=null;
@@ -100,5 +101,31 @@ public class LocalChecksLogData {
 		writeTo.close();
 	}
 	
+	// pd addition
+//	public static void writeData (List<String> aData, File anEclipseDirectory, String anAssignmentIndex, File output) {
+////		int assignmentIndex = Integer.parseInt(anEclipseDirectory.getName().substring(anEclipseDirectory.getName().toLowerCase().indexOf("assignment")+"assignment".length()+1));
+//		try {
+//		
+////		List<String> aData = getData(anEclipseDirectory, anAssignmentIndex);
+//		String path=output.toString()+"/assignment"+anAssignmentIndex+"_events.csv";
+//		File outputData=new File(path);
+//		outputData.mkdirs();
+//		if (outputData.exists()) {
+//			outputData.delete();
+//		}
+//		outputData.createNewFile();
+//		FileWriter dataOut=new FileWriter(outputData);
+//		LogWriter.writeToFileMultipleLines(dataOut, aData);
+//		} catch (Exception e) {
+//			System.err.println ("Could not write data:" + e);
+//		}
+////		LogWriter.writeToFile(dataOut,dataCollection.getOrderedHeaders());
+//		
+//	}
+//	public static void transformData(File anEclipseDirectory, Collector[] aCollectors, File anOutputDirectory) {
+//		String anAssignmentIndex = anEclipseDirectory.getName().substring(anEclipseDirectory.getName().toLowerCase().indexOf("assignment")+"assignment".length()+1);
+//		List<String> aData = getData(anEclipseDirectory, anAssignmentIndex, aCollectors);
+//		writeData(aData, anEclipseDirectory, anAssignmentIndex, anOutputDirectory);
+//	}
 	
 }
