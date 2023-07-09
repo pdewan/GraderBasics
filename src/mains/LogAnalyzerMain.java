@@ -5,6 +5,8 @@ import java.io.FileWriter;
 
 import gradingTools.logs.bulkLogProcessing.collectors.Collector;
 import gradingTools.logs.bulkLogProcessing.collectors.EventCollectors.TestWorkingEvent;
+import gradingTools.logs.bulkLogProcessing.compiledLogGenerator.CollectorManager;
+import gradingTools.logs.bulkLogProcessing.compiledLogGenerator.SemesterLogGenerator;
 
 //import gradingTools.logs.localChecksStatistics.collectors.Collector;
 //import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.AbstractIntervalReplayerBasedCollector;
@@ -44,7 +46,7 @@ public class LogAnalyzerMain {
 			File output=new File("LocalChecks Logs");
 			
 
-			runEventsAnalysis();
+			runEventsAnalysis(args);
 //			runAnalysis();
 //			eventLogs();
 //			soloTesting();
@@ -227,12 +229,12 @@ public class LogAnalyzerMain {
 //		}
 //	}
 	
-	private static void runEventsAnalysis() {
+	private static void runEventsAnalysis(String[] args) {
 		File [] inputs = {
-				new File("<>"),
+				new File(args[0]),
 		};
 		File [] outputs = {
-				new File("<>"),
+				new File("LocalChecks Logs"),
 		};
 		
 		Collector [][] recursives = {
@@ -249,14 +251,16 @@ public class LogAnalyzerMain {
 		
 		
 //		YearSelectFactory.setYearMap(new Comp524Fall2020());
-//		CollectorManager.enableConcurrency=false;
-//		for(int i=0;i<recursives.length;i++) {
-//			try {
+		CollectorManager.enableConcurrency=false;
+		for(int i=0;i<recursives.length;i++) {
+			try {
 //				new SemesterLogGenerator(recursives[i],false,i+"assignment#_events.csv").generateData(inputs[0], outputs[0]);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
+			    SemesterLogGenerator aSemesterLogGenerator = new SemesterLogGenerator(recursives[i],false,i+"assignment#_events.csv");
+			    aSemesterLogGenerator.generateDataSingleAssignment(inputs[0], outputs[0]);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	

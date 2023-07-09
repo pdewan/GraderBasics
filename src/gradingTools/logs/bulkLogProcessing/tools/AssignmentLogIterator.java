@@ -3,6 +3,7 @@ package gradingTools.logs.bulkLogProcessing.tools;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class AssignmentLogIterator implements Iterator<File>{
 
@@ -21,8 +22,18 @@ public class AssignmentLogIterator implements Iterator<File>{
 	}
 	
 	public AssignmentLogIterator(File logLocation, String pattern, String assignmentNumber){
+		logLocation = logLocation.getParentFile(); // just trying to see what Andrew's iterator does
+		String aName = logLocation.getName();		
 		logPattern=pattern.replace(replacePattern, assignmentNumber);
-		fileIterator=Arrays.stream(logLocation.listFiles(File::isDirectory)).iterator();
+		if (aName.contains("ssignment")) {
+			fileIterator=Arrays.stream(logLocation.listFiles()).iterator();
+
+		} else {
+			File[] aListFiles = logLocation.listFiles(File::isDirectory);
+			Stream<File> aStream = Arrays.stream(aListFiles);
+			fileIterator = aStream.iterator();
+//		fileIterator=Arrays.stream(logLocation.listFiles(File::isDirectory)).iterator();
+		}
 		nextFile=findNext();
 	}
 	

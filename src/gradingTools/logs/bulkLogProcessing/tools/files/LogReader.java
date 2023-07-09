@@ -80,7 +80,7 @@ public class LogReader {
 	private static List<Iterator<File>> getAllAssignmentIterators(File location){
 		ArrayList<Iterator<File>> allAssignments=new ArrayList<Iterator<File>>();
 		for(int i=0;i<13;i++){
-			String assignmentNumber = i==0?i+"_1":Integer.toString(i);
+			String assignmentNumber = i==0?i+"_1":Integer.toString(i); // this seems to be peculiar to 524
 			
 			Iterator<File> testVal=new AssignmentLogIterator(location, AssignmentLogIterator.fineGrainedPattern,assignmentNumber);
 			if(testVal.hasNext())
