@@ -16,6 +16,7 @@ public class LogReader {
 	private List<Iterator<File>> allAssignmentIterators;
 	private List<String> studentNames;
 	
+	public LogReader() {}
 	
 	public LogReader(File location){
 		allAssignmentIterators=getAllAssignmentIterators(location); 
@@ -23,6 +24,31 @@ public class LogReader {
 	
 	public int getNumAssignments(){
 		return allAssignmentIterators.size();
+	}
+	
+	public List<String> getStudentAssignmentLogLines(File assignmentLog) throws FileNotFoundException {
+		Scanner scan = new Scanner(assignmentLog);
+		ArrayList<String> logLines = new ArrayList<String>();
+		
+		while(scan.hasNext()){
+			String nextLine=scan.nextLine();
+			if(nextLine.matches(".*,,$")) 
+				nextLine=nextLine.replaceAll(",,", ", ,");
+			
+			
+			String [] split = nextLine.split(",");
+			if(split.length==9||split.length==17)
+				logLines.add(nextLine);
+			else {
+				System.err.println("Error with log length: "+assignmentLog.getAbsolutePath());
+			}
+		}
+		scan.close();
+		if(logLines.size()==0)
+			return null;
+		
+		logLines.remove(0);
+		return logLines;
 	}
 	
 	public List<List<String>> getAllStudentsAssignmentLogLines(int assignmentIndex) throws FileNotFoundException{
@@ -37,29 +63,10 @@ public class LogReader {
 			File assignmentLog=assignmentLogIterator.next();
 			studentNames.add(determineStudentName(assignmentLog));
 			
-			Scanner scan = new Scanner(assignmentLog);
-			ArrayList<String> logLines = new ArrayList<String>();
-			
-			while(scan.hasNext()){
-				String nextLine=scan.nextLine();
-				if(nextLine.matches(".*,,$")) 
-					nextLine=nextLine.replaceAll(",,", ", ,");
-				
-				
-				String [] split = nextLine.split(",");
-				if(split.length==9||split.length==17)
-					logLines.add(nextLine);
-				else {
-					System.err.println("Error with log length: "+assignmentLog.getAbsolutePath());
-				}
-			}
-			scan.close();
-			if(logLines.size()==0)
-				continue;
-			
+			List<String> lines = getStudentAssignmentLogLines(assignmentLog);
+			if(lines==null) continue;
 
-			logLines.remove(0);
-			allAssignmentLines.add(logLines);
+			allAssignmentLines.add(lines);
 		}
 		
 		return allAssignmentLines;

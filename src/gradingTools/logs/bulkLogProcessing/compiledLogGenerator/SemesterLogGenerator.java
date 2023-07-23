@@ -46,16 +46,52 @@ public class SemesterLogGenerator {
 		manager=new CollectorManager(collectors);
 	}
 	
-	public void generateData(File location, File output) throws IOException, ParseException{
-		generateData(location,output,0);
-	}
-	public void generateDataSingleAssignment ( File location, File output) throws IOException, ParseException{
-		LogReader logReader = new LogReader(location);
+	public List<String> generateDataSignalAssignment(File location) throws Exception{
+		//TODO replace with a way to find a student's name
+		String studentName = "student";
+		manager.setStudentName(studentName);
 		
-		int assignmentIndex = Integer.parseInt(location.getName().substring(location.getName().toLowerCase().indexOf("assignment")+"assignment".length()+1));
-		generateDataSingleAssignment(logReader, location, output, assignmentIndex);
-	
+		if(!location.isFile()) return null;
+		
+		LogReader logReader = new LogReader();
+		List<String> readLogs = logReader.getStudentAssignmentLogLines(location);
+		SuitesAndTests assignmentSuitesAndTests = TestingData.findAllSuitesAndTests(readLogs);
+		String [] tests = new String[assignmentSuitesAndTests.getTests().size()];
+		assignmentSuitesAndTests.getTests().toArray(tests);
+		
+		manager.setTestNames(tests);
+		manager.processLog(readLogs);
+		
+		List<String> resultsList;
+		
+		//TODO make a name collector
+		if(includeName) {
+			resultsList = new ArrayList<String>();
+			resultsList.add(studentName);
+			resultsList.addAll(manager.getOrderedData());
+		}else {
+			resultsList = manager.getOrderedData();
+		}
+		
+		manager.reset();
+		return resultsList;
 	}
+	
+	public void generateDataSingleAssignment (File location, File output) throws Exception{
+		List<String> dataCategories = new ArrayList<String>();
+		if(includeName)
+			Collections.addAll(dataCategories, nameHeader);
+		dataCategories.addAll(manager.getOrderedHeaders());
+		List<String> resultsList = generateDataSignalAssignment(location);
+		FileWriter dataOut=new FileWriter(output);
+		LogWriter.writeToFile(dataOut,dataCategories);
+		if(manager.specialPrint()) 
+			LogWriter.simpleWrite(dataOut,resultsList);
+		else
+			LogWriter.writeToFile(dataOut,resultsList);
+		dataOut.close();
+	}
+	
 	public void generateDataSingleAssignment (LogReader logReader, File location, File output, int assignmentIndex) throws IOException, ParseException{
 		List<List<String>> allAssignmentLines = logReader.getAllStudentsAssignmentLogLines(assignmentIndex);
 		if(allAssignmentLines==null)
@@ -68,7 +104,6 @@ public class SemesterLogGenerator {
 		
 		String [] tests = new String[assignmentSuitesAndTests.getTests().size()];
 		assignmentSuitesAndTests.getTests().toArray(tests);
-		
 		
 		manager.setTestNames(tests);
 		manager.setTestMappings(YearSelectFactory.getYearMap(assignmentIndex));
@@ -124,17 +159,22 @@ public class SemesterLogGenerator {
 		}
 	}
 
-	// maka isopmorphic change readData in localheckStatistics SemesterLogGenerator
-	public void generateData(File location, File output, int minimumAssignmentNumber) throws IOException, ParseException{
-		
-		LogReader logReader = new LogReader(location);
-		
-		for(int assignmentIndex=minimumAssignmentNumber;assignmentIndex<logReader.getNumAssignments();assignmentIndex++){
-			generateDataSingleAssignment(logReader, location, output, assignmentIndex);
-			
-		}
+public void generateData(File location, File output) throws IOException, ParseException {
+	generateData(location,output,0);
+}
+	
+// maka isopmorphic change readData in localheckStatistics SemesterLogGenerator
+public void generateData(File location, File output, int minimumAssignmentNumber) throws IOException, ParseException{
+	
+	LogReader logReader = new LogReader(location);
+	
+	for(int assignmentIndex=minimumAssignmentNumber;assignmentIndex<logReader.getNumAssignments();assignmentIndex++){
+		generateDataSingleAssignment(logReader, location, output, assignmentIndex);
 		
 	}
+	
+}
+
 public void oldGenerateData(File location, File output, int minimumAssignmentNumber) throws IOException, ParseException{
 		
 		LogReader logReader = new LogReader(location);
