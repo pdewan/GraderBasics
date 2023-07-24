@@ -41,9 +41,9 @@ public class LogAnalyzerMain {
 		try {
 
 //			File data=new File("E:\\submissions_2\\Assignment 1");
-			File data = new File(args[0]);
+//			File data = new File(args[0]);
 //			File output = new File("C:\\Users\\Zhizhou\\git\\Hermes_Log_Parser\\NewVersionTest");
-			File output=new File("LocalChecks Logs");
+//			File output=new File("LocalChecks Logs");
 			
 
 			runEventsAnalysis(args);
@@ -231,10 +231,12 @@ public class LogAnalyzerMain {
 	
 	private static void runEventsAnalysis(String[] args) {
 		File [] inputs = {
-				new File(args[0]),
+				//new File(args[0]),
+				new File("I:\\Research\\Log_Parsing\\Research\\LogParser\\InputFolders\\Comp533\\Spring20\\0c1e468e4e4b1d39812fd2c8c5a0cba81828a5682eced2a6ca1e50afe43e42, 13ae3ed6fe76d459c9c66fe38ff187593561a1f24d34cb22e06148c77e4cc02b(2627dc3fbf149f58a61f9f94d28baed5bb59cf68f64b4ff611d3bc54a0cb81da)\\comp533s20_assignment2_Assignment2Suite.csv")
 		};
 		File [] outputs = {
-				new File("LocalChecks Logs"),
+				//new File("LocalChecks Logs"),
+				new File("scripts/events.csv"),
 		};
 		
 		Collector [][] recursives = {

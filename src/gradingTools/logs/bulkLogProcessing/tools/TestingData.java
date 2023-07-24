@@ -17,10 +17,17 @@ public class TestingData {
 
 	private static final int TEST_SUITE_INDEX=4,TEST_PASS_INDEX=5,TEST_PARTIAL_INDEX=6,TEST_FAIL_INDEX=7,TEST_UNTESTED_INDEX=8,TEST_SIZE=9;
 	
+	
+	public static SuitesAndTests findAllSuitesAndTests(List<String> assignmentData) throws FileNotFoundException{
+		ArrayList<List<String>> values = new ArrayList<>();
+		values.add(assignmentData);
+		return findAllSuitesAndTests(values,-1);
+	}
+	
 	public static SuitesAndTests findAllSuitesAndTests(List<List<String>> assignmentData, int assignmentNumber) throws FileNotFoundException{
 		List<String> suites=new ArrayList<String>();
 		List<String> tests=new ArrayList<String>();
-		List<KeyValue<SuiteTestPairings,Integer>> testPool = new ArrayList<KeyValue<SuiteTestPairings,Integer>>();
+		List<Pairing<SuiteTestPairings,Integer>> testPool = new ArrayList<Pairing<SuiteTestPairings,Integer>>();
 		
 		Map<String,Integer> testCollector = new HashMap<String, Integer>();
 		
@@ -41,7 +48,7 @@ public class TestingData {
 				for(String test:movedTests) {
 					SuiteTestPairings stp = new SuiteTestPairings(line[TEST_SUITE_INDEX],test);
 					if(!inTestPool(testPool,stp)) 
-						testPool.add(new KeyValue<SuiteTestPairings,Integer>(stp,1));
+						testPool.add(new Pairing<SuiteTestPairings,Integer>(stp,1));
 					
 						
 				}
@@ -74,10 +81,10 @@ public class TestingData {
 		}
 		
 		int halfNumStudents=assignmentData.size()/2;
-		Iterator<Entry<String, Integer>> hashmapValues = testCollector.entrySet().iterator();
+		Iterator<Entry<String, Integer>> hashmapseconds = testCollector.entrySet().iterator();
 		List<String> wrongTests = new ArrayList<String>();
-		while(hashmapValues.hasNext()){
-			Entry<String,Integer> entry = hashmapValues.next();
+		while(hashmapseconds.hasNext()){
+			Entry<String,Integer> entry = hashmapseconds.next();
 			if(entry.getValue().intValue()>=halfNumStudents)
 				tests.add(entry.getKey());
 			else
@@ -87,21 +94,17 @@ public class TestingData {
 		List<SuiteTestPairings> mappingPool = new ArrayList<SuiteTestPairings>();
 		
 		int thirdStudents = assignmentData.size()/3;
-		for(KeyValue<SuiteTestPairings,Integer> kv:testPool) 
-			if(kv.value>thirdStudents)
-				mappingPool.add(kv.key);
+		for(Pairing<SuiteTestPairings,Integer> kv:testPool) 
+			if(kv.second>thirdStudents)
+				mappingPool.add(kv.first);
 		
 //		for(int i=0;i<testPool.size();i++)
 //			if(wrongTests.contains(testPool.get(i).testName)) {
 //				testPool.remove(i);
 //				i=0;
 //			}
-				
-		
 			
-		
 		return new SuitesAndTests(suites,tests,assignmentNumber,new SuiteMapping(mappingPool));
-		
 	}
 	
 	private static List<String> testsMoved(String [] ... categories){
@@ -113,27 +116,16 @@ public class TestingData {
 		return retval;
 	}
 	
-	private static boolean inTestPool(List<KeyValue<SuiteTestPairings,Integer>> testPool, SuiteTestPairings stp) {
-		for(KeyValue<SuiteTestPairings,Integer> pool:testPool)
-			if(pool.key.equals(stp)) {
-				pool.value++;
+	private static boolean inTestPool(List<Pairing<SuiteTestPairings,Integer>> testPool, SuiteTestPairings stp) {
+		for(Pairing<SuiteTestPairings,Integer> pool:testPool)
+			if(pool.first.equals(stp)) {
+				pool.second++;
 				return true;
 			}
 				
 		return false;
 	}
 	
-	
-}
-
-class KeyValue<K,V>{
-	public K key;
-	public V value;
-	
-	public KeyValue(K key, V value) {
-		this.key=key;
-		this.value=value;
-	}
 	
 }
 
