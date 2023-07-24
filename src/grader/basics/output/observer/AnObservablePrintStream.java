@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import grader.basics.concurrency.propertyChanges.Selector;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 
 
 public class AnObservablePrintStream extends PrintStream implements ObservablePrintStream  {
@@ -21,6 +22,7 @@ public class AnObservablePrintStream extends PrintStream implements ObservablePr
 	List<Selector> negativeOutputSelectors = new ArrayList();
 	ObjectToPropertyChange converter = new BasicObjectToPropertyChange();
 	boolean redirectionFrozen = false;
+//	boolean hidePrints = false;
 
 //	public AnObservablePrintStream(String fileName) throws FileNotFoundException {
 //		super(fileName);
@@ -30,7 +32,12 @@ public class AnObservablePrintStream extends PrintStream implements ObservablePr
 	public AnObservablePrintStream(PrintStream aDelegate) throws FileNotFoundException {
 		super(aDelegate);
 		delegate = aDelegate;
+//		hidePrints = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getHideRedirectedOutput();
+		
 		// TODO Auto-generated constructor stub
+	}
+	protected boolean hidePrints() {
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getHideRedirectedOutput();
 	}
 public	void	close() {
 	delegate.close();
@@ -55,6 +62,7 @@ public	void	flush() {
 //	void	print(float f)
 //	Prints a floating-point number.
 public	void	print(int i) {
+	if (hidePrints()) return;
 	delegate.print(i);
 	maybeConvertAndAnnounceOutput(i);
 
@@ -71,51 +79,61 @@ public	void	print(int i) {
 //	PrintStream	printf(String format, Object... args)
 //	A convenience method to write a formatted string to this output stream using the specified format string and arguments.
 public	void println() {
+	if (hidePrints()) return;
 	delegate.println();
 }
 //	Terminates the current line by writing the line separator string.
 public	void	println(boolean x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints a boolean and then terminate the line.
 public	void	println(char x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints a character and then terminate the line.
 public	void	println(char[] x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints an array of characters and then terminate the line.
 public	void	println(double x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints a double and then terminate the line.
 public	void	println(float x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints a float and then terminate the line.
 public	void	println(int x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints an integer and then terminate the line.
 public	void	println(long x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 }
 //	Prints a long and then terminate the line.
 public	void	println(Object x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 
 }
 //	Prints an Object and then terminate the line.
 public	void	println(String x) {
+	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
 	
@@ -124,11 +142,15 @@ public	void	println(String x) {
 //	protected void	setError()
 //	Sets the error state of the stream to true.
 public void	write(byte[] buf, int off, int len) {
+	if (hidePrints()) return;
+
 	delegate.write(buf, off, len);
 	
 }
 //	Writes len bytes from the specified byte array starting at offset off to this stream.
 public	void	write(int b) {
+	if (hidePrints()) return;
+
 	delegate.write(b);
 }
 //	Writes the specified byte to this stream

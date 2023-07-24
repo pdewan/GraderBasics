@@ -1139,4 +1139,13 @@ protected String requirementsLocation = null;
 	public void setInstrumentUsingValgrind(boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.INSTRUMENT_USING_VALGRIND, newVal);		
 	}
+	@Override
+	public boolean getHideRedirectedOutput() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.HIDE_REDIRECTED_OUTPUT, 
+				BasicStaticConfigurationUtils.DEFAULT_HIDE_REDIRECTED_OUTPUT);
+	}
+	@Override
+	public void setHideRedirectedOuput(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.HIDE_REDIRECTED_OUTPUT, newVal);		
+	}
 }

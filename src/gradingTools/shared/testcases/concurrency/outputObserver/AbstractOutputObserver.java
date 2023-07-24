@@ -18,100 +18,111 @@ import grader.basics.output.observer.ObservablePrintStreamFactory;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.shared.testcases.TaggedOrNamedClassTest;
-public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
-	private ConcurrentPropertyChangeSupport concurrentPropertyChangeSupport;
-	private ResultingOutErr resultingOutErr;
-	public static final int CONCURRENT_PROGRAM_MAX_TIME = 1000;
+import gradingTools.shared.testcases.concurrency.timing.AbstractConcurrencyPerformanceChecker;
+//public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
+
+public abstract class AbstractOutputObserver extends AbstractConcurrencyPerformanceChecker {
+//	private ConcurrentPropertyChangeSupport concurrentPropertyChangeSupport;
+//	private ResultingOutErr resultingOutErr;
+//	public static final int CONCURRENT_PROGRAM_MAX_TIME = 1000;
 	public AbstractOutputObserver() {
 		
 	}
-	protected Selector positiveSelector() {
-		return new BasicPositiveOutputSelector();
-	}
-	protected Selector negativeSelector() {
-		return new BasicNegativeOutputSelector();
-	}
-	protected Selector<ConcurrentPropertyChangeSupport> waitSelector() {
-		return null;
-	}
-	protected ResultingOutErr getResultingOutErr() {
-		return resultingOutErr;
-	}
-	protected ConcurrentPropertyChangeSupport getConcurrentPropertyChangeSupport() {
-		return concurrentPropertyChangeSupport;
-	}
+//	protected Selector positiveSelector() {
+//		return new BasicPositiveOutputSelector();
+//	}
+//	protected Selector negativeSelector() {
+//		return new BasicNegativeOutputSelector();
+//	}
+//	protected Selector<ConcurrentPropertyChangeSupport> waitSelector() {
+//		return null;
+//	}
+//	protected ResultingOutErr getResultingOutErr() {
+//		return resultingOutErr;
+//	}
+//	protected ConcurrentPropertyChangeSupport getConcurrentPropertyChangeSupport() {
+//		return concurrentPropertyChangeSupport;
+//	}
 //	protected  Class mainClass() throws ClassNotFoundException {
 //		return Class.forName("Main");
 //	}
-	static String[] emptyArray = {};
-	protected String[] args() {
-		return emptyArray;
-	}
-	protected String[] inputs() {
-		return emptyArray;
-	}
-
-	protected int timeOut() {
-		return BasicProjectExecution.getMethodTimeOut();
-	}
-	protected static PrintStream originalOut = System.out;
-    protected ObservablePrintStream redirectOutput() {    	
-    	ObservablePrintStream aRedirectedStream = ObservablePrintStreamFactory.getObservablePrintStream();
-//		aRedirectedStream.addPropertyChangeListener(new BasicPrintStreamListener());
-		aRedirectedStream.addPositiveSelector(positiveSelector());
-		aRedirectedStream.addNegativeSelector(negativeSelector());
-		aRedirectedStream.setRedirectionFrozen(false);
-
-		System.setOut((PrintStream) aRedirectedStream);
-		return aRedirectedStream;
-    }
-    protected void receivePropertyChanges() {
-    	concurrentPropertyChangeSupport = new BasicConcurrentPropertyChangeSupport();
-    	observablePrintStream.addPropertyChangeListener(concurrentPropertyChangeSupport);
+//	static String[] emptyArray = {};
+//	protected String[] args() {
+//		return emptyArray;
+//	}
+//	protected String[] inputs() {
+//		return emptyArray;
+//	}
+//
+//	protected int timeOut() {
+//		return BasicProjectExecution.getMethodTimeOut();
+//	}
+//	protected static PrintStream originalOut = System.out;
+//    protected ObservablePrintStream redirectOutput() {    	
+//    	ObservablePrintStream aRedirectedStream = ObservablePrintStreamFactory.getObservablePrintStream();
+////		aRedirectedStream.addPropertyChangeListener(new BasicPrintStreamListener());
+//		aRedirectedStream.addPositiveSelector(positiveSelector());
+//		aRedirectedStream.addNegativeSelector(negativeSelector());
+//		aRedirectedStream.setRedirectionFrozen(false);
+//
+//		System.setOut((PrintStream) aRedirectedStream);
+//		return aRedirectedStream;
+//    }
+	protected void receivePropertyChanges() {
+    	super.receivePropertyChanges();
+    	observablePrintStream.addPropertyChangeListener(getConcurrentPropertyChangeSupport());
 		Selector<ConcurrentPropertyChangeSupport> aWaitSelector = waitSelector();
 		if (aWaitSelector != null) {
-	    	concurrentPropertyChangeSupport.addtWaitSelector(aWaitSelector);
+	    	getConcurrentPropertyChangeSupport().addtWaitSelector(aWaitSelector);
 		}    	
     }
+//    protected void receivePropertyChanges() {
+//    	concurrentPropertyChangeSupport = new BasicConcurrentPropertyChangeSupport();
+//    	observablePrintStream.addPropertyChangeListener(concurrentPropertyChangeSupport);
+//		Selector<ConcurrentPropertyChangeSupport> aWaitSelector = waitSelector();
+//		if (aWaitSelector != null) {
+//	    	concurrentPropertyChangeSupport.addtWaitSelector(aWaitSelector);
+//		}    	
+//    }
     
-    protected void restoreOutput() {
-    	System.setOut(originalOut);
+//    protected void restoreOutput() {
+//    	System.setOut(originalOut);
+////    	observablePrintStream.removePropertyChangeListener(concurrentPropertyChangeSupport);
+////    	observablePrintStream.setRedirectionFrozen(true);
+//    }
+//    protected void doNotReceiveEvents() {
 //    	observablePrintStream.removePropertyChangeListener(concurrentPropertyChangeSupport);
 //    	observablePrintStream.setRedirectionFrozen(true);
-    }
-    protected void doNotReceiveEvents() {
-    	observablePrintStream.removePropertyChangeListener(concurrentPropertyChangeSupport);
-    	observablePrintStream.setRedirectionFrozen(true);
-    }
+//    }
     protected  TestCaseResult checkOutput(ResultingOutErr anOutput) {
     	return pass();
     }
     protected  TestCaseResult checkEvents(ConcurrentPropertyChange[] anEvents) {
     	return pass();
     }
-    protected void waitForTermination() {
-    	Selector<ConcurrentPropertyChangeSupport> aWaitSelector = waitSelector();
-    	long aTimeOut = timeOut();
-		if (aWaitSelector != null) {
-	    	concurrentPropertyChangeSupport.selectorBasedWait(aTimeOut);
-		} else {
-			concurrentPropertyChangeSupport.timeOutBasedWait(aTimeOut);
-		}
-    }
-    protected ObservablePrintStream observablePrintStream;
-	public ObservablePrintStream getObservablePrintStream() {
-		return observablePrintStream;
-	}
-	protected void invokeMainMethod(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {
-		int aPreviousTimeout = BasicProjectExecution.getMethodTimeOut();
-		BasicProjectExecution.setMethodTimeOut(mainTimeOut());
-		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);
-		BasicProjectExecution.setMethodTimeOut(aPreviousTimeout);
-
-	}
-	protected int mainTimeOut() {
-		return BasicProjectExecution.getMethodTimeOut();
-	}
+//    protected void waitForTermination() {
+//    	Selector<ConcurrentPropertyChangeSupport> aWaitSelector = waitSelector();
+//    	long aTimeOut = timeOut();
+//		if (aWaitSelector != null) {
+//	    	concurrentPropertyChangeSupport.selectorBasedWait(aTimeOut);
+//		} else {
+//			concurrentPropertyChangeSupport.timeOutBasedWait(aTimeOut);
+//		}
+//    }
+//    private ObservablePrintStream observablePrintStream;
+//	public ObservablePrintStream getObservablePrintStream() {
+//		return observablePrintStream;
+//	}
+//	protected void invokeMainMethod(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {
+//		int aPreviousTimeout = BasicProjectExecution.getMethodTimeOut();
+//		BasicProjectExecution.setMethodTimeOut(mainTimeOut());
+//		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);
+//		BasicProjectExecution.setMethodTimeOut(aPreviousTimeout);
+//
+//	}
+//	protected int mainTimeOut() {
+//		return BasicProjectExecution.getMethodTimeOut();
+//	}
     abstract protected int numExpectedForkedThreads();
     
     protected abstract double threadCountCredit () ;
@@ -166,24 +177,24 @@ public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 
 	}
 	
-	@Override
-	public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
-			NotGradableException {
-		try {
-			Class aMainClass = mainClass(project);
-			TestCaseResult retVal = 
-			runAndCheck(aMainClass, args(), inputs());
-			return retVal;			
-
-		} catch (NotRunnableException e) {
-			e.printStackTrace();
-			throw new NotGradableException();
-		} catch (Throwable e) {
-			e.printStackTrace();
-			throw new NotGradableException();
-		}
-	}
-	protected Class mainClass(Project aProject) {
-		return findClassByName(aProject, mainClassIdentifier());
-	}
+//	@Override
+//	public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
+//			NotGradableException {
+//		try {
+//			Class aMainClass = mainClass(project);
+//			TestCaseResult retVal = 
+//			runAndCheck(aMainClass, args(), inputs());
+//			return retVal;			
+//
+//		} catch (NotRunnableException e) {
+//			e.printStackTrace();
+//			throw new NotGradableException();
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//			throw new NotGradableException();
+//		}
+//	}
+//	protected Class mainClass(Project aProject) {
+//		return findClassByName(aProject, mainClassIdentifier());
+//	}
 }

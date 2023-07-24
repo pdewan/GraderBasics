@@ -153,5 +153,7 @@ public interface BasicExecutionSpecification {
 	boolean getLogTestData();
 	void setLogTestData(boolean newVal);
 	boolean getLoadClasses();
-	void setLoadClasses(boolean newVal);	
+	void setLoadClasses(boolean newVal);
+	boolean getHideRedirectedOutput();
+	void setHideRedirectedOuput(boolean newVal);	
 }

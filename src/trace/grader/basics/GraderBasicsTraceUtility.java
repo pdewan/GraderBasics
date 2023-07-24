@@ -71,6 +71,14 @@ public class GraderBasicsTraceUtility {
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification()
 		.setTracing(newVal);
 	}
+	
+	public static boolean getHideRedirectedPrints() {
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getHideRedirectedOutput();
+	}
+	
+	public static void setHideRedirectedPrints(boolean newVal) {
+		 BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setHideRedirectedOuput(newVal);
+	}
 
 	@Deprecated
 	public static void setTurnOn(boolean turnOn) {
@@ -121,6 +129,22 @@ public class GraderBasicsTraceUtility {
 
 
 //		}
+
+	}
+	// This method must be reused directly in all testable code and should
+		// be given to the student
+		public static String threadPrefix() {
+			return "Thread " + Thread.currentThread().getId() + "->";
+		}
+	// This method should be used directly in all testable programs
+	// it does the print only if the problem size is small - implying testing or
+	// debugging. The performance benefits of concurrency are demonstrated only
+	// when problems are large, when we do not want prints to clutter the display
+	// and slow computation
+	public static void printProperty(String aPropertyName, Object aPropertyValue) {
+			String aComposition = threadPrefix() + aPropertyName + ":" + aPropertyValue;
+//			System.out.println(threadPrefix() + aPropertyName + ":" + aPropertyValue);
+			System.out.println(aComposition);
 
 	}
 

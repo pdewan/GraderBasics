@@ -262,6 +262,10 @@ public class BasicStaticConfigurationUtils {
 	public static final int DEFAULT_PROCESS_TIME_OUT = 4; // in seconds
 	public static final String CHECK_ALL_SPECIFIED_TAGS = "checkAllSpecifiedTags";
 	public static final boolean DEFAULT_CHECK_ALL_SPECIFIED_TAGS = false;
+	
+	public static final String HIDE_REDIRECTED_OUTPUT = "hideRedirectedOuput";
+	public static final boolean DEFAULT_HIDE_REDIRECTED_OUTPUT = false;
+
 
 	public static String toVariable(String aVariableName) {
 		return "{" + aVariableName + "}";

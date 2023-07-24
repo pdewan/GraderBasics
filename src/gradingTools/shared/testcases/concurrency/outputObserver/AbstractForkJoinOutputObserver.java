@@ -60,6 +60,8 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	private Map<Thread, ConcurrentPropertyChange[]> threadToForkEvents = emptyMap;
 
 	private Map<Thread, ConcurrentPropertyChange[]> threadToIterationEvents = emptyMap;
+	private Map<Thread, List<Map<String, Object>>> threadToIterationTuples = new HashMap();
+
 	private Map<Thread, ConcurrentPropertyChange[]> threadToPostIterationEvents = emptyMap;
 
 //	private Map<Thread, String[]> threadToStrings;
@@ -196,6 +198,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	}
 
 	protected double postIterationsEventCredit() {
+		return 0.0;
+	}
+	protected double compareIterationEventsCredit() {
 		return 0.1;
 	}
 
@@ -1015,11 +1020,11 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 		TestCaseResult aResult = partialPass(forkEventCredit(), "Fork correct");
 		TestCaseResult anInterleavingResult = null;
 
-		boolean hasInterleaving = ConcurrentEventUtility.someInterleaving(anEvents,
+		boolean hasInterleaving = numExpectedForkedThreads() == 1 || ConcurrentEventUtility.someInterleaving(anEvents,
 				aStartIndex,
 				aStopIndex,
-				null, null);
-		if (!hasInterleaving) {
+				null, null); 
+		if (!hasInterleaving ) {
 			anInterleavingResult = fail ("No interleaving during fork");
 		} else {
 			anInterleavingResult = partialPass (interleavingCredit(), "Interleaving correct");
@@ -1041,7 +1046,8 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 
 				ConcurrentPropertyChange[] anIterationEvents = ConcurrentEventUtility
 						.filterByProperties(anOriginalEvents, iterationPropertyNames);
-
+				threadToIterationEvents.put(aThread, anIterationEvents);
+				
 				anIterationsResult = checkIterationEvents(aThread, anIterationEvents);
 				if (anIterationsResult.getPercentage() < iterationsEventCredit()) {
 					return combineResults (anInterleavingResult, anIterationsResult);
@@ -1052,6 +1058,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 				ConcurrentPropertyChange[] aPostIterationEvents = ConcurrentEventUtility
 						.filterByProperties(anOriginalEvents, postIterationPropertyNames);
 				aPostIterationsResult = checkPostIterationEvents(aThread, aPostIterationEvents);
+				
 				if (aPostIterationsResult.getPercentage() < postIterationsEventCredit()) {
 //					return combineResults(anIterationsResult, aPostIterationsResult);
 					return combineResults (anInterleavingResult, 
@@ -1059,11 +1066,65 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 				}
 			}
 		}
+		aResult = combineResults(anInterleavingResult, aResult);
+//		TestCaseResult aCompareIterationEentsResult = compareIterationEvents(threadToIterationEvents);
+		TestCaseResult aCompareIterationEentsResult = compareIterationTuples(threadToIterationTuples);
 
-		return combineResults (anInterleavingResult, aResult);
+		aResult = combineResults(aCompareIterationEentsResult, aResult);
+		return aResult;
+
+//		return combineResults (anInterleavingResult, aResult);
 //			return fail("#Post Iteration  notifying threads == " + postIterationEvents.size() + " instead of 1" );
 
 	}
+	
+	protected TestCaseResult compareIterationEvents(Map<Thread, ConcurrentPropertyChange[]> aThreadToIterationEvents) {
+		String aMessage = compareIterationEventsMessage(aThreadToIterationEvents);
+		if (aMessage == null) {
+			return partialPass(compareIterationEventsCredit(), "Iteration events compared correctly");
+			
+		} else {
+			return fail(aMessage);
+		}
+	}
+	protected TestCaseResult compareIterationTuples(Map<Thread, List<Map<String, Object>>> aThreadToIterationEvents) {
+		String aMessage = compareIterationTuplesMessage(aThreadToIterationEvents);
+		if (aMessage == null) {
+			return partialPass(compareIterationEventsCredit(), "Iteration events compared correctly");
+			
+		} else {
+			return fail(aMessage);
+		}
+	}
+	protected String compareIterationEventsMessage(Map<Thread, ConcurrentPropertyChange[]> aThreadToIterationEvents) {
+		int aMinIterations = Integer.MAX_VALUE;
+		int aMaxIterations = 0;
+		for (ConcurrentPropertyChange[] aChanges:aThreadToIterationEvents.values()) {
+			int aNumIterations = aChanges.length;
+			aMinIterations = Math.min(aMinIterations, aNumIterations);
+			aMaxIterations = Math.max(aMaxIterations, aNumIterations);
+		}
+		return compareIterationEventsMessage(aMinIterations, aMaxIterations);
+	}
+	protected String compareIterationTuplesMessage(Map<Thread, List<Map<String, Object>>> aThreadToIterationTuples) {
+		int aMinIterations = Integer.MAX_VALUE;
+		int aMaxIterations = 0;
+		for (List<Map<String, Object>> aChanges:aThreadToIterationTuples.values()) {
+			int aNumIterations = aChanges.size();
+			aMinIterations = Math.min(aMinIterations, aNumIterations);
+			aMaxIterations = Math.max(aMaxIterations, aNumIterations);
+		}
+		return compareIterationEventsMessage(aMinIterations, aMaxIterations);
+	}
+protected String compareIterationEventsMessage(int aMinIterations, int aMaxIterations) {
+	int aDifference = aMaxIterations - aMinIterations;
+	if (aDifference >  1) {
+		return "Max thread iterations:" + aMaxIterations + " - min thread iterations =" + aDifference; 
+	} else {
+		return null;
+	}
+}
+	
 
 	protected TestCaseResult checkIterationsEvents(ConcurrentPropertyChange[] anEvents, int aStartIndex,
 			int aStopIndex) {
@@ -1096,6 +1157,9 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	protected TestCaseResult checkIterationEvents(Thread aThread, ConcurrentPropertyChange[] anEvents) {
 		TestCaseResult aResult = partialPass(iterationsEventCredit(), "Iteration events correct");
 		ConcurrentPropertyChange[] aTuple = new ConcurrentPropertyChange[numPerIterationEvents()];
+		List<Map<String, Object>> aTuples = new ArrayList();
+		threadToIterationTuples.put(aThread, aTuples);
+
 		for (int eventsIndex = 0; eventsIndex <= anEvents.length - aTuple.length;) {
 			for (int aTupleIndex = 0; aTupleIndex < aTuple.length; aTupleIndex++) {
 				aTuple[aTupleIndex] = anEvents[eventsIndex];
@@ -1104,6 +1168,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 //				aTuple[aTupleIndex + 2] = anEvents[eventsIndex + 2];
 			}
 			Map<String, Object> aNameValuePairs = toNameValueMap(aTuple);
+			aTuples.add(aNameValuePairs);
 			aResult = checkIterationEvents(aThread, aNameValuePairs);
 			if (aResult.getPercentage() < iterationsEventCredit()) {
 				return aResult;
@@ -1124,6 +1189,21 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 	}
 
 	protected String iterationEventsMessage(Thread aThread, Map<String, Object> aNameValuePairs) {
+		return null;
+	}
+	@Override
+	protected TestCaseResult performanceCredit(long aLowThreadsTime, long aHighThreadsTime, int aNumProcessors) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	protected String[] lowThreadArgs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	protected String[] highThreadArgs() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
