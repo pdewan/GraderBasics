@@ -42,6 +42,8 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected String name = "anonymous";
 	protected TestCaseResult lastResult; // last run, for depndent tests
 	protected double fractionComplete;
+	public final static  TestCaseResult NO_OP_RESULT =  new TestCaseResult(0, null, null, true);
+
 
 	protected ABufferingTestInputGenerator outputBasedInputGenerator;
 	protected RunningProject interactiveInputProject;
@@ -314,10 +316,17 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		
 	}
 	protected TestCaseResult combineResults(TestCaseResult... aResultArray) {
+		
 		boolean anAllPassed = true;
 		double aPercentage = 0;
 		StringBuffer aMessage = new StringBuffer();
+		boolean allNoOps = true;
+		
 		for (TestCaseResult aTestCaseResult : aResultArray) {
+			if (aTestCaseResult == NO_OP_RESULT ) {
+				continue;
+			}
+			allNoOps = false;
 			if (!aTestCaseResult.isPass() && anAllPassed) {
 				anAllPassed = false;
 			}
@@ -326,7 +335,12 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 					//&& !aMessage.toString().endsWith("\n")) {
 				aMessage.append(" \n");
 			}
-			aMessage.append(aTestCaseResult.getNotes());
+//			if (aPercentage == 0) {
+			aMessage.append(aTestCaseResult.getNotes()); // only failure messages
+//			}
+		}
+		if (allNoOps) {
+			return NO_OP_RESULT;
 		}
 		if (anAllPassed) {
 			return pass();

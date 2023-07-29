@@ -719,27 +719,44 @@ public class ConcurrentEventUtility {
 			Object[] aMatchedComponents) {
 		return someInterleaving(anOriginalEvents, 0, anOriginalEvents.length, aThreads, aMatchedComponents);
 	}
+	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents, 
+			int from, int to, 
+			Thread[] anIncludeOrExcludeThreads,
+			Object[] aMatchedComponents) {
+		return someInterleaving(anOriginalEvents, from, to, anIncludeOrExcludeThreads, true, aMatchedComponents);
+	}
 
 	public static boolean someInterleaving(ConcurrentPropertyChange[] anOriginalEvents, 
 			int from, int to, 
-			Thread[] aThreads,
+			Thread[] anIncludeOrExcludeThreads,
+			boolean isIncludeThreads,
 			Object[] aMatchedComponents) {
+		
+		Thread[] anIncludeThreads;
 
 		Map<Thread, ConcurrentPropertyChange[]> aThreadToEvents = getConcurrentPropertyChangesByThread(
 				anOriginalEvents, from, to);
 		List<Integer> aStartIndices = new ArrayList();
 		List<Integer> aStopIndices = new ArrayList();
 //		List<Integer> aThreadsMatched = new ArrayList();
-		if (aThreads == null) {
-			List<Thread> aList = new ArrayList( aThreadToEvents.keySet());
-			aThreads = aList.toArray(emptyThreads);
+		if (isIncludeThreads && anIncludeOrExcludeThreads != null) {
+			anIncludeThreads = anIncludeOrExcludeThreads;
+		} else {
+			List<Thread> anIncludeThreadsList = new ArrayList( aThreadToEvents.keySet());
+			if (!isIncludeThreads) {
+				for (Thread aThread:anIncludeOrExcludeThreads) {
+					anIncludeThreadsList.remove(aThread);
+				}
+			}
+			anIncludeThreads = anIncludeThreadsList.toArray(emptyThreads);
 		}
-		for (Thread aThread : aThreads) {			
+		
+		for (Thread aThread : anIncludeThreads) {			
 			ConcurrentPropertyChange[] aThreadEvents = aThreadToEvents.get(aThread);
 			ConcurrentPropertyChange[] aSelectedEvents = selectEvents(aThreadEvents, aMatchedComponents);
 			if (processInterleaving(aThreadEvents, aStartIndices, aStopIndices)) {
 				Tracer.info(ConcurrentEventUtility.class, "Events of thread:" + aThread + 
-						" overlap with one or more of matched threads:" + Arrays.toString(aThreads) );
+						" overlap with one or more of matched threads:" + Arrays.toString(anIncludeThreads) );
 				
 				Tracer.info(ConcurrentEventUtility.class, "Events of new thread:");
 				trace(aSelectedEvents);
@@ -749,7 +766,7 @@ public class ConcurrentEventUtility {
 				return true;
 			}
 		}
-		Tracer.info(ConcurrentEventUtility.class, "No intervealing occured in matched threads " + aThreads);
+		Tracer.info(ConcurrentEventUtility.class, "No intervealing occured in matched threads " + anIncludeThreads);
 		Tracer.info(ConcurrentEventUtility.class, "Start indices " + aStartIndices);
 		Tracer.info(ConcurrentEventUtility.class, "Sop indices " + aStopIndices);
 

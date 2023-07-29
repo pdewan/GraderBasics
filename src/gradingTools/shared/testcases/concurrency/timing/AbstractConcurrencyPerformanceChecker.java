@@ -50,6 +50,13 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 //		minThreadTimes = new long[numRounds];
 //		maxThreadTimes = new long[numRounds];
 	}
+	private Thread rootThread;
+	public Thread getRootThread() {
+		return rootThread;
+	}
+	protected boolean isRootThread(Thread aThread) {
+		return aThread == rootThread;
+	}
 	
 	protected ResultingOutErr getResultingOutErr() {
 		return resultingOutErr;
@@ -106,6 +113,8 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 		BasicProjectExecution.setMethodTimeOut(mainTimeOut());
 		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);
 		BasicProjectExecution.setMethodTimeOut(aPreviousTimeout);
+		rootThread = BasicProjectExecution.getLastMainMethodThread();
+
 
 	}
 	protected int mainTimeOut() {

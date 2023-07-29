@@ -1,6 +1,8 @@
 package gradingTools.shared.testcases.concurrency.outputObserver;
 
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.List;
 
 import grader.basics.concurrency.propertyChanges.BasicConcurrentPropertyChangeSupport;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
@@ -17,11 +19,16 @@ import grader.basics.output.observer.ObservablePrintStream;
 import grader.basics.output.observer.ObservablePrintStreamFactory;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
+import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.TaggedOrNamedClassTest;
 import gradingTools.shared.testcases.concurrency.timing.AbstractConcurrencyPerformanceChecker;
 //public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 
 public abstract class AbstractOutputObserver extends AbstractConcurrencyPerformanceChecker {
+//	private Thread rootThread;
+//	public Thread getRootThread() {
+//		return rootThread;
+//	}
 //	private ConcurrentPropertyChangeSupport concurrentPropertyChangeSupport;
 //	private ResultingOutErr resultingOutErr;
 //	public static final int CONCURRENT_PROGRAM_MAX_TIME = 1000;
@@ -130,7 +137,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 
 	protected TestCaseResult checkNumThreads (int aNumThreadsCreated) {
 		if  (aNumThreadsCreated == numExpectedForkedThreads()) {
-			return partialPass(threadCountCredit(), "Number of forked threads corrrect");
+			return partialPass(threadCountCredit(), "Number of forked threads correct");
 		}
 		return fail("Num threads created " + aNumThreadsCreated + " != num expected threads " + numExpectedForkedThreads());
 	}
@@ -143,11 +150,21 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		waitForTermination();
 		restoreOutput();
 		doNotReceiveEvents();
-		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
+		Thread[] aThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads();
+		List<Thread> aThreadList = Arrays.asList(aThreads);
+		Thread aRootThread = getRootThread();
+		if (aThreadList.contains(aRootThread)) {
+			numOutputtingForkedThreads = aThreadList.size() - 1;
+		} else {
+			numOutputtingForkedThreads = aThreadList.size(); 
+		}
+//		if (aThreadList.contains())
+		
+//		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
 
 		TestCaseResult aRetValOut = checkOutput(getResultingOutErr());
 		
-		if (!sufficientOutputCredit(aRetValOut)) {
+		if (!sufficientOutputCredit(aRetValOut) && aRetValOut != PassFailJUnitTestCase.NO_OP_RESULT) {
   			TestCaseResult badOutput = fail ("Event tests will not be run until output fixed");
 			return combineResults(badOutput, aRetValOut);
 		}

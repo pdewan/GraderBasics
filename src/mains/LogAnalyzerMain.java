@@ -258,7 +258,7 @@ public class LogAnalyzerMain {
 			try {
 //				new SemesterLogGenerator(recursives[i],false,i+"assignment#_events.csv").generateData(inputs[0], outputs[0]);
 			    SemesterLogGenerator aSemesterLogGenerator = new SemesterLogGenerator(recursives[i],false,i+"assignment#_events.csv");
-			    aSemesterLogGenerator.generateDataSingleAssignment(inputs[0], outputs[0]);
+			    aSemesterLogGenerator.generateDataSingleAssignmentWithHeaders(inputs[0], outputs[0], "0");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
