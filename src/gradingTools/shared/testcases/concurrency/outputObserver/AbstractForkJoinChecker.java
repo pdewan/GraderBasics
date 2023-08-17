@@ -21,7 +21,7 @@ import gradingTools.shared.testcases.utils.LinesMatcher;
 import util.annotations.MaxValue;
 
 @MaxValue(2)
-public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObserver {
+public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 //	public static final int TIME_OUT_SECS = 1; // secs
 	Map<String, Object[]> nameToType = new HashMap();
 	private int forkLineNumber = 0;
@@ -41,7 +41,7 @@ public abstract class AbstractForkJoinOutputObserver extends AbstractOutputObser
 
 //	private LinesMatcher linesMatcher;
 
-	public AbstractForkJoinOutputObserver() {
+	public AbstractForkJoinChecker() {
 //		rootThread = Thread.currentThread();
 	}
 
@@ -1274,7 +1274,7 @@ protected String compareIterationEventsMessage(int aMinIterations, int aMaxItera
 	protected String iterationEventsMessage(Thread aThread, Map<String, Object> aNameValuePairs) {
 		return null;
 	}
-	@Override
+	
 	protected TestCaseResult performanceCredit(long aLowThreadsTime, long aHighThreadsTime, int aNumProcessors) {
 		// TODO Auto-generated method stub
 		return null;

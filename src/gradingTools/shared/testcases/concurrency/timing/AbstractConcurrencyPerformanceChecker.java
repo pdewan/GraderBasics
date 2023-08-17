@@ -37,6 +37,7 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 	protected String maxThreadArgsString;
 	protected long totalMinThreadTime = 0;
 	protected long totalMaxThreadTime = 0;
+	protected double actualSpeedup;
 	
 
 	public AbstractConcurrencyPerformanceChecker() {
@@ -184,13 +185,34 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 			
 //			 getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges();
 //			numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
+		 	actualSpeedup =  (double) totalMinThreadTime/			
+		 			(double) totalMaxThreadTime;
+		 	double anExpectedMinimumSpeedup = expectedMinimumSpeedup();
+		 	System.out.println("Max thread time:" +  totalMaxThreadTime);
+		 	System.out.println("Min thread time:" +  totalMinThreadTime);
 
+		 	if (actualSpeedup < anExpectedMinimumSpeedup) {
+		 		return fail("Actual speedup " + actualSpeedup + " less than minimum expected speedup " + anExpectedMinimumSpeedup);
+		 	}
 			
-			return performanceCredit(totalMinThreadTime, totalMaxThreadTime, aNumProcessors);
-
+//			return performanceCredit(totalMinThreadTime, totalMaxThreadTime, aNumProcessors);
+		 	return pass();
 
 
 		}
+//	 protected TestCaseResult performanceCredit(long aLowThreadsTime, long aHighThreadsTime, int aNumProcessors) {
+//			double anActualSpeedup = (double) aLowThreadsTime/ aHighThreadsTime;
+////			System.out.println("Actual Speedup:" + anActualSpeedup);
+////			System.out.println("Expected Minimum Speedup:" + EXPECTED_MINIMUM_SPEEDUP );
+//			if (anActualSpeedup < EXPECTED_MINIMUM_SPEEDUP) {
+//				return fail ("Speedup of " + anActualSpeedup + " less than minimum expected speedup of " + EXPECTED_MINIMUM_SPEEDUP);
+//			}
+//			return pass();
+//		}
+	 
+	protected double expectedMinimumSpeedup( ) {
+		return 1.5;
+	}
 	 @Override
 		public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException,
 				NotGradableException {
@@ -235,7 +257,7 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 		protected int numRounds() {
 			return 10;
 		}
-		protected abstract TestCaseResult performanceCredit(long aLowThreadsTime, long aHighThreadsTime, int aNumProcessors);
+//		protected abstract TestCaseResult performanceCredit(long aLowThreadsTime, long aHighThreadsTime, int aNumProcessors);
 //		protected double minSingleProcessorRatio( ) {
 //			return 0.9;
 //		}
