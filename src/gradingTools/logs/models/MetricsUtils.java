@@ -162,6 +162,17 @@ public class MetricsUtils {
 
 		}
 	}
+	public static void fillBreaksInMapDoubleList(Map<String, TestMetrics> aTestMetricsMap, List<List<String>> anAttemptsList) {
+		for (int i=0;i<anAttemptsList.size();i++) {
+			try {
+				String [] aNameAndMetric = {anAttemptsList.get(0).get(i),anAttemptsList.get(1).get(i)};
+				TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
+				aTestMetrics.setBreaks(Double.parseDouble(aNameAndMetric[1]));
+			}catch(Exception e) {
+				continue;
+			}
+		}
+	}
 
 	public static void fillWorktimeInMap(Map<String, TestMetrics> aTestMetricsMap, List<String> anAttemptsList) {
 		String[] aNameAndMetric = new String[2];
@@ -180,6 +191,23 @@ public class MetricsUtils {
 		}
 	}
 
+	public static void fillWorktimeInMapDoubleList(Map<String, TestMetrics> aTestMetricsMap, List<List<String>> anAttemptsList) {
+		for (int i=0;i<anAttemptsList.size();i++) {
+			try {
+				String [] aNameAndMetric = {anAttemptsList.get(0).get(i),anAttemptsList.get(1).get(i)};
+
+				TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
+				int aMilliSeconds = (int) Double.parseDouble(aNameAndMetric[1]);
+				int aSeconds = aMilliSeconds/1000;
+
+				String aFormattedString = formatSecondDateTime(aSeconds);
+				aTestMetrics.setTimeWorked(aFormattedString);
+			}catch(Exception e) {
+				continue;
+			}
+		}
+	}
+	
 	public static String formatSecondDateTime(int aSeconds) {
 		if (aSeconds <= 0)
 			return "0h:0m:0s";
@@ -201,7 +229,18 @@ public class MetricsUtils {
 
 		}
 	}
-
+	public static void fillRegressionsInMapDoubleList(Map<String, TestMetrics> aTestMetricsMap, List<List<String>> anAttemptsList) {
+		for (int i=0;i<anAttemptsList.size();i++) {
+			try {
+				String [] aNameAndMetric = {anAttemptsList.get(0).get(i),anAttemptsList.get(1).get(i)};
+				TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
+				aTestMetrics.setRegressions(twoDecimalPlaces(Double.parseDouble(aNameAndMetric[1])));
+			}catch(Exception e) {
+				continue;
+			}
+		}
+	}
+	
 	public static void fillTestMetricsMap(Map<String, TestMetrics> aTestMetricsMap) {
 		File directory = CurrentProjectHolder.getProjectLocation();
 		String assignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
@@ -211,10 +250,11 @@ public class MetricsUtils {
 			fillAttemptsInMapDoubleList(aTestMetricsMap, anAttemptsList);
 			
 			List<List<String>> aWorkTimeList = new SemesterLogGenerator(workTimeCollectors, false).generateDataSingleAssignmentWithHeaders(directory, assignmentNumber);
-			fillAttemptsInMapDoubleList(aTestMetricsMap, aWorkTimeList);
+			fillWorktimeInMapDoubleList(aTestMetricsMap, aWorkTimeList);
+			
 			
 			List<List<String>> aRegressionsList = new SemesterLogGenerator(decreasingAttemptsCollectors, false).generateDataSingleAssignmentWithHeaders(directory, assignmentNumber);
-			fillAttemptsInMapDoubleList(aTestMetricsMap, aRegressionsList);
+			fillRegressionsInMapDoubleList(aTestMetricsMap, aRegressionsList);
 		}catch(Exception e) {
 			
 		}
