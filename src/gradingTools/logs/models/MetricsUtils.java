@@ -1,7 +1,6 @@
 package gradingTools.logs.models;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,44 +9,41 @@ import java.util.Map;
 
 import grader.basics.junit.BasicJUnitUtils;
 import grader.basics.junit.GradableJUnitTest;
-import grader.basics.observers.AnAbstractTestLogFileWriter;
 import grader.basics.project.CurrentProjectHolder;
-import gradingTools.logs.LocalChecksLogData;
-import gradingTools.logs.localChecksStatistics.collectors.Collector;
-import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.ContextBasedWorkTimeIRCollector;
-import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.EditsIRCollector;
-import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.FixedWorkTimeIRCollector;
-import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.RunsIRCollector;
-import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.TestFocusedContextBasedWorkTimeIRCollector;
-import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.TestFocusedFixedWorkTimeIRCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.AttemptsCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.AttemptsCollectorV2;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.BreakTimeCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DateFirstTestedCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DateLastTestedCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DecreasingAttemptsCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.DecreasingAttemptsCollectorV2;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.TotalTimeCollector;
-import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
-import gradingTools.logs.localChecksStatistics.compiledLogGenerator.CollectorManager;
-import gradingTools.logs.localChecksStatistics.compiledLogGenerator.LocalLogDataAnalyzer;
+import gradingTools.logs.bulkLogProcessing.collectors.Collector;
+import gradingTools.logs.bulkLogProcessing.collectors.IntervalReplayer.Edits.EditsIRCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.IntervalReplayer.Runs.RunsIRCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.IntervalReplayer.Timing.ContextBasedWorkTimeIRCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.IntervalReplayer.Timing.FixedWorkTimeIRCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.IntervalReplayer.Timing.TestFocusedContextBasedWorkTimeIRCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.IntervalReplayer.Timing.TestFocusedFixedWorkTimeIRCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.AttemptsCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.AttemptsCollectorV2;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.BreakTimeCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DateFirstTestedCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DateLastTestedCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DecreasingAttemptsCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DecreasingAttemptsCollectorV2;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.TotalTimeCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.WorkTimeCollector;
+import gradingTools.logs.bulkLogProcessing.compiledLogGenerator.LocalChecksLogData;
+import gradingTools.logs.bulkLogProcessing.compiledLogGenerator.SemesterLogGenerator;
 
 public class MetricsUtils {
 	public static final int BREAK_TIME = 300;
+	
 	static Collector dateFirstTested = new DateFirstTestedCollector();
 	static Collector dateLastTested = new DateLastTestedCollector();
 	static Collector totalTime = new TotalTimeCollector();
 	static Collector breakTime = new BreakTimeCollector(BREAK_TIME);
 	static Collector workTimeCollector = new WorkTimeCollector(BREAK_TIME);
-	static Collector fixedTestTimeCollector = new TestFocusedFixedWorkTimeIRCollector();
-	static Collector fixedWorkTimeCollector = new FixedWorkTimeIRCollector();
-
-	static Collector contextWorkTimeCollector = new ContextBasedWorkTimeIRCollector
-();
-	static Collector contextTestTimeCollector = new TestFocusedContextBasedWorkTimeIRCollector
-();
-	static Collector  editsColector = new EditsIRCollector();
-	static Collector runsCollector = new RunsIRCollector();
+//	static Collector fixedTestTimeCollector = new TestFocusedFixedWorkTimeIRCollector();
+//	static Collector fixedWorkTimeCollector = new FixedWorkTimeIRCollector();
+//
+//	static Collector contextWorkTimeCollector = new ContextBasedWorkTimeIRCollector();
+//	static Collector contextTestTimeCollector = new TestFocusedContextBasedWorkTimeIRCollector();
+//	static Collector editsColector = new EditsIRCollector();
+//	static Collector runsCollector = new RunsIRCollector();
 
 	static Collector totalAttempts = new AttemptsCollector();
 	static Collector totalAttemptsV2 = new AttemptsCollectorV2();
@@ -74,11 +70,11 @@ public class MetricsUtils {
 //
 //	};
 	
-	static Collector[] testingPeriodCollectors = { 
-			dateFirstTested, dateLastTested, workTimeCollector, totalTime, fixedWorkTimeCollector, fixedTestTimeCollector,
-			contextTestTimeCollector,  contextWorkTimeCollector
-
-	};
+//	static Collector[] testingPeriodCollectors = { 
+//			dateFirstTested, dateLastTested, workTimeCollector, totalTime, fixedWorkTimeCollector, fixedTestTimeCollector,
+//			contextTestTimeCollector,  contextWorkTimeCollector
+//
+//	};
 	static Collector[] workTimeCollectors = { workTimeCollector };
 //	static Collector[] workTimeCollectors = { contextTestTimeCollector };
 
@@ -131,6 +127,22 @@ public class MetricsUtils {
 			}
 			aTestMetrics.setAttempts(anAttempts);
 
+		}
+	}
+	
+	public static void fillAttemptsInMapDoubleList(Map<String, TestMetrics> aTestMetricsMap, List<List<String>> anAttemptsList) {
+		for (int i=0;i<anAttemptsList.size();i++) {
+			try {
+				String [] aNameAndMetric = {anAttemptsList.get(0).get(i),anAttemptsList.get(1).get(i)};
+				TestMetrics aTestMetrics = getAndPossiblyCreateTestMetrics(aTestMetricsMap, aNameAndMetric[0]);
+				double anAttempts = twoDecimalPlaces(Double.parseDouble(aNameAndMetric[1]));
+				if (anAttempts < 0) {
+					anAttempts = - anAttempts;
+				}
+				aTestMetrics.setAttempts(anAttempts);	
+			}catch(Exception e) {
+				continue;
+			}
 		}
 	}
 	
@@ -192,19 +204,20 @@ public class MetricsUtils {
 
 	public static void fillTestMetricsMap(Map<String, TestMetrics> aTestMetricsMap) {
 		File directory = CurrentProjectHolder.getProjectLocation();
-		if (!directory.exists()) { }
 		String assignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
-		List<String> anAttemptsList = LocalChecksLogData.getData(directory, assignmentNumber, attemptsCollectors);
-		fillAttemptsInMap(aTestMetricsMap, anAttemptsList);
-		
-		List<String> aWorkTimeList = LocalChecksLogData.getData(directory, assignmentNumber,
-				workTimeCollectors);
-		fillWorktimeInMap(aTestMetricsMap, aWorkTimeList);
-		
-		List<String> aRegressionsList = LocalChecksLogData.getData(directory, assignmentNumber,
-				decreasingAttemptsCollectors);
-		fillRegressionsInMap(aTestMetricsMap, aRegressionsList);
-
+		//File log = SemesterLogGenerator.findAssignment(directory, false, assignmentNumber);
+		try {
+			List<List<String>> anAttemptsList =  new SemesterLogGenerator(attemptsCollectors, false).generateDataSingleAssignmentWithHeaders(directory, assignmentNumber);
+			fillAttemptsInMapDoubleList(aTestMetricsMap, anAttemptsList);
+			
+			List<List<String>> aWorkTimeList = new SemesterLogGenerator(workTimeCollectors, false).generateDataSingleAssignmentWithHeaders(directory, assignmentNumber);
+			fillAttemptsInMapDoubleList(aTestMetricsMap, aWorkTimeList);
+			
+			List<List<String>> aRegressionsList = new SemesterLogGenerator(decreasingAttemptsCollectors, false).generateDataSingleAssignmentWithHeaders(directory, assignmentNumber);
+			fillAttemptsInMapDoubleList(aTestMetricsMap, aRegressionsList);
+		}catch(Exception e) {
+			
+		}
 	}
 
 	static String noOutput = "Could not find project directory";
@@ -263,14 +276,14 @@ public class MetricsUtils {
 //		String anAssignmentNumber = BasicJUnitUtils.getLastAssignmentNumber();
 //		String anAssignmentNumber = AnAbstractTestLogFileWriter.toAssignmentNumber(aTopTest)
 
-		List<String> aData = LocalChecksLogData.getData(directory, anAssignmentNumber, testingPeriodCollectors);
+		//List<String> aData = LocalChecksLogData.getData(directory, anAssignmentNumber, testingPeriodCollectors);
 
 //		stringBuffer.setLength(0);
 //		for (String aString:aData) {
 //			stringBuffer.append(aString + "\n");
 //		}
 //		return stringBuffer.toString();
-		return aData;
+		return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

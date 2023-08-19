@@ -321,11 +321,12 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		return MetricsUtils.
 				testingPeriodMetrics( this, AnAbstractTestLogFileWriter.toAssignmentNumber(this));
 	}
+	//TODO not sure what this is
 	public String loggedName() {
-		return LogNameManager.getLoggedName();
+		return "student";//LogNameManager.getLoggedName();
 	}
 	public void newLoggedName(String newVal) {
-		 LogNameManager.setLoggedName(newVal);
+		// LogNameManager.setLoggedName(newVal);
 	}
 	public List<String[]> showSessions() {
 		String aFileName = AnAbstractTestLogFileWriter.toFileName(this);

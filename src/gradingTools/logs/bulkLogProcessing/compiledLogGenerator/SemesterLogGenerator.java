@@ -16,10 +16,17 @@ import gradingTools.logs.bulkLogProcessing.tools.files.LogReader;
 import gradingTools.logs.bulkLogProcessing.tools.files.LogWriter;
 
 public class SemesterLogGenerator {
-
 	private static final String nonFineGrainedFormatting = ".*Assignment#Suite\\.csv", 
 			fineGrainedFormatting = ".*Assignment#SuiteFineGrained\\.csv",
 			logsPath="/Logs/LocalChecks";
+
+//	private static final String nonFineGrainedFormatting = ".*Assignment#Suite\\.csv", 
+//			fineGrainedFormatting = ".*Assignment#SuiteFineGrained\\.csv",
+//			logsPath="/Logs/LocalChecks",
+//			localChecksCheckerDataPath=logsPath+"/LocalChecksAnalysis.csv",
+//			localChecksCheckerDataHeader = "Log Checked,Date,Collectors Used\n";
+	public static final String ALL_ASSIGNMENTS = "AllAssignments";
+	
 	private static final String [] nameHeader={	
 			"Name",							//0
 		  	};	
@@ -59,46 +66,92 @@ public class SemesterLogGenerator {
 		if(!logsDirectory.exists()|| logsDirectory.isFile())
 			throw new IllegalArgumentException("The path "+logsDirectory.getAbsolutePath()+" must be a directory that exists");
 
-//		if(assignmentNumber!=-1) {
-			String assignment = nonFineGrainedFormatting.replace("#", assignmentNumber);
-			for(File log:logsDirectory.listFiles(File::isFile))
-				if(log.getName().matches(assignment))
-					try {
-						//TODO replace with a way to find a student's name
-						String studentName = "student";
-						manager.setStudentName(studentName);
-						
-						if(!log.isFile()) continue;
-						
-						LogReader logReader = new LogReader();
-						List<String> readLogs = logReader.getStudentAssignmentLogLines(log);
-						SuitesAndTests assignmentSuitesAndTests = TestingData.findAllSuitesAndTests(readLogs);
-						String [] tests = new String[assignmentSuitesAndTests.getTests().size()];
-						assignmentSuitesAndTests.getTests().toArray(tests);
-						
-						manager.setTestNames(tests);
-						manager.processLog(readLogs);
-						
-						List<List<String>> resultsList = new ArrayList<>();
-						resultsList.add(manager.getOrderedHeaders());
-						List<String> dataList;
-						//TODO make a name collector
-						if(includeName) {
-							dataList = new ArrayList<String>();
-							resultsList.get(0).add(0, studentName);
-							dataList.add(studentName);
-							dataList.addAll(manager.getOrderedData());
-						}else {
-							dataList = manager.getOrderedData();
-						}
-						resultsList.add(dataList);
-						manager.reset();
-						return resultsList;
-					} catch (IOException e) {
-						e.printStackTrace();
+		String assignment = nonFineGrainedFormatting.replace("#", assignmentNumber);
+		for(File log:logsDirectory.listFiles(File::isFile)) {
+			if(log.getName().matches(assignment))
+				try {
+					//TODO replace with a way to find a student's name
+					String studentName = "student";
+					manager.setStudentName(studentName);
+					
+					if(!log.isFile()) continue;
+					
+					LogReader logReader = new LogReader();
+					List<String> readLogs = logReader.getStudentAssignmentLogLines(log);
+					SuitesAndTests assignmentSuitesAndTests = TestingData.findAllSuitesAndTests(readLogs);
+					String [] tests = new String[assignmentSuitesAndTests.getTests().size()];
+					assignmentSuitesAndTests.getTests().toArray(tests);
+					
+					manager.setTestNames(tests);
+					manager.processLog(readLogs);
+					
+					List<List<String>> resultsList = new ArrayList<>();
+					resultsList.add(manager.getOrderedHeaders());
+					List<String> dataList;
+					//TODO make a name collector
+					if(includeName) {
+						dataList = new ArrayList<String>();
+						resultsList.get(0).add(0, studentName);
+						dataList.add(studentName);
+						dataList.addAll(manager.getOrderedData());
+					}else {
+						dataList = manager.getOrderedData();
 					}
-			throw new IllegalArgumentException("No test log file found in directory: "+logsDirectory.getAbsolutePath()+" matching format: "+assignment);
+					resultsList.add(dataList);
+					manager.reset();
+					return resultsList;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
+		throw new IllegalArgumentException("No test log file found in directory: "+logsDirectory.getAbsolutePath()+" matching format: "+assignment);
+	}
+			
+			
+	public static File findAssignment(File directory, boolean isFineGrained, String number) {
+		File logsDirectory = new File(directory, logsPath);
+		if(!logsDirectory.exists()) {
+			return null;
+		}
+		File [] filesInLogs = logsDirectory.listFiles(File::isFile);
+		String assignment = isFineGrained ? fineGrainedFormatting.replace("#", number) : nonFineGrainedFormatting.replace("#", number);
+		for(File log:filesInLogs) {
+			if(log.getName().matches(assignment)) {
+				return log;
+			}
+		}
+		
+		return null;
+	}
+	
+	public List<String> generateDataSignalAssignment(File location) throws Exception{
+		//TODO replace with a way to find a student's name
+		String studentName = "student";
+		manager.setStudentName(studentName);
+		
+		if(!location.isFile()) return null;
+		
+		LogReader logReader = new LogReader();
+		List<String> readLogs = logReader.getStudentAssignmentLogLines(location);
+		SuitesAndTests assignmentSuitesAndTests = TestingData.findAllSuitesAndTests(readLogs);
+		String [] tests = new String[assignmentSuitesAndTests.getTests().size()];
+		assignmentSuitesAndTests.getTests().toArray(tests);
+		
+		manager.setTestNames(tests);
+		manager.processLog(readLogs);
+		
+		List<String> resultsList;
+		
+		//TODO make a name collector
+		if(includeName) {
+			resultsList = new ArrayList<String>();
+			resultsList.add(studentName);
+			resultsList.addAll(manager.getOrderedData());
+		}else {
+			resultsList = manager.getOrderedData();
+		}
+		return resultsList;
+	}
 		
 	
 	

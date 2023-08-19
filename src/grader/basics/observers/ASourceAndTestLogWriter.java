@@ -185,6 +185,14 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
 					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
 		}
+		File temp = new File(sourceLogFileName);
+		if(!temp.exists()){
+			try {
+				temp.createNewFile();
+			} catch (IOException e) {
+				//e.printStackTrace();
+			}
+		}
            		return sourceLogFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 	}

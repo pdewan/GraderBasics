@@ -142,22 +142,4 @@ public class LocalChecksLogData {
 		writeTo.close();
 	}
 	
-	
-//	public static void main(String[] args) {
-//		Collector [] collectors = {
-//			new AttemptsCollectorV2(),
-//			new ContextBasedWorkTimeIRCollector(),
-//			new FixedWorkTimeIRCollector(),
-//			new EditsIRCollector(),
-//			new RunsIRCollector(),
-////			new TestFocusedContextBasedWorkTimeIRCollector(),
-////			new TestFocusedFixedWorkTimeIRCollector(),
-//			
-//		};
-//		File project = new File("");
-//		
-//		List<String> data = getData(project,4,collectors);
-//	}
-	
-	
 }
