@@ -726,9 +726,12 @@ public class BasicProjectClassesManager implements ClassesManager {
 //        System.out.println ("Class descriptions:" +classDescriptions);
         for (ClassDescription description : classDescriptions) {
         	Class aCandidate = description.getJavaClass();
+//        	Class[] aSuperClasses = aCandidate.getInterfaces();
+        	
         	boolean aMatch = true;
         	for (Class anInterface:aSupertypes) {
-        		if (anInterface == aCandidate  || !anInterface.isAssignableFrom(aCandidate)) {
+        		if (anInterface == aCandidate  || 
+        				!anInterface.isAssignableFrom(aCandidate)) {
         			aMatch = false;
         			break;
         		}        		
