@@ -1,18 +1,30 @@
 package gradingTools.logs.bulkLogProcessing.tools;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-public class LogAnalyzerAssignmentLogIteractorFactory implements AssignmentLogIteratorFactory {
+public class LogAnalyzerAssignmentLogIteractorFactory {
 
-	@Override
-	public Iterator<File> createAssignmentLogIterator(File logLocation, String assignmentNumber) {
-		return new LogAnalyzerAssignmentLogIterator(logLocation, assignmentNumber);
+	private static Class<? extends Iterator<Pairing<String, File>>> iteratorClass = AssignmentLogIterator.class;
+	
+	public static void setIterator(Class<? extends Iterator<Pairing<String, File>>> clazz) {
+		iteratorClass = clazz;
+	}
+	
+	public static Iterator<Pairing<String, File>> createAssignmentLogIterator(File logLocation, String assignmentNumber) {
+		try {
+			return iteratorClass.getConstructor(File.class, String.class).newInstance(logLocation,assignmentNumber);
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}
 	}
 
-	@Override
-	public Iterator<File> createAssignmentLogIterator(File logLocation, String pattern, String assignmentNumber) {
-		return new LogAnalyzerAssignmentLogIterator(logLocation, assignmentNumber);
+	public static Iterator<Pairing<String, File>> createAssignmentLogIterator(File logLocation, String pattern, String assignmentNumber) {
+		try {
+			return iteratorClass.getConstructor(File.class, String.class, String.class).newInstance(logLocation,pattern,assignmentNumber);
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}
 	}
-
 }

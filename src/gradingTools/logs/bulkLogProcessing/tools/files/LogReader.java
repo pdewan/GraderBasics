@@ -10,10 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import gradingTools.logs.bulkLogProcessing.tools.AssignmentLogIterator;
+import gradingTools.logs.bulkLogProcessing.tools.LogAnalyzerAssignmentLogIteractorFactory;
+import gradingTools.logs.bulkLogProcessing.tools.Pairing;
 
 public class LogReader {
 
-	private List<Iterator<File>> allAssignmentIterators;
+	private List<Iterator<Pairing<String, File>>> allAssignmentIterators;
 	private List<String> studentNames;
 	
 	public LogReader() {}
@@ -52,7 +54,7 @@ public class LogReader {
 	}
 	
 	public List<List<String>> getAllStudentsAssignmentLogLines(int assignmentIndex) throws FileNotFoundException{
-		Iterator<File> assignmentLogIterator=allAssignmentIterators.get(assignmentIndex);
+		Iterator<Pairing<String, File>> assignmentLogIterator=allAssignmentIterators.get(assignmentIndex);
 		if(assignmentLogIterator==null)
 			return null;
 		
@@ -60,10 +62,10 @@ public class LogReader {
 		studentNames = new ArrayList<String>();
 		
 		while(assignmentLogIterator.hasNext()){
-			File assignmentLog=assignmentLogIterator.next();
-			studentNames.add(determineStudentName(assignmentLog));
+			Pairing<String, File> assignmentLog=assignmentLogIterator.next();
+			studentNames.add(assignmentLog.first);
 			
-			List<String> lines = getStudentAssignmentLogLines(assignmentLog);
+			List<String> lines = getStudentAssignmentLogLines(assignmentLog.second);
 			if(lines==null) continue;
 
 			allAssignmentLines.add(lines);
@@ -76,21 +78,13 @@ public class LogReader {
 		return studentNames;
 	}
 	
-	private static String determineStudentName(File log){
-		Matcher studentID=Pattern.compile(".*\\\\(.*)\\\\.*").matcher(log.toString());
-		if(studentID.find())
-			return "\""+studentID.group(1)+"\"";
-		else
-			return "I am error";
-	}
-	
-	private static List<Iterator<File>> getAllAssignmentIterators(File location){
-		ArrayList<Iterator<File>> allAssignments=new ArrayList<Iterator<File>>();
+	private static List<Iterator<Pairing<String, File>>> getAllAssignmentIterators(File location){
+		ArrayList<Iterator<Pairing<String, File>>> allAssignments=new ArrayList<Iterator<Pairing<String, File>>>();
 		for(int i=0;i<13;i++){
-			String assignmentNumber = i==0?i+"_1":Integer.toString(i); // this seems to be peculiar to 524
+			String assignmentNumber = i==0?i+"[-_]1":Integer.toString(i); // this seems to be peculiar to 524
 			
-			Iterator<File> testVal=new AssignmentLogIterator(location, AssignmentLogIterator.fineGrainedPattern,assignmentNumber);
-			if(testVal.hasNext())
+			Iterator<Pairing<String, File>> testVal= LogAnalyzerAssignmentLogIteractorFactory.createAssignmentLogIterator(location, AssignmentLogIterator.fineGrainedPattern,assignmentNumber);
+			if(testVal.hasNext() && testVal!=null)
 				allAssignments.add(testVal);
 			else// if(i==0)
 				allAssignments.add(null);

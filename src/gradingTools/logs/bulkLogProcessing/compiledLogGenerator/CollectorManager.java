@@ -10,7 +10,7 @@ import gradingTools.logs.bulkLogProcessing.tools.dataStorage.SuiteMapping;
 
 public class CollectorManager {
 
-	public static boolean enableConcurrency = true;
+	public static boolean enableConcurrency = false;
 	private List<Collector> collectors;
 	private int maxReqPass=1;
 //	private TestStatePreProcessing stateManager = new TestStatePreProcessing();

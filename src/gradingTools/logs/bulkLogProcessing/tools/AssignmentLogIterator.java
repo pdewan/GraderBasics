@@ -3,9 +3,11 @@ package gradingTools.logs.bulkLogProcessing.tools;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class AssignmentLogIterator implements Iterator<File>{
+public class AssignmentLogIterator implements Iterator<Pairing<String, File>>{
 
 	private static final String replacePattern = "###";
 	public static final String fineGrainedPattern =  ".*Assignment"+replacePattern+"SuiteFineGrained\\.csv",
@@ -22,7 +24,7 @@ public class AssignmentLogIterator implements Iterator<File>{
 	}
 	
 	public AssignmentLogIterator(File logLocation, String pattern, String assignmentNumber){
-		logLocation = logLocation.getParentFile(); // just trying to see what Andrew's iterator does
+		logLocation = logLocation.getParentFile(); // just trying to see what Anna's iterator does
 		String aName = logLocation.getName();		
 		logPattern=pattern.replace(replacePattern, assignmentNumber);
 		if (aName.contains("ssignment")) {
@@ -43,11 +45,12 @@ public class AssignmentLogIterator implements Iterator<File>{
 	}
 
 	@Override
-	public File next() {
+	public Pairing<String, File> next() {
 		File returnVal=nextFile;
 		nextFile=findNext();
+		String studentName = determineStudentName(returnVal);
 		
-		return returnVal;
+		return new Pairing<>(studentName,returnVal);
 	}
 	
 	private File findNext(){
@@ -64,4 +67,12 @@ public class AssignmentLogIterator implements Iterator<File>{
 		return null;
 	}
 
+	public static String determineStudentName(File log){
+		Matcher studentID=Pattern.compile(".*\\\\(.*)\\\\.*").matcher(log.toString());
+		if(studentID.find())
+			return "\""+studentID.group(1)+"\"";
+		else
+			return "I am error";
+	}
+	
 }

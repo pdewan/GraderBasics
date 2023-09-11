@@ -1,12 +1,24 @@
 package mains;
 
 import java.io.File;
-import java.io.FileWriter;
 
 import gradingTools.logs.bulkLogProcessing.collectors.Collector;
 import gradingTools.logs.bulkLogProcessing.collectors.EventCollectors.TestWorkingEvent;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.AttemptsCollectorV2;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DateFirstTestedCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DateLastTestedCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.DecreasingAttemptsCollectorV2;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.FinalStatusCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.IncreasingAttemptsCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.PercentPassedCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.TotalAttemptsCollector;
+import gradingTools.logs.bulkLogProcessing.collectors.StandardCollectors.TotalTimeCollector;
 import gradingTools.logs.bulkLogProcessing.compiledLogGenerator.CollectorManager;
 import gradingTools.logs.bulkLogProcessing.compiledLogGenerator.SemesterLogGenerator;
+import gradingTools.logs.bulkLogProcessing.selectYearMapping.Comp524Fall2020;
+import gradingTools.logs.bulkLogProcessing.selectYearMapping.YearSelectFactory;
+import gradingTools.logs.bulkLogProcessing.tools.ASakaiStructureAssignmentLogIteratorAndUnzipper;
+import gradingTools.logs.bulkLogProcessing.tools.LogAnalyzerAssignmentLogIteractorFactory;
 
 //import gradingTools.logs.localChecksStatistics.collectors.Collector;
 //import gradingTools.logs.localChecksStatistics.collectors.IntervalReplayer.AbstractIntervalReplayerBasedCollector;
@@ -45,8 +57,8 @@ public class LogAnalyzerMain {
 //			File output = new File("C:\\Users\\Zhizhou\\git\\Hermes_Log_Parser\\NewVersionTest");
 //			File output=new File("LocalChecks Logs");
 			
-
-			runEventsAnalysis(args);
+			bulkProcessFromSakai();
+			//runEventsAnalysis(args);
 //			runAnalysis();
 //			eventLogs();
 //			soloTesting();
@@ -55,6 +67,46 @@ public class LogAnalyzerMain {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void bulkProcessFromSakai() throws Exception {
+		File [] inputs = {
+			new File("I:\\Research\\Log_Parsing\\ClassFolders\\Comp524\\Fall2020"),
+			
+		};
+		File [] outputs = {
+			new File("I:\\Research\\Outside_Projects\\GraderBasics\\scripts\\debug"),
+		};
+		
+		Collector [] collectors = {
+			new TotalAttemptsCollector(),
+		//		new WorkingSetStatisicsCollector(),
+		//		new TestingSetStatisicsCollector(),
+		//		new NaiveAttemptsCollector(),
+			
+			new PercentPassedCollector(4),
+			new TotalTimeCollector(),
+			new DateFirstTestedCollector(),
+			new DateLastTestedCollector(),
+			
+			new AttemptsCollectorV2(),
+		//		new WorkTimeCollector(breakTime, false),
+			new IncreasingAttemptsCollector(),
+			new DecreasingAttemptsCollectorV2(),
+			new FinalStatusCollector(),
+		};
+	
+	//YearSelectFactory.setYearMap(new Comp524Fall2020());
+	LogAnalyzerAssignmentLogIteractorFactory.setIterator(ASakaiStructureAssignmentLogIteratorAndUnzipper.class);
+	for(int i=0;i<inputs.length;i++) {
+		try {
+			new SemesterLogGenerator(collectors,true,"assignment#.csv").generateData(inputs[i], outputs[i]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}		
+		
+		
 	}
 	
 //	private static void attemptsAndTimings() throws Exception {

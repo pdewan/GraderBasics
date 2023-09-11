@@ -176,6 +176,10 @@ public class SemesterLogGenerator {
 		if(allAssignmentLines==null)
 			return;
 		
+		if(!output.exists()) {
+			output.mkdir();
+		}
+		
 		List<String> studentNames = logReader.getStudentNames();
 		
 		SuitesAndTests assignmentSuitesAndTests = TestingData.findAllSuitesAndTests(allAssignmentLines,assignmentIndex);
