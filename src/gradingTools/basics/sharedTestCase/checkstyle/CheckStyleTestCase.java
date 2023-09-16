@@ -207,7 +207,10 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
     	return test(aProject, aCheckStyleLines, aFailedLines, aSucceededLines, autoGrade);    	
     }
     
-	protected void maybeProcessSucceededLine (String aSucceededLine) {
+	protected String maybeProcessSucceededLine (String aSucceededLine) {
+		String retVal = removeUntilSrcFolderName(aSucceededLine);
+		return retVal;
+
 //		if (callingTypeName != null) {
 //			return;
 //		}
@@ -218,18 +221,32 @@ public abstract class CheckStyleTestCase extends PassFailJUnitTestCase {
 //            callingTypeName = matcher.group(1).split(":")[0];
 //        }
 	}
+	protected String removeUntilSrcFolderName(String aLine) {
+		String retVal = aLine.replaceAll(".*src.", "");
+		return retVal;
+	}
+	protected String maybeProcessFailedLine (String aFaiedLine) {
+		
+		String retVal = removeUntilSrcFolderName(aFaiedLine);
+		return retVal;
+	}
     
     protected void maybeProcessSucceededLines (List<String> aSucceededLines) {
     	if (aSucceededLines != null ) {
     		for (int i = 0; i < aSucceededLines.size(); i++) {
     		String aSucceededLine = aSucceededLines.get(i);
-    		maybeProcessSucceededLine(aSucceededLine);
+    		aSucceededLines.set(i, maybeProcessSucceededLine(aSucceededLine));
     		}
     	}
     }
     
     protected void maybeProcessFailedLines (List<String> aFailedLines) {
-    	
+    	if (aFailedLines != null ) {
+    		for (int i = 0; i < aFailedLines.size(); i++) {
+    		String aFailedLine = aFailedLines.get(i);
+    		aFailedLines.set(i, maybeProcessFailedLine(aFailedLine));
+    		}
+    	}
     }
     
     protected TestCaseResult classFractionResult (Project aProject, String[] aCheckStyleLines, List<String> aMatchedLines, boolean autoGrade) {

@@ -81,7 +81,7 @@ public class LogReader {
 	private static List<Iterator<Pairing<String, File>>> getAllAssignmentIterators(File location){
 		ArrayList<Iterator<Pairing<String, File>>> allAssignments=new ArrayList<Iterator<Pairing<String, File>>>();
 		for(int i=0;i<13;i++){
-			String assignmentNumber = i==0?i+"[-_]1":Integer.toString(i); // this seems to be peculiar to 524
+			String assignmentNumber = i==0?i+"[-_]?1?":Integer.toString(i); // this seems to be peculiar to 524
 			
 			Iterator<Pairing<String, File>> testVal= LogAnalyzerAssignmentLogIteractorFactory.createAssignmentLogIterator(location, AssignmentLogIterator.fineGrainedPattern,assignmentNumber);
 			if(testVal.hasNext() && testVal!=null)

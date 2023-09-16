@@ -336,8 +336,12 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 				aMessage.append(" \n");
 			}
 //			if (aPercentage == 0) {
-			aMessage.append(aTestCaseResult.getNotes()); // only failure messages
-//			}
+			String aNotes = aTestCaseResult.getNotes();
+			if (aNotes.length() > 0) {
+			  aMessage.append(aNotes); // only failure messages
+			  System.out.println(aNotes);
+			}
+///			}
 		}
 		if (allNoOps) {
 			return NO_OP_RESULT;

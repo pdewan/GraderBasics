@@ -71,11 +71,12 @@ public class LogAnalyzerMain {
 	
 	private static void bulkProcessFromSakai() throws Exception {
 		File [] inputs = {
-			new File("I:\\Research\\Log_Parsing\\ClassFolders\\Comp524\\Fall2020"),
-			
+//			new File("I:\\Research\\Log_Parsing\\ClassFolders\\Comp524\\Fall2020"),
+				new File("D:\\sakaidownloads_anonymyzed\\Comp524\\F22"),
+		
 		};
 		File [] outputs = {
-			new File("I:\\Research\\Outside_Projects\\GraderBasics\\scripts\\debug"),
+			new File("D:\\testoutput"),
 		};
 		
 		Collector [] collectors = {

@@ -49,8 +49,14 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	
 	@Override
 	public String negativeRegexLineFilter() {
-		return ".*" + "WARN" + ".*"  + callingMethod + ".*" + typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
+		return ".*" + "WARN" + ".*:"  + callingMethod + " .*" + typeTag + "(.*) " + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
 
+
+	}
+	@Override
+	public String positiveRegexLineFilter() {
+		return ".*" + "INFO" + ".*:" + callingMethod + " .*" +typeTag + "(.*) " + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
+		
 
 	}
 	// [INFO] D:\dewan_backup\Java\PLTeaching\PL_Java\.\src\byteman\examples\BytemanMerge.java:1: Method:sort:int[]->int[] in class byteman.examples.BytemanMerge:[@MergeSort] has made expected call sort:int[]->int[]. Good! [MissingMethodCall]
@@ -69,12 +75,22 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	}
 	
 	
-	protected void maybeProcessSucceededLine (String aSucceededLine) {
+	protected String maybeProcessSucceededLine (String aSucceededLine) {
 		if (callingTypeName != null && callingTypeFileName != null) {
-			return;
+			return aSucceededLine;
 		}
-		int aFileNameEnd = aSucceededLine.indexOf(": Method");
+		// not sure what the point of the following code is
+//		int aFileNameEnd = aSucceededLine.indexOf(": Method");
+		int aFileNameEnd = aSucceededLine.indexOf(": ");
+
+//		if (aFileNameEnd == -1) {
+//			aFileNameEnd = aSucceededLine.indexOf(": Method");
+//		}
+		try {
 		callingTypeFileName = aSucceededLine.substring("[INFO] ".length(), aFileNameEnd);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		final String typeNamePrefix = " in class ";
 		final String typeNameSuffix = ":";
 		int aPrefixStart = aSucceededLine.indexOf(typeNamePrefix);
@@ -88,6 +104,7 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 ////            System.out.println("found: " + matcher.group(1));
 //            callingTypeName = matcher.group(1).split(":")[0];
 //        }
+		return aSucceededLine;
 	}
 
 //	protected void maybeProcessSucceededLines (List<String> aSucceededLines) {
@@ -103,16 +120,11 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 		return callingTypeName;
 	}
     
-    protected void maybeProcessFailedLines (List<String> aFailedLines) {
-    	
-    }
+//    protected void maybeProcessFailedLines (List<String> aFailedLines) {
+//    	super.maybeProcessFailedLines(aFailedLines);
+//    }
 	
-	@Override
-	public String positiveRegexLineFilter() {
-		return ".*" + "INFO" + ".*" + callingMethod + ".*" +typeTag + "(.*)" + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
-		
-
-	}
+	
 	 public TestCaseResult test(Project project, boolean autoGrade) throws NotAutomatableException, NotGradableException {
 //	     Class aClass = IntrospectionUtil.getOrFindClass(project, this, typeTag); 
 //	     if (aClass == null) {
