@@ -52,7 +52,7 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			String aMessage = aThrowable.getMessage();
 			String aTestName = name != null? name:"Test";
 //			System.err.println ("Test Failed:" + aMessage);
-			System.err.println (name + " did not pass completely:" + aMessage);
+//			System.err.println (name + " did not pass completely:" + aMessage);
 			if (!aThrowable.getClass().isAssignableFrom(AssertionError.class)) {
 			aThrowable.printStackTrace();
 			} 

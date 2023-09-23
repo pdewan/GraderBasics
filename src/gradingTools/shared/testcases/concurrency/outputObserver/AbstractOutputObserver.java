@@ -143,6 +143,8 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 	}
 	abstract protected boolean sufficientOutputCredit(TestCaseResult aResult) ;
 	protected TestCaseResult runAndCheck(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {		
+		System.out.println("Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs));
+
 		observablePrintStream = redirectOutput();
 		receivePropertyChanges();
 		BasicProjectExecution.setMethodTimeOut(timeOut());
@@ -150,6 +152,8 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		waitForTermination();
 		restoreOutput();
 		doNotReceiveEvents();
+		System.out.println("TEST RESULTS");
+
 		Thread[] aThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads();
 		List<Thread> aThreadList = Arrays.asList(aThreads);
 		Thread aRootThread = getRootThread();
@@ -158,21 +162,31 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		} else {
 			numOutputtingForkedThreads = aThreadList.size(); 
 		}
+		// moved code from below
+		TestCaseResult aNumThreadsCheck = checkNumThreads(
+				numOutputtingForkedThreads);
+//		if (aNumThreadsCheck.isFail() && numOutputtingForkedThreads == 0) {
+//			return aNumThreadsCheck;
+//		}
+		
+		
 //		if (aThreadList.contains())
 		
 //		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
-
+		System.out.println("Checking the form of output");
 		TestCaseResult aRetValOut = checkOutput(getResultingOutErr());
 		
 		if (!sufficientOutputCredit(aRetValOut) && aRetValOut != PassFailJUnitTestCase.NO_OP_RESULT) {
-  			TestCaseResult badOutput = fail ("Event tests will not be run until output fixed");
+  			TestCaseResult badOutput = fail ("Test semantics will not be checked  until output form fixed");
 			return combineResults(badOutput, aRetValOut);
 		}
+		System.out.println("Checking output event semantics");
+
 //		 getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges();
 //		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
 
-		TestCaseResult aNumThreadsCheck = checkNumThreads(
-				numOutputtingForkedThreads);
+//		TestCaseResult aNumThreadsCheck = checkNumThreads(
+//				numOutputtingForkedThreads);
 		TestCaseResult aRetValEvents = checkEvents(
 				getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges());
 		return combineResults(aRetValOut, aNumThreadsCheck, aRetValEvents);

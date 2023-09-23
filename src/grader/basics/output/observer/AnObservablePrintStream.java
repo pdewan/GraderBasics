@@ -13,6 +13,7 @@ import java.util.List;
 
 import grader.basics.concurrency.propertyChanges.Selector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import util.misc.ThreadSupport;
 
 
 public class AnObservablePrintStream extends PrintStream implements ObservablePrintStream  {
@@ -22,12 +23,14 @@ public class AnObservablePrintStream extends PrintStream implements ObservablePr
 	List<Selector> negativeOutputSelectors = new ArrayList();
 	ObjectToPropertyChange converter = new BasicObjectToPropertyChange();
 	boolean redirectionFrozen = false;
+	boolean sleepFrozen = true;
 //	boolean hidePrints = false;
 
 //	public AnObservablePrintStream(String fileName) throws FileNotFoundException {
 //		super(fileName);
 //		// TODO Auto-generated constructor stub
 //	}
+	
 	
 	public AnObservablePrintStream(PrintStream aDelegate) throws FileNotFoundException {
 		super(aDelegate);
@@ -81,54 +84,64 @@ public	void	print(int i) {
 public	void println() {
 	if (hidePrints()) return;
 	delegate.println();
+	maybeSleep();
 }
 //	Terminates the current line by writing the line separator string.
 public	void	println(boolean x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints a boolean and then terminate the line.
 public	void	println(char x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints a character and then terminate the line.
 public	void	println(char[] x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints an array of characters and then terminate the line.
 public	void	println(double x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints a double and then terminate the line.
 public	void	println(float x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints a float and then terminate the line.
 public	void	println(int x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints an integer and then terminate the line.
 public	void	println(long x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
 }
 //	Prints a long and then terminate the line.
 public	void	println(Object x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
+	maybeSleep();
+
 
 }
 //	Prints an Object and then terminate the line.
@@ -136,7 +149,7 @@ public	void	println(String x) {
 	if (hidePrints()) return;
 	delegate.println(x);
 	maybeConvertAndAnnounceOutput(x);
-	
+	maybeSleep();
 }
 //	Prints a String and then terminate the line.
 //	protected void	setError()
@@ -222,11 +235,26 @@ public	void	write(int b) {
 		}
 		
 	}
+	protected void maybeSleep() {
+		if (!sleepFrozen) {
+			ThreadSupport.sleep(1);
+		}
+		
+	}
 	
 	@Override
 	public void setRedirectionFrozen(boolean newVal) {
 		redirectionFrozen = newVal;
 		
+	}
+	public boolean isRedirectionFrozen() {
+		return redirectionFrozen;
+	}
+	public boolean isSleepFrozen() {
+		return sleepFrozen;
+	}
+	public void setSleepFrozen(boolean sleepFrozen) {
+		this.sleepFrozen = sleepFrozen;
 	}
 	public static void main (String[] args) {
 //		Class anOutClass = System.out.getClass();

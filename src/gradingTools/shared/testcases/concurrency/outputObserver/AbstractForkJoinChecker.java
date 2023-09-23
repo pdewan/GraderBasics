@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
@@ -784,8 +785,19 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 	}
 
 	@Override
-	protected TestCaseResult checkEvents(ConcurrentPropertyChange[] anEvents) {
+	protected TestCaseResult checkEvents(ConcurrentPropertyChange[] anOriginalEvents) {
 
+		List<ConcurrentPropertyChange> aFilteredEventsList = new ArrayList();
+		Set<String> aFilteredPropertyNames = nameToType.keySet(); // these ate the ones we are testing
+		for (ConcurrentPropertyChange aConcurrentEvent:anOriginalEvents) {
+			String aPropertyName = aConcurrentEvent.getEvent().getPropertyName();
+			if (aFilteredPropertyNames.contains(aPropertyName)) {
+				aFilteredEventsList.add(aConcurrentEvent);
+			}			
+		}
+		ConcurrentPropertyChange[] anEvents = new ConcurrentPropertyChange[aFilteredEventsList.size()];
+		aFilteredEventsList.toArray(anEvents);
+		
 //		int aPreForkEventsSize = preForkProperties.length;
 //		int aPostForkEventsSize = postForkProperties.length;
 //		int aPostJoinEventsSize = postJoinProperties.length;
@@ -801,6 +813,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 //		} else {
 //			eventsAfterIterations = aPostForkEventsSize;
 //		}
+		// This may not be correct as we may have additional prints
 		int anActualIterationsSize = anEvents.length
 				- (aPreForkEventsSize + aPostIterationEventsSize + aPostJoinEventsSize);
 
@@ -842,8 +855,10 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 //		TestCaseResult aPostIterationsResult = checkPostIterationsEvents(anEvents, aPostIterationStartIndex,
 //				aPostIterationStopIndex);
 //		aFinalResult = combineResults(aFinalResult, aPostIterationsResult);
+		
 		TestCaseResult aForkResult = checkForkEvents(anEvents, aForkStartIndex, aForkStopIndex);
 		aFinalResult = combineResults(aFinalResult, aForkResult);
+		
 		TestCaseResult aPostJoinResult = checkPostJoinEvents(anEvents, aPostJoinStartIndex, aPostJoinStopIndex);
 		aFinalResult = combineResults(aFinalResult, aPostJoinResult);
 		return aFinalResult;
@@ -1095,6 +1110,10 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 				null); 
 		if (!hasInterleaving ) {
 			anInterleavingResult = fail ("No interleaving during fork");
+			System.out.println("Forked threads do not execute concurrently.");
+			System.out.println("Between the first and last output of each forked thread, there is no other thread output.");
+			System.out.println("Are you executing threads sequentially?");
+
 		} else if (numExpectedForkedThreads() == 1 ){
 			anInterleavingResult = PassFailJUnitTestCase.NO_OP_RESULT;
 
@@ -1202,7 +1221,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 protected String compareIterationEventsMessage(int aMinIterations, int aMaxIterations) {
 	int aDifference = aMaxIterations - aMinIterations;
 	if (aDifference >  1) {
-		return "Imbalanced thread load: Max thread iterations:" + aMaxIterations + " - min thread iterations = " + aDifference; 
+		return "Imbalanced thread load: Max thread iterations(" + aMaxIterations + ") - min thread iterations(" + aMinIterations + ") = " + aDifference + ". It should be <= 1"; 
 	} else {
 		return null;
 	}

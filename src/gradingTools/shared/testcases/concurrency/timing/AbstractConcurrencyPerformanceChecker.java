@@ -102,8 +102,11 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 		aRedirectedStream.addPositiveSelector(positiveSelector());
 		aRedirectedStream.addNegativeSelector(negativeSelector());
 		aRedirectedStream.setRedirectionFrozen(false);
+//		System.err.println ("Out" + System.out);
 
 		System.setOut((PrintStream) aRedirectedStream);
+//		System.err.println ("Out" + System.out);
+
 		return aRedirectedStream;
     }
 	protected ConcurrentPropertyChangeSupport getConcurrentPropertyChangeSupport() {

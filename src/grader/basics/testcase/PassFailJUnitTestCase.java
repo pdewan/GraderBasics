@@ -339,7 +339,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 			String aNotes = aTestCaseResult.getNotes();
 			if (aNotes.length() > 0) {
 			  aMessage.append(aNotes); // only failure messages
-			  System.out.println(aNotes);
+//			  System.out.println(aNotes);
 			}
 ///			}
 		}
