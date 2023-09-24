@@ -77,7 +77,12 @@ public class BasicProjectExecution {
 
 	static Object[] emptyObjectArray = {};
 	static BasicExecutionSpecification basicExecutionSpecification = BasicExecutionSpecificationSelector.getBasicExecutionSpecification();
-
+	static PrintStream previousOut() {
+		if (previousOut == null) {
+			previousOut = System.out;
+		}
+		return previousOut;
+	}
 	public static int getConstructorTimeOut() {
 //		return constructorTimeOut;
 		return basicExecutionSpecification.getConstructorTimeOut();
@@ -457,7 +462,7 @@ public class BasicProjectExecution {
 			
 			return new AResultWithOutput(null, null);
 		} finally {
-			System.setOut(previousOut);
+			System.setOut(previousOut());
 
 		}
 	}
@@ -486,7 +491,7 @@ public class BasicProjectExecution {
 			
 			return new AResultWithOutput(null, null);
 		} finally {
-			System.setOut(previousOut);
+			System.setOut(previousOut());
 
 		}
 	}
@@ -515,7 +520,7 @@ public class BasicProjectExecution {
 		catch (Exception e) {
 			return new AResultWithOutput(null, null);
 		} finally {
-			System.setOut(previousOut);
+			System.setOut(previousOut());
 
 		}
 	}
@@ -542,7 +547,7 @@ public class BasicProjectExecution {
 		catch (Exception e) {
 			return new AResultWithOutput(null, null);
 		} finally {
-			System.setOut(previousOut);
+			System.setOut(previousOut());
 
 		}
 	}
@@ -560,7 +565,8 @@ public class BasicProjectExecution {
 	// static int numRedirections = 0;
 	static Stack<File> tmpOutFileStack = new Stack();
 	static Stack<File> tmpErrFileStack = new Stack();
-	static PrintStream previousOut = System.out;
+	// do not initialize it prematurely, before some other code has initialized
+	static PrintStream previousOut; // = System.out;
 	static PrintStream previousErr = System.err;
 	static InputStream originalIn = System.in;
 	static FileInputStream newIn;
@@ -608,7 +614,7 @@ public class BasicProjectExecution {
 			aTmpErrFile.deleteOnExit();
 			fileErrStack.push(anErrFileStream);
 			tmpErrFileStack.push(aTmpErrFile);
-			originalErrStack.push(previousOut); // this should be System.out;
+			originalErrStack.push(previousOut()); // this should be System.out;
 			PrintStream teeErrStream = new TeePrintStream(anErrFileStream,
 					previousErr);
 			System.setErr(teeErrStream);
@@ -642,8 +648,8 @@ public class BasicProjectExecution {
 
 			fileOutStack.push(aFileStream);
 			tmpOutFileStack.push(aTmpFile);
-			originalOutStack.push(previousOut); // this should be System.out;
-			PrintStream teeStream = new TeePrintStream(aFileStream, previousOut);
+			originalOutStack.push(previousOut()); // this should be System.out;
+			PrintStream teeStream = new TeePrintStream(aFileStream, previousOut());
 			System.setOut(teeStream);
 			previousOut = teeStream;
 

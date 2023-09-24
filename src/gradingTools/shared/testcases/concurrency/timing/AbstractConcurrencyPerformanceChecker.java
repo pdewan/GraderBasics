@@ -90,11 +90,12 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 	protected int timeOut() {
 		return BasicProjectExecution.getMethodTimeOut();
 	}
-	private static PrintStream originalOut = System.out;
+//	private static PrintStream originalOut = System.out;
 	 protected void restoreOutput() {
-	    	System.setOut(originalOut);
-//	    	observablePrintStream.removePropertyChangeListener(concurrentPropertyChangeSupport);
-//	    	observablePrintStream.setRedirectionFrozen(true);
+	    	ObservablePrintStream aRedirectedStream = ObservablePrintStreamFactory.getObservablePrintStream();
+	    	aRedirectedStream.setRedirectionFrozen(true);
+//	    	System.setOut(originalOut);
+
 	    }
     protected ObservablePrintStream redirectOutput() {    	
     	ObservablePrintStream aRedirectedStream = ObservablePrintStreamFactory.getObservablePrintStream();
@@ -102,10 +103,8 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 		aRedirectedStream.addPositiveSelector(positiveSelector());
 		aRedirectedStream.addNegativeSelector(negativeSelector());
 		aRedirectedStream.setRedirectionFrozen(false);
-//		System.err.println ("Out" + System.out);
 
-		System.setOut((PrintStream) aRedirectedStream);
-//		System.err.println ("Out" + System.out);
+//		System.setOut((PrintStream) aRedirectedStream);
 
 		return aRedirectedStream;
     }

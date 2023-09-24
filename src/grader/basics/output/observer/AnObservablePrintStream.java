@@ -193,11 +193,17 @@ public	void	write(int b) {
 	}
 	@Override
 	public void addPositiveSelector(Selector aSelector) {
+		if (positiveOutputSelectors.contains(aSelector)) {
+			return;
+		}
 		positiveOutputSelectors.add(aSelector);
 		
 	}
 	@Override
 	public void addNegativeSelector(Selector aSelector) {
+		if (negativeOutputSelectors.contains(aSelector)) {
+			return;
+		}
 		negativeOutputSelectors.add(aSelector);
 	}
 	@Override
