@@ -24,8 +24,10 @@ public class LocalChecksLogSender {
 	private static long totalTimeTaken = 0;
 	private static long totalSends = 0;
 	private static final String TIME_STATISTICS_FILE_NAME = "timeStatistics.csv";
-
-	private static final String reportURL="https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
+	private static final String reportURL=
+			"https://us-east-1.aws.data.mongodb-api.com/app/rest-api-vsfoo/endpoint/add_log?db=studies&collection=dewan-localchecks";
+	private static final String password = "sYCUBa*shZKU4F-yxHrTk8D7FHo4xbBBV.-BK!-L";
+//	private static final String reportURL="https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
 	private static String lastLogFilePath = null;
 	
 	private static File lastLogDirectory = null;
@@ -96,6 +98,7 @@ public class LocalChecksLogSender {
 //		message.put("machine_id",getHashMachineId());
 		message.put("log_type","LocalChecksLog");
 		message.put("course_id",assignment);
+		message.put("password",password);
 		//message.put("course_id",determineSemester());
 		
 		JSONObject logJSON = new JSONObject();

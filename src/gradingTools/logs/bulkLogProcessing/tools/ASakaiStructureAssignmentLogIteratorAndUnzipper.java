@@ -103,6 +103,10 @@ public class ASakaiStructureAssignmentLogIteratorAndUnzipper implements Iterator
 		return Arrays.stream(studentDirectoryDirectory.listFiles(File::isDirectory)).iterator();
 	}
 	
+//	public static final List<File> getLocalChecksFiles(File aLogDirectory){
+//		aLogDirectory.lis
+//	}
+	
 	//from https://stackoverflow.com/questions/9324933/what-is-a-good-java-library-to-zip-unzip-files
 	private void extractFolder(String zipFile,String extractFolder) 
 	{

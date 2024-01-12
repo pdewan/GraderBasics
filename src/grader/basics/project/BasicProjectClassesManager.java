@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import grader.basics.BasicLanguageDependencyManager;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.RunningProject;
 import grader.basics.settings.BasicGradingEnvironment;
 import grader.basics.util.DirectoryUtils;
@@ -123,8 +124,10 @@ public class BasicProjectClassesManager implements ClassesManager {
         initializeClassLoaders();
         classDescriptions = new HashSet<ClassDescription>();
         tagsToClasses.clear();
+		if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLoadClasses()) {
 
         loadClasses(sourceFolder);
+		}
         maybeCheckStyle();
         } else {
         	classDescriptions = null;

@@ -868,8 +868,13 @@ protected String requirementsLocation = null;
 		return getStringProperty(BasicStaticConfigurationUtils.CHECK_STYLE_FILE, BasicStaticConfigurationUtils.DEFAULT_CONFIGURATION_FILE);
 
 	}
+	protected boolean freezeCheckstyleConfiguration = true;
 	@Override
 	public void setCheckStyleConfiguration(String newVal) {
+		if (freezeCheckstyleConfiguration && 
+				runtimeGraderStringProperties.get(BasicStaticConfigurationUtils.CHECK_STYLE_FILE) != null) {
+			return;
+		}
 		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.CHECK_STYLE_FILE, newVal);
 	}
 	@Override

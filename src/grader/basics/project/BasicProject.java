@@ -356,11 +356,11 @@ public class BasicProject implements Project {
 			if (objectFolder == null) {
 				objectFolder = buildFolder;
 			}
-			if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLoadClasses()) {
+//			if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLoadClasses()) {
 //         	CurrentProjectHolder.setProject(this); // so that classesManager can find it
 				Tracer.info(this, "Creating classes manager");
 				classesManager = createClassesManager(buildFolder);
-			}
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
