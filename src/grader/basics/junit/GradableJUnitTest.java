@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import grader.basics.testcase.JUnitTestCase;
+import grader.basics.testcase.PassFailJUnitTestCase;
 import util.models.PropertyListenerRegisterer;
 
 /**
@@ -68,7 +69,7 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializa
 		return (double) Math.round(aDouble * 10)/10.0;
 	}
 	double getDisplayedScore();
-	JUnitTestCase getJUnitTestCase();
+	PassFailJUnitTestCase getJUnitTestCase();
 	boolean isDefinesMaxScore();
 	void setDefinesMaxScore(boolean definesMaxScore);
 	void fillLeafNodeDescendents(List<GradableJUnitTest> retVal);

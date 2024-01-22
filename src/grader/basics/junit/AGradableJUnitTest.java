@@ -21,6 +21,7 @@ import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.observers.AnAbstractTestLogFileWriter;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
+import grader.basics.testcase.PassFailJUnitTestCase;
 import util.annotations.Explanation;
 import util.annotations.Group;
 import util.annotations.IsExtra;
@@ -167,7 +168,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	}
 	@Visible(false)
 	@Override
-	public JUnitTestCase getJUnitTestCase() {
+	public PassFailJUnitTestCase getJUnitTestCase() {
 		if (jUnitClass == null) {
 			return null;
 		}
@@ -223,8 +224,11 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore,
 				score);
 	}
+	protected boolean hasShownResult = false;
 	protected void printResult() {
-		System.out.println("Test Result:" + 
+		
+		if (getJUnitTestCase().isShowResult() && !hasShownResult) {
+		System.out.println(getName() + " Test Result:\n" + 
 				getSimpleName() + "," +
 				status + "," +
 				score + "," +
@@ -232,6 +236,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 				message + 
 				"\n"
 				);
+		hasShownResult = true;
+		}
 		
 	}
 	protected void showResult (TestCaseResult aTestCaseResult) {
@@ -285,6 +291,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		return null;
 	}
 	static Date date = new Date();
+	
 	@Visible(false)
 	public TestCaseResult test()
 			throws NotAutomatableException, NotGradableException {

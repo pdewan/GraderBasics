@@ -183,7 +183,8 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed:", false);
 			}
 			// if (!aLastResult.isFail()) {
-			if (!aLastResult.isPass()) {
+			if (shouldScaleResult() &&
+					!aLastResult.isPass()) {
 
 				Tracer.info(PassFailJUnitTestCase.class, "Preceding test " + aPrecedingTestElement.getSimpleName()
 						+ " partially passed:" + aLastResult.getPercentage());
@@ -205,8 +206,15 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 
 	}
 	
+	protected boolean shouldScaleResult() {
+		return true;
+	}
+	
 	  public TestCaseResult scaleResult(TestCaseResult aResult) {
-	    	 if (precedingTestInstances.size() == 0 || aResult.getPercentage() == 0) {
+		  	 
+	    	 if (!shouldScaleResult() ||
+	    			 precedingTestInstances.size() == 0 || 
+	    			 aResult.getPercentage() == 0) {
 	    		 return aResult;
 	    	 }
 			 double aTotalFractionComplete = 0;
@@ -351,5 +359,12 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		}
 		return partialPass(aPercentage, aMessage.toString());
 	
+	}
+	protected boolean showResult = true;
+	public boolean isShowResult() {
+		return showResult;
+	}
+	public void setShowResult(boolean newVal) {
+		showResult = newVal;
 	}
 }
