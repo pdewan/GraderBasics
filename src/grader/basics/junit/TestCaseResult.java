@@ -155,6 +155,10 @@ public class TestCaseResult {
 			this.score = score;
 	}
 	
+	public TestCaseResult clone() {
+		return new TestCaseResult(percentage, notes, name);
+	}
+	
 
 }
 

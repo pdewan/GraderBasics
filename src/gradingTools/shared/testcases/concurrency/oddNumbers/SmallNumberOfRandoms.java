@@ -1,4 +1,4 @@
-package gradingTools.shared.testcases.concurrency.odddNumbers;
+package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import util.annotations.MaxValue;
 @MaxValue(15)

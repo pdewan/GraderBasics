@@ -1,4 +1,4 @@
-package gradingTools.shared.testcases.concurrency.odddNumbers;
+package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import java.lang.reflect.Array;
 import java.util.HashSet;

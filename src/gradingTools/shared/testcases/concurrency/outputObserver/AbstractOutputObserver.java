@@ -24,9 +24,14 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.TaggedOrNamedClassTest;
 import gradingTools.shared.testcases.concurrency.timing.AbstractConcurrencyPerformanceChecker;
+import junit.framework.TestResult;
+import net.sf.saxon.pattern.CombinedNodeTest;
 //public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 
 public abstract class AbstractOutputObserver extends AbstractConcurrencyPerformanceChecker {
+	public static final String THREAD_COUNT = "threadCount";
+	public static final String COMBINED_OUTPUT = "combinedOutput";
+	public static final String COMBINED_EVENTS = "combinedEvents";
 	protected Map<String, TestCaseResult> nameToResult = new HashMap();
 
 //	private Thread rootThread;
@@ -82,6 +87,31 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 	public Map<String, TestCaseResult> getNameToResult() {
 		return nameToResult;
 	}
+	public boolean isPassed(String aTestName) {
+		TestCaseResult aResult = nameToResult.get(aTestName);
+		return (aResult != null) && (aResult.isPass());
+	}
+	public TestCaseResult combineNormalizedResults(String[] aTestNames) {
+		return combineResults(toTestResults(aTestNames));
+	}
+	
+	public TestCaseResult[] toTestResults(String[] aTestNames) {
+		TestCaseResult[] aModifiedResults = new TestCaseResult[aTestNames.length];
+		for (int anIndex = 0; anIndex < aTestNames.length; anIndex++) {
+				String aTestName = aTestNames[anIndex];
+				TestCaseResult anOriginalResult = nameToResult.get(aTestName);
+				if (anOriginalResult == null) {
+					System.err.println("Missing result for:" + aTestName);
+					continue;
+				}
+				TestCaseResult aModifiedResult = anOriginalResult.clone();
+				double aNewPercentage = anOriginalResult.isFail()?0:1.0/aTestNames.length;
+				aModifiedResult.setPercentage(aNewPercentage);
+				aModifiedResults[anIndex] = aModifiedResult;
+		}
+		return aModifiedResults;
+	}
+	
 	protected void receivePropertyChanges() {
     	super.receivePropertyChanges();
     	observablePrintStream.addPropertyChangeListener(getConcurrentPropertyChangeSupport());
@@ -149,9 +179,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		return fail("Num threads created " + aNumThreadsCreated + " != num expected threads " + numExpectedForkedThreads());
 	}
 	abstract protected boolean sufficientOutputCredit(TestCaseResult aResult) ;
-	public static final String THREAD_COUNT = "threadCount";
-	public static final String COMBINED_OUTPUT = "combinedOutput";
-	public static final String COMBINED_EVENTS = "combinedEvents";
+
 
 	protected TestCaseResult runAndCheck(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {		
 		System.out.println("Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs));

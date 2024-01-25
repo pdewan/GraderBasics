@@ -12,11 +12,15 @@ import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.ResultingOutErr;
+import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.output.observer.APropertyBasedStringChecker;
 import grader.basics.output.observer.ObservablePrintStreamUtility;
 import grader.basics.output.observer.PropertyBasedStringChecker;
+import grader.basics.project.NotGradableException;
+import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import gradingTools.shared.testcases.concurrency.oddNumbers.AbstractOddNumbersExecution;
 import gradingTools.shared.testcases.utils.LinesMatchKind;
 import gradingTools.shared.testcases.utils.LinesMatcher;
 import util.annotations.MaxValue;
@@ -25,6 +29,24 @@ import util.annotations.MaxValue;
 public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 	
 //	public static final int TIME_OUT_SECS = 1; // secs
+	public static final String PRE_FORK_OUTPUT = "preForkOutput";
+	public static final String POST_FORK_OUTPUT = "postForkOutput";
+	public static final String POST_JOIN_OUTPUT = "postJoinOutput";
+	public static final String PRE_FORK_EVENTS = "preForkEvents";
+	public static final String POST_FORK_EVENTS = "postForkEvents";
+	public static final String POST_JOIN_EVENTS = "postJoinEvents";
+	public static final String ITERATION_EVENTS_COUNT = "iterationEventsCount";
+	public static final String HAS_INTERLEAVING = "hasInterLeaving";
+	
+//	public static final String CORRECT_THREAD_COUNT = "correctThreadCount";
+//	public static final String POST_ITERATION_EVENTS = "postIterationEvents";
+	public static final String ITERATION_EVENTS = "iterationEvents";
+	public static final String POST_ITERATION_EVENTS = "postIterationEvents";
+
+//	public static final String ITERATION_COUNTS = "iterationCounts";
+	public static final String COMPARE_ITERATION_COUNTS = "compareIterationCounts";
+	public static final String TOTAL_ITERATION_COUNT = "totalIterationCount";
+	
 	Map<String, Object[]> nameToType = new HashMap();
 	private int forkLineNumber = 0;
 	private int joinLineNumber = 0;
@@ -54,6 +76,8 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 //	protected boolean isRootThread(Thread aThread) {
 //		return aThread == rootThread;
 //	}
+	
+	
 
 	public static PropertyBasedStringChecker toChecker(String[][] anOutputProperties) {
 		if (anOutputProperties == null) {
@@ -655,9 +679,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 //
 //		return partialPass(forkedThreadPartialCredit(), "Forked thread " + aThread + " output correct");
 //	}
-	public static final String PRE_FORK_OUTPUT = "preForkOutput";
-	public static final String POST_FORK_OUTPUT = "postForkOutput";
-	public static final String POST_JOIN_OUTPUT = "postJoinOutput";
+	
 	@Override
 	protected TestCaseResult checkOutput(ResultingOutErr anOutput) {
 		TestCaseResult aPreForkResult = checkPreForkOutput();
@@ -798,10 +820,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 	protected boolean rootThreadIterates() {
 		return false;
 	}
-	public static final String PRE_FORK_EVENTS = "preForkEvents";
-	public static final String POST_FORK_EVENTS = "postForkEvents";
-	public static final String POST_JOIN_EVENTS = "postJoinEvents";
-	public static final String ITERATION_EVENTS_COUNT = "iterationEventsCount";
+	
 //	public static final String ITERATIONS_COUNT = "iterationsCount";
 
 	@Override
@@ -1110,15 +1129,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 		return false;
 	}
 	
-	public static final String HAS_INTERLEAVING = "hasInterLeaving";
-//	public static final String CORRECT_THREAD_COUNT = "correctThreadCount";
-//	public static final String POST_ITERATION_EVENTS = "postIterationEvents";
-	public static final String ITERATION_EVENTS = "iterationEvents";
-	public static final String POST_ITERATION_EVENTS = "postIterationEvents";
-
-//	public static final String ITERATION_COUNTS = "iterationCounts";
-	public static final String COMPARE_ITERATION_COUNTS = "compareIterationCounts";
-	public static final String TOTAL_ITERATION_COUNT = "totalIterationCount";
+	
 
 	
 
@@ -1373,6 +1384,21 @@ protected String totalterationEventsMessage(int anExpectedIterations, int anActu
 	protected String[] highThreadArgs() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	protected  String[] relevantCheckNames(  ) {
+		return emptyStringArray;
+	}
+	protected TestCaseResult testCaseResult() {
+		return combineNormalizedResults(relevantCheckNames());
+	}
+	
+	public TestCaseResult computeFromPreTest(Project project, boolean autoGrade)
+			throws NotAutomatableException, NotGradableException {
+
+		AbstractForkJoinChecker preExecution =
+				(AbstractForkJoinChecker) getPrecedingTestInstances().get(0);
+		return preExecution.combineNormalizedResults(relevantCheckNames());
+		
 	}
 
 }
