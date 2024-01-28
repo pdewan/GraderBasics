@@ -191,7 +191,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		waitForTermination();
 		restoreOutput();
 		doNotReceiveEvents();
-		System.out.println("TEST RESULTS");
+//		System.out.println("TEST RESULTS");
 
 		Thread[] aThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads();
 		List<Thread> aThreadList = Arrays.asList(aThreads);
@@ -213,7 +213,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 //		if (aThreadList.contains())
 		
 //		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;
-		System.out.println("Checking the form of output");
+//		System.out.println("Checking the form of output");
 		ResultingOutErr aResultingOutErr = getResultingOutErr();
 		if (aResultingOutErr == null) {
 			return fail ("Failed to get output");
@@ -235,7 +235,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 			aFinalRetValOut = aRetValOut;
 		}
 		nameToResult.put(COMBINED_OUTPUT, aFinalRetValOut);
-		System.out.println("Checking output event semantics");
+//		System.out.println("Checking output event semantics");
 
 //		 getConcurrentPropertyChangeSupport().getConcurrentPropertyChanges();
 //		numOutputtingForkedThreads = getConcurrentPropertyChangeSupport().getNotifyingThreads().length - 1;

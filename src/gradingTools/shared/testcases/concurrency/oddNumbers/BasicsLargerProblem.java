@@ -11,9 +11,9 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestC
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import util.annotations.MaxValue;
 @MaxValue(2)
-public class BasicsSmallProblem extends BasicsProblem {
+public class BasicsLargerProblem extends BasicsProblem {
 	
-	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
+	Class[] PRECEDING_TESTS = {LargerNumberOfRandoms.class};
 //	String[] relevantCheckNames = {
 //			THREAD_COUNT,
 //			PRE_FORK_OUTPUT,

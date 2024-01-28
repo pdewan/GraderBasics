@@ -23,7 +23,7 @@ import unc.symbolTable.SymbolTableFactory;
 import unc.tools.checkstyle.PostProcessingMain;
 import util.annotations.MaxValue;
 @MaxValue(10)
-public class FairAllocationSmallProblem extends FairAllocationProblem {
+public class FairAllocationLargerProblem extends FairAllocationProblem {
 	
 //	enum ErrorInference {
 //			NONE,
@@ -33,7 +33,7 @@ public class FairAllocationSmallProblem extends FairAllocationProblem {
 //			RETURN_TOO_BIG,
 //			UNKNOWN
 //	}
-	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
+	Class[] PRECEDING_TESTS = {LargerNumberOfRandoms.class};
 //	String[] relevantCheckNames = {
 //			this.COMPARE_ITERATION_COUNTS,
 //			this.TOTAL_ITERATION_COUNT

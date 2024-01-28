@@ -2,8 +2,8 @@ package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import util.annotations.MaxValue;
 @MaxValue(5)
-public class ForkJoinSmallProblem extends ForkJoinProblem {
-	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
+public class ForkJoinLargerProblem extends ForkJoinProblem {
+	Class[] PRECEDING_TESTS = {LargerNumberOfRandoms.class};
 	
 //	String[] relevantCheckNames = {this.HAS_INTERLEAVING};
 

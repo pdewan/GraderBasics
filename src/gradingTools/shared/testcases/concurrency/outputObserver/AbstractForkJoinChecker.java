@@ -1155,9 +1155,9 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 				null); 
 		if (!hasInterleaving ) {
 			anInterleavingResult = fail ("No interleaving during fork");
-			System.out.println("Forked threads do not execute concurrently.");
-			System.out.println("Between the first and last output of each forked thread, there is no other thread output.");
-			System.out.println("Are you executing threads sequentially?");
+//			System.out.println("Forked threads do not execute concurrently.");
+//			System.out.println("Between the first and last output of each forked thread, there is no other thread output.");
+//			System.out.println("Are you executing threads sequentially?");
 
 		} else if (numExpectedForkedThreads() == 1 ){
 			anInterleavingResult = PassFailJUnitTestCase.NO_OP_RESULT;
@@ -1392,13 +1392,13 @@ protected String totalterationEventsMessage(int anExpectedIterations, int anActu
 		return combineNormalizedResults(relevantCheckNames());
 	}
 	
-	public TestCaseResult computeFromPreTest(Project project, boolean autoGrade)
-			throws NotAutomatableException, NotGradableException {
-
-		AbstractForkJoinChecker preExecution =
-				(AbstractForkJoinChecker) getPrecedingTestInstances().get(0);
-		return preExecution.combineNormalizedResults(relevantCheckNames());
-		
-	}
+//	public TestCaseResult computeFromPreTest(Project project, boolean autoGrade)
+//			throws NotAutomatableException, NotGradableException {
+//
+//		AbstractForkJoinChecker preExecution =
+//				(AbstractForkJoinChecker) getPrecedingTestInstances().get(0);
+//		return preExecution.combineNormalizedResults(relevantCheckNames());
+//		
+//	}
 
 }

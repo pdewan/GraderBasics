@@ -128,8 +128,12 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		return precedingTestInstances;
 	}
 
-	protected boolean failedTestVetoes() {
+	protected boolean failedTestVetoes(Class aClass) {
 		return true;
+	}
+	
+	protected boolean partialPassTestVetoes(Class aClass) {
+		return false;
 	}
 
 	protected void possiblyRunAndCheckPrecedingTests() {
@@ -170,8 +174,8 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 			PassFailJUnitTestCase aPrecedingTestInstance = JUnitTestsEnvironment
 					.getAndPossiblyRunGradableJUnitTest(aPrecedingTestElement);
 			if (aPrecedingTestInstance == null ) {
-				if (failedTestVetoes()) {
-					assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed due to an excecption:", false);
+				if (failedTestVetoes(aPrecedingTestElement)) {
+					assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed due to an exception:", false);
 
 				} else {
 					precedingTestInstances.add(aPrecedingTestInstance);
@@ -179,8 +183,11 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 				}
 			}
 			TestCaseResult aLastResult = aPrecedingTestInstance.getLastResult();
-			if (aLastResult.isFail() && failedTestVetoes()) {
+			if (aLastResult.isFail() && failedTestVetoes(aPrecedingTestElement)) {
 				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed:", false);
+			} else if (aLastResult.isPartialPass() && partialPassTestVetoes(aPrecedingTestElement)) {
+				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " did not pass:", false);
+
 			}
 			// if (!aLastResult.isFail()) {
 			if (shouldScaleResult() &&
@@ -323,7 +330,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		return aTaggedClass;
 		
 	}
-	protected TestCaseResult combineResults(TestCaseResult... aResultArray) {
+	public TestCaseResult combineResults(TestCaseResult... aResultArray) {
 		
 		boolean anAllPassed = true;
 		double aPercentage = 0;

@@ -12,41 +12,44 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import util.annotations.MaxValue;
-@MaxValue(2)
-public class SynchronizationSmallProblem extends PreTestExecutorOfForkJoin {
+@MaxValue(3)
+public class SynchronizationSmallProblem extends SynchronizationProblem {
 	
-	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
-	String[] relevantCheckNames = {
-			this.POST_JOIN_EVENTS
+	Class[] PRECEDING_TESTS = {
+			SmallNumberOfRandoms.class,
+			ForkJoinSmallProblem.class
 			};
+//	String[] relevantCheckNames = {
+//			this.POST_JOIN_EVENTS
+//			};
 	@Override
 	protected Class[] precedingTests() {
 		return PRECEDING_TESTS;
 	}
 	
-	protected  String[] relevantCheckNames(  ) {
-		return relevantCheckNames;
-	}
-//	protected AbstractForkJoinChecker oddNumbersExecution() {
-//		
-////			List<PassFailJUnitTestCase> aPrecedingInstances =
-//			return (AbstractOddNumbersExecution) getPrecedingTestInstances().get(0);
-//		
+//	protected  String[] relevantCheckNames(  ) {
+//		return relevantCheckNames;
 //	}
-	
-//	protected boolean shouldScaleResult() {
-//		return false;
-//	}
-
-//	@Override
-//	public TestCaseResult test(Project project, boolean autoGrade)
-//			throws NotAutomatableException, NotGradableException {
-//		AbstractForkJoinChecker oddNumbersExecution = oddNumbersExecution();
-//		Map<String, TestCaseResult> nameToResult = oddNumbersExecution.getNameToResult();
-//		
-//		System.out.print(nameToResult);
-//		return oddNumbersExecution().getLastResult();
-//	}
-	
+////	protected AbstractForkJoinChecker oddNumbersExecution() {
+////		
+//////			List<PassFailJUnitTestCase> aPrecedingInstances =
+////			return (AbstractOddNumbersExecution) getPrecedingTestInstances().get(0);
+////		
+////	}
+//	
+////	protected boolean shouldScaleResult() {
+////		return false;
+////	}
+//
+////	@Override
+////	public TestCaseResult test(Project project, boolean autoGrade)
+////			throws NotAutomatableException, NotGradableException {
+////		AbstractForkJoinChecker oddNumbersExecution = oddNumbersExecution();
+////		Map<String, TestCaseResult> nameToResult = oddNumbersExecution.getNameToResult();
+////		
+////		System.out.print(nameToResult);
+////		return oddNumbersExecution().getLastResult();
+////	}
+//	
 
 }

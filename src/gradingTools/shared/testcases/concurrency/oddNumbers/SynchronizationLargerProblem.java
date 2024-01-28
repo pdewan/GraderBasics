@@ -2,6 +2,8 @@ package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import java.util.Map;
 
+import org.eclipse.jdt.core.dom.ThisExpression;
+
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
@@ -10,16 +12,15 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import util.annotations.MaxValue;
-@MaxValue(2)
-public class BasicsSmallProblem extends BasicsProblem {
+@MaxValue(3)
+public class SynchronizationLargerProblem extends SynchronizationProblem {
 	
-	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
+	Class[] PRECEDING_TESTS = {
+			LargerNumberOfRandoms.class,
+			ForkJoinLargerProblem.class
+			};
 //	String[] relevantCheckNames = {
-//			THREAD_COUNT,
-//			PRE_FORK_OUTPUT,
-//			PRE_FORK_EVENTS,
-//			ITERATION_EVENTS,
-//			TOTAL_ITERATION_COUNT
+//			this.POST_JOIN_EVENTS
 //			};
 	@Override
 	protected Class[] precedingTests() {
