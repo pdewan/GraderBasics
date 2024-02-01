@@ -4,15 +4,26 @@ import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
+import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 
-public class PostTestExecutorOfForkJoin extends AbstractForkJoinChecker {
+public class PostTestExecutorOfForkJoin 
+	extends 
+	AbstractForkJoinChecker 
+//	PassFailJUnitTestCase
+	{
 
 	@Override
 	protected int numExpectedForkedThreads() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	protected String mainClassIdentifier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	protected boolean nonPassTestVetoes (Class aClass) {
 		Class[] aPrecedingTests = precedingTests();
 		if (aPrecedingTests == null || aPrecedingTests.length == 0) {
@@ -30,13 +41,14 @@ public class PostTestExecutorOfForkJoin extends AbstractForkJoinChecker {
 		return nonPassTestVetoes(aClass);
 	}
 
-	
-
-	@Override
-	protected String mainClassIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+	String[] emptyStringArray = {};
+	protected  String[] relevantCheckNames(  ) {
+		return emptyStringArray;
 	}
+	protected TestCaseResult testCaseResult() {
+		return combineNormalizedResults(relevantCheckNames());
+	}
+	
 	public TestCaseResult computeFromPreTest(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
 

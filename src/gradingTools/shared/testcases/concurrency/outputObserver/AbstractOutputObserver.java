@@ -32,7 +32,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 	public static final String THREAD_COUNT = "threadCount";
 	public static final String COMBINED_OUTPUT = "combinedOutput";
 	public static final String COMBINED_EVENTS = "combinedEvents";
-	protected Map<String, TestCaseResult> nameToResult = new HashMap();
+//	protected Map<String, TestCaseResult> nameToResult = new HashMap();
 
 //	private Thread rootThread;
 //	public Thread getRootThread() {
@@ -84,33 +84,33 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 //		System.setOut((PrintStream) aRedirectedStream);
 //		return aRedirectedStream;
 //    }
-	public Map<String, TestCaseResult> getNameToResult() {
-		return nameToResult;
-	}
-	public boolean isPassed(String aTestName) {
-		TestCaseResult aResult = nameToResult.get(aTestName);
-		return (aResult != null) && (aResult.isPass());
-	}
-	public TestCaseResult combineNormalizedResults(String[] aTestNames) {
-		return combineResults(toTestResults(aTestNames));
-	}
-	
-	public TestCaseResult[] toTestResults(String[] aTestNames) {
-		TestCaseResult[] aModifiedResults = new TestCaseResult[aTestNames.length];
-		for (int anIndex = 0; anIndex < aTestNames.length; anIndex++) {
-				String aTestName = aTestNames[anIndex];
-				TestCaseResult anOriginalResult = nameToResult.get(aTestName);
-				if (anOriginalResult == null) {
-					System.err.println("Missing result for:" + aTestName);
-					continue;
-				}
-				TestCaseResult aModifiedResult = anOriginalResult.clone();
-				double aNewPercentage = anOriginalResult.isFail()?0:1.0/aTestNames.length;
-				aModifiedResult.setPercentage(aNewPercentage);
-				aModifiedResults[anIndex] = aModifiedResult;
-		}
-		return aModifiedResults;
-	}
+//	public Map<String, TestCaseResult> getNameToResult() {
+//		return nameToResult;
+//	}
+//	public boolean isPassed(String aTestName) {
+//		TestCaseResult aResult = nameToResult.get(aTestName);
+//		return (aResult != null) && (aResult.isPass());
+//	}
+//	public TestCaseResult combineNormalizedResults(String[] aTestNames) {
+//		return combineResults(toTestResults(aTestNames));
+//	}
+//	
+//	public TestCaseResult[] toTestResults(String[] aTestNames) {
+//		TestCaseResult[] aModifiedResults = new TestCaseResult[aTestNames.length];
+//		for (int anIndex = 0; anIndex < aTestNames.length; anIndex++) {
+//				String aTestName = aTestNames[anIndex];
+//				TestCaseResult anOriginalResult = nameToResult.get(aTestName);
+//				if (anOriginalResult == null) {
+//					System.err.println("Missing result for:" + aTestName);
+//					continue;
+//				}
+//				TestCaseResult aModifiedResult = anOriginalResult.clone();
+//				double aNewPercentage = anOriginalResult.isFail()?0:1.0/aTestNames.length;
+//				aModifiedResult.setPercentage(aNewPercentage);
+//				aModifiedResults[anIndex] = aModifiedResult;
+//		}
+//		return aModifiedResults;
+//	}
 	
 	protected void receivePropertyChanges() {
     	super.receivePropertyChanges();

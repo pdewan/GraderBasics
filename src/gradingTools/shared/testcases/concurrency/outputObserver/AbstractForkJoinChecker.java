@@ -527,7 +527,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 		return partialPass(preForkOutputCredit(), "Pre fork output correct");
 	}
 
-	static String[] emptyStringArray = {};
+	protected static String[] emptyStringArray = {};
 	static String[][] emptyStringMatrix = {};
 	static List<String> emptyList = Arrays.asList(emptyStringArray);
 
@@ -1273,7 +1273,11 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 protected String compareIterationEventsMessage(int aMinIterations, int aMaxIterations) {
 	int aDifference = aMaxIterations - aMinIterations;
 	if (aDifference >  1) {
-		return "Imbalanced thread load: Max thread iterations(" + aMaxIterations + ") - min thread iterations(" + aMinIterations + ") = " + aDifference + ". It should be <= 1"; 
+//		return "Imbalanced thread load"; 
+		return "Imbalanced thread load: Max thread iterations =" + aMaxIterations + " Min thread iterations =" + aMinIterations; 
+
+//		return "Imbalanced thread load: Max thread iterations(" + aMaxIterations + ") - min thread iterations(" + aMinIterations + ") = " + aDifference + ". It should be <= 1"; 
+
 	} else {
 		return null;
 	}
@@ -1385,12 +1389,12 @@ protected String totalterationEventsMessage(int anExpectedIterations, int anActu
 		// TODO Auto-generated method stub
 		return null;
 	}
-	protected  String[] relevantCheckNames(  ) {
-		return emptyStringArray;
-	}
-	protected TestCaseResult testCaseResult() {
-		return combineNormalizedResults(relevantCheckNames());
-	}
+//	protected  String[] relevantCheckNames(  ) {
+//		return emptyStringArray;
+//	}
+//	protected TestCaseResult testCaseResult() {
+//		return combineNormalizedResults(relevantCheckNames());
+//	}
 	
 //	public TestCaseResult computeFromPreTest(Project project, boolean autoGrade)
 //			throws NotAutomatableException, NotGradableException {

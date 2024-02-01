@@ -25,7 +25,7 @@ import util.annotations.MaxValue;
 @MaxValue(10)
 public class FairAllocationLargerProblem extends FairAllocationProblem {
 	
-//	enum ErrorInference {
+//	enum FairAllocationErrorInference {
 //			NONE,
 //			MOD_OPERATOR,
 //			OFF_BY_ONE,
@@ -58,14 +58,14 @@ public class FairAllocationLargerProblem extends FairAllocationProblem {
 //		    		findAllInOrderMatchingNodes(aMethodAST, TokenTypes.LITERAL_IF);
 //		 return anIfASTs;		
 //	}
-//	protected ErrorInference makeErrorInference (List<DetailAST> anIfASTs, TestCaseResult aTestCaseResult) {
-////		ErrorInference retVal = ErrorInference.NONE;
+//	protected FairAllocationErrorInference makeErrorInference (List<DetailAST> anIfASTs, TestCaseResult aTestCaseResult) {
+////		FairAllocationErrorInference retVal = FairAllocationErrorInference.NONE;
 //		
 //		if (anIfASTs.size() == 0) {
-//			return ErrorInference.MOD_OPERATOR;
+//			return FairAllocationErrorInference.MOD_OPERATOR;
 //		}
 //		if (anIfASTs.size() > 1) {
-//			return ErrorInference.MULTIPLE_IFS;
+//			return FairAllocationErrorInference.MULTIPLE_IFS;
 //			
 //		};
 //		
@@ -77,39 +77,39 @@ public class FairAllocationLargerProblem extends FairAllocationProblem {
 //		return aBooleanOperator.getType() == TokenTypes.LE;
 //	}
 ////	protected boolean isReturn
-//	protected ErrorInference makeErrorInference (DetailAST anIfAST, TestCaseResult aTestCaseResult) {
+//	protected FairAllocationErrorInference makeErrorInference (DetailAST anIfAST, TestCaseResult aTestCaseResult) {
 //		if (isLEOperator(anIfAST) && !isPassed(TOTAL_ITERATION_COUNT)) {
-//			return ErrorInference.OFF_BY_ONE;
+//			return FairAllocationErrorInference.OFF_BY_ONE;
 //		}
 //		DetailAST aThenPart = TagBasedCheck.getThenPart(anIfAST);
 //		DetailAST aReturnPart = aThenPart.getFirstChild();
 //		if (aReturnPart == null || aReturnPart.getType() != TokenTypes.LITERAL_RETURN) {
-//			return ErrorInference.UNKNOWN;
+//			return FairAllocationErrorInference.UNKNOWN;
 //		}
 //		DetailAST aReturnValueExpr = aReturnPart.getFirstChild();
 //		if (aReturnValueExpr == null) {
 //
-//			return ErrorInference.UNKNOWN;
+//			return FairAllocationErrorInference.UNKNOWN;
 //		
 //		}
 //		DetailAST aReturnValue = aReturnValueExpr.getFirstChild();
 //		if (aReturnValueExpr == null) {
 //
-//			return ErrorInference.UNKNOWN;
+//			return FairAllocationErrorInference.UNKNOWN;
 //		
 //		}
 //		String anExpressionString = TagBasedCheck.toStringList(aReturnValueExpr);
 //		if (!"EXPR 1".equals(anExpressionString) || 
 //				("EXPR aRemainder".equals(anExpressionString))) {
-//			return ErrorInference.RETURN_TOO_BIG;
+//			return FairAllocationErrorInference.RETURN_TOO_BIG;
 //		}
 //			
-//		return ErrorInference.UNKNOWN;
+//		return FairAllocationErrorInference.UNKNOWN;
 //		
 ////		DetailAST
 //	
 //	}
-//	protected ErrorInference makeErrorInference(Project aProject, TestCaseResult aTestCaseResult ) {
+//	protected FairAllocationErrorInference makeErrorInference(Project aProject, TestCaseResult aTestCaseResult ) {
 //		String aCheckStyleText = aProject.getCheckstyleText();
 //		   
 //	    SymbolTable aTable = SymbolTableFactory.getCurrentSymbolTable();
@@ -122,7 +122,7 @@ public class FairAllocationLargerProblem extends FairAllocationProblem {
 //	    return makeErrorInference(anIfASTs, aTestCaseResult);
 //
 //	}
-//	ErrorInference errorInference;
+//	FairAllocationErrorInference errorInference;
 //	@Override
 //	public TestCaseResult test(Project aProject, boolean autoGrade)
 //			throws NotAutomatableException, NotGradableException {

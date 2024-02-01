@@ -14,5 +14,6 @@ public interface JUnitTestContext {
 
 
 	void setJUnitPassFailTestCase(PassFailJUnitTestCase junitTestCase);
+	long getGradableJUnitTestTime();
 
 }

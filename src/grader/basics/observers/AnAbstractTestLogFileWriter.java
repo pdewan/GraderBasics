@@ -30,6 +30,7 @@ import grader.basics.project.CurrentProjectHolder;
 import grader.basics.trace.CheckersLogFolderCreated;
 import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
 import grader.basics.vetoers.AConsentFormVetoer;
+import util.misc.Common;
 import util.trace.Tracer;
 
 
@@ -55,6 +56,7 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	protected  BufferedWriter bufWriter, bufWriter_altLocation;	
 	
 	protected String logFilePath, logFileName;
+	protected String previousContents;
 	Field idField;
 	List<String[]> previousRunData = new ArrayList();
 	String[] normalizedLastLines = null;
@@ -253,6 +255,7 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 		}
 	}
 
+	
 
 	protected void closeFile() {
 		if (out == null) return;
@@ -304,7 +307,22 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	        JUnitLogFileCreatedOrLoaded.newCase(aFullFileName, this);
 
 	        maybeCreateOrLoadSecondAppendableFile(aFile);
+	        
+	        maybeReadPreviousContents();
 	    }
+	 
+	 private void maybeReadPreviousContents() {
+		 if (previousContents == null) {
+		 String aFilePath = getLogFilePath();
+		 previousContents = Common.toText(new File(aFilePath));
+		 }
+	 }
+	 
+	 public String getPreviousContents() {
+		 return previousContents;
+	 }
+	 
+	
 	
 	 private void maybeCreateOrLoadSecondAppendableFile(File javaFile) {
 		 	File projectLocation =  CurrentProjectHolder.getProjectLocation();

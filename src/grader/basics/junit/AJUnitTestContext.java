@@ -16,6 +16,7 @@ import grader.basics.testcase.PassFailJUnitTestCase;
  */
 public class AJUnitTestContext implements JUnitTestContext {
 	GradableJUnitTest gradableJUnitTest;
+	long gradableJUnitTestTime;
 	PassFailJUnitTestCase junitTestCase; // so this is initially null
 	public AJUnitTestContext(GradableJUnitTest aGradableJUnitTest) {
 		gradableJUnitTest = aGradableJUnitTest;
@@ -23,6 +24,10 @@ public class AJUnitTestContext implements JUnitTestContext {
 	@Override
 	public GradableJUnitTest getGradableJUnitTest() {
 		return gradableJUnitTest;
+	}
+	@Override
+	public long getGradableJUnitTestTime() {
+		return gradableJUnitTestTime;
 	}
 	@Override
 	public void setGradableJUnitTest(GradableJUnitTest gradableJUnitTest) {
@@ -50,6 +55,7 @@ public class AJUnitTestContext implements JUnitTestContext {
 		if (junitTestCase == null) { 
 //			System.err.println("Unepected null test in context");
 			gradableJUnitTest.test();
+			gradableJUnitTestTime = System.currentTimeMillis();
 		}
 		return junitTestCase;
 	}

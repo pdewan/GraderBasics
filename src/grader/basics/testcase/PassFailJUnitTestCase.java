@@ -1,7 +1,9 @@
 package grader.basics.testcase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,9 +46,13 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected double fractionComplete;
 	public final static  TestCaseResult NO_OP_RESULT =  new TestCaseResult(0, null, null, true);
 
+	protected boolean precedingTestMustBeCorrected = false;
+	
 
 	protected ABufferingTestInputGenerator outputBasedInputGenerator;
 	protected RunningProject interactiveInputProject;
+	protected Map<String, TestCaseResult> nameToResult = new HashMap();
+
 
 	/**
 	 * This is where we add an instance of the test case. This means only subclasses
@@ -184,11 +190,18 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 			}
 			TestCaseResult aLastResult = aPrecedingTestInstance.getLastResult();
 			if (aLastResult.isFail() && failedTestVetoes(aPrecedingTestElement)) {
-				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed:", false);
+				precedingTestMustBeCorrected = true;
+
+				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed. \n Please correct the problems identified by preceding test:" + aPrecedingTestElement.getSimpleName() +  " before running this test", false);
 			} else if (aLastResult.isPartialPass() && partialPassTestVetoes(aPrecedingTestElement)) {
-				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " did not pass:", false);
+				precedingTestMustBeCorrected = true;
+
+				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " did not pass.\n Please correct the problems identified by preceding test:" + aPrecedingTestElement.getSimpleName() +  " before running this test", false);
 
 			}
+//			if (!aLastResult.isPass()) {
+////				precedingTestMustBeCorrected = true;
+//			}
 			// if (!aLastResult.isFail()) {
 			if (shouldScaleResult() &&
 					!aLastResult.isPass()) {
@@ -373,5 +386,56 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	}
 	public void setShowResult(boolean newVal) {
 		showResult = newVal;
+	}
+	public Map<String, TestCaseResult> getNameToResult() {
+		return nameToResult;
+	}
+	public boolean isPassed(String aTestName) {
+		TestCaseResult aResult = nameToResult.get(aTestName);
+		return (aResult != null) && (aResult.isPass());
+	}
+	public TestCaseResult combineNormalizedResults(String[] aTestNames) {
+		return combineResults(toTestResults(aTestNames));
+	}
+	
+	public TestCaseResult[] toTestResults(String[] aTestNames) {
+		TestCaseResult[] aModifiedResults = new TestCaseResult[aTestNames.length];
+		for (int anIndex = 0; anIndex < aTestNames.length; anIndex++) {
+				String aTestName = aTestNames[anIndex];
+				TestCaseResult anOriginalResult = nameToResult.get(aTestName);
+				if (anOriginalResult == null) {
+					System.err.println("Missing result for:" + aTestName);
+					continue;
+				}
+				TestCaseResult aModifiedResult = anOriginalResult.clone();
+				double aNewPercentage = anOriginalResult.isFail()?0:1.0/aTestNames.length;
+				aModifiedResult.setPercentage(aNewPercentage);
+				aModifiedResults[anIndex] = aModifiedResult;
+		}
+		return aModifiedResults;
+	}
+	protected boolean precedingTestsCorrect() {
+		List<PassFailJUnitTestCase> aPrecedingTestInstances = 
+				getPrecedingTestInstances();
+		for (PassFailJUnitTestCase aTestCase:aPrecedingTestInstances) {
+			if (!aTestCase.getLastResult().isPass()) {
+				return false;
+			}
+		}
+		return false;
+	}
+	protected boolean precedingTestsMustBeCorrected() {
+		List<PassFailJUnitTestCase> aPrecedingTestInstances = 
+				getPrecedingTestInstances();
+		for (PassFailJUnitTestCase aTestCase:aPrecedingTestInstances) {
+			if (aTestCase.isPrecedingTestMustBeCorrected()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isPrecedingTestMustBeCorrected() {
+		return precedingTestMustBeCorrected;
 	}
 }
