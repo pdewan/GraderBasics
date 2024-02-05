@@ -10,7 +10,7 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import util.annotations.MaxValue;
 @MaxValue(0)
-public class FairAllocationHintOnOutput_1 extends FairAllocationHint {
+public class FairAllocationHint1OnOutput extends FairAllocationHint {
 	
 //	static Class[] PRECEDING_TESTS = {
 //			FairAllocationSmallProblem.class

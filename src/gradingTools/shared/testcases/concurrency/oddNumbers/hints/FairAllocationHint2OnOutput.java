@@ -12,7 +12,7 @@ import util.annotations.MaxValue;
 @MaxValue(0)
 public class FairAllocationHint2OnOutput extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
-			FairAllocationHintOnOutput_1.class
+			FairAllocationHint1OnOutput.class
 	};
 
 	

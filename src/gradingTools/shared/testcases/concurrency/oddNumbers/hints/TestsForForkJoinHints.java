@@ -6,33 +6,39 @@ import org.junit.runners.Suite;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.BasicJUnitUtils;
 import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
-import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	SmallNumberOfRandoms.class,
-	FairAllocationSmallProblem.class,
-	FairAllocationHints.class
-//	FairAllocationHint1OnOutput.class,
-//	FairAllocationHint2OnOutput.class,
-//	FairAllocationHint3OnError.class,
-//	FairAllocationHint4OnCode.class,
-//	FairAllocationHint5OnCode.class		
+	ForkJoinSmallProblem.class,
+//	ForkJoinHints.class
+//	ForkJoinHint2OnOutput.class,
+//	ForkJoinHint3OnOutput.class,
+//	ForkJoinHint1OnOutput.class,
+//	ForkJoinHint4OnCode.class,
+//	ForkJoinHint5OnCode.class,
+//	ForkJoinHint6OnCode.class
+
+		
 })
 
-public class FairAllocationHintsSuite extends ConcurrencySuiteSkeleton {
+public class TestsForForkJoinHints extends ConcurrencySuiteSkeleton{
 	public static void main (String[] args) {
 		try {
-			BasicJUnitUtils.interactiveTest(FairAllocationHintsSuite.class);
+//			BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLanguage(BasicLanguageDependencyManager.JAVA_LANGUAGE);
+//			BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+//			setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
+			
+			BasicJUnitUtils.interactiveTest(TestsForForkJoinHints.class);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	static {
-		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
-		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
-	}
-}
+	
+	
+	
 
+}

@@ -33,13 +33,23 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin{
 //		return false;
 //	}
 	
-	@Override
+	public static String toString (Class[] aClasses) {
+		if (aClasses.length == 1) {
+			return aClasses[0].getSimpleName();
+		}
+		String[] aSimpleNames = new String[aClasses.length];
+		for (int anIndex = 0; anIndex < aSimpleNames.length; anIndex++) {
+			aSimpleNames[anIndex] = aClasses[anIndex].getSimpleName();
+		}
+		return Arrays.toString(aSimpleNames);
+	}
 	
+	@Override	
 	public TestCaseResult test(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
 		if (precedingTestsCorrect()) {
-			return partialPass(0.1, 
-					"No hint needed for: " + Arrays.toString(precedingTests()));
+			return partialPass(0.1,
+					"\nNo hint needed for " + toString(precedingTests()) + " as the test is correct");
 		}
 		if (precedingTestsMustBeCorrected()) {
 			return partialPass(0.2,

@@ -1302,7 +1302,7 @@ protected String totalIterationTuplesMessage(Map<Thread, List<Map<String, Object
 }
 protected String totalterationEventsMessage(int anExpectedIterations, int anActualIterations) {
 	if (anExpectedIterations !=  anActualIterations) {
-		return "Actual total iterations:" + anActualIterations + " != actual total:" + anExpectedIterations; 
+		return "Actual total iterations:" + anActualIterations + " != expected total iterations:" + anExpectedIterations; 
 	} else {
 		return null;
 	}

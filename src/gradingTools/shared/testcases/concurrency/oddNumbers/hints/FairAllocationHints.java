@@ -12,20 +12,19 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	SmallNumberOfRandoms.class,
-	FairAllocationSmallProblem.class,
-	FairAllocationHints.class
-//	FairAllocationHint1OnOutput.class,
-//	FairAllocationHint2OnOutput.class,
-//	FairAllocationHint3OnError.class,
-//	FairAllocationHint4OnCode.class,
-//	FairAllocationHint5OnCode.class		
+//	SmallNumberOfRandoms.class,
+//	FairAllocationSmallProblem.class,
+	FairAllocationHint1OnOutput.class,
+	FairAllocationHint2OnOutput.class,
+	FairAllocationHint3OnError.class,
+	FairAllocationHint4OnCode.class,
+	FairAllocationHint5OnCode.class		
 })
 
-public class FairAllocationHintsSuite extends ConcurrencySuiteSkeleton {
+public class FairAllocationHints extends ConcurrencySuiteSkeleton {
 	public static void main (String[] args) {
 		try {
-			BasicJUnitUtils.interactiveTest(FairAllocationHintsSuite.class);
+			BasicJUnitUtils.interactiveTest(FairAllocationHints.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

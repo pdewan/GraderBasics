@@ -49,6 +49,10 @@ public class PostTestExecutorOfForkJoin
 		return combineNormalizedResults(relevantCheckNames());
 	}
 	
+	protected TestCaseResult[] maybeAddToResults (TestCaseResult[] aResults) {
+		return aResults;
+	}
+	
 	public TestCaseResult computeFromPreTest(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
 
@@ -56,6 +60,7 @@ public class PostTestExecutorOfForkJoin
 				(AbstractForkJoinChecker) getPrecedingTestInstances().get(0);
 		String[] aTestNames = relevantCheckNames();
 		TestCaseResult[] aResults = preExecution.toTestResults(relevantCheckNames());
+		aResults = maybeAddToResults(aResults);
 		for (int anIndex = 0; anIndex < aTestNames.length; anIndex++)  {
 			nameToResult.put(aTestNames[anIndex], aResults[anIndex]);
 		}

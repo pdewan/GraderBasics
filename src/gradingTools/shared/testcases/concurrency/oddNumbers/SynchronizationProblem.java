@@ -1,7 +1,12 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.ThisExpression;
 
 import grader.basics.junit.NotAutomatableException;
@@ -50,6 +55,40 @@ public class SynchronizationProblem extends PostTestExecutorOfForkJoin {
 //		System.out.print(nameToResult);
 //		return oddNumbersExecution().getLastResult();
 //	}
-	
+	protected TestCaseResult isAddOddNumberResult = null;
+	public TestCaseResult getIsAddOddNumberResult() {
+		return isAddOddNumberResult;
+	}
+	protected void determineIfAddOddNumberIsSynchronized() {
+		if (isAddOddNumberResult != null) {
+			return;
+		}
+		try {
+			Class aSynchronizationClass = Class.forName("BasicSynchronizationDemo");
+			Class[] aFillParameters = {int.class};
+			Method anAddOddNumber = aSynchronizationClass.getDeclaredMethod("addOddNumber", aFillParameters);
+			if (Modifier.isSynchronized(anAddOddNumber.getModifiers())) {
+				isAddOddNumberResult = partialPass(0.1, "No race conditions");
+//				aMessage = "Please make fillOddNumbers(int[]) in BasicSynchronizationDemo synchronized ";
+			} else {
+				isAddOddNumberResult = fail("Race conditions exist");
+			}			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	protected TestCaseResult[] maybeAddToResults (TestCaseResult[] aResults) {
+		determineIfAddOddNumberIsSynchronized();
+		List<TestCaseResult> aNewResults = new ArrayList<TestCaseResult>();
+		aNewResults.addAll(Arrays.asList(aResults));
+		aNewResults.add(isAddOddNumberResult);
+		return aNewResults.toArray(aResults);
+//		return super.maybeAddToResults(aResults);
+	}
 
 }

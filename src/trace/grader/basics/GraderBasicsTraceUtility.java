@@ -129,7 +129,8 @@ public class GraderBasicsTraceUtility {
 	// This method must be reused directly in all testable code and should
 	// be given to the student
 	public static String threadPrefix() {
-		return "Thread " + Thread.currentThread().getId() + "->";
+//		return "Thread " + Thread.currentThread().getId() + "->";
+		return Thread.currentThread().getName() + "->";
 	}
 
 	// This method should be used directly in all testable programs

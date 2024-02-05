@@ -3,22 +3,21 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.BasicJUnitUtils;
 import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
-import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
-import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	SmallNumberOfRandoms.class,
-	ForkJoinSmallProblem.class,
-	ForkJoinHint2OnOutput.class,
-	ForkJoinHint3OnOutput.class,
-	ForkJoinHint1OnOutput.class,
-	ForkJoinHint4OnCode.class,
-	ForkJoinHint5OnCode.class,
-	ForkJoinHint6OnCode.class
+//	SmallNumberOfRandoms.class,
+//	ForkJoinSmallProblem.class,
+	TestsForForkJoinHints.class,
+	ForkJoinHints.class
+//	ForkJoinHint2OnOutput.class,
+//	ForkJoinHint3OnOutput.class,
+//	ForkJoinHint1OnOutput.class,
+//	ForkJoinHint4OnCode.class,
+//	ForkJoinHint5OnCode.class,
+//	ForkJoinHint6OnCode.class
 
 		
 })

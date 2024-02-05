@@ -422,7 +422,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 	protected boolean precedingTestsMustBeCorrected() {
 		List<PassFailJUnitTestCase> aPrecedingTestInstances = 
@@ -438,4 +438,5 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	public boolean isPrecedingTestMustBeCorrected() {
 		return precedingTestMustBeCorrected;
 	}
+	
 }
