@@ -9,10 +9,11 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(2)
 public class BasicsProblem extends PostTestExecutorOfForkJoin {
-	
+	public static final String EXPLANATION = "This test checks for the correct thread count, number of loop iterations performed to process the input random numbers, correct implementation of each iteration, and pre-fork behavior. This test should work correctly with the given code. However changes to fairRemainderSize can cause this test to fail."; 
 //	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
 	String[] relevantCheckNames = {
 			THREAD_COUNT,

@@ -33,7 +33,9 @@ public class FairAllocationLargerProblem extends FairAllocationProblem {
 //			RETURN_TOO_BIG,
 //			UNKNOWN
 //	}
-	Class[] PRECEDING_TESTS = {LargerNumberOfRandoms.class};
+	Class[] PRECEDING_TESTS = {
+			LargerNumberOfRandoms.class,
+			BasicsLargerProblem.class};
 //	String[] relevantCheckNames = {
 //			this.COMPARE_ITERATION_COUNTS,
 //			this.TOTAL_ITERATION_COUNT

@@ -1,6 +1,6 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
-public class SynchronizationHint4OnOutput extends SynchronizationHint{
+public class SynchronizationHint5OnThreadSwitch extends SynchronizationHint{
 
 	static Class[] PREVIOUS_HINTS = {
 			SynchronizationHint3OnOutput.class
@@ -14,9 +14,13 @@ public class SynchronizationHint4OnOutput extends SynchronizationHint{
 
 	@Override
 	protected String hint() {
-		String aLine1 = "To identify multiple increments reduced to one, \n look in the output for lines containing the strings:";
-		String aLine2 = "\"(LD)\" and \"(SV)\"";
-		String aLine3 = "To identify the method outputing these lines, \n look in the code for the strings \"traceLoad\" and \"traceSave\" ";
+		String aLine1 = "Look in the code for the sleep call";
+		String aLine2 = "Before this line call a load occurs";
+		String aLine3 = "Afer this line a save occurs";
+		String aLine4 = "A sleep call results in a thread switch";
+		String aLine5 = "What probem can occur if another thread executes between the load and save";
+
+
 		
 //		String aLine3 = "\"Adding odd number to all odd numbers\" and \"All Odd Numbers\"";
 

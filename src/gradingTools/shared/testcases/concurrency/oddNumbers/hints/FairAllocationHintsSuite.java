@@ -12,8 +12,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	SmallNumberOfRandoms.class,
-	FairAllocationSmallProblem.class,
+	TestsForFairAllocation.class,
 	FairAllocationHints.class
 //	FairAllocationHint1OnOutput.class,
 //	FairAllocationHint2OnOutput.class,

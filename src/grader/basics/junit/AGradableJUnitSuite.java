@@ -334,11 +334,18 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		List<String[]> aSessions = ASourceAndTestLogWriter.getInstance().readAllSessions(this);
 		return aSessions;
 	}
-
-
+	
+	
 	@Visible(false)
 	public TestCaseResult test() throws NotAutomatableException,
 			NotGradableException {
+		date.setTime(System.currentTimeMillis());
+
+		System.out.println(">>Running at " + date + " suite " + getExplanation() +"\n<<");
+//		String anExplanation = getExplanation();
+//		if (anExplanation != null && !anExplanation.isEmpty()) {
+//			System.out.println(this.getExplanation());
+//		}
 //		JUnitTestsEnvironment.clearCachedJUnitTestCases();
 		for (GradableJUnitTest aTest : children) {
 			JUnitTestCase aJUnitTestCase = aTest.getJUnitTestCase();

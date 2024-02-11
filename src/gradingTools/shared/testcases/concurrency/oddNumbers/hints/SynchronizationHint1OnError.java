@@ -1,6 +1,6 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
-public class SynchronizationHint1OnOutput extends SynchronizationHint{
+public class SynchronizationHint1OnError extends SynchronizationHint{
 
 	@Override
 	protected Class[] previousHints() {

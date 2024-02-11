@@ -1,18 +1,10 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers;
 
-import java.util.Map;
-
-import grader.basics.junit.NotAutomatableException;
-import grader.basics.junit.TestCaseResult;
-import grader.basics.project.NotGradableException;
-import grader.basics.project.Project;
-import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
-import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(2)
-public class BasicsSmallProblem extends BasicsProblem {
-	
+@Explanation(BasicsProblem.EXPLANATION)
+public class BasicsSmallProblem extends BasicsProblem {	
 	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
 //	String[] relevantCheckNames = {
 //			THREAD_COUNT,

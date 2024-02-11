@@ -100,15 +100,37 @@ public class LocalChecksLogSender {
 		message.put("course_id",assignment);
 		message.put("password",password);
 		//message.put("course_id",determineSemester());
+//		String BS = "\\\\\\";
+		String BS = " B*S ";
+		log = log.replaceAll("\n",  BS + "n");
+		log = log.replaceAll("\r", BS + "r");
+		log = log.replaceAll("	", BS + "t");
+		log = log.replaceAll("\t", BS + "t");
+		log = log.replaceAll("\f", BS + "f");
+		log = log.replaceAll("\"",  BS + "q");
+		log = log.replaceAll("\\=", BS + "=" );
+		log = log.replaceAll("\\-", BS + "-" );
+		log = log.replaceAll("\\+", BS + "+" );
+
+//		log = log.replaceAll("\\", "BSBS");
+
+
 		
+
+//		log = log.replaceAll("\\", "");
 		JSONObject logJSON = new JSONObject();
+//		log = JSON
 		logJSON.put("json", log);
+		
+
 		
 		message.put("log", logJSON);
 		if (log.length() == 0) {
 			return;
 		}
+//		System.out.println("Posting message:" +message );
 		JSONObject ret = post(message,reportURL);
+//		System.out.println("Return value from post:" + ret);
 		if(ret==null) {
 			Thread.sleep(5000);
 			post(message,reportURL);

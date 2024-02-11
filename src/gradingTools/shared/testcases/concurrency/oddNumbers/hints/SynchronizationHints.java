@@ -13,10 +13,16 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmall
 @Suite.SuiteClasses({
 //	SmallNumberOfRandoms.class,
 //	SynchronizationSmallProblem.class,
-	SynchronizationHint1OnOutput.class,
-	SynchronizationHint2OnOutput.class,
-	SynchronizationHint3OnOutput.class,
-	SynchronizationHint4OnOutput.class,		
+//	SynchronizationHint1OnOutput.class,
+//	SynchronizationHint2OnOutput.class,
+//	SynchronizationHint3OnOutput.class,
+//	SynchronizationHint4OnOutput.class,	
+	SynchronizationHint1OnError.class,
+	SynchronizationHint2OnGeneralRaceConditions.class,
+	SynchronizationHint3OnSpecificRaceCondition.class,
+	SynchronizationHint4OnSpecificOutput.class,
+
+
 })
 
 public class SynchronizationHints extends ConcurrencySuiteSkeleton {

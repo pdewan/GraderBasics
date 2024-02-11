@@ -1274,7 +1274,7 @@ protected String compareIterationEventsMessage(int aMinIterations, int aMaxItera
 	int aDifference = aMaxIterations - aMinIterations;
 	if (aDifference >  1) {
 //		return "Imbalanced thread load"; 
-		return "Imbalanced thread load: Max thread iterations =" + aMaxIterations + " Min thread iterations =" + aMinIterations; 
+		return "\nImbalanced thread load:\nMax thread iterations = " + aMaxIterations + " Min thread iterations = " + aMinIterations; 
 
 //		return "Imbalanced thread load: Max thread iterations(" + aMaxIterations + ") - min thread iterations(" + aMinIterations + ") = " + aDifference + ". It should be <= 1"; 
 

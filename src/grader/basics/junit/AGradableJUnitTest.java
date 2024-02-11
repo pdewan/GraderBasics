@@ -18,7 +18,6 @@ import org.junit.runners.model.InitializationError;
 import bus.uigen.attributes.AttributeNames;
 import bus.uigen.introspect.Attribute;
 import grader.basics.config.BasicStaticConfigurationUtils;
-import grader.basics.observers.AnAbstractTestLogFileWriter;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 import grader.basics.testcase.PassFailJUnitTestCase;
@@ -146,7 +145,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public void setExplanation (Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(Explanation.class)) {
 			Explanation anExplanation =  (Explanation) aJUnitClass.getAnnotation(Explanation.class);
-			explanation = aJUnitClass.getSimpleName() + ":" + anExplanation.value();
+//			explanation = aJUnitClass.getSimpleName() + ":" + anExplanation.value();
+			explanation = aJUnitClass.getSimpleName() + ": \n" + anExplanation.value();
+
 		} else {
 			explanation = aJUnitClass.getSimpleName();
 		}
@@ -228,13 +229,15 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	protected void printResult() {
 		
 		if (getJUnitTestCase().isShowResult() && !hasShownResult) {
-		System.out.println(getName() + " Test Result:\n" + 
+//		System.err.println(getName() + ">>Test Result:\n>>" + 
+		System.out.println(">>Test Result:\n" + 
+
 				getSimpleName() + "," +
 				status + "," +
 				score + "," +
 				maxScore + "," +
 				message + 
-				"\n"
+				"\n<<"
 				);
 		hasShownResult = true;
 		}
@@ -319,13 +322,21 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 
 			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
 			date.setTime(System.currentTimeMillis());
-			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
+//			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
+//			String anExplanation = getExplanation();
+//			if (anExplanation != null && !anExplanation.isEmpty()) {
+//				System.out.println(anExplanation);
+//			}
+			
 //			long aStartTime = System.currentTimeMillis();
+//			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
+			System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
+
 			aRunner.run(runNotifier);
 			
 			long anElapsedTime = System.currentTimeMillis() - date.getTime();
 			
-			System.err.println("Test execution time (ms):" + anElapsedTime);
+			System.out.println(">>" + aJUnitClass.getSimpleName() + " test execution time (ms):" + anElapsedTime + "<<");
 
 			testCaseResult = runListener.getTestCaseResult();
 			failure = runListener.getFailure();

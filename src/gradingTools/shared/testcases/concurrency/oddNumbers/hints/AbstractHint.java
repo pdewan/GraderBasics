@@ -48,8 +48,9 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin{
 	public TestCaseResult test(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
 		if (precedingTestsCorrect()) {
+//		if (precedingTestCorrect()) {
 			return partialPass(0.1,
-					"\nNo hint needed for " + toString(precedingTests()) + " as the test is correct");
+					"\nNo hint needed for " + toString(precedingTests()) + " as its test is successful");
 		}
 		if (precedingTestsMustBeCorrected()) {
 			return partialPass(0.2,

@@ -424,6 +424,17 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		}
 		return true;
 	}
+	protected boolean precedingTestCorrect() {
+		List<PassFailJUnitTestCase> aPrecedingTestInstances = 
+				getPrecedingTestInstances();
+		PassFailJUnitTestCase aLastTest = aPrecedingTestInstances.get(aPrecedingTestInstances.size() -1);
+		for (PassFailJUnitTestCase aTestCase:aPrecedingTestInstances) {
+			if (!aTestCase.getLastResult().isPass()) {
+				return false;
+			}
+		}
+		return true;
+	}
 	protected boolean precedingTestsMustBeCorrected() {
 		List<PassFailJUnitTestCase> aPrecedingTestInstances = 
 				getPrecedingTestInstances();

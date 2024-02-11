@@ -43,6 +43,8 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	static final String LAST_SOURCES_FILE_NAME_SUFFIX = ".txt";
 	static final String REPLAYED_SOURCE_FILE_NAME_MODIFIER = "_replayed";
 	static final String REPLAYED_SOURCE_FILE_NAME_SUFFIX = ".txt";
+	static final String DIFF_INDICATOR = "\n(DIFF_FROM_PREVIOUS_FILE)\n";
+
 
 	Project project;
 	List<String> lastSourcesLines;
@@ -467,7 +469,10 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 			String aDiff = toDelta (anOriginalFile, aCurrentFile );
 			if (aDiff == EMPTY_STRING)
 				continue;
-			retVal.put(key, aDiff);			
+			String aCurrentFileAndDiff = aCurrentFile + DIFF_INDICATOR + aDiff;
+//			retVal.put(key, aDiff);
+			retVal.put(key, aCurrentFileAndDiff);			
+
 		}
 		return retVal;
 		// it will be nice to find renamed files

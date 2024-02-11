@@ -83,6 +83,12 @@ public class BasicProjectExecution {
 		}
 		return previousOut;
 	}
+	static PrintStream previousErr() {
+		if (previousErr == null) {
+			previousErr = System.err;
+		}
+		return previousErr;
+	}
 	public static int getConstructorTimeOut() {
 //		return constructorTimeOut;
 		return basicExecutionSpecification.getConstructorTimeOut();
@@ -567,7 +573,7 @@ public class BasicProjectExecution {
 	static Stack<File> tmpErrFileStack = new Stack();
 	// do not initialize it prematurely, before some other code has initialized
 	static PrintStream previousOut; // = System.out;
-	static PrintStream previousErr = System.err;
+	static PrintStream previousErr; // = System.err;
 	static InputStream originalIn = System.in;
 	static FileInputStream newIn;
 	static Stack<PrintStream> originalOutStack = new Stack();
@@ -614,9 +620,12 @@ public class BasicProjectExecution {
 			aTmpErrFile.deleteOnExit();
 			fileErrStack.push(anErrFileStream);
 			tmpErrFileStack.push(aTmpErrFile);
-			originalErrStack.push(previousOut()); // this should be System.out;
+//			originalErrStack.push(previousOut()); // this should be System.out;
+			PrintStream aPreviousErr = previousErr();
+			originalErrStack.push(aPreviousErr); // this should be System.err;
+
 			PrintStream teeErrStream = new TeePrintStream(anErrFileStream,
-					previousErr);
+					aPreviousErr);
 			System.setErr(teeErrStream);
 			previousErr = teeErrStream;
 
@@ -648,8 +657,11 @@ public class BasicProjectExecution {
 
 			fileOutStack.push(aFileStream);
 			tmpOutFileStack.push(aTmpFile);
+			PrintStream aPreviousOut = previousOut();
 			originalOutStack.push(previousOut()); // this should be System.out;
-			PrintStream teeStream = new TeePrintStream(aFileStream, previousOut());
+//			PrintStream teeStream = new TeePrintStream(aFileStream, previousOut());
+			PrintStream teeStream = new TeePrintStream(aFileStream, aPreviousOut);
+
 			System.setOut(teeStream);
 			previousOut = teeStream;
 

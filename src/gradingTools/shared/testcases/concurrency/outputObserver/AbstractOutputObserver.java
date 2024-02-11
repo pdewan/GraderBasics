@@ -182,7 +182,7 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 
 
 	protected TestCaseResult runAndCheck(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {		
-		System.out.println("Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs));
+		System.out.println(">>Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs) + "<<");
 
 		observablePrintStream = redirectOutput();
 		receivePropertyChanges();

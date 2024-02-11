@@ -189,7 +189,7 @@ public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecke
 					+ numExpectedFinalNumbers + ")";
 		}
 		if (aComputedFinalNumbers != expectedFinalSet.size()) {
-			return "\nComputed set of odd numbers (" + aComputedFinalNumbers + ") != " + "does not have expected  set size ("
+			return "\nComputed set of odd numbers (" + aComputedFinalNumbers + ") != " + "does not have expected set size ("
 					+ expectedFinalSet.size() + ")";
 		}
 		Set aComputedFinalSet = (Set) aNameValuePairs.get("Odd Numbers");

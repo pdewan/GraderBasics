@@ -56,10 +56,15 @@ public class AJUnitTestResult extends RunListener implements JUnitTestResult {
 			if (!aThrowable.getClass().isAssignableFrom(AssertionError.class)) {
 			aThrowable.printStackTrace();
 			} 
-
-			System.out.println("Steps traced since last test:");
+			String aSteps = Tracer.consumeBufferedTracedMessages();
+			if (!aSteps.isBlank() && !aSteps.isEmpty() ) {
+				
+			
+			System.err.println(">>Steps traced since last test:");
 //			System.out.println(Tracer.getBufferedTracedMessages());
-			System.out.println(Tracer.consumeBufferedTracedMessages());
+//			System.err.println(Tracer.consumeBufferedTracedMessages());
+			System.err.println(aSteps);
+			}
 
 			if (aMessage == null) { // some exception
 				checkResult = new TestCaseResult(false, 

@@ -1,6 +1,6 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
-public class SynchronizationHint3OnOutput extends SynchronizationHint{
+public class SynchronizationHint3OnSpecificRaceCondition extends SynchronizationHint{
 
 	static Class[] PREVIOUS_HINTS = {
 			SynchronizationHint2OnOutput.class

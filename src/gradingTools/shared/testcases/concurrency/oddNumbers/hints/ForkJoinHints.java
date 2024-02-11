@@ -13,8 +13,10 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 @Suite.SuiteClasses({
 //	SmallNumberOfRandoms.class,
 //	ForkJoinSmallProblem.class,
-	ForkJoinHint1OnOutput.class,
-	ForkJoinHint2OnOutput.class,
+//	ForkJoinHint1OnOutput.class,
+//	ForkJoinHint2OnOutput.class,
+	ForkJoinHint1OnError.class,
+	ForkJoinHint2OnCodeAndOutput.class,
 	ForkJoinHint3OnOutput.class,
 	ForkJoinHint4OnCode.class,
 	ForkJoinHint5OnCode.class,

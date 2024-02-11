@@ -1,28 +1,10 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers;
 
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.core.dom.ThisExpression;
-
-import com.puppycrawl.tools.checkstyle.api.DetailAST;
-import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-
-import grader.basics.junit.NotAutomatableException;
-import grader.basics.junit.TestCaseResult;
-import grader.basics.project.NotGradableException;
-import grader.basics.project.Project;
-import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
-import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
-import unc.checks.TagBasedCheck;
-import unc.symbolTable.STMethod;
-import unc.symbolTable.STType;
-import unc.symbolTable.SymbolTable;
-import unc.symbolTable.SymbolTableFactory;
-import unc.tools.checkstyle.PostProcessingMain;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(10)
+@Explanation(FairAllocationProblem.EXPLANATION)
+
 public class FairAllocationSmallProblem extends FairAllocationProblem {
 	
 //	enum FairAllocationErrorInference {
@@ -33,7 +15,11 @@ public class FairAllocationSmallProblem extends FairAllocationProblem {
 //			RETURN_TOO_BIG,
 //			UNKNOWN
 //	}
-	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
+	Class[] PRECEDING_TESTS = {
+			SmallNumberOfRandoms.class,
+			BasicsSmallProblem.class
+
+			};
 //	String[] relevantCheckNames = {
 //			this.COMPARE_ITERATION_COUNTS,
 //			this.TOTAL_ITERATION_COUNT
