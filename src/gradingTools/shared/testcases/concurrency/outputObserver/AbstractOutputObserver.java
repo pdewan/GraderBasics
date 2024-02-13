@@ -1,6 +1,7 @@
 package gradingTools.shared.testcases.concurrency.outputObserver;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -180,9 +181,15 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 	}
 	abstract protected boolean sufficientOutputCredit(TestCaseResult aResult) ;
 
+//	List<String> preAnnouncements = new ArrayList();
+//	List<String> postAnnouncemets = new ArrayList();
 
 	protected TestCaseResult runAndCheck(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {		
-		System.out.println(">>Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs) + "<<");
+		String aPreAnnouncement = ">>Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs) + "<<";
+		System.out.println(aPreAnnouncement);
+		addPreAnnouncement(aPreAnnouncement);
+
+//		System.out.println(">>Test about to invoke " + aMainClass.getName() + " with arguments " + Arrays.toString(anArgs) + "<<");
 
 		observablePrintStream = redirectOutput();
 		receivePropertyChanges();

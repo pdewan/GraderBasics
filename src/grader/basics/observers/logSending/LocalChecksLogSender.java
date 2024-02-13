@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.util.Calendar;
 
 import analyzer.extension.timerTasks.LogNameManager;
+import grader.basics.observers.LogEntryKind;
 
 public class LocalChecksLogSender {
 	private static long totalLogSizeSent = 0;
@@ -69,7 +70,9 @@ public class LocalChecksLogSender {
 	}
 	
 	public static void sendToServer(SendingData sd) throws Exception {
-		sendToServer(sd.isTests(), sd.getLogFileName(), sd.getLog(),sd.getAssignment(),sd.getIteration());
+//		sendToServer(sd.isTests(), sd.getLogFileName(), sd.getLog(),sd.getAssignment(),sd.getIteration());
+		sendToServer(sd.getLogEntryKind(), sd.getLogFileName(), sd.getLog(),sd.getAssignment(),sd.getIteration());
+
 	}
 	
 	private static void maybeUpdateLogDirectory(String aLogFilePath) {
@@ -81,14 +84,19 @@ public class LocalChecksLogSender {
 		lastLogDirectory = aLogFile.getParentFile();
 	}
 	
-	public static void sendToServer(boolean anIsTests, String aLogFilePath, String log, String assignment, int sessionId) throws Exception{		
-		if (anIsTests) {
+//	public static void sendToServer(boolean anIsTests, String aLogFilePath, String log, String assignment, int sessionId) throws Exception{		
+	public static void sendToServer(LogEntryKind aLogEntryKind, String aLogFilePath, String log, String assignment, int sessionId) throws Exception{		
+	
+//		if (anIsTests) {
+		if (aLogEntryKind == LogEntryKind.TEST) {
 			maybeUpdateLogDirectory(aLogFilePath);
 		}
 		File aFile = new File(aLogFilePath);
 		long aStartTime = System.currentTimeMillis();
 		JSONObject message = new JSONObject();
-		String aLogId = anIsTests + " " + LogNameManager.getLoggedName()+" "+ " "+sessionId + " " + System.currentTimeMillis()+ " " + aFile.getName();
+		String aLogId = aLogEntryKind + " " + LogNameManager.getLoggedName()+" "+ " "+sessionId + " " + System.currentTimeMillis()+ " " + aFile.getName();
+
+//		String aLogId = anIsTests + " " + LogNameManager.getLoggedName()+" "+ " "+sessionId + " " + System.currentTimeMillis()+ " " + aFile.getName();
 //		message.put("log_id",System.currentTimeMillis()+"-"+sessionId);
 		message.put("log_id",aLogId);
 

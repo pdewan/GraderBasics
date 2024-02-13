@@ -47,21 +47,21 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 
 
 	Project project;
-	List<String> lastSourcesLines;
-	List<String> currentSourcesLines;
+	private List<String> lastSourcesLines;
+	private List<String> currentSourcesLines;
 
-	Map<String, String> lastSourcesMap;
-	int lastSourcesLength;
-	Map<String, String> currentSourcesMap;
-	int currentSourcesLength;
-	Map<String, String> diffMap;
-	String lastSourceFileName;
-	String sourceLogFileName;
-	String sourceLogFileShortName;
+	private Map<String, String> lastSourcesMap;
+	private int lastSourcesLength;
+	private Map<String, String> currentSourcesMap;
+	private int currentSourcesLength;
+	private Map<String, String> diffMap;
+	private String lastSourceFileName;
+	private String sourceLogFileName;
+	private String sourceLogFileShortName;
 
-	String replayedSourceFileName;
-	boolean isAppended;
-	String[] emptyStrings = {};
+	private String replayedSourceFileName;
+	private boolean isAppended;
+	private String[] emptyStrings = {};
 
 	
 	public ASourceAndTestLogWriter() {
@@ -71,9 +71,11 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	
 	protected static final String SESSION_END = "//SESSION END";
 	protected static final String SESSION_START = "//SESSION START";
+	StringBuffer retVal = new StringBuffer(ABasicTextManager.MAX_SOURCE_SIZE);
 
 	public  String toLogEntry(String aText) {
-		StringBuffer retVal = new StringBuffer(ABasicTextManager.MAX_SOURCE_SIZE);
+		retVal.setLength(0);
+//		StringBuffer retVal = new StringBuffer(ABasicTextManager.MAX_SOURCE_SIZE);
 		int aSessionNumber = getSessionNumber();
 		int aLengthChange = currentSourcesLength - lastSourcesLength;
 		retVal.append(SESSION_START + "\n" + aSessionNumber + ",");		
@@ -165,7 +167,9 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 			try {
 				String aSourceFileName = getSourceLogFileName();
 //				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
-				getLogSender().addToQueue(false, aSourceFileName, aNextLogEntry, getTopLevelInfo(), numTotalRuns);
+//				getLogSender().addToQueue(false, aSourceFileName, aNextLogEntry, getTopLevelInfo(), numTotalRuns);
+				getLogSender().addToQueue(LogEntryKind.SOURCE, aSourceFileName, aNextLogEntry, getTopLevelInfo(), numTotalRuns);
+
 			}catch(Exception e) {
 //				System.err.println("Error resolving local checks server sending");
 //				System.err.println("Thrown message:\n"+e.getMessage());
@@ -655,6 +659,7 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 		if (!BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
 			return;
 		}
+//		writeLastSourcesText();
 		if (!isAppended) {
 			appendChanges();
 			writeLastSourcesText();

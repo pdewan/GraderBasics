@@ -14,6 +14,7 @@ import grader.basics.config.BasicConfigurationManagerSelector;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.observers.ASourceAndTestLogWriter;
 import grader.basics.observers.AnAbstractTestLogFileWriter;
+import grader.basics.observers.IOTraceRepository;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 import gradingTools.logs.models.MetricsUtils;
@@ -340,8 +341,12 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public TestCaseResult test() throws NotAutomatableException,
 			NotGradableException {
 		date.setTime(System.currentTimeMillis());
+		String anOutput = ">>Running at " + date + " suite " + getExplanation() +"\n<<";
+		System.out.println(anOutput);
+		IOTraceRepository.addPreAnnouncement(anOutput);
+//		jUnitTest.addPreAnnouncement(anOutput);
+//		System.out.println(">>Running at " + date + " suite " + getExplanation() +"\n<<");
 
-		System.out.println(">>Running at " + date + " suite " + getExplanation() +"\n<<");
 //		String anExplanation = getExplanation();
 //		if (anExplanation != null && !anExplanation.isEmpty()) {
 //			System.out.println(this.getExplanation());

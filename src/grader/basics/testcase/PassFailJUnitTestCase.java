@@ -1,6 +1,7 @@
 package grader.basics.testcase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +11,15 @@ import org.junit.Test;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.RunningProject;
+import grader.basics.junit.AGradableJUnitTest;
 //import grader.basics.execution.RunningProject;
 import grader.basics.junit.BasicJUnitUtils;
+import grader.basics.junit.GradableJUnitTest;
 import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.NotesAndScore;
 import grader.basics.junit.TestCaseResult;
+import grader.basics.observers.IOTraceRepository;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
@@ -41,12 +45,16 @@ import util.trace.Tracer;
  * </pre>
  */
 public abstract class PassFailJUnitTestCase implements JUnitTestCase {
+//	private List<String> preAnnouncements = new ArrayList<String>();
+//	private List<String> postAnnouncements = new ArrayList<String>();
 	protected String name = "anonymous";
 	protected TestCaseResult lastResult; // last run, for depndent tests
 	protected double fractionComplete;
 	public final static  TestCaseResult NO_OP_RESULT =  new TestCaseResult(0, null, null, true);
 
 	protected boolean precedingTestMustBeCorrected = false;
+//	private GradableJUnitTest gradableJUnitTest;
+
 	
 
 	protected ABufferingTestInputGenerator outputBasedInputGenerator;
@@ -111,9 +119,18 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 
 	public abstract TestCaseResult test(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException;
-
+	Date date = new Date();
 	@Test
 	public void defaultTest() {
+//		date.setTime(System.currentTimeMillis());
+//		String anExplanation = AGradableJUnitTest.computeExplanation(this.getClass());
+//
+//		String anOutput =
+//				">>Running at " + date + " test " +  anExplanation+ "\n<<";
+//
+//		System.out.println(anOutput);
+//////		System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
+//		addPreAnnouncement(anOutput);
 		passfailDefaultTest();
 	}
 
@@ -449,5 +466,30 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	public boolean isPrecedingTestMustBeCorrected() {
 		return precedingTestMustBeCorrected;
 	}
+	
+	public void addPreAnnouncement(String aNewValue) {
+		IOTraceRepository.addPreAnnouncement(aNewValue);
+//		preAnnouncements.add(aNewValue);
+	}
+	public void addPostAnnouncement(String aNewValue) {
+		IOTraceRepository.addPostAnnouncement(aNewValue);
+
+//		postAnnouncements.add(aNewValue);
+	}
+//	public void clearAnnouncements() {
+//		preAnnouncements.clear();
+//	}
+//	public List getPreAnnouncements() {
+//		return preAnnouncements;
+//	}
+//	public List getPostAnnouncements() {
+//		return postAnnouncements;
+//	}
+//	public GradableJUnitTest getGradableJUnitTest() {
+//		return gradableJUnitTest;
+//	}
+//	public void setGradableJUnitTest(GradableJUnitTest newVal) {
+//		gradableJUnitTest = newVal;
+//	}
 	
 }

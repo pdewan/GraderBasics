@@ -225,7 +225,9 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 //				String aLogFileName = getLogFileName();
 				String aLogFileName = getLogFilePath();
 //				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
-				getLogSender().addToQueue(true, aLogFileName, fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
+				getLogSender().addToQueue(LogEntryKind.TEST, aLogFileName, fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
+
+//				getLogSender().addToQueue(true, aLogFileName, fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
 			} catch (Exception e) {
 //				System.err.println("Error resolving local checks server sending");
 //				System.err.println("Thrown message:\n"+e.getMessage());

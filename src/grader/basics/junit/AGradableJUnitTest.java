@@ -18,6 +18,7 @@ import org.junit.runners.model.InitializationError;
 import bus.uigen.attributes.AttributeNames;
 import bus.uigen.introspect.Attribute;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.observers.IOTraceRepository;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 import grader.basics.testcase.PassFailJUnitTestCase;
@@ -141,16 +142,27 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			isExtra = false;
 		}
 	}
-	@Visible(false)
-	public void setExplanation (Class aJUnitClass) {
+	public static String computeExplanation(Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(Explanation.class)) {
 			Explanation anExplanation =  (Explanation) aJUnitClass.getAnnotation(Explanation.class);
 //			explanation = aJUnitClass.getSimpleName() + ":" + anExplanation.value();
-			explanation = aJUnitClass.getSimpleName() + ": \n" + anExplanation.value();
+			return aJUnitClass.getSimpleName() + ": \n" + anExplanation.value();
 
 		} else {
-			explanation = aJUnitClass.getSimpleName();
+			return aJUnitClass.getSimpleName();
 		}
+	}
+	@Visible(false)
+	public void setExplanation (Class aJUnitClass) {
+		explanation = computeExplanation(aJUnitClass);
+//		if (aJUnitClass.isAnnotationPresent(Explanation.class)) {
+//			Explanation anExplanation =  (Explanation) aJUnitClass.getAnnotation(Explanation.class);
+////			explanation = aJUnitClass.getSimpleName() + ":" + anExplanation.value();
+//			explanation = aJUnitClass.getSimpleName() + ": \n" + anExplanation.value();
+//
+//		} else {
+//			explanation = aJUnitClass.getSimpleName();
+//		}
 //		setName(explanation);
 	}	
 	@Visible(false)
@@ -204,7 +216,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	}
 	
 	@Visible(false)
-	public String getExplanation() {
+	public  String getExplanation() {
 		return explanation;
 	}
 	protected void showColor() {
@@ -229,16 +241,27 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	protected void printResult() {
 		
 		if (getJUnitTestCase().isShowResult() && !hasShownResult) {
-//		System.err.println(getName() + ">>Test Result:\n>>" + 
-		System.out.println(">>Test Result:\n" + 
+			String aPostAnnouncement = 
+					">>Test Result:\n" + 
 
 				getSimpleName() + "," +
 				status + "," +
 				score + "," +
 				maxScore + "," +
 				message + 
-				"\n<<"
-				);
+				"\n<<";
+//		System.err.println(getName() + ">>Test Result:\n>>" + 
+//		System.out.println(">>Test Result:\n" + 
+//
+//				getSimpleName() + "," +
+//				status + "," +
+//				score + "," +
+//				maxScore + "," +
+//				message + 
+//				"\n<<"
+//				);
+		System.out.println(aPostAnnouncement);
+		IOTraceRepository.addPostAnnouncement(aPostAnnouncement);
 		hasShownResult = true;
 		}
 		
@@ -328,10 +351,15 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //				System.out.println(anExplanation);
 //			}
 			
-//			long aStartTime = System.currentTimeMillis();
+			long aStartTime = System.currentTimeMillis();
 //			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
-			System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
+			String anOutput =
+					">>Running at " + date + " test " +  getExplanation()+ "\n<<";
 
+			System.out.println(anOutput);
+			IOTraceRepository.addPreAnnouncement(anOutput);
+////			System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
+//			jUnitTest.addPreAnnouncement(anOutput);
 			aRunner.run(runNotifier);
 			
 			long anElapsedTime = System.currentTimeMillis() - date.getTime();
@@ -343,6 +371,12 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			
 			jUnitTest = getJUnitTestCase();
 			if (jUnitTest != null) {
+//				String anOutput =
+//						">>Running at " + date + " test " +  getExplanation()+ "\n<<";
+//
+//				System.out.println(anOutput);
+////				System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
+//				jUnitTest.addPreAnnouncement(anOutput);
 				jUnitTest.setLastResult(testCaseResult);
 			}
 
@@ -439,8 +473,8 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		isExtra = newVal;		
 	}
 	@Visible(false)
-	@Override
-	public void setExplanation(String newVal) {
+//	@Override
+	public  void setExplanation(String newVal) {
 		explanation = newVal;		
 	}
 	
@@ -703,9 +737,26 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public GradableJUnitSuite getParentSuite() {
 		return parentSuite;
 	}
-	@Visible(false)	public void setParentSuite(GradableJUnitSuite parentSuite) {
-		this.parentSuite = parentSuite;
-	}
-	
+//	@Visible(false)	
+//	private List<String> preAnnouncements = new ArrayList();
+//	private List<String> postAnnouncements = new ArrayList();
+//	public void setParentSuite(GradableJUnitSuite parentSuite) {
+//		this.parentSuite = parentSuite;
+//	}
+//	public void addPreAnnouncement(String aNewValue) {
+//		preAnnouncements.add(aNewValue);
+//	}
+//	public void addPostAnnouncement(String aNewValue) {
+//		postAnnouncements.add(aNewValue);
+//	}
+//	public void clearAnnouncements() {
+//		preAnnouncements.clear();
+//	}
+//	public List getPreAnnouncements() {
+//		return preAnnouncements;
+//	}
+//	public List getPostAnnouncements() {
+//		return postAnnouncements;
+//	}
 	
 }

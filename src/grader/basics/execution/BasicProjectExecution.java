@@ -31,6 +31,7 @@ import java.util.concurrent.TimeoutException;
 import grader.basics.config.BasicExecutionSpecification;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
+import grader.basics.observers.IOTraceRepository;
 //import framework.execution.ARunningProject;
 import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.CurrentProjectHolder;
@@ -623,7 +624,7 @@ public class BasicProjectExecution {
 //			originalErrStack.push(previousOut()); // this should be System.out;
 			PrintStream aPreviousErr = previousErr();
 			originalErrStack.push(aPreviousErr); // this should be System.err;
-
+// may need output and error mixed with cascaded TeePrintStream
 			PrintStream teeErrStream = new TeePrintStream(anErrFileStream,
 					aPreviousErr);
 			System.setErr(teeErrStream);
@@ -738,6 +739,8 @@ public class BasicProjectExecution {
 		restoreInput();
 		String anOutput = restoreAndGetOut();
 		String anErrors = restoreAndGetErr();
+		IOTraceRepository.setOutput(anOutput);
+		IOTraceRepository.setError(anErrors);
 		return new ResultingOutErr(anOutput, anErrors);
 	}
 

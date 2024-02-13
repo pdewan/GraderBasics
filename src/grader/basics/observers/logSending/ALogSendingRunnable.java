@@ -4,6 +4,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import grader.basics.observers.LogEntryKind;
+
 public class ALogSendingRunnable implements Runnable, WindowListener {
 
 	ArrayBlockingQueue<SendingData> logQueue = new ArrayBlockingQueue<>(100);
@@ -21,8 +23,12 @@ public class ALogSendingRunnable implements Runnable, WindowListener {
 		logQueue.add(log);
 	}
 	
-	public void addToQueue(boolean isTests, String aLogFileName, String log, String assignment, int intr) {
-		logQueue.add(new SendingData(isTests, aLogFileName, log,assignment,intr));
+//	public void addToQueue(boolean isTests, String aLogFileName, String log, String assignment, int intr) {
+//		logQueue.add(new SendingData(isTests, aLogFileName, log,assignment,intr));
+//	}
+	
+	public void addToQueue(LogEntryKind aLogEntryKind, String aLogFileName, String log, String assignment, int intr) {
+		logQueue.add(new SendingData(aLogEntryKind, aLogFileName, log,assignment,intr));
 	}
 	
 	private boolean end=false;
