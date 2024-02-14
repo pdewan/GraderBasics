@@ -351,10 +351,14 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //				System.out.println(anExplanation);
 //			}
 			
-			long aStartTime = System.currentTimeMillis();
+//			long aStartTime = System.currentTimeMillis();
+			System.out.println(">>" + date + "<<");
+
 //			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
+//			String anOutput =
+//					">>Running at " + date + " test " +  getExplanation()+ "\n<<";
 			String anOutput =
-					">>Running at " + date + " test " +  getExplanation()+ "\n<<";
+					">>Running test " +  getExplanation()+ "\n<<";
 
 			System.out.println(anOutput);
 			IOTraceRepository.addPreAnnouncement(anOutput);

@@ -48,6 +48,7 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 	static final String OUTPUT = "*OUTPUT*";
 	static final String ERRORS = "*ERROR*";
 	static final String POST_OUTPUT = "*POST_OUTPUT*";
+	static final String END_OUTPUT = "*END_OUTPUT*";
 	static final String SAME_AS_LAST_OUTPUT = "*PREVIOUS_OUTPUT*";
 
 	static final String DIFF_INDICATOR = "\n(DIFF_FROM_PREVIOUS_OUTPUT)\n";
@@ -72,7 +73,7 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 	
 	StringBuffer lastOutputLogEntry = new StringBuffer(MAX_IO_SIZE);
 	
-	String lastOutput;
+	String lastTrace;
 	StringBuffer currentTrace = new StringBuffer(MAX_IO_SIZE);
 
 	
@@ -98,10 +99,10 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 		}
 		lastOutputLogEntry.append(aDate.toString());
 //		retVal.append(aDate.toString() + "," + aLengthChange + "\n");
-		retVal.append(aText);
-		retVal.append("\n");
+		lastOutputLogEntry.append(aText);
+		lastOutputLogEntry.append("\n");
 //		retVal.append(SESSION_END);
-		return retVal.toString();
+		return lastOutputLogEntry.toString();
 		
 	}
 //	public void append(String aFile, String aText) {
@@ -178,17 +179,18 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 		if (aCurrentStringTrace.isEmpty()) {
 			return;
 		}
-		if (aCurrentStringTrace.equals(lastOutput)) {
+		if (aCurrentStringTrace.equals(lastTrace)) {
 			aDataSent = SAME_AS_LAST_OUTPUT;
 		} else {
 			aDataSent = currentTrace.toString();
-			writeLastOutputText(aDataSent);
+			writeLastTraceText(aDataSent);
+			lastTrace = null;
 		}
 		
 		String aLogSent =  toOutputLogEntry(aDataSent);
 		String anOutputLogFileName = getOutputLogFileName();
 		append(anOutputLogFileName, aLogSent);
-//		getLogSender().addToQueue(LogEntryKind.OUTPUT, anOutputLogFileName, aNextLogEntry, getTopLevelInfo(), numTotalRuns);
+		getLogSender().addToQueue(LogEntryKind.OUTPUT, anOutputLogFileName, aLogSent, getTopLevelInfo(), numTotalRuns);
 
 //		getLogSender().addToQueue(false, aSourceFileName, aNextLogEntry, getTopLevelInfo(), numTotalRuns);
 
@@ -293,8 +295,8 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 //		return lastOutputLines;
 //
 //	}
-	protected String getLastOutput() {
-		if (lastOutput == null) {
+	protected String readLastTrace() {
+		if (lastTrace == null) {
 //			maybeSetLastSourcesFileName();
 			File aLastOutputFile = new File(getLastOutputFileName());
 			if (!aLastOutputFile.exists()) {
@@ -303,14 +305,14 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 			};
 			try {
 				
-				lastOutput = Files.readString(aLastOutputFile.toPath());
+				lastTrace = Files.readString(aLastOutputFile.toPath());
 			} catch (IOException e) {
 				e.printStackTrace();
 				return EMPTY_STRING;
 			
 			}
 		}
-		return lastOutput;
+		return lastTrace;
 
 	}
 //	public static int getLength(Map<String, String> aKeyToString) {
@@ -336,7 +338,7 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 //		return project;
 //	}
 	
-	protected void writeLastOutputText(String aString) {
+	protected void writeLastTraceText(String aString) {
 		Project aProject = getProject();
 		
 		File aLastOutputFile = new File (getLastOutputFileName());
@@ -698,7 +700,7 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 	
 	protected void composeCurrentOutput() {
 		List<String> aPreOutputs = IOTraceRepository.getPreAnnouncements();
-		List<String> aPostOutputs = IOTraceRepository.getPreAnnouncements();
+		List<String> aPostOutputs = IOTraceRepository.getPostAnnouncements();
 		String anOutput = IOTraceRepository.getOutput();
 		String anError = IOTraceRepository.getError();
 		currentTrace.setLength(0);
@@ -713,7 +715,9 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 		currentTrace.append(POST_OUTPUT + "\n");
 		for (String aPostOutput:aPostOutputs) {
 			currentTrace.append(aPostOutput + "\n");
-		}	
+		}
+		currentTrace.append(END_OUTPUT + "\n");
+
 							 
 	}
 
@@ -730,6 +734,7 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 	public void testRunFinished(Result aResult) throws Exception {
 //		String aSourceFileName = getSourceLogFileName();
 		super.testRunFinished(aResult);
+		readLastTrace();
 		composeCurrentOutput();
 		writeOutputLogData();
 	}

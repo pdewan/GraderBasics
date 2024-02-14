@@ -341,7 +341,9 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	public TestCaseResult test() throws NotAutomatableException,
 			NotGradableException {
 		date.setTime(System.currentTimeMillis());
-		String anOutput = ">>Running at " + date + " suite " + getExplanation() +"\n<<";
+		String anOutput = ">>Running suite " + getExplanation() +"\n<<";
+
+//		String anOutput = ">>Running at " + date + " suite " + getExplanation() +"\n<<";
 		System.out.println(anOutput);
 		IOTraceRepository.addPreAnnouncement(anOutput);
 //		jUnitTest.addPreAnnouncement(anOutput);
