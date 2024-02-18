@@ -1,5 +1,8 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
+import util.annotations.Explanation;
+
+@Explanation("This hint identifies parts of the output trace and comments on the semantics of relevant Java Thread methods to help fix the fork-join bug")
 public class ForkJoinHint2OnCodeAndOutput extends ForkJoinHint{
 
 	static Class[] PREVIOUS_HINTS = {

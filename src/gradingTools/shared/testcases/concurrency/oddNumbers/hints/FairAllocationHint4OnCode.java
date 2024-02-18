@@ -12,8 +12,10 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationErrorInference;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationProblem;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(0)
+@Explanation("This hint tries to identify parts of the code in fairThreadRemainderSize() that are leading to teh error message from FairAllocationSmallProblem")
 public class FairAllocationHint4OnCode extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
 			FairAllocationHint3OnError.class
@@ -51,7 +53,7 @@ public class FairAllocationHint4OnCode extends FairAllocationHint {
 		case NONE:
 			return aPrefix + "you do not need a hint";
 		case OFF_BY_ONE:
-			return aPrefix + "your need a different compariosn operator to address the off by one problem in allocating to threads";
+			return aPrefix + "your need a different comparison operator to address the off by one problem in allocating to threads";
 		case RETURN_TOO_BIG:
 			return aPrefix + "the value you return should be zero or 1, as this method id allocating the remainder after allocating the minimum work to each thread";
 		case UNKNOWN:

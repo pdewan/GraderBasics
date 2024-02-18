@@ -8,8 +8,10 @@ import grader.basics.observers.TestLogFileWriterFactory;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(0)
+@Explanation("This hint helps interpret the error message produced by the FairAllocationSmallProblem test to help identify what output properties are being violated by the current version of fairThreadRemainderSize()")
 public class FairAllocationHint3OnError extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
 			FairAllocationHint2OnOutput.class
@@ -34,7 +36,7 @@ public class FairAllocationHint3OnError extends FairAllocationHint {
 		String aLine1 = "Look at the error message produced by FairAllocationSmallProblem and FairAllocationKLargerProblem";
 		String aLine2 = "There are two possible errors reported";
 		String aLine3 = "The sum of the total items allocated to each thread runnable is not the same as the total number of items in the list";
-		String aLine4 = "So the difference between the min and max allocations is not <= 1";
+		String aLine4 = "Or the difference between the min and max allocations is not <= 1";
 		String aLine5 = "You need to fix one or both errors";
 
 		return "\n" + aLine1 + "\n" + aLine2 + "\n" + aLine3 + "\n" + aLine4 + "\n" + aLine5;		   

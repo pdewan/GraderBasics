@@ -11,8 +11,10 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(3)
+@Explanation(SynchronizationProblem.EXPLANATION + SmallNumberTests.SMALL_EXPLANATION)
 public class SynchronizationSmallProblem extends SynchronizationProblem {
 	
 	Class[] PRECEDING_TESTS = {

@@ -25,7 +25,9 @@ import util.annotations.MaxValue;
 //@MaxValue(2)
 public class FairAllocationProblem extends PostTestExecutorOfForkJoin {
 	public static final String EXPLANATION = 
-			"This test checks the output to determine if the bug in fairThreadRemainderSize has been fixed.\n Improper changes to it can result in the test to check concurrency basics to fail\n Ths test will not be run unless the basics test in this suite succeeds";
+//			"This test checks the output to determine if the bug in the fairThreadRemainderSize has been fixed.\n Improper changes to it can result in the test to check concurrency basics to fail\n Ths test will not be run unless the basics test in this suite succeeds";
+			"This test checks the output to determine if the task-allocation bug in the method fairThreadRemainderSize() has been fixed for the ";
+	
 //	enum FairAllocationErrorInference {
 //			NONE,
 //			MOD_OPERATOR,

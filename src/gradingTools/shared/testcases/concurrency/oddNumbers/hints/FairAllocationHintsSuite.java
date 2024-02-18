@@ -9,10 +9,11 @@ import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import util.annotations.Explanation;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	TestsForFairAllocation.class,
+	TestsForFairAllocationHints.class,
 	FairAllocationHints.class
 //	FairAllocationHint1OnOutput.class,
 //	FairAllocationHint2OnOutput.class,

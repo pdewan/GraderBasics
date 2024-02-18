@@ -1,5 +1,8 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
+import util.annotations.Explanation;
+
+@Explanation("This hint identifies which aspect of the code in forkAndJoinThreads() should be changed to fix the fork-join bug in forkAndJoinTHreads()")
 public class ForkJoinHint6OnCode extends ForkJoinHint{
 
 	static Class[] PREVIOUS_HINTS = {

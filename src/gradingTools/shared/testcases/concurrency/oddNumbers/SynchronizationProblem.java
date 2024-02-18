@@ -4,22 +4,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.ThisExpression;
 
-import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
-import grader.basics.project.NotGradableException;
-import grader.basics.project.Project;
-import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
-import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import util.annotations.MaxValue;
 @MaxValue(5)
 public class SynchronizationProblem extends PostTestExecutorOfForkJoin {
+	public static final String EXPLANATION = "This test checks if race conditions in ConcurrentOddumbers have been eliminated for the ";
+//	public static final String SMALL_EXPLANATION = " for the small problem";
 	
+
 //	Class[] PRECEDING_TESTS = {
 //			SmallNumberOfRandoms.class,
 //			ForkJoinSmallProblem.class

@@ -1,15 +1,9 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
-import grader.basics.junit.JUnitTestsEnvironment;
-import grader.basics.junit.NotAutomatableException;
-import grader.basics.junit.TestCaseResult;
-import grader.basics.observers.AnAbstractTestLogFileWriter;
-import grader.basics.observers.TestLogFileWriterFactory;
-import grader.basics.project.NotGradableException;
-import grader.basics.project.Project;
-import grader.basics.testcase.PassFailJUnitTestCase;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(0)
+@Explanation("This hint identifies properties the relevant output should have if the task-allocation bug in fairThreadRemainderSize() is fixed")
 public class FairAllocationHint2OnOutput extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
 			FairAllocationHint1OnOutput.class

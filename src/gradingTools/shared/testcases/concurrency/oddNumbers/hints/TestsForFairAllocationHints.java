@@ -9,6 +9,7 @@ import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import util.annotations.Explanation;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -21,11 +22,11 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 //	FairAllocationHint4OnCode.class,
 //	FairAllocationHint5OnCode.class		
 })
-
-public class TestsForFairAllocation extends ConcurrencySuiteSkeleton {
+@Explanation("These are secondary tests to generate the output on which the fair-allocation hints are based")
+public class TestsForFairAllocationHints extends ConcurrencySuiteSkeleton {
 	public static void main (String[] args) {
 		try {
-			BasicJUnitUtils.interactiveTest(TestsForFairAllocation.class);
+			BasicJUnitUtils.interactiveTest(TestsForFairAllocationHints.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -9,8 +9,10 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(2)
+@Explanation(BasicsProblem.EXPLANATION + LargerNumberTests.LARGER_EXPLANATION)
 public class BasicsLargerProblem extends BasicsProblem {
 	
 	Class[] PRECEDING_TESTS = {LargerNumberOfRandoms.class};

@@ -12,9 +12,11 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestCase;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractOutputObserver;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(10)
 public class ForkJoinProblem extends PostTestExecutorOfForkJoin {
+	public static final String EXPLANATION = "This test checks if the fork-join bug in the method forkAndJoinThreads() has been fixed for the ";
 //	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
 	
 	String[] relevantCheckNames = {this.HAS_INTERLEAVING};

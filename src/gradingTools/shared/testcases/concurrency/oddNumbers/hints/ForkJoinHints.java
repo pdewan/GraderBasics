@@ -8,6 +8,7 @@ import grader.basics.junit.BasicJUnitUtils;
 import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import util.annotations.Explanation;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -24,7 +25,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 
 		
 })
-
+@Explanation("If the code in forkAndJoinThreads(), the output of the program, and the error message produced by the ForkJoinSmallProblem and ForkJoinLargeProblem tests are not sufficient to identify its bug, then execute the tests in this suite in sequence for increasingly detailed hints on how to find and fix the bug")
 public class ForkJoinHints extends ConcurrencySuiteSkeleton{
 	public static void main (String[] args) {
 		try {

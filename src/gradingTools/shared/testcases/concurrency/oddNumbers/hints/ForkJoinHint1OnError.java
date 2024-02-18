@@ -1,5 +1,8 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
+import util.annotations.Explanation;
+
+@Explanation("This hint explains how to interpret the error message from the test for fork-join bug")
 public class ForkJoinHint1OnError extends ForkJoinHint{
 
 	@Override

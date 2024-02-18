@@ -6,12 +6,15 @@ import org.junit.runners.Suite;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.BasicJUnitUtils;
 import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
+import gradingTools.shared.testcases.concurrency.oddNumbers.BasicsSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import util.annotations.Explanation;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	SmallNumberOfRandoms.class,
+	BasicsSmallProblem.class,
 	ForkJoinSmallProblem.class,
 //	ForkJoinHints.class
 //	ForkJoinHint2OnOutput.class,
@@ -23,7 +26,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 
 		
 })
-
+@Explanation("These are secondary tests to generate the output on which the fork-join hints are based")
 public class TestsForForkJoinHints extends ConcurrencySuiteSkeleton{
 	public static void main (String[] args) {
 		try {

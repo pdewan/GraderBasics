@@ -21,8 +21,10 @@ import unc.symbolTable.STType;
 import unc.symbolTable.SymbolTable;
 import unc.symbolTable.SymbolTableFactory;
 import unc.tools.checkstyle.PostProcessingMain;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(10)
+@Explanation(FairAllocationProblem.EXPLANATION + LargerNumberTests.LARGER_EXPLANATION)
 public class FairAllocationLargerProblem extends FairAllocationProblem {
 	
 //	enum FairAllocationErrorInference {

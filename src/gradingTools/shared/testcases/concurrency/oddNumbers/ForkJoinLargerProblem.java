@@ -1,7 +1,9 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers;
 
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(5)
+@Explanation(ForkJoinProblem.EXPLANATION + LargerNumberTests.LARGER_EXPLANATION)
 public class ForkJoinLargerProblem extends ForkJoinProblem {
 	Class[] PRECEDING_TESTS = {
 			LargerNumberOfRandoms.class,

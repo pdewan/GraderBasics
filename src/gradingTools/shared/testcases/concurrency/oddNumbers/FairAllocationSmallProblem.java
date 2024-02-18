@@ -2,8 +2,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
-@MaxValue(10)
-@Explanation(FairAllocationProblem.EXPLANATION)
+@MaxValue(10)@Explanation(FairAllocationProblem.EXPLANATION + SmallNumberTests.SMALL_EXPLANATION)
 
 public class FairAllocationSmallProblem extends FairAllocationProblem {
 	

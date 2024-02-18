@@ -3,7 +3,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(2)
-@Explanation(BasicsProblem.EXPLANATION)
+@Explanation(BasicsProblem.EXPLANATION + SmallNumberTests.SMALL_EXPLANATION)
 public class BasicsSmallProblem extends BasicsProblem {	
 	Class[] PRECEDING_TESTS = {SmallNumberOfRandoms.class};
 //	String[] relevantCheckNames = {

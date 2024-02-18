@@ -9,6 +9,7 @@ import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import util.annotations.Explanation;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -18,9 +19,9 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 	FairAllocationHint2OnOutput.class,
 	FairAllocationHint3OnError.class,
 	FairAllocationHint4OnCode.class,
-	FairAllocationHint5OnCode.class		
+//	FairAllocationHint5OnCode.class		
 })
-
+@Explanation("If the code in fairThreadRemainderSize(), the output of the program, and the error message produced by the FairAllocationSmallProblem and FairAllocationLargeProblem tests are not sufficient to identify its bug, then execute the tests in this suite in sequence for increasingly detailed hints on how to find and fix the bug")
 public class FairAllocationHints extends ConcurrencySuiteSkeleton {
 	public static void main (String[] args) {
 		try {
