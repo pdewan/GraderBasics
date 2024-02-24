@@ -18,8 +18,8 @@ import util.annotations.Explanation;
 //	FairAllocationHint1OnOutput.class,
 //	FairAllocationHint2OnOutput.class,
 //	FairAllocationHint3OnError.class,
-//	FairAllocationHint4OnCode.class,
-//	FairAllocationHint5OnCode.class		
+//	FairAllocationHint5OnCode.class,
+//	FairAllocationHint6OnCode.class		
 })
 
 public class FairAllocationHintsSuite extends ConcurrencySuiteSkeleton {

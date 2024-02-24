@@ -6,7 +6,7 @@ import util.annotations.Explanation;
 public class ForkJoinHint3OnOutput extends ForkJoinHint{
 
 	static Class[] PREVIOUS_HINTS = {
-			ForkJoinHint2OnOutput.class
+			ForkJoinHint2OnCodeAndOutput.class
 	};
 
 	

@@ -12,16 +12,17 @@ import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.concurrency.oddNumbers.PostTestExecutorOfForkJoin;
 
-public abstract class AbstractHint extends PostTestExecutorOfForkJoin{
+public abstract class AbstractHint extends PostTestExecutorOfForkJoin {
 	Class[] noHints = {};
+
 	protected abstract Class[] previousHints();
-	
+
 	protected Class[] noPreviousHints() {
 		return noHints;
 	}
-	
+
 	protected abstract String hint();
-	
+
 //	protected boolean precedingTestsCorrect() {
 //		List<PassFailJUnitTestCase> aPrecedingTestInstances = 
 //				getPrecedingTestInstances();
@@ -32,8 +33,8 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin{
 //		}
 //		return false;
 //	}
-	
-	public static String toString (Class[] aClasses) {
+
+	public static String toString(Class[] aClasses) {
 		if (aClasses.length == 1) {
 			return aClasses[0].getSimpleName();
 		}
@@ -43,33 +44,43 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin{
 		}
 		return Arrays.toString(aSimpleNames);
 	}
-	
-	@Override	
+
+	protected boolean checkPrecedingTests = false;
+
+	@Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
-		if (precedingTestsCorrect()) {
-//		if (precedingTestCorrect()) {
-			return partialPass(0.1,
-					"\nNo hint needed for " + toString(precedingTests()) + " as its test is successful");
-		}
 		if (precedingTestsMustBeCorrected()) {
 			return partialPass(0.2,
-					"Hint cannot be  given until you run the test " + precedingTests()[0].getSimpleName() + "\n You need to successfully execute its preceding test");
+					"Hint cannot be  given until you run the test " + precedingTests()[0].getSimpleName()
+							+ "\n You need to successfully execute its preceding test");
 		}
-		AnAbstractTestLogFileWriter[] aFileWriters =
-				TestLogFileWriterFactory.getFileWriter();
-		AnAbstractTestLogFileWriter aFineGrainedWriter = aFileWriters[1];
-		
-		String aPreviousContents = aFineGrainedWriter.getPreviousContents();
-		
-		for (Class aPreviousHint: previousHints()) {
-			String aPreviousName = aPreviousHint.getSimpleName();
-			if (aPreviousContents.contains(aPreviousName)) {
-				continue;
+		if (checkPrecedingTests) {
+			if (precedingTestsCorrect()) {
+//		if (precedingTestCorrect()) {
+				return partialPass(0.1,
+						"\nNo hint needed for " + toString(precedingTests()) + " as its test is successful");
 			}
-			return fail("\nPlease execute preceding hint:" + aPreviousName + " and try to follow it first. \n Then rerun the test program and ask for this hint");
+//			if (precedingTestsMustBeCorrected()) {
+//				return partialPass(0.2,
+//						"Hint cannot be  given until you run the test " + precedingTests()[0].getSimpleName()
+//								+ "\n You need to successfully execute its preceding test");
+//			}
+			AnAbstractTestLogFileWriter[] aFileWriters = TestLogFileWriterFactory.getFileWriter();
+			AnAbstractTestLogFileWriter aFineGrainedWriter = aFileWriters[1];
+
+			String aPreviousContents = aFineGrainedWriter.getPreviousContents();
+
+			for (Class aPreviousHint : previousHints()) {
+				String aPreviousName = aPreviousHint.getSimpleName();
+				if (aPreviousContents != null && aPreviousContents.contains(aPreviousName)) {
+					continue;
+				}
+				return fail("\nPlease execute preceding hint:" + aPreviousName
+						+ " and try to follow it first. \nThen rerun the test program and ask for this hint");
+			}
 		}
-		
+
 		return partialPass(0.5, hint());
 //		PassFailJUnitTestCase aTestCase = JUnitTestsEnvironment
 //		.getAndPossiblyRunGradableJUnitTest(FairAllocationSmallProblem.class);

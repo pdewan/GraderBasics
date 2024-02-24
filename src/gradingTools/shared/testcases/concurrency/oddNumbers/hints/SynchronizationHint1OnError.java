@@ -17,7 +17,7 @@ public class SynchronizationHint1OnError extends SynchronizationHint{
 		String aLine5 = "\"Total Num Odd Numbers:\"";
 		String aLine6 = "Sum up the lines indicating that an odd number was found, which is equal to the number of increments to Total Num Odd Numbers";
 		String aLine7 = "This sum is not the same as Total Num Odd Numbers";
-		String aLine8 = "Look at the coede to understand why this may have happened";
+		String aLine8 = "Look at the code to understand why this may have happened";
 
 
 		return "\n" + aLine1 + "\n" +aLine2 + "\n" + aLine3 + "\n" + aLine4 + "\n" + aLine5 + "\n" + aLine6 + "\n" + aLine7;

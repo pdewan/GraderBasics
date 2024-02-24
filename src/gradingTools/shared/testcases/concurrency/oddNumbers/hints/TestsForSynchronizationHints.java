@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 
 import grader.basics.junit.BasicJUnitUtils;
 import gradingTools.shared.testcases.ConcurrencySuiteSkeleton;
+import gradingTools.shared.testcases.concurrency.oddNumbers.BasicsSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
@@ -12,6 +13,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmall
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	BasicsSmallProblem.class,
 	SmallNumberOfRandoms.class,
 	ForkJoinSmallProblem.class,
 	SynchronizationSmallProblem.class,

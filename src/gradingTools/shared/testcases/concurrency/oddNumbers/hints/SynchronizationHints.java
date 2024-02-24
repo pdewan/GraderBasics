@@ -18,9 +18,14 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmall
 //	SynchronizationHint3OnOutput.class,
 //	SynchronizationHint4OnOutput.class,	
 	SynchronizationHint1OnError.class,
-	SynchronizationHint2OnGeneralRaceConditions.class,
-	SynchronizationHint3OnSpecificRaceCondition.class,
-	SynchronizationHint4OnSpecificOutput.class,
+	SynchronizationHint1OnGeneralRaceConditions.class,
+	SynchronizationHint2OnOutputAndAssociatedCode.class,
+	SynchronizationHint3OnOutputProperties.class,
+	SynchronizationHint4OnLoadStore.class,
+	SynchronizationHint5OnThreadSwitch.class,
+	SynchronizationHint6OnSharedVariablesAndCriticalCode.class
+//	SynchronizationHint3OnOutputProperties.class,
+//	SynchronizationHint4OnSpecificOutput.class,
 
 
 })

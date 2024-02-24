@@ -209,11 +209,11 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 			if (aLastResult.isFail() && failedTestVetoes(aPrecedingTestElement)) {
 				precedingTestMustBeCorrected = true;
 
-				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed. \n Please correct the problems identified by preceding test:" + aPrecedingTestElement.getSimpleName() +  " before running this test", false);
+				assertTrue("\nPreceding test " + aPrecedingTestElement.getSimpleName() + " failed.\nPlease correct the problems identified by preceding test:" + aPrecedingTestElement.getSimpleName() +  " before running this test", false);
 			} else if (aLastResult.isPartialPass() && partialPassTestVetoes(aPrecedingTestElement)) {
 				precedingTestMustBeCorrected = true;
 
-				assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " did not pass.\n Please correct the problems identified by preceding test:" + aPrecedingTestElement.getSimpleName() +  " before running this test", false);
+				assertTrue("\nPreceding test " + aPrecedingTestElement.getSimpleName() + " did not pass.\nPlease correct the problems identified by preceding test:" + aPrecedingTestElement.getSimpleName() +  " before running this test", false);
 
 			}
 //			if (!aLastResult.isPass()) {

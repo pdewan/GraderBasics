@@ -1154,7 +1154,7 @@ public abstract class AbstractForkJoinChecker extends AbstractOutputObserver {
 				false,
 				null); 
 		if (!hasInterleaving ) {
-			anInterleavingResult = fail ("No interleaving during fork");
+			anInterleavingResult = fail ("\nNo interleaving during fork");
 //			System.out.println("Forked threads do not execute concurrently.");
 //			System.out.println("Between the first and last output of each forked thread, there is no other thread output.");
 //			System.out.println("Are you executing threads sequentially?");
