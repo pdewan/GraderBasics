@@ -201,6 +201,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 					assertTrue("Preceding test " + aPrecedingTestElement.getSimpleName() + " failed due to an exception:", false);
 
 				} else {
+//					aPrecedingTestInstance.setPreTest(true);
 					precedingTestInstances.add(aPrecedingTestInstance);
 					continue;
 				}
@@ -462,11 +463,27 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		}
 		return false;
 	}
-	
+//	static boolean printPreTestAnnoucement = true; // for hints, we will disable it
+//	
+//	public static boolean printPreTestAnnouncement() {
+//		return printPreTestAnnoucement;
+//	}
+//	public static void setPrintPreTestAnnouncement(boolean newVal) {
+//		printPreTestAnnoucement = newVal;
+//	}
 	public boolean isPrecedingTestMustBeCorrected() {
 		return precedingTestMustBeCorrected;
 	}
-	
+//    private boolean isPreTest = false;
+//	
+//    @Override
+//	public boolean isPreTest() {
+//		return isPreTest;
+//	}
+//	
+//	protected void setPreTest(boolean newVal) {
+//		isPreTest = newVal;
+//	}
 	public void addPreAnnouncement(String aNewValue) {
 		IOTraceRepository.addPreAnnouncement(aNewValue);
 //		preAnnouncements.add(aNewValue);

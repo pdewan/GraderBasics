@@ -35,7 +35,7 @@ public class JUnitTestsEnvironment {
 		history.put(aClass, aContext);		
 	}
 	/**
-	 *  adds an instance of the class that was added erlier
+	 *  adds an instance of the class that was added earlier
 	 */
 	public static void addPassFailJUnitTestInstance(PassFailJUnitTestCase aTestCase) {
 		JUnitTestContext aContext = history.get(aTestCase.getClass());

@@ -1,13 +1,14 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
+import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationLargerProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblem;
 import util.annotations.MaxValue;
 @MaxValue(0)
 public abstract class SynchronizationHint extends AbstractHint {
 	
 	static Class[] PRECEDING_TESTS = {
-			SynchronizationSmallProblem.class,
+			SynchronizationLargerProblem.class,
 //			FairAllocationLargerProblem.class
 	};
 	

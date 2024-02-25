@@ -80,6 +80,15 @@ public class GraderBasicsTraceUtility {
 	public static void setHideRedirectedPrints(boolean newVal) {
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setHideRedirectedOuput(newVal);
 	}
+	
+static boolean printPreTestAnnoucement = true; // for hints, we will disable it
+	
+	public static boolean printPreTestAnnouncement() {
+		return printPreTestAnnoucement;
+	}
+	public static void setPrintPreTestAnnouncement(boolean newVal) {
+		printPreTestAnnoucement = newVal;
+	}
 
 	@Deprecated
 	public static void setTurnOn(boolean turnOn) {

@@ -54,8 +54,11 @@ public class AJUnitTestContext implements JUnitTestContext {
 	public PassFailJUnitTestCase getAndPossiblyRunJUnitPassFailTestCase() {
 		if (junitTestCase == null) { 
 //			System.err.println("Unepected null test in context");
+			gradableJUnitTest.setPreTest(true);
 			gradableJUnitTest.test();
 			gradableJUnitTestTime = System.currentTimeMillis();
+			gradableJUnitTest.setPreTest(false); // do not know how many such tests are there
+
 		}
 		return junitTestCase;
 	}

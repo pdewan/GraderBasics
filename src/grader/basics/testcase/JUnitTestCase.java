@@ -33,4 +33,8 @@ public interface JUnitTestCase {
 //	GradableJUnitTest getGradableJUnitTest();
 //	void setGradableJUnitTest(GradableJUnitTest newVal);
 
+//	boolean printPreTestAnnouncement();
+
+//	boolean isPreTest();
+
 }

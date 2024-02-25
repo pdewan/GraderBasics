@@ -45,7 +45,7 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin {
 		return Arrays.toString(aSimpleNames);
 	}
 
-	protected boolean checkPrecedingTests = false;
+	protected boolean checkPrecedingTests = true;
 
 	@Override
 	public TestCaseResult test(Project project, boolean autoGrade)

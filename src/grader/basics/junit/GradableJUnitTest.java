@@ -76,7 +76,6 @@ public interface GradableJUnitTest extends PropertyListenerRegisterer, Serializa
 	public MaxScoreAssignmentResult assignMaxScores();
 	String getSimpleName();
 	double getComputedRegularMaxScore();
-
-
-
+	boolean isPreTest();
+	void setPreTest(boolean newVal);
 }

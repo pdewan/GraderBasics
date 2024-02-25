@@ -22,6 +22,7 @@ import grader.basics.observers.IOTraceRepository;
 import grader.basics.project.NotGradableException;
 import grader.basics.testcase.JUnitTestCase;
 import grader.basics.testcase.PassFailJUnitTestCase;
+import trace.grader.basics.GraderBasicsTraceUtility;
 import util.annotations.Explanation;
 import util.annotations.Group;
 import util.annotations.IsExtra;
@@ -32,23 +33,25 @@ import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
 import util.trace.Tracer;
+
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 /**
- * This is the object displayed in the LocalChecks UI as a  (leaf-level?) tree node.
+ * This is the object displayed in the LocalChecks UI as a (leaf-level?) tree
+ * node.
  *
  */
-public class AGradableJUnitTest implements GradableJUnitTest{
+public class AGradableJUnitTest implements GradableJUnitTest {
+	
 	public static final Color UNTESTED_COLOR = Color.BLACK;
 	public static final Color ALL_FAIL_COLOR = Color.RED;
 	public static final Color MOSTLY_FAIL_COLOR = Color.PINK;
 	public static final Color MOSTLY_PASS_COLOR = Color.ORANGE;
 	public static final Color ALL_PASS_COLOR = Color.GREEN;
-	static int DEFAULT_SCORE = 0;	
+	static int DEFAULT_SCORE = 0;
 	int defaultScore = DEFAULT_SCORE;
 	Class jUnitClass;
 	Color color = UNTESTED_COLOR;
 	protected boolean isExtra;
-	
 
 	boolean definesMaxScore = false;
 //	boolean writeToConsole;
@@ -67,8 +70,6 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //	RunNotifier runNotifier = RunNotifierFactory.getRunNotifier();
 	GradableJUnitSuite parentSuite;
 
-	
-
 	AJUnitTestResult runListener = new AJUnitTestResult();
 	JUnitTestCase jUnitTest;
 	int numTests = 0;
@@ -78,14 +79,13 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	Failure failure;
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	TestCaseResult testCaseResult;
-	
-	
-	public AGradableJUnitTest (Class aJUnitClass) {
+
+	public AGradableJUnitTest(Class aJUnitClass) {
 		init();
-		setJUnitClass(aJUnitClass);	
+		setJUnitClass(aJUnitClass);
 //		BasicJUnitUtils.setLastAssignmentNumber(AnAbstractTestLogFileWriter.toAssignmentNumber(this));
 	}
-	
+
 //	public AJUnitTestToGraderTestCase () {
 //		init();
 //	}
@@ -93,58 +93,66 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public void init() {
 		runNotifier.addListener(runListener);
 	}
+
 	@Visible(false)
 	public Class getJUnitClass() {
 		return jUnitClass;
 	}
+
 	@Visible(false)
 
 	public void setDefaultScore(int aDefaultScore) {
 		defaultScore = aDefaultScore;
 	}
+
 	@Visible(false)
 	public int getDefaultScore() {
 		return defaultScore;
 	}
+
 	@Visible(false)
-	public void setMaxScore (Class aJUnitClass) {
+	public void setMaxScore(Class aJUnitClass) {
 		if (aJUnitClass == null) {
 			return;
 		}
 		if (aJUnitClass.isAnnotationPresent(MaxValue.class)) {
-			MaxValue aMaxValue =  (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
+			MaxValue aMaxValue = (MaxValue) aJUnitClass.getAnnotation(MaxValue.class);
 			setMaxScore(aMaxValue.value());
 			definesMaxScore = true;
 		} else {
 			definesMaxScore = false;
-			setMaxScore((Double)null);
+			setMaxScore((Double) null);
 			maybeSetDefaultMaxScore();
 		}
 	}
+
 	protected void maybeSetDefaultMaxScore() {
 		setMaxScore(DEFAULT_SCORE);
 	}
+
 	@Visible(false)
-	public void setIsRestriction (Class aJUnitClass) {
+	public void setIsRestriction(Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(IsRestriction.class)) {
-			IsRestriction anIsRestriction =  (IsRestriction) aJUnitClass.getAnnotation(IsRestriction.class);
+			IsRestriction anIsRestriction = (IsRestriction) aJUnitClass.getAnnotation(IsRestriction.class);
 			isRestriction = anIsRestriction.value();
 		} else {
 			isRestriction = false;
 		}
 	}
+
 	@Visible(false)
-	public void setIsExtra (Class aJUnitClass) {
+	public void setIsExtra(Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(IsExtra.class)) {
-			IsExtra anIsExtra =  (IsExtra) aJUnitClass.getAnnotation(IsExtra.class);
+			IsExtra anIsExtra = (IsExtra) aJUnitClass.getAnnotation(IsExtra.class);
 			isExtra = anIsExtra.value();
 		} else {
 			isExtra = false;
 		}
 	}
+
 	public static String computeExplanation(Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(Explanation.class)) {
-			Explanation anExplanation =  (Explanation) aJUnitClass.getAnnotation(Explanation.class);
+			Explanation anExplanation = (Explanation) aJUnitClass.getAnnotation(Explanation.class);
 //			explanation = aJUnitClass.getSimpleName() + ":" + anExplanation.value();
 			return aJUnitClass.getSimpleName() + ": \n" + anExplanation.value();
 
@@ -152,8 +160,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			return aJUnitClass.getSimpleName();
 		}
 	}
+
 	@Visible(false)
-	public void setExplanation (Class aJUnitClass) {
+	public void setExplanation(Class aJUnitClass) {
 		explanation = computeExplanation(aJUnitClass);
 //		if (aJUnitClass.isAnnotationPresent(Explanation.class)) {
 //			Explanation anExplanation =  (Explanation) aJUnitClass.getAnnotation(Explanation.class);
@@ -164,21 +173,24 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //			explanation = aJUnitClass.getSimpleName();
 //		}
 //		setName(explanation);
-	}	
+	}
+
 	@Visible(false)
-	public void setGroup (Class aJUnitClass) {
+	public void setGroup(Class aJUnitClass) {
 		if (aJUnitClass.isAnnotationPresent(Group.class)) {
-			Group aGroup =  (Group) aJUnitClass.getAnnotation(Group.class);
+			Group aGroup = (Group) aJUnitClass.getAnnotation(Group.class);
 			group = aGroup.value();
 		} else {
 			group = explanation;
 		}
 	}
+
 	@Override
 	@Visible(false)
 	public String getGroup() {
 		return group;
 	}
+
 	@Visible(false)
 	@Override
 	public PassFailJUnitTestCase getJUnitTestCase() {
@@ -187,6 +199,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		}
 		return JUnitTestsEnvironment.getPassFailJUnitTest(jUnitClass);
 	}
+
 	@Visible(false)
 	public void setJUnitClass(Class aJUnitClass) {
 		jUnitClass = aJUnitClass;
@@ -197,34 +210,35 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		setGroup(aJUnitClass);
 		JUnitTestsEnvironment.addPassFailJUnitTestCaseClass(aJUnitClass, this);
 
-
-		
 	}
-	
-	
+
 	@Visible(false)
 	public boolean isRestriction() {
 		return isRestriction;
 	}
+
 	@Visible(false)
 	public boolean isExtra() {
 		return isExtra;
 	}
+
 	@Visible(false)
 	public Double getMaxScore() {
 		return maxScore;
 	}
-	
+
 	@Visible(false)
-	public  String getExplanation() {
+	public String getExplanation() {
 		return explanation;
 	}
+
 	protected void showColor() {
 		Color oldColor = color;
 		color = computeColor();
 		propertyChangeSupport.firePropertyChange("this", oldColor,
 				new Attribute(AttributeNames.COMPONENT_FOREGROUND, color));
 	}
+
 	protected void showScore() {
 		Double oldScore = score;
 //		Double oldScore = getDisplayedScore();
@@ -234,22 +248,17 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 
 //		propertyChangeSupport.firePropertyChange("UnroundedScore", oldScore,
 //				score);
-		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore,
-				score);
+		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore, score);
 	}
-	protected boolean hasShownResult = false;
-	protected void printResult() {
-		
-		if (getJUnitTestCase().isShowResult() && !hasShownResult) {
-			String aPostAnnouncement = 
-					">>Test Result:\n" + 
 
-				getSimpleName() + "," +
-				status + "," +
-				score + "," +
-				maxScore + "," +
-				message + 
-				"\n<<";
+	protected boolean hasShownResult = false;
+
+	protected void printResult() {
+
+		if (getJUnitTestCase().isShowResult() && !hasShownResult) {
+			String aPostAnnouncement = ">>Test Result:\n" +
+
+					getSimpleName() + "," + status + "," + score + "," + maxScore + "," + message + "\n<<";
 //		System.err.println(getName() + ">>Test Result:\n>>" + 
 //		System.out.println(">>Test Result:\n" + 
 //
@@ -260,22 +269,26 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //				message + 
 //				"\n<<"
 //				);
-		System.out.println(aPostAnnouncement);
-		IOTraceRepository.addPostAnnouncement(aPostAnnouncement);
-		hasShownResult = true;
+//			if (!isPreTest() || PassFailJUnitTestCase.printPreTestAnnouncement()) {
+			if (printAnnouncement()) {		
+				System.out.println(aPostAnnouncement);
+				IOTraceRepository.addPostAnnouncement(aPostAnnouncement);
+				hasShownResult = true;
+			}
 		}
-		
+
 	}
-	protected void showResult (TestCaseResult aTestCaseResult) {
+
+	protected void showResult(TestCaseResult aTestCaseResult) {
 //		String aTestName = getName();
 		String oldStatus = status;
 		String oldMessage = message;
 		double oldScore = score;
-		status = aTestCaseResult.getPercentage()*100 + "% complete";
+		status = aTestCaseResult.getPercentage() * 100 + "% complete";
 		message = aTestCaseResult.getNotes();
 //		score = getUnroundedScore();	
-		score = getDisplayedScore();	
-		
+		score = getDisplayedScore();
+
 		testCaseResult.setMaxScore(maxScore);
 		testCaseResult.setScore(score);
 		propertyChangeSupport.firePropertyChange("DisplayedScore", oldScore, getDisplayedScore());
@@ -284,14 +297,15 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		propertyChangeSupport.firePropertyChange("Message", oldMessage, message);
 		showColor();
 		printResult();
-		
+
 //		showScore();
 //		Color oldColor = color;
 //		Color color = computeColor();
 //		propertyChangeSupport.firePropertyChange("this", oldColor,
 //				new Attribute(AttributeNames.COMPONENT_FOREGROUND, color));
-		
+
 	}
+
 	@Override
 	@Visible(false)
 	public List<Double> getPercentages() {
@@ -299,6 +313,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		retVal.add(fractionComplete);
 		return retVal;
 	}
+
 	@Override
 	@Visible(false)
 	public List<String> getMessages() {
@@ -306,6 +321,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		retVal.add(message);
 		return retVal;
 	}
+
 	@Override
 	@Visible(false)
 	public List<TestCaseResult> getTestCaseResults() {
@@ -313,18 +329,25 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		retVal.add(testCaseResult);
 		return retVal;
 	}
+
 	protected TestCaseResult testNullJUnitClass() {
 		return null;
 	}
+
 	static Date date = new Date();
 	
+	protected boolean printAnnouncement() {
+		return (!isPreTest() || GraderBasicsTraceUtility.printPreTestAnnouncement());
+
+	}
+
 	@Visible(false)
-	public TestCaseResult test()
-			throws NotAutomatableException, NotGradableException {
+	public TestCaseResult test() throws NotAutomatableException, NotGradableException {
 		try {
 			// consume is resetting so we do not need line below
-			Tracer.resetNumTraces();// previous test output should not affect this one in case messages were not consumed
-			
+			Tracer.resetNumTraces();// previous test output should not affect this one in case messages were not
+									// consumed
+
 			numTests++;
 			Class aJUnitClass = getJUnitClass();
 //			BasicStaticConfigurationUtils.setTest(aJUnitClass);
@@ -338,51 +361,54 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			if (aJUnitTest != null) {
 				testCaseResult = aJUnitTest.getLastResult();
 				return testCaseResult;
-			} 
-		
-			if (aJUnitClass != null) {
-				
+			}
 
-			Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
-			date.setTime(System.currentTimeMillis());
+			if (aJUnitClass != null) {
+
+				Runner aRunner = new BlockJUnit4ClassRunner(aJUnitClass);
+				date.setTime(System.currentTimeMillis());
 //			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
 //			String anExplanation = getExplanation();
 //			if (anExplanation != null && !anExplanation.isEmpty()) {
 //				System.out.println(anExplanation);
 //			}
-			
+
 //			long aStartTime = System.currentTimeMillis();
-			System.out.println(">>" + date + "<<");
+//				if (!isPreTest() || PassFailJUnitTestCase.printPreTestAnnouncement()) {
+				if (printAnnouncement()) {			
+				System.out.println(">>" + date + "<<");
 
 //			System.out.println("Running junit test:" + aJUnitClass.getSimpleName() + " at " + date);
 //			String anOutput =
 //					">>Running at " + date + " test " +  getExplanation()+ "\n<<";
-			String anOutput =
-					">>Running test " +  getExplanation()+ "\n<<";
+				String anOutput = ">>Running test " + getExplanation() + "\n<<";
 
-			System.out.println(anOutput);
-			IOTraceRepository.addPreAnnouncement(anOutput);
+				System.out.println(anOutput);
+				IOTraceRepository.addPreAnnouncement(anOutput);
 ////			System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
 //			jUnitTest.addPreAnnouncement(anOutput);
-			aRunner.run(runNotifier);
-			
-			long anElapsedTime = System.currentTimeMillis() - date.getTime();
-			
-			System.out.println(">>" + aJUnitClass.getSimpleName() + " test execution time (ms):" + anElapsedTime + "<<");
+				}
+				aRunner.run(runNotifier);
 
-			testCaseResult = runListener.getTestCaseResult();
-			failure = runListener.getFailure();
-			
-			jUnitTest = getJUnitTestCase();
-			if (jUnitTest != null) {
+				long anElapsedTime = System.currentTimeMillis() - date.getTime();
+//				if (!isPreTest() || PassFailJUnitTestCase.printPreTestAnnouncement()) {
+				if (printAnnouncement()) {
+				System.out.println(
+						">>" + aJUnitClass.getSimpleName() + " test execution time (ms):" + anElapsedTime + "<<");
+				}
+				testCaseResult = runListener.getTestCaseResult();
+				failure = runListener.getFailure();
+
+				jUnitTest = getJUnitTestCase();
+				if (jUnitTest != null) {
 //				String anOutput =
 //						">>Running at " + date + " test " +  getExplanation()+ "\n<<";
 //
 //				System.out.println(anOutput);
 ////				System.out.println(">>Running at " + date + " test " +  getExplanation()+ "\n<<");
 //				jUnitTest.addPreAnnouncement(anOutput);
-				jUnitTest.setLastResult(testCaseResult);
-			}
+					jUnitTest.setLastResult(testCaseResult);
+				}
 
 			} else {
 				testCaseResult = testNullJUnitClass();
@@ -397,10 +423,9 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //			testCaseResult.setMaxScore(maxScore);
 //			testCaseResult.setScore(score);
 			showResult(testCaseResult);
-			
+
 			return testCaseResult;
 
-			
 		} catch (InitializationError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -410,10 +435,10 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			showResult(aTestCaseResult);
 			return aTestCaseResult;
 //			return fail(e.getMessage());
-		} catch (IllegalArgumentException e ) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			String anExceptionMessage = e.getMessage();
-			TestCaseResult aTestCaseResult = new TestCaseResult(false,  e.getMessage(), getExplanation(), true);
+			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getExplanation(), true);
 			showResult(aTestCaseResult);
 			return aTestCaseResult;
 		} catch (Exception e) {
@@ -423,8 +448,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			showResult(aTestCaseResult);
 			return aTestCaseResult;
 		}
-			
-		
+
 		// InitializationError
 //		Runner aRunner = new BlockJUnit4ClassRunner(ACartesianPointParametrizedJUnitTester.class);
 //		Runner aRunner = new BlockJUnit4ClassRunner(ASinglePointBeforeClassJUnitMultiTester.class);
@@ -432,31 +456,36 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //		Runner aRunner = new BlockJUnit4ClassRunner(ACartesianPointParametrizedJUnitMultiTester.class);
 //		return null;
 	}
+
 	protected boolean isPass() {
 		return getFractionComplete() == 1.0;
 	}
+
 	protected boolean isPartialPass() {
-		return !isPass() && getFractionComplete() >  0.0;
+		return !isPass() && getFractionComplete() > 0.0;
 	}
+
 	protected boolean isFail() {
 		return getFractionComplete() == 0.0 & numTests != 0;
 	}
+
 	protected boolean isUntested() {
-		return  numTests == 0;
+		return numTests == 0;
 	}
 
 	protected void setMaxScore(Double aMaxScore) {
 		maxScore = aMaxScore;
 //		maybeSetChildrenMaxScores();
 	}
-	
+
 	@Visible(false)
 	@Override
 	public void setMaxScore(double aMaxScore) {
-		setMaxScore((Double)aMaxScore);
+		setMaxScore((Double) aMaxScore);
 //		definesMaxScore = true;
 //		maybeSetChildrenMaxScores();
 	}
+
 //	protected void maybeSetChildrenMaxScores() {
 //		
 //	}
@@ -464,79 +493,89 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Override
 	public void setGroup(String newVal) {
 		group = newVal;
-		
+
 	}
+
 	@Visible(false)
 	@Override
 	public void setRestriction(boolean newVal) {
-		isRestriction = newVal;		
+		isRestriction = newVal;
 	}
+
 	@Visible(false)
 	@Override
 	public void setExtra(boolean newVal) {
-		isExtra = newVal;		
+		isExtra = newVal;
 	}
+
 	@Visible(false)
 //	@Override
-	public  void setExplanation(String newVal) {
-		explanation = newVal;		
+	public void setExplanation(String newVal) {
+		explanation = newVal;
 	}
-	
+
 	protected String description = null;
+
 	@Override
 	@Visible(false)
 	public String getSimpleName() {
 		return getJUnitClass().getSimpleName();
 	}
+
 	protected String toScoreString() {
-		return Double.toString (GradableJUnitTest.round(getComputedMaxScore()));
+		return Double.toString(GradableJUnitTest.round(getComputedMaxScore()));
 	}
+
 	public String getName() {
 		if (description == null) {
 //		String aScore = "[" + GradableJUnitTest.round(getComputedRegularMaxScore()) + "/" + GradableJUnitTest.round(getComputedMaxScore()) + " pts" + "]";
-		String aScore = "[" + toScoreString() + " pts" + "]";
+			String aScore = "[" + toScoreString() + " pts" + "]";
 
-		String anExtra = isExtra?
-				"(extra credit)"
-				:"";
+			String anExtra = isExtra ? "(extra credit)" : "";
 //		description = explanation + aScore + anExtra;
 //		description = getJUnitClass().getSimpleName() + aScore + anExtra;
-		description = getSimpleName() + aScore + anExtra;
+			description = getSimpleName() + aScore + anExtra;
 		}
 		return description;
 	}
+
 	@Visible(false)
 	@Position(0)
 	@Override
 	public String getStatus() {
 		return status;
 	}
+
 	@Position(1)
 	@Override
 	public String getMessage() {
 		return message;
 	}
+
 	@Visible(false)
 	public void open(String aField) {
 //		System.out.println ("opened: " + aTest);
 		test();
 	}
+
 	@Override
 	@Visible(false)
 	public int numExecutions() {
 		return numTests;
 	}
-	protected Color computeColor(int aNumTests,double aFractionComplete) {
+
+	protected Color computeColor(int aNumTests, double aFractionComplete) {
 		if (aNumTests == 0)
 			return UNTESTED_COLOR;
 		if (aFractionComplete == 1)
 			return ALL_PASS_COLOR;
 		if (aFractionComplete == 0)
-			return ALL_FAIL_COLOR;		
+			return ALL_FAIL_COLOR;
 		if (aFractionComplete >= 0.5)
 			return MOSTLY_PASS_COLOR;
 		return MOSTLY_FAIL_COLOR;
 	}
+
 	protected Color computeColor() {
 		return computeColor(numTests, fractionComplete);
 //		if (numTests == 0)
@@ -549,6 +588,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //			return MOSTLY_PASS_COLOR;
 //		return MOSTLY_FAIL_COLOR;
 	}
+
 //	double aFractionCorrect = ((double) numTestsSuceeded())/children.size());
 //	if (aFractionCorrect == 1)
 //		return ALL_PASS_COLOR;
@@ -561,32 +601,38 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public double getFractionComplete() {
 		return fractionComplete;
 	}
+
 	@Override
 	@Visible(false)
 	public void addPropertyChangeListenerRecursive(PropertyChangeListener arg0) {
-		addPropertyChangeListener(arg0);		
+		addPropertyChangeListener(arg0);
 	}
+
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener arg0) {
 		propertyChangeSupport.addPropertyChangeListener(arg0);
 		showColor();
-		
+
 	}
+
 	@Visible(false)
 	@Override
 	public double getUnroundedScore() {
-		return getMaxScore()*fractionComplete;
+		return getMaxScore() * fractionComplete;
 	}
+
 	@Position(0)
 	@Override
 	public double getDisplayedScore() {
 		return GradableJUnitTest.round(getUnroundedScore());
 	}
+
 	@Override
 	@Visible(false)
 	public String getText() {
-		return getName() + "," + getUnroundedScore() +  "," + getMessage();
+		return getName() + "," + getUnroundedScore() + "," + getMessage();
 	}
+
 //	public String toString() {
 //		return getName();
 //	}
@@ -594,13 +640,15 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	@Override
 	public double getComputedRegularMaxScore() {
 		if (isExtra()) {
-			
+
 		}
 		return getMaxScore();
 	}
+
 	public double getComputedMaxScore() {
 		return getMaxScore();
 	}
+
 	@Override
 	public int numLeafNodeDescendents() {
 		return 1;
@@ -617,6 +665,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 //	public void setWriteToServer(boolean writeToServer) {
 //		this.writeToServer = writeToServer;
 //	}
@@ -679,7 +728,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			return getLeafClasses();
 		return emptySet;
 	}
-	
+
 	@Override
 	@Visible(false)
 	public Set<Class> getUntestedClasses() {
@@ -687,10 +736,11 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 			return getLeafClasses();
 		return emptySet;
 	}
+
 	public String toString() {
 		return getName() + "(" + super.toString() + ")";
 	}
-	
+
 //	@Override
 //	public void setTopLevelSuite(GradableJUnitSuite newVal) {
 //		topLevelSuite = newVal;
@@ -713,6 +763,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 	public boolean isDefinesMaxScore() {
 		return definesMaxScore;
 	}
+
 	@Override
 	@Visible(false)
 	public void setDefinesMaxScore(boolean definesMaxScore) {
@@ -736,7 +787,7 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 		}
 		return aMaxScoreAssignmentResult;
 	}
-	
+
 	@Visible(false)
 	public GradableJUnitSuite getParentSuite() {
 		return parentSuite;
@@ -762,5 +813,14 @@ public class AGradableJUnitTest implements GradableJUnitTest{
 //	public List getPostAnnouncements() {
 //		return postAnnouncements;
 //	}
-	
+	private boolean isPreTest = false;
+	@Visible(false)
+    @Override
+	public boolean isPreTest() {
+		return isPreTest;
+	}
+    @Override
+	public void setPreTest(boolean newVal) {
+		isPreTest = newVal;
+	}
 }

@@ -180,6 +180,12 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		return fail("Num threads created " + aNumThreadsCreated + " != num expected threads " + numExpectedForkedThreads());
 	}
 	abstract protected boolean sufficientOutputCredit(TestCaseResult aResult) ;
+	
+	
+//	protected boolean printPreAnnouncement() {
+//		return true;
+//	}
+	
 
 //	List<String> preAnnouncements = new ArrayList();
 //	List<String> postAnnouncemets = new ArrayList();
