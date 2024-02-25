@@ -155,8 +155,13 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 			return;
 		}
 		if (!notifyingThreads.contains(anEventThread)) {
+//			Tracer.info(this, "Notifying threads before addition:" + notifyingThreads);
 			Tracer.info(this, " Added new thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
-			notifyingThreads.add(aConcurrentOrderedEvent.getThread());
+//			notifyingThreads.add(aConcurrentOrderedEvent.getThread());
+			notifyingThreads.add(anEventThread);
+//			Tracer.info(this, "Notifying threads after addition:" + notifyingThreads);
+
+
 			if (!allKnownThreads.contains(anEventThread)) {
 				notifyingNewThreads.add(anEventThread);
 			}

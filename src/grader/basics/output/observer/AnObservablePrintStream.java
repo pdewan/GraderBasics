@@ -234,9 +234,15 @@ public	void	write(int b) {
 		PropertyChangeEvent aConvertedEvent = converter.toPropertyChange(anOutput);
 		propertyChangeSupport.firePropertyChange(aConvertedEvent);
 	}
-	
+	protected boolean isTrace(Object anOutput) {
+		return anOutput.toString().startsWith("I***");
+	}
 	protected void maybeConvertAndAnnounceOutput(Object anOutput) {
-		if (!redirectionFrozen && checkWithSelectors(anOutput)) {
+		//if (!redirectionFrozen && checkWithSelectors(anOutput)) {
+		if (
+				!redirectionFrozen && 
+				!isTrace(anOutput) &&
+				checkWithSelectors(anOutput)) {
 			convertAndAnnounceOutput(anOutput);	
 		}
 		
