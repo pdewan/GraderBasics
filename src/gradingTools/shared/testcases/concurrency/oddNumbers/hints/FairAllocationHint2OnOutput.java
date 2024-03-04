@@ -19,12 +19,12 @@ public class FairAllocationHint2OnOutput extends FairAllocationHint {
 	@Override
 	protected String hint() {
 		// TODO Auto-generated method stub
-		String aLine1 = "Look at the maximum and minimum number of items in each subsequence allocated to each thread";
-		String aLine2 = "For each item allocated, a loop iteration is performed by a worker thread to determine if it is odd";
-		String aLine3 = "The fair allocation test reports the max and min iterations performed";
-		String aLine4 = "The difference between these two values should be 0 if the total number divides evenly among the threads";
-		String aLine5 = "The difference should be 1 if it does not.";
-		String aLine6 = "So the difference should be <= 1";
+		String aLine1 = "Look at the maximum and minimum number of items in each subsequence allocated to each thread. ";
+		String aLine2 = "For each item allocated, a loop iteration is performed by a worker thread to determine if it is odd. ";
+		String aLine3 = "The fair allocation test reports the max and min iterations performed. ";
+		String aLine4 = "The difference between these two values should be 0 if the total number divides evenly among the threads. ";
+		String aLine5 = "The difference should be 1 if it does not. ";
+		String aLine6 = "So the difference should be <= 1. ";
 		return "\n" + aLine1 + "\n" + aLine2 + "\n" + aLine3 + "\n" + aLine4 + "\n" + aLine5 + "\n" + aLine6;		   
 	}
 	

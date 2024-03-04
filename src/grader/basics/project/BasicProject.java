@@ -110,7 +110,7 @@ public class BasicProject implements Project {
 			Set<File> sourceFiles = DirectoryUtils.getSourceFiles(projectFolder, sourceFilePattern);
 			if (!sourceFiles.isEmpty()) {
 				File aSourceFile = sourceFiles.iterator().next();
-				System.out.println("Found a source file:" + aSourceFile);
+//				System.out.println("Found a source file:" + aSourceFile);
 				sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
 //				System.out.println("Assuming src folder is:" + sourceFolder);
 

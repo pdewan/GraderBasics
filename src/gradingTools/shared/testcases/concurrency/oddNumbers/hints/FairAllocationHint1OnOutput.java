@@ -25,8 +25,8 @@ public class FairAllocationHint1OnOutput extends FairAllocationHint {
 		// TODO Auto-generated method stub
 		String aLine1 = "Look at the console outputs indicating how much of the input list is allocated to each thread runnable. ";
 		String aLine2 = "To do so search the output for lines with the following string:";
-		String aLine3 = "\"run() called to start processing subsequence\"";
-		String aLine4 = "Compare the number of item allocated to each thread runnable";
+		String aLine3 = "\"run() called to start processing subsequence\". ";
+		String aLine4 = "Compare the number of item allocated to each thread runnable.";
 		return "\n" + aLine1 + "\n" + aLine2 + "\n" + aLine3 + "\n" + aLine4;		   
 	}
 	

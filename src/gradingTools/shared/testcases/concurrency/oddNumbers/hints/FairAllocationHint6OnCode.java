@@ -2,6 +2,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
 import java.util.List;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -81,5 +82,9 @@ public class FairAllocationHint6OnCode extends FairAllocationHint5OnCode {
 //		String aLine5 = "You need to fix one or both errors";
 //
 //		return "\n" + aLine1 + "\n" + aLine2 + "\n" + aLine3 + "\n" + aLine4 + "\n" + aLine5;		   
+	}
+	static {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
 	}
 }

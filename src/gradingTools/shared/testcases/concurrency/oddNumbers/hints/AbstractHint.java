@@ -45,22 +45,39 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin {
 		return Arrays.toString(aSimpleNames);
 	}
 
-	protected boolean checkPrecedingTests = true;
+	private static boolean checkIfPrecedingTestIsCorrect = true;
+	public static boolean isCheckIfPrecedingTestIsCorrect() {
+		return checkIfPrecedingTestIsCorrect;
+	}
+	public static void setCheckIfPrecedingTestIsCorrect(boolean newVal) {
+		checkIfPrecedingTestIsCorrect = newVal;
+	}
+
+	private static boolean checkIfPrecedingHintHasBeenExecuted = false;
+
+	public static boolean isCheckIfPrecedingHintHasBeenExecuted() {
+		return checkIfPrecedingHintHasBeenExecuted;
+	}
+
+	public static void setCheckIfPrecedingHintHasBeenExecuted(boolean newVal) {
+		checkIfPrecedingHintHasBeenExecuted = newVal;
+	}
 
 	@Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
 		if (precedingTestsMustBeCorrected()) {
-			return partialPass(0.2,
-					"Hint cannot be  given until you run the test " + precedingTests()[0].getSimpleName()
-							+ "\n You need to successfully execute its preceding test");
+			return partialPass(0.2, "Hint cannot be  given until you run the test "
+					+ precedingTests()[0].getSimpleName() + "\n You need to successfully execute its preceding test");
 		}
-		if (checkPrecedingTests) {
+		if (isCheckIfPrecedingTestIsCorrect()) {
 			if (precedingTestsCorrect()) {
 //		if (precedingTestCorrect()) {
 				return partialPass(0.1,
 						"\nNo hint needed for " + toString(precedingTests()) + " as its test is successful");
 			}
+		}
+		if (isCheckIfPrecedingHintHasBeenExecuted()) {
 //			if (precedingTestsMustBeCorrected()) {
 //				return partialPass(0.2,
 //						"Hint cannot be  given until you run the test " + precedingTests()[0].getSimpleName()

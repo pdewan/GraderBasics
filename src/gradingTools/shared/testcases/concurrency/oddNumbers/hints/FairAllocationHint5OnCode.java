@@ -2,6 +2,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
 import java.util.List;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -18,7 +19,7 @@ import util.annotations.MaxValue;
 @Explanation("This hint tries to identify parts of the code in fairThreadRemainderSize() that are leading to teh error message from FairAllocationSmallProblem")
 public class FairAllocationHint5OnCode extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
-			FairAllocationHint3OnError.class
+			FairAllocationHint4OnOutput.class
 	};
 //	static Class[] PRECEDING_TESTS = {
 //			FairAllocationSmallProblem.class
@@ -47,19 +48,19 @@ public class FairAllocationHint5OnCode extends FairAllocationHint {
 		String aPrefix = "In method fairThreadRemainderSize ";
 		switch (aFairAllocationErrorInference) {
 		case MOD_OPERATOR:
-			return  aPrefix + "check your mod operator in fair";
+			return  aPrefix + "check your mod operator in fair. ";
 		case MULTIPLE_IFS:
-			return aPrefix + "you should have a single if with a comparision operator in the checked expression rather than multiple ifs";
+			return aPrefix + "you should have a single if with a comparision operator in the checked expression rather than multiple ifs. ";
 		case NONE:
 			return aPrefix + "you do not need a hint";
 		case OFF_BY_ONE:
-			return aPrefix + "your need a different comparison operator to address the off by one problem in allocating to threads";
+			return aPrefix + "your need a different comparison operator to address the off by one problem in allocating to threads. ";
 		case RETURN_TOO_BIG:
-			return aPrefix + "the value you return should be zero or 1, as this method id allocating the remainder after allocating the minimum work to each thread";
+			return aPrefix + "the value you return should be zero or 1, as this method id allocating the remainder after allocating the minimum work to each thread. ";
 		case UNKNOWN:
-			return aPrefix + " cannot determine the exact problem";
+			return aPrefix + " cannot determine the exact problem in source code. ";
 		default:
-			return aPrefix + " cannot determine the exact problem";
+			return aPrefix + " cannot determine the exact problem in source code. ";
 
 		
 		
@@ -91,5 +92,8 @@ public class FairAllocationHint5OnCode extends FairAllocationHint {
 ////		.getAndPossiblyRunGradableJUnitTest(FairAllocationSmallProblem.class);
 //		return null;
 //	}
-
+	static {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
+	}
 }

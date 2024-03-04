@@ -33,11 +33,11 @@ public class FairAllocationHint3OnError extends FairAllocationHint {
 	@Override
 	protected String hint() {
 		// TODO Auto-generated method stub
-		String aLine1 = "Look at the error message produced by FairAllocationSmallProblem and FairAllocationKLargerProblem";
+		String aLine1 = "Look at the error message produced by FairAllocationSmallProblem and FairAllocationKLargerProblem. ";
 		String aLine2 = "There are two possible errors reported";
-		String aLine3 = "The sum of the total items allocated to each thread runnable is not the same as the total number of items in the list";
-		String aLine4 = "Or the difference between the min and max allocations is not <= 1";
-		String aLine5 = "You need to fix one or both errors";
+		String aLine3 = "The sum of the total items allocated to each thread runnable is not the same as the total number of items in the list. ";
+		String aLine4 = "Or the difference between the min and max allocations is not <= 1. ";
+		String aLine5 = "You need to fix one or both errors.";
 
 		return "\n" + aLine1 + "\n" + aLine2 + "\n" + aLine3 + "\n" + aLine4 + "\n" + aLine5;		   
 	}

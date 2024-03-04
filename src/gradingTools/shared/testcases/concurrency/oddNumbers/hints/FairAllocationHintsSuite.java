@@ -30,9 +30,9 @@ public class FairAllocationHintsSuite extends ConcurrencySuiteSkeleton {
 			e.printStackTrace();
 		}
 	}
-	static {
-		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
-		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
-	}
+//	static {
+//		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+//		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
+//	}
 }
 

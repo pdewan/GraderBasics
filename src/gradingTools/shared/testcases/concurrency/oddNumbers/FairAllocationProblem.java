@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.ThisExpression;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
@@ -127,22 +128,39 @@ public class FairAllocationProblem extends PostTestExecutorOfForkJoin {
 	}
 	FairAllocationErrorInference errorInference;
 	public FairAllocationErrorInference getFairAllocationErrorInference() {
+		if (errorInference == null) {
+			TestCaseResult aTestCaseResult =  getLastResult();
+			if (!aTestCaseResult.isPass()) {
+				errorInference = makeErrorInference(project, aTestCaseResult);
+//				System.out.println("Error Inference:" + errorInference);
+			} else {
+				errorInference = FairAllocationErrorInference.NONE;
+			}
+		}
 		return errorInference;
 	}
+	private Project project;
+	
+//	public void getErrorInference () {
+//		if (errorInference ==)
+//	}
+	
 	@Override
 	public TestCaseResult test(Project aProject, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
-
-//		
+		project = aProject;		
 		TestCaseResult aTestCaseResult =  super.test(aProject, autoGrade);
-		if (!aTestCaseResult.isPass()) {
-			errorInference = makeErrorInference(aProject, aTestCaseResult);
-//			System.out.println("Error Inference:" + errorInference);
-		} else {
-			errorInference = FairAllocationErrorInference.NONE;
-		}
+//		if (!aTestCaseResult.isPass()) {
+//			errorInference = makeErrorInference(aProject, aTestCaseResult);
+////			System.out.println("Error Inference:" + errorInference);
+//		} else {
+//			errorInference = FairAllocationErrorInference.NONE;
+//		}
 		return aTestCaseResult;
 	}
-
+//	static {
+//		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+//		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");
+//	}
 
 }

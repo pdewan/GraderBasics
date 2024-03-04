@@ -51,17 +51,97 @@ public class SynchronizationProblem extends PostTestExecutorOfForkJoin {
 //		return oddNumbersExecution().getLastResult();
 //	}
 	protected TestCaseResult isAddOddNumberResult = null;
-	public TestCaseResult getIsAddOddNumberResult() {
-		return isAddOddNumberResult;
+	protected TestCaseResult isOnlyOneMethodSynchronizedResult = null;
+	protected List<Method> synchronizedMethods;
+	
+//	public TestCaseResult getIsAddOddNumberResult() {
+//		return isAddOddNumberResult;
+//	}
+	
+	protected void findSynchronizedMethods() {
+		if (synchronizedMethods != null) {
+			return;
+		}
+
+		synchronizedMethods = new ArrayList();
+		try {
+			Class aSynchronizationClass = Class.forName("BasicSynchronizationDemo");
+			isOnlyOneMethodSynchronizedResult = partialPass(0.1, "Exactly one method synchronized");
+
+			Method[] aMethods = aSynchronizationClass.getDeclaredMethods();
+//			int aNumSynchronizedMethods = 0;
+
+			for (int anIndex = 0; anIndex < aMethods.length; anIndex++) {
+				Method aMethod = aMethods[anIndex];
+				if (Modifier.isSynchronized(aMethod.getModifiers())) {
+					synchronizedMethods.add(aMethod);
+					if (aMethod.getName().equals("addOddNumber")) {
+						isAddOddNumberResult = partialPass(0.1, "No race conditions");
+					}
+				}
+			}
+			
+			if (synchronizedMethods.size() == 0) {				
+				isAddOddNumberResult = fail("Race conditions exist");
+				isOnlyOneMethodSynchronizedResult = fail ("No synchronized method in class SynchrnoizationDemo"); 
+				return;
+			}
+			if (synchronizedMethods.size() == 1) {
+				if (isAddOddNumberResult == null) {
+					isAddOddNumberResult = fail("Race conditions exist");
+					isOnlyOneMethodSynchronizedResult = fail ("Think of synchronizing a method other than: " + synchronizedMethods);
+				} else {
+//					isAddOddNumberResult = fail("No race conditions");
+					isOnlyOneMethodSynchronizedResult = partialPass (0.1, "Correct method synchronized: " + synchronizedMethods);
+				}
+				return;
+			}
+			
+			if (isAddOddNumberResult == null) {
+				isAddOddNumberResult = fail("Race conditions exist");
+//				isOnlyOneMethodSynchronizedResult = fail ("More than one method synchronized: " + synchronizedMethods);
+//				return;
+
+			}
+			
+			isOnlyOneMethodSynchronizedResult = fail ("More than one method synchronized: " + synchronizedMethods);
+
+			
+//			if (synchronizedMethods.size() > 1) {
+//				isOnlyOneMethodSynchronizedResult = fail ("More than one synchronized method:" + synchronizedMethods); 
+//			} 
+//			if (synchronizedMethods.size() == 1 && isAddOddNumberResult == null) {
+//				isOnlyOneMethodSynchronizedResult = fail ("Think of synchronizing a method other than: " + synchronizedMethods);
+//				isAddOddNumberResult = fail("Race conditions exist");
+//
+//			} 
+//			if (isAddOddNumberResult == null) {
+//				isAddOddNumberResult = fail("Race conditions exist");
+//				isOnlyOneMethodSynchronizedResult = fail ("Think of synchronizing a method other than: " + synchronizedMethods);
+//
+//			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+//			return aSynchrnoizedMethods;
+		}
+
+
 	}
 	protected void determineIfAddOddNumberIsSynchronized() {
 		if (isAddOddNumberResult != null) {
 			return;
 		}
 		try {
+//			List<Method> aSynchronizedMethods = findSynchronizedMethods();
+			
 			Class aSynchronizationClass = Class.forName("BasicSynchronizationDemo");
 			Class[] aFillParameters = {int.class};
+			
+			
 			Method anAddOddNumber = aSynchronizationClass.getDeclaredMethod("addOddNumber", aFillParameters);
+			
+			
 			if (Modifier.isSynchronized(anAddOddNumber.getModifiers())) {
 				isAddOddNumberResult = partialPass(0.1, "No race conditions");
 //				aMessage = "Please make fillOddNumbers(int[]) in BasicSynchronizationDemo synchronized ";
@@ -76,12 +156,28 @@ public class SynchronizationProblem extends PostTestExecutorOfForkJoin {
 			e.printStackTrace();
 		}
 	}
+	
+//	protected boolean isAddNumberSynchronized(List<Method> aSynchronizedMethods) {
+//	
+//	}
+	
 	@Override
 	protected TestCaseResult[] maybeAddToResults (TestCaseResult[] aResults) {
-		determineIfAddOddNumberIsSynchronized();
+//		determineIfAddOddNumberIsSynchronized();
+//		List<Method> aSynchronizedMethods = findSynchronizedMethods();
+//		if (aSynchronizedMethods)
 		List<TestCaseResult> aNewResults = new ArrayList<TestCaseResult>();
+		findSynchronizedMethods();
+		if (aResults.length >= 1) {
+			TestCaseResult aResult = aResults[aResults.length - 1];
+			if (aResult.getPercentage() == 1.0) {
+				aResult.setPercentage(0.8); // will add two new results below
+			}
+			
+		}
 		aNewResults.addAll(Arrays.asList(aResults));
 		aNewResults.add(isAddOddNumberResult);
+		aNewResults.add(isOnlyOneMethodSynchronizedResult);
 		return aNewResults.toArray(aResults);
 //		return super.maybeAddToResults(aResults);
 	}
