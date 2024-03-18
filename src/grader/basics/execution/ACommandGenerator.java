@@ -72,6 +72,7 @@ public abstract class ACommandGenerator implements CommandGenerator{
 		
 	}
 	@Override
+	// This method needs an extra argument!
 	public  String[] getExecutionCommand(Project aProject,
 			File aBuildFolder, String anEntryPoint, String[] anArgs) {
 //		return StaticConfigurationUtils.getExecutionCommand(aProject, aBuildFolder, anEntryPoint);

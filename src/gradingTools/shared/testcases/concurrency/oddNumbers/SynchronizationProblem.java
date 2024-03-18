@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.Modifier;
 
+import grader.basics.execution.GradingMode;
 import grader.basics.junit.TestCaseResult;
+import grader.basics.trace.GraderInfo;
 import util.annotations.MaxValue;
 @MaxValue(5)
 public class SynchronizationProblem extends PostTestExecutorOfForkJoin {
@@ -166,6 +168,9 @@ public class SynchronizationProblem extends PostTestExecutorOfForkJoin {
 //		determineIfAddOddNumberIsSynchronized();
 //		List<Method> aSynchronizedMethods = findSynchronizedMethods();
 //		if (aSynchronizedMethods)
+		if (GradingMode.getGraderRun()) {
+			return aResults; // cannot reflect on non public class
+		}
 		List<TestCaseResult> aNewResults = new ArrayList<TestCaseResult>();
 		findSynchronizedMethods();
 		if (aResults.length >= 1) {

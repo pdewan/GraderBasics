@@ -431,20 +431,26 @@ public class AGradableJUnitTest implements GradableJUnitTest {
 			e.printStackTrace();
 			String anExceptionMessage = e.getMessage();
 			String aMessage = e.getClass().getSimpleName() + " Could not initialize an instance of test class ";
-			TestCaseResult aTestCaseResult = new TestCaseResult(false, aMessage, getExplanation(), true);
+//			TestCaseResult aTestCaseResult = new TestCaseResult(false, aMessage, getExplanation(), true);
+			TestCaseResult aTestCaseResult = new TestCaseResult(false, aMessage, getSimpleName(), true);
+
 			showResult(aTestCaseResult);
 			return aTestCaseResult;
 //			return fail(e.getMessage());
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			String anExceptionMessage = e.getMessage();
-			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getExplanation(), true);
+//			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getExplanation(), true);
+			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getSimpleName(), true);
+		
 			showResult(aTestCaseResult);
 			return aTestCaseResult;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String anExceptionMessage = e.getMessage();
-			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getExplanation(), true);
+//			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getExplanation(), true);
+			TestCaseResult aTestCaseResult = new TestCaseResult(false, e.getMessage(), getSimpleName(), true);
+
 			showResult(aTestCaseResult);
 			return aTestCaseResult;
 		}

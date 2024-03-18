@@ -415,7 +415,9 @@ public class BasicJUnitUtils {
 				GradableJUnitTest aGradable = new AGradableJUnitTest(aLeafTestCase);
 				if (aTestMaxScore != null) {
 //					aGradable.setMaxScore(aTestMaxScore);	
-					aGradable.setGroup(aSuiteGradable.getExplanation());
+//					aGradable.setGroup(aSuiteGradable.getExplanation());
+					aGradable.setGroup(aSuiteGradable.getSimpleName());
+
 					aGradable.setRestriction(aSuiteGradable.isRestriction());
 					aGradable.setExtra(aSuiteGradable.isExtra());
 				}
@@ -426,7 +428,9 @@ public class BasicJUnitUtils {
 //			if (aGradables.size() > 1) { // they need a parent
 			aGradables.add(0, aSuiteGradable); // for consistency add it always
 //			}
-			aResult.put(aSuiteGradable.getExplanation(), aGradables);
+			aResult.put(aSuiteGradable.getSimpleName(), aGradables);
+
+//			aResult.put(aSuiteGradable.getExplanation(), aGradables);
 			// we no longer need this as we are
 //			maybeAssignMaxScores(aSuiteGradable, aGradables);
 

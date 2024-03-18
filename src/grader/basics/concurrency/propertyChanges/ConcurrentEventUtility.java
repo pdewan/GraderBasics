@@ -863,6 +863,13 @@ public class ConcurrentEventUtility {
 	public static  Map<Thread, List<ConcurrentPropertyChange>> getConcurrentPropertyChangeListByThread(
 			ConcurrentPropertyChange[] anOriginalEvents, int from, int to) {
 		Map<Thread, List<ConcurrentPropertyChange>> retVal = new HashMap<>();
+		if (
+				from < 0 ||
+				anOriginalEvents.length < from ||
+				anOriginalEvents.length < to ) {
+			return retVal;
+		}
+		
 		for (int index = from; index < to; index++ ) {
 			ConcurrentPropertyChange anEvent = anOriginalEvents[index];
 			Thread aThread = anEvent.getThread();

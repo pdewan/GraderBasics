@@ -380,10 +380,13 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 		}
 		int aNumSuccesses = numTestsSuceeded();
 		if (aNumSuccesses == children.size()) {
-			return new TestCaseResult(true, getExplanation());
+//			return new TestCaseResult(true, getExplanation());
+			return new TestCaseResult(true, getSimpleName());
+
 		} else {
 			return new TestCaseResult(((double) aNumSuccesses)
-					/ children.size(), getExplanation());
+//					/ children.size(), getExplanation());
+			/ children.size(), getSimpleName());
 		}
 	}
 

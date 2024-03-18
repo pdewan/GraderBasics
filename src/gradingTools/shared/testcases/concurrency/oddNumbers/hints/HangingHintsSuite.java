@@ -10,8 +10,9 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	SmallNumberOfRandoms.class,
-	HangingScenario.class,	
+//	SmallNumberOfRandoms.class,
+//	HangingScenario.class,	
+	TestsForHangingHints.class,
 	HangingHints.class
 //	HangingHint1OnOutput.class,
 //	HangingHint2OnOutput.class,
