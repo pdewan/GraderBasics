@@ -22,7 +22,7 @@ import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.file.RootFolderProxy;
 import grader.basics.file.filesystem.AFileSystemRootFolderProxy;
 import grader.basics.project.Project;
-import sun.java2d.pipe.hw.AccelGraphicsConfig;
+//import sun.java2d.pipe.hw.AccelGraphicsConfig;
 import util.pipe.InputGenerator;
 import util.trace.Tracer;
 import valgrindpp.codegen.Parser;
