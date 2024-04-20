@@ -5,7 +5,7 @@ import gradingTools.shared.testcases.utils.ABufferingTestInputGenerator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.sun.org.apache.xalan.internal.xsltc.dom.FilteredStepIterator;
+//import com.sun.org.apache.xalan.internal.xsltc.dom.FilteredStepIterator;
 
 import util.pipe.AnAbstractInputGenerator;
 import util.trace.Tracer;
