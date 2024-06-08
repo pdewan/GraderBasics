@@ -1,13 +1,16 @@
 package gradingTools.shared.testcases.shapes;
 
 import gradingTools.shared.testcases.shapes.interfaces.TestMovable;
+import util.trace.Tracer;
 
 public abstract class MovableTest extends LocatableTest{
 	protected TestMovable movable;
 	
 	protected TestMovable movable() {
-		if (movable == null)
+		if (movable == null) {
 			movable = initializeMovable();
+			Tracer.info("Movable initialized to:" + movable);
+		}
 		return movable;
 	}
 	protected TestMovable initializeMovable() {
@@ -15,6 +18,7 @@ public abstract class MovableTest extends LocatableTest{
 		return (TestMovable) rootProxy;
 	}
     protected void move() throws Exception {
+    	doMove(); // reset objects from previous tests
     	setOriginalLocation();
 		doMove();
     }

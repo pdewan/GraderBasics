@@ -44,6 +44,15 @@ public class GraderBasicsTraceUtility {
 	public static void setMaxTraces(int newVal) {
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setMaxTraces(newVal);
 	}
+	public static boolean isUseMethodAndConstructorTimeOut(boolean newVal) {
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+		isUseMethodAndConstructorTimeOut();
+	}
+	
+	public static void setUseMethodAndConstructorTimeOut(boolean newVal) {
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
+		setGraderUseMethodAndConstructorTimeOut(newVal);
+	}
 
 	public static int getMaxPrintedTraces() {
 		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getMaxPrintedTraces();
