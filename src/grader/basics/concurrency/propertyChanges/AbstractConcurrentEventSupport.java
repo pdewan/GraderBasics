@@ -30,6 +30,8 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 	protected List<Thread> notifyingNewThreads = new ArrayList();
 
 	protected Set<Thread> allKnownThreads = new HashSet();
+	protected Set<Thread> threadsAtReset;
+
 	protected long minimumEventDelayPerThread = 0;
 	protected Map<Thread, Long> threadToLastEventTimes = new HashMap();
 	protected int initialThreadCount;
@@ -89,10 +91,19 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 	}
 	@Override
 	public synchronized void resetConcurrentEvents() {
+//		System.out.println("RESET OCCURRED");
+		Tracer.info(this, "reset concurrent events: notifying threads, notifying new threads, wait selectot successfil, lateThreads");
+		
 		allKnownThreads.addAll(ConcurrentEventUtility.getCurrentThreads());
+		threadsAtReset = new HashSet( Thread.getAllStackTraces().keySet());
 		concurrentEvents.clear();
+//		System.out.println("Previous notifying threads:	" + notifyingThreads);
+
 		previousNotifyingThreads.addAll(notifyingThreads);
 		allKnownThreads.addAll(notifyingThreads);
+		Tracer.info(this, "All known threads after reset:" + allKnownThreads);
+		Tracer.info(this, "Previous notifying threads after reset:" + previousNotifyingThreads);
+//		System.out.println(" THreads at reset " + threadsAtReset);
 		notifyingThreads.clear();
 		notifyingNewThreads.clear();
 		resetTime = System.currentTimeMillis();
@@ -118,9 +129,20 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 		}
 		long aNewEventTime = aNewEvent.getRelativeTime();
 		Long lastEventTime = threadToLastEventTimes.get(aThread);
-		return (lastEventTime == null  
-				|| (aNewEventTime - lastEventTime) >= minimumEventDelayPerThread);
-			
+		if (lastEventTime == null) return true;
+		long anActualSeparation = aNewEventTime - lastEventTime;
+		boolean retVal = (lastEventTime == null  
+				|| anActualSeparation >= minimumEventDelayPerThread);
+		if (retVal) {
+			Tracer.info(this, "Event separation:" + anActualSeparation + " > min separation:" +minimumEventDelayPerThread );
+		} else {
+			Tracer.info(this, "Event separation:" + anActualSeparation + " < min separation:" +minimumEventDelayPerThread );
+
+		}
+		return retVal;
+//		return (lastEventTime == null  
+//				|| (aNewEventTime - lastEventTime) >= minimumEventDelayPerThread);
+//			
 	}
 	protected synchronized void addEvent(EventType anEvent) {
 //		System.out.println("received event:" + anEvent);
@@ -156,14 +178,22 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 		}
 		if (!notifyingThreads.contains(anEventThread)) {
 //			Tracer.info(this, "Notifying threads before addition:" + notifyingThreads);
-			Tracer.info(this, " Added new thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
+			Tracer.info(this, " Added notifying thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
 //			notifyingThreads.add(aConcurrentOrderedEvent.getThread());
 			notifyingThreads.add(anEventThread);
 //			Tracer.info(this, "Notifying threads after addition:" + notifyingThreads);
 
 
 			if (!allKnownThreads.contains(anEventThread)) {
+				Tracer.info(this, "added new notifying thread " + anEventThread);
 				notifyingNewThreads.add(anEventThread);
+			} else {
+				String aMessage = "If threads created by previous testcases that should have terminatd did not terminate, this test may give erroneous result";
+				Tracer.info(this, aMessage);
+				System.err.println(aMessage);
+//				Tracer.info(this, "all known threads:" + allKnownThreads);
+//				Tracer.info(this, "threads at reset:" + threadsAtReset);
+
 			}
 
 

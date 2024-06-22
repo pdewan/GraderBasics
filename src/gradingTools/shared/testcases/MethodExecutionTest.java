@@ -876,7 +876,7 @@ public abstract class MethodExecutionTest extends PassFailJUnitTestCase  {
 //		Tracer.info (this, "New threads:" + newThreads);		
 	}
 	protected void assertNewThreadCreated() {
-		assertTrue("No thread created by previous operation:", newThreads.size() > 0);
+		assertTrue("No thread created by a programmer operation that should have created a thread:", newThreads.size() > 0);
 		Tracer.info (this, "New threads:" + newThreads);
 	}
 	protected boolean checkTrue() {
