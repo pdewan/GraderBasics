@@ -148,7 +148,10 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 //		System.out.println("received event:" + anEvent);
 		if (isEventsFrozen()) {
 			eventsReceivedWhenFrozen = true;
-			Tracer.info(this, "Event " + anEvent + "received when events were frozen");
+			String aMessage = "Warning:Ignored event:" + Thread.currentThread() + "->" + anEvent ;
+			System.err.println(aMessage);
+			Tracer.info(this, aMessage );
+			
 			return;
 		}
 		
@@ -178,14 +181,14 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 		}
 		if (!notifyingThreads.contains(anEventThread)) {
 //			Tracer.info(this, "Notifying threads before addition:" + notifyingThreads);
-			Tracer.info(this, " Added notifying thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
+			Tracer.info(this, "Added notifying thread " + anEventThread + " for event " + aConcurrentOrderedEvent );
 //			notifyingThreads.add(aConcurrentOrderedEvent.getThread());
 			notifyingThreads.add(anEventThread);
 //			Tracer.info(this, "Notifying threads after addition:" + notifyingThreads);
 
 
 			if (!allKnownThreads.contains(anEventThread)) {
-				Tracer.info(this, "added new notifying thread " + anEventThread);
+				Tracer.info(this, "Added new notifying thread " + anEventThread);
 				notifyingNewThreads.add(anEventThread);
 			} else {
 				String aMessage = "If threads created by previous testcases that should have terminatd did not terminate, this test may give erroneous result";
@@ -285,6 +288,12 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 	@Override
 	public void setEventsFrozen(boolean newValue) {
 		Tracer.info(this, "Events frozen = " + newValue);
+		if (newValue) {
+			Tracer.info(this, "Until unfozen events will be ignored");
+		} else {
+			Tracer.info(this, "Events will now be processed");
+
+		}
 		this.eventsFrozen = newValue;
 	}
 	@Override

@@ -68,10 +68,14 @@ public class BasicConcurrentPropertyChangeSupport
 	public synchronized void selectorBasedWait( long aTimeOut) {
 		if (!waitSelectorSuccessful) {
 			try {
+				Tracer.info(this, "Selector waiting for notofying condition");
+
 //				System.out.println("Waiting for max time:" + aTimeOut);
 				wait(aTimeOut);
 				if (!waitSelectorSuccessful) {
-					Tracer.info(this, "Timed out after ms:" + aTimeOut);
+					String aMessage =  "Warning: Selector timed out after ms:" + aTimeOut + " notifying condition did not occur";
+					System.err.println(aMessage);
+					Tracer.info(this, aMessage);
 				}
 //				System.out.println("Finished Waiting for time:" + aTimeOut);
 
