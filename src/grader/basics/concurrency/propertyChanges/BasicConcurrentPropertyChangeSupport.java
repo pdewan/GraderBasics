@@ -65,6 +65,10 @@ public class BasicConcurrentPropertyChangeSupport
 		return propertyChangeSelector;
 	}
 	@Override
+	protected boolean giveWarningMessage() {
+		return !waitSelectorSuccessful;
+	}
+	@Override
 	public synchronized void selectorBasedWait( long aTimeOut) {
 		if (!waitSelectorSuccessful) {
 			try {
@@ -74,7 +78,7 @@ public class BasicConcurrentPropertyChangeSupport
 				wait(aTimeOut);
 				if (!waitSelectorSuccessful) {
 					String aMessage =  "Warning: Selector timed out after ms:" + aTimeOut + " notifying condition did not occur";
-					System.err.println(aMessage);
+					System.err.println(">>" + aMessage + "<<");
 					Tracer.info(this, aMessage);
 				}
 //				System.out.println("Finished Waiting for time:" + aTimeOut);
@@ -83,7 +87,13 @@ public class BasicConcurrentPropertyChangeSupport
 				e.printStackTrace();
 			}
 		}
+		if (waitSelectorSuccessful) {
+			String aMessage = "Selector based wait finished successfully, it is ok if some later events are ignored";
+			Tracer.info(this, aMessage);
+		
+		}
 		setEventsFrozen(true);
 	}
 
 }
+

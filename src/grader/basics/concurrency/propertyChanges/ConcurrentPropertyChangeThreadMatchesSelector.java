@@ -1,5 +1,6 @@
 package grader.basics.concurrency.propertyChanges;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,14 @@ public class ConcurrentPropertyChangeThreadMatchesSelector implements Selector<C
 		numThreads = aNumThreads;
 		threadPattern = aThreadPattern;
 		minimumEventDelayPerThread = aMinDelay;
+		
+		Tracer.info(this, "Num threads to be matched:" + numThreads + " " +
+		"minimumEventDelayPerThread:" +  minimumEventDelayPerThread + " " +
+		"numMatches:" + numMatches + " " + 
+		"threadPattern:" + aThreadPattern + " " +
+		"parameters:" + Arrays.toString(parameters) + " " +
+		"threadPattern:" + aThreadPattern);
+		
 //		minThreads = aMinThreads;
 		
 		

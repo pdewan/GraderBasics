@@ -1070,6 +1070,7 @@ public class BasicProject implements Project {
 				return null;
 			}
 			String aConfigurationFileName = aCheckstyleConfigurationFile.getAbsolutePath();
+			System.out.println(">>Running checkstyle, this will take time<<");
 			symbolTable = CheckStyleInvoker.runCheckstyle(this, aConfigurationFileName, anOutFileName,
 					aCheckstyleGeneratedFileName);
 //			CheckStyleInvoker.forkCheckstyle(this, aConfigurationFileName, anOutFileName, aCheckstyleGeneratedFileName);

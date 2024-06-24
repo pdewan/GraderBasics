@@ -144,12 +144,18 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 //				|| (aNewEventTime - lastEventTime) >= minimumEventDelayPerThread);
 //			
 	}
+	protected boolean giveWarningMessage() {
+		return true;
+	}
 	protected synchronized void addEvent(EventType anEvent) {
 //		System.out.println("received event:" + anEvent);
 		if (isEventsFrozen()) {
-			eventsReceivedWhenFrozen = true;
+			eventsReceivedWhenFrozen = true;			
 			String aMessage = "Warning:Ignored event:" + Thread.currentThread() + "->" + anEvent ;
-			System.err.println(aMessage);
+			if (giveWarningMessage()) {				
+		
+			System.err.println(">>" + aMessage + "<<");
+			}
 			Tracer.info(this, aMessage );
 			
 			return;
