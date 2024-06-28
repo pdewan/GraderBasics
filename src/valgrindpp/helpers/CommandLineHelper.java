@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import util.trace.Tracer;
 
 public class CommandLineHelper {
 	private static boolean createDockerContainer = 
@@ -15,11 +16,13 @@ public class CommandLineHelper {
 //	}
 	
 	public static int executeInProcessBuilder(String[] command, String anExecutionDirectory,  boolean silent, InputStream input) throws Exception{
-		if(!silent) System.out.println("Executing: " + String.join(" ", command));
+		if(!silent) {
+			Tracer.info(CommandLineHelper.class, "Executing: " + String.join(" ", command));
+		}
 		
 		ProcessBuilder pb = new ProcessBuilder();
 		if (anExecutionDirectory != null && command[0] != DockerHelper.DOCKER_PATH) {
-			System.out.println("CLH Process Builder directory:" + anExecutionDirectory);
+			Tracer.info(CommandLineHelper.class, "CLH Process Builder directory:" + anExecutionDirectory);
 			pb.directory(new File(anExecutionDirectory));
 		}
 		

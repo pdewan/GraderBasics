@@ -1,10 +1,12 @@
 package valgrindpp.helpers;
 
 import java.io.File;
+import java.util.Arrays;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.execution.AValgrindCommandGenerator;
+import util.trace.Tracer;
 
 public class DockerHelper {
 //	public static final String IMAGE_NAME = "nalingaddis/valgrind";
@@ -47,22 +49,11 @@ public class DockerHelper {
 	public static int createContainer(String mountDir) throws Exception {
 		if (!createDockerContainer) {
 			return 0;
+			
 		}
-//		mountDir = AValgrindCommandGenerator.toSingleSlash(mountDir);
-//		mountDir = "D:\\dewan_backup\\C\\ValgrindExamples\\Assignment5\\\\\"All, Correct\\\"\\(acorrect\\)\\\\\"Submission attachment\\\"\\(s\\)\\CorrectMutexLRU-No-Config\\CorrectMutexLRU-No-Config"; 
-//		mountDir = "D:\\dewan_backup\\C\\ValgrindExamples\\Link"; 
+
 		File aFile = new File(mountDir);
-//		if (!aFile.exists()) {
-//			System.out.println(" No link");
-//		}
 
-//		mountDir = "D:/dewan_backup/C/ValgrindExamples/Assignment5/\"All, Correct\"/\\(acorrect\\)/\"Submission attachment\\(s\\)\"/CorrectMutexLRU-No-Config/CorrectMutexLRU-No-Config";
-//		mountDir = "\"D:\\dewan_backup\\C\\ValgrindExamples\\Assignment5\\\\\'All, Correct (acorrect)\\\'\\\\\"Submission attachment(s)\\\"\\CorrectMutexLRU-No-Config\\CorrectMutexLRU-No-Config\\SimpleAdderConfig-wrapper.c\""; 
-
-	//			mountDir = mountDir.replaceAll("/", "\\ ");
-//			mountDir = "\'" + mountDir + "'";
-//			mountDir = mountDir.replaceAll(" ", "\\\\ ");
-//		}
 			
 		
 		String[] command = new String[]{
@@ -76,6 +67,8 @@ public class DockerHelper {
 				CONTAINER_NAME,
 				IMAGE_NAME
 		};
+		Tracer.info(DockerHelper.class, "Creating Docker Container from command:" + Arrays.toString(command));
+
 		
 		return CommandLineHelper.executeInProcessBuilder(command, null, false, null);
 	}
@@ -84,6 +77,8 @@ public class DockerHelper {
 		if (!createDockerContainer) {
 			return 0;
 		}
+		Tracer.info(DockerHelper.class, "Stopping Docker Container");
+
 		String[] command = {
 				DOCKER_PATH,
 				"stop",
@@ -97,12 +92,15 @@ public class DockerHelper {
 		if (!createDockerContainer) {
 			return 0;
 		}
+
 		String[] command = {
 				DOCKER_PATH,
 				"rm",
 				"-f",
 				CONTAINER_NAME
 		};
+		Tracer.info(DockerHelper.class, "Deleting Docker Container using command:" + Arrays.toString(command));
+
 		
 		return CommandLineHelper.executeInProcessBuilder(command, null, false, null);
 	}

@@ -100,10 +100,10 @@ public class BasicProject implements Project {
 
 //        Option<File> src = DirectoryUtils.locateFolder(aDirectory, "src");
 		Option<File> src = DirectoryUtils.locateFolder(projectFolder, Project.SOURCE);
-		Tracer.info(this, "located src folder:" + src.get());
+		Tracer.info(this, "Located src folder:" + src.get());
 
 		if (src.isEmpty()) {
-			Tracer.info(this, "src folder is empty:" + src);
+			Tracer.info(this, "src folder is empty:");
 
 			SourceFolderNotFound.newCase(projectFolder.getAbsolutePath(), this).getMessage();
 
@@ -114,7 +114,7 @@ public class BasicProject implements Project {
 				sourceFolder = aSourceFile.getParentFile(); // assuming no packages!
 //				System.out.println("Assuming src folder is:" + sourceFolder);
 
-				Tracer.info(this, "Assuming src folder is:" + sourceFolder);
+//				Tracer.info(this, "Assuming src folder is:" + sourceFolder);
 				if (!projectFolder.equals(sourceFolder)) {
 					this.projectFolder = sourceFolder.getParentFile();
 				}
@@ -131,7 +131,7 @@ public class BasicProject implements Project {
 			sourceFolder = src.get();
 			this.projectFolder = src.get().getParentFile();
 		}
-		Tracer.info(this, "passing to text manager, folder:" + sourceFolder);
+		Tracer.info(this, "Passing to text manager, folder:" + sourceFolder);
 		textManager = new ABasicTextManager(sourceFolder);
 	}
 

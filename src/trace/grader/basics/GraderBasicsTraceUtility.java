@@ -2,6 +2,7 @@ package trace.grader.basics;
 
 import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.config.TracingHashMap;
 import grader.basics.execution.BasicProjectExecution;
 import grader.basics.file.zipfile.AZippedRootFolderProxy;
 import grader.basics.junit.TestCaseResult;
@@ -27,6 +28,9 @@ import util.trace.ImplicitKeywordKind;
 import util.trace.TraceableWarning;
 import util.trace.Tracer;
 import util.trace.uigen.UnknownPropertyNotification;
+import valgrindpp.codegen.Function;
+import valgrindpp.codegen.Wrapper;
+import valgrindpp.helpers.DockerHelper;
 
 public class GraderBasicsTraceUtility {
 	static boolean turnOn = true;
@@ -118,13 +122,14 @@ static boolean printPreTestAnnoucement = true; // for hints, we will disable it
 		Tracer.setImplicitPrintKeywordKind(ImplicitKeywordKind.OBJECT_PACKAGE_NAME);
 //		if (isTurnOn()) {
 		Tracer.setKeywordPrintStatus(PassFailJUnitTestCase.class, true);
+//		Tracer.setKeywordPrintStatus(TracingHashMap.class, true);
 
 		Tracer.setKeywordPrintStatus(MethodExecutionTest.class, true);
 		Tracer.setKeywordPrintStatus(LocatableTest.class, true);
-		Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);
-		Tracer.setKeywordPrintStatus(DetachedRotatingLineFortyFiveDegreeTest.class, true);
-		Tracer.setKeywordPrintStatus(RotatingFixedLineRotateTest.class, true);
-		Tracer.setKeywordPrintStatus(MovingRotatingLineFortyFiveDegreeTest.class, true);
+//		Tracer.setKeywordPrintStatus(TestBoundedShape.class, true);
+//		Tracer.setKeywordPrintStatus(DetachedRotatingLineFortyFiveDegreeTest.class, true);
+//		Tracer.setKeywordPrintStatus(RotatingFixedLineRotateTest.class, true);
+//		Tracer.setKeywordPrintStatus(MovingRotatingLineFortyFiveDegreeTest.class, true);
 		Tracer.setKeywordPrintStatus(MethodPropertyChecker.class, true);
 		Tracer.setKeywordPrintStatus(BasicProjectIntrospection.class, true);
 		Tracer.setKeywordPrintStatus(BasicProjectExecution.class, true);
@@ -139,6 +144,12 @@ static boolean printPreTestAnnoucement = true; // for hints, we will disable it
 		Tracer.setKeywordPrintStatus(CheckStyleTestCase.class, true);
 		Tracer.setKeywordPrintStatus(CheckStyleWarningsRatioTestCase.class, true);
 		Tracer.setKeywordPrintStatus(ConcurrentEventUtility.class, true);
+		
+		Tracer.setKeywordPrintStatus(DockerHelper.class, true);
+		Tracer.setKeywordPrintStatus(Function.class, true);
+		Tracer.setKeywordPrintStatus(Wrapper.class, true);
+
+
 
 //		}
 

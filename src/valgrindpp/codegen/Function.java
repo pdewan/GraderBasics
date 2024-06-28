@@ -1,7 +1,10 @@
 package valgrindpp.codegen;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import util.trace.Tracer;
 
 public class Function {
 	String soName, fnName, returnType;
@@ -16,6 +19,7 @@ public class Function {
 	}
 	
 	public Function(String encoded) throws InvalidFunctionException {
+		Tracer.info(this, "Creating Function from:" + encoded);
 		String[] data = encoded.split(":");
 		String[] name = data[0].split(",");
 		String[] signature = data[1].split("->");
@@ -44,6 +48,15 @@ public class Function {
 		
 		soName = soName.trim();
 		fnName = fnName.trim();
+		Tracer.info(this, "Function representation:" + toString() );
+	}
+	public String toString() {
+		return 
+				"funName:" + fnName +
+				" arguments:" + Arrays.toString(arguments) +
+				" returnType:" + returnType + 
+				" soName:" +  soName ;
+
 	}
 	
 	public String toCString() throws InvalidFunctionException {
@@ -190,8 +203,10 @@ public class Function {
 		}
 		
 		sb.append("}");
-		
-		return sb.toString();
+		String retVal = sb.toString();
+		Tracer.info(this, "Created function:" + retVal);
+		return retVal;
+//		return sb.toString();
 	}
 	
 	private enum StringType {

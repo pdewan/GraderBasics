@@ -120,7 +120,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 //		System.out.println ("Basic command" + Arrays.toString(command));
 		try {
 			String[] retVal = CommandLineHelper.getExecutionCommand(command, executionDirectory);
-			System.out.println ("Execution command " + Arrays.toString(retVal));
+			Tracer.info (this, "Tracing execution command " + Arrays.toString(retVal));
 			return retVal;
 
 		} catch (Exception e) {
@@ -288,15 +288,15 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 					.getInstrumentUsingValgrind();
 			projectDirectory =  aProject.getProjectFolder().getAbsolutePath();
 			studentDirectory = projectDirectory;
-			System.out.println("Student directory:" + studentDirectory);
+			Tracer.info(this, "Student directory:" + studentDirectory);
 
 			File aStudentDirectoryFile = new File(studentDirectory);
 			File aMaybeChanged = maybeToZippedGradescopeProjectFolder(aStudentDirectoryFile);
 			if (aStudentDirectoryFile != aMaybeChanged) {
-				System.out.println("Changed student directory");
-				System.out.println("Original student directory " + studentDirectory);
+//				System.out.println("Changed student directory");
+				Tracer.info(this, "Original student directory " + studentDirectory);
 				studentDirectory = aMaybeChanged.getAbsolutePath();
-				System.out.println("New student directory " + studentDirectory);
+				Tracer.info(this, "New student directory " + studentDirectory);
 
 			}
 			executionDirectory = studentDirectory;
@@ -315,6 +315,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 			setRelativeTraceFileName(getTraceFileRelativeName());
 // this should be project directory instead of execution directory if no docker container
 			traceExecutionFile = new File(executionDirectory + "/" + getRelativeTraceFileName());
+			Tracer.info(this, "TraceExecutionFile:" + traceExecutionFile );
 
 			traceExecutionDirectory = traceExecutionFile.getParentFile();
 			if (!traceExecutionDirectory.exists()) {
@@ -355,6 +356,7 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 			String[] aCommand, String input, String[] args, int timeout, String aProcessName, boolean anOnlyProcess)
 			throws NotRunnableException {
 		try {
+			Tracer.info(this, "Executing pre-execution commands");
 //		String aDockerProgramName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDockerPath();
 			String aValgrindConfigurationDirectory = BasicExecutionSpecificationSelector
 					.getBasicExecutionSpecification().getValgrindConfigurationDirectory();
@@ -366,34 +368,6 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 			if (!GradingMode.getGraderRun()) {
 				aValgrindConfigurationFileName = executionDirectory + "/" + aValgrindConfigurationRelativeFileName;
 			}
-//		String aValgrindConfigurationFileName = 
-//				aProjectDirectory + "/" +
-//				aValgrindConfigurationDirectory + "/" +
-//				aConfiguration;
-//				BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindConfiguration();
-//		File aTraceFile = getTraceFile(runner.getBasicProject());
-//		File aTraceFolder = aTraceFile.getParentFile();
-//		if (!aTraceFolder.exists()) {
-//			aTraceFolder.mkdirs();
-//		}
-////		String aValgrindTraceDirectory = aProjectDirectory + "/"  +
-////				BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindTraceDirectory();
-//		traceFolder = aTraceFolder.getCanonicalPath();
-////		File aFolder = new File(aValgrindTraceDirectory);
-////		if (!aFolder.exists()) {
-////			aFolder.mkdirs();
-////		}
-////		String aTraceShortFileName = 			
-////				BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindTraceFile();
-////		if (aTraceShortFileName == null) {
-////			aTraceShortFileName = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getValgrindConfiguration() + "Traces" + ".txt";
-////		}
-////		traceFile = aTraceShortFileName;
-//
-////		String aTraceFile = aValgrindTraceDirectory + "/" + aTraceShortFileName;
-//		traceFile = aTraceFile.getCanonicalPath();
-
-//		String aProjectDirectory = runner.getBasicProject().getProjectFolder().getAbsolutePath();
 			DockerHelper.deleteContainer();
 			DockerHelper.createContainer(executionDirectory);
 
@@ -454,8 +428,11 @@ public abstract class AValgrindCommandGenerator extends AnExecutableFinder imple
 	@Override
 	public void runPostIndividualCommand(RunningProject runner) {
 		try {
+			Tracer.info(this, "Post execution commands");;
 
 			maybeCopyTraceFile();
+			Tracer.info(this, "Post execution commands");
+			Tracer.info(this, "Deleting binary");
 			deleteBinary();
 			DockerHelper.stopContainer();
 //			Grader grader = new SimpleGrader(traceFolder, traceFileName);

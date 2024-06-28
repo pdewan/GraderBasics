@@ -5,7 +5,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import util.trace.Tracer;
 
 public class CompilerHelper {
 	static final String CC = "gcc";
@@ -46,21 +49,15 @@ public class CompilerHelper {
 	}
 	
 	public int compileWrapper() throws Exception {	
-//		File aFile = new File(cFile);
-//		String aFileName = cFile.replaceAll("\\\\", "/");
+
 		String[] command = {CC, "-c", FLAGS, cFile, "-o", objFile};
-//		String[] command = {"cd", src, ";", 
-//				CC, "-c", FLAGS, cFile, "-o", objFile, ";",
-//				"cd", executionDirectory};
 
-//		String[] command = {CC, "-c", FLAGS, aFileName, "-o", objFile};
-
+		Tracer.info(this, "Compiling wrapper in " + executionDirectory + " using command:" + Arrays.toString(command));
 		
 		return CommandLineHelper.execute(command, executionDirectory);
 	}
 	
 	public int compileStudentCode() throws Exception {
-//		File dir = new File(executionDirectory);
 		File dir = new File(executionDirectory + "/" + src);
 
 		
@@ -86,7 +83,7 @@ public class CompilerHelper {
 		for(int i=0; i<srcFiles.size(); i++) {
 			command[i+5] = srcFiles.get(i);
 		}
-
+		Tracer.info(this, "Compiling student code in " + executionDirectory + " using command:" + command);
 		return CommandLineHelper.execute(command, executionDirectory);
 	}
 	
@@ -170,6 +167,7 @@ public class CompilerHelper {
 				"make",
 				"wrapped"
 		};
+		Tracer.info(this, "Executing in " + executionDirectory + "make command: " +  Arrays.toString(command));
 		
 		return CommandLineHelper.execute(command, executionDirectory);
 	}
@@ -179,7 +177,8 @@ public class CompilerHelper {
 				"make",
 				"clean"
 		};
-		
+		Tracer.info(this, "Executing in " + executionDirectory + "make command: " +  Arrays.toString(command));
+
 		return CommandLineHelper.execute(command, executionDirectory);
 	}
 }

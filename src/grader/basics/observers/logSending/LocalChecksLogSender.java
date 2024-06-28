@@ -208,7 +208,7 @@ public class LocalChecksLogSender {
 			return "SummerII"+year;
 		return "Fall"+year;
 	}
-	
+	static boolean logErrorMessageSent = false;
 	public static JSONObject post(JSONObject request, String urlString) {
 		BufferedReader reader;
 		String line;
@@ -255,7 +255,10 @@ public class LocalChecksLogSender {
 			}
 			conn.disconnect();
 		} catch (Exception e) {
+			if (!logErrorMessageSent) {
 			System.err.println("Error sending logs:\n"+e.getMessage());
+			logErrorMessageSent = true;
+			}
 			return null;
 //			e.printStackTrace();
 		} 

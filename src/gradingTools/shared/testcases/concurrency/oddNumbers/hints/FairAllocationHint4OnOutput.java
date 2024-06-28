@@ -3,7 +3,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(0)
-@Explanation("This hint identifies additional trace lines to look at to help identify the natire of the fair-allocation problem")
+@Explanation("This hint identifies additional trace lines to look at to help determine the subtask in fair allocation problem leading to the hint")
 public class FairAllocationHint4OnOutput extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
 			FairAllocationHint3OnError.class

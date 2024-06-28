@@ -16,7 +16,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationProble
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(0)
-@Explanation("This hint tries to identify parts of the code in fairThreadRemainderSize() that are leading to teh error message from FairAllocationSmallProblem")
+@Explanation("This hint analyzes the student code in fairThreadRemainderSize() to help identify the problems that is leading to the error message from FairAllocationSmallProblem")
 public class FairAllocationHint5OnCode extends FairAllocationHint {
 	static Class[] PREVIOUS_HINTS = {
 			FairAllocationHint4OnOutput.class

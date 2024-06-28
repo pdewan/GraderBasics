@@ -47,14 +47,23 @@ public class ABasicExecutionSpecification implements BasicExecutionSpecification
 	protected List<String> emptyList = new ArrayList();
 
 
-	protected Map<String, String> runtimeGraderStringProperties = new HashMap<>();
-	protected Map<String, String> runtimeStudentStringProperties = new HashMap<>();
-	protected Map<String, Integer> runtimeGraderIntegerProperties = new HashMap<>();
-	protected Map<String, Integer> runtimeStudentIntegerProperties = new HashMap<>();
-	protected Map<String, Boolean> runtimeGraderBooleanProperties = new HashMap<>();
-	protected Map<String, Boolean> runtimeStudentBooleanProperties = new HashMap<>();
-	protected Map<String, List> runtimeGraderListProperties = new HashMap<>();
-	protected Map<String, List> runtimeStudentListProperties = new HashMap<>();
+//	protected Map<String, String> runtimeGraderStringProperties = new HashMap<>();
+//	protected Map<String, String> runtimeStudentStringProperties = new HashMap<>();
+//	protected Map<String, Integer> runtimeGraderIntegerProperties = new HashMap<>();
+//	protected Map<String, Integer> runtimeStudentIntegerProperties = new HashMap<>();
+//	protected Map<String, Boolean> runtimeGraderBooleanProperties = new HashMap<>();
+//	protected Map<String, Boolean> runtimeStudentBooleanProperties = new HashMap<>();
+//	protected Map<String, List> runtimeGraderListProperties = new HashMap<>();
+//	protected Map<String, List> runtimeStudentListProperties = new HashMap<>();
+	
+	protected Map<String, String> runtimeGraderStringProperties = new TracingHashMap<>();
+	protected Map<String, String> runtimeStudentStringProperties = new TracingHashMap<>();
+	protected Map<String, Integer> runtimeGraderIntegerProperties = new TracingHashMap<>();
+	protected Map<String, Integer> runtimeStudentIntegerProperties = new TracingHashMap<>();
+	protected Map<String, Boolean> runtimeGraderBooleanProperties = new TracingHashMap<>();
+	protected Map<String, Boolean> runtimeStudentBooleanProperties = new TracingHashMap<>();
+	protected Map<String, List> runtimeGraderListProperties = new TracingHashMap<>();
+	protected Map<String, List> runtimeStudentListProperties = new TracingHashMap<>();
 	
 	@Override
     public Integer getIntegerProperty(String aProperty, Integer aDefault) {
@@ -1085,6 +1094,7 @@ protected String requirementsLocation = null;
 	}
 	@Override
 	public void setEchoOutput(boolean newVal) {
+//		Tracer.info(this, "Setting " + BasicStaticConfigurationUtils.ECHO_OUTPUT + " to ");
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.ECHO_OUTPUT, newVal);		
 	}
 	@Override
@@ -1152,5 +1162,10 @@ protected String requirementsLocation = null;
 	@Override
 	public void setHideRedirectedOuput(boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.HIDE_REDIRECTED_OUTPUT, newVal);		
+	}
+	
+	static {
+		Tracer.setKeywordPrintStatus(TracingHashMap.class, true);
+
 	}
 }

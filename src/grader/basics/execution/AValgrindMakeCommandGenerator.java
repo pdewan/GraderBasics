@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import util.trace.Tracer;
 
 public class AValgrindMakeCommandGenerator extends AValgrindCommandGenerator  implements CommandGenerator {
 
@@ -34,7 +35,7 @@ protected String[] getBasicTraceCommand( ) {
 			command[2 + anIndex] = aBasicCommandList.get(anIndex);
 		}
 
-		System.out.println ("Returning Make command" + Arrays.toString(command) );
+		Tracer.info (this, "Returning Make command" + Arrays.toString(command) );
 		return command;
 }
 //	ch.trace(new String[]{"./lru-mutex-wrapped", "-c", "2"});

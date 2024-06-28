@@ -1,5 +1,6 @@
 package valgrindpp.grader;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,16 @@ public class ValgrindTrace {
 		}
 
 		private static final long serialVersionUID = 1;
+	}
+	
+	public String toString() {
+		String aString = 
+				"Funname:" + fnname +
+				" Timestamp:" + timestamp + 
+				" Thread:" + thread + 
+				" Arguments:" + Arrays.toString(arguments) + 
+				" Result:" + result;
+		return aString;
 	}
 	
 	public ValgrindTrace(String trace) throws Exception {
