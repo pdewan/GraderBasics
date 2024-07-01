@@ -32,7 +32,9 @@ public class ValgrindTrace {
 		if (trace.endsWith("\n")) {
 			aPrcessedTrace = trace.substring(0, trace.length() - 1);
 		}
-		Pattern pattern = Pattern.compile("([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
+		Pattern pattern = Pattern.compile("I\\*\\*\\*([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
+
+//		Pattern pattern = Pattern.compile("([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
 		Matcher m = pattern.matcher(aPrcessedTrace);
 		
 		if(m.matches()) {

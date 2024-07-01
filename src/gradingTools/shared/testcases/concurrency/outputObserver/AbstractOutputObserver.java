@@ -26,7 +26,6 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.TaggedOrNamedClassTest;
 import gradingTools.shared.testcases.concurrency.timing.AbstractConcurrencyPerformanceChecker;
 import junit.framework.TestResult;
-import net.sf.saxon.pattern.CombinedNodeTest;
 //public abstract class AbstractOutputObserver extends TaggedOrNamedClassTest {
 
 public abstract class AbstractOutputObserver extends AbstractConcurrencyPerformanceChecker {

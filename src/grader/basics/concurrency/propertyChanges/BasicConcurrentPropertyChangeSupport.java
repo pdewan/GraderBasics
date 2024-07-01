@@ -30,7 +30,13 @@ public class BasicConcurrentPropertyChangeSupport
 		}
 		return new BasicConcurrentPropertyChange(aLastEvent);
 	}
-	
+@Override	
+protected void recordEventThread(PropertyChangeEvent anEvent) {
+		Object anOldValue = anEvent.getOldValue();
+		if (anOldValue != null && anOldValue instanceof Thread) {
+			lastThread = (Thread) anOldValue;
+		}
+}
 
 	protected Selector<ConcurrentPropertyChangeSupport> propertyChangeSelector;
 //	public synchronized void wait (Selector<ConcurrentPropertyChangeSupport> aSelector, 
@@ -65,8 +71,8 @@ public class BasicConcurrentPropertyChangeSupport
 		return propertyChangeSelector;
 	}
 	@Override
-	protected boolean giveWarningMessage() {
-		return !waitSelectorSuccessful;
+	protected boolean giveEventsFrozenWarningMessage() {
+		return !waitSelectorSuccessful && super.giveEventsFrozenWarningMessage();
 	}
 	@Override
 	public synchronized void selectorBasedWait( long aTimeOut) {

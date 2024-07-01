@@ -19,7 +19,8 @@ public class Wrapper {
 	
 	public static final String TRACE_FUNCTION = 
 			"void trace(const char* format, ...) {\n"
-					+ "    printf(\"%ld - Thread: %lu - \",\n"
+					+ "    printf(\"I***%ld - Thread: %lu - \",\n"
+//					+ "    printf(\"%ld - Thread: %lu - \",\n"
 					+ "        time(NULL),\n"
 					+ "        pthread_self()\n"
 					+ "    );\n"

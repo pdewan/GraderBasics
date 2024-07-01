@@ -1,6 +1,7 @@
 package grader.basics.concurrency.propertyChanges;
 
 import java.beans.PropertyChangeEvent;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,12 +13,33 @@ import java.util.TreeMap;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import grader.basics.output.observer.ObservablePrintStream;
+import grader.basics.output.observer.ObservablePrintStreamFactory;
 import util.trace.Tracer;
 
 public class ConcurrentEventUtility {
+	
+	private static boolean threadsInDifferentProcess = false;
+	
+	public static void setThreadsInDifferentProcess (boolean newVal) {
+		threadsInDifferentProcess = newVal;
+	}
+	public static boolean getThreadsInDifferentProcess () {
+		return threadsInDifferentProcess;
+	}
+	public static ObservablePrintStream redirectToObservablePrintStream() {
+		ObservablePrintStream retVal = ObservablePrintStreamFactory.getObservablePrintStream();
+		System.setOut((PrintStream) retVal);
+		return retVal;
+	}
 
 	public static Set<Thread> newThreads(Set<Thread> aPreviousThreads) {
 		Set<Thread> retVal = new HashSet(getCurrentThreads());
+		retVal.removeAll(aPreviousThreads);
+		return retVal;
+	}
+	public static Set<Thread> newThreads(Set<Thread> aCurrentThreads, Set<Thread> aPreviousThreads) {
+		Set<Thread> retVal = new HashSet(aCurrentThreads);
 		retVal.removeAll(aPreviousThreads);
 		return retVal;
 	}
@@ -35,7 +57,11 @@ public class ConcurrentEventUtility {
 			return null;
 		}
 	}
+	static Set<Thread> emptySet = new HashSet();
 	public static Set<Thread> getCurrentThreads() {
+		if (threadsInDifferentProcess) {
+			return emptySet;
+		}
 		return new HashSet<Thread>(Thread.getAllStackTraces().keySet());
 	}
 	
@@ -743,7 +769,9 @@ public class ConcurrentEventUtility {
 			anIncludeThreads = anIncludeOrExcludeThreads;
 		} else {
 			List<Thread> anIncludeThreadsList = new ArrayList( aThreadToEvents.keySet());
-			if (!isIncludeThreads) {
+//			if (!isIncludeThreads) {
+			if (!isIncludeThreads && anIncludeOrExcludeThreads != null) {
+
 				for (Thread aThread:anIncludeOrExcludeThreads) {
 					anIncludeThreadsList.remove(aThread);
 				}

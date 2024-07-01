@@ -21,13 +21,20 @@ public class ObservablePrintStreamFactory {
 			try {
 				observablePrintStream = new AnObservablePrintStream(System.out);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}		
 		return observablePrintStream;	
-}
+	}
+	
+//	public static ObservablePrintStream redirectToObservablePrintStream() {
+//		ObservablePrintStream retVal = getObservablePrintStream();
+//		System.setOut((PrintStream) retVal);
+//		return retVal;
+//
+//	}
+	
+	
 
 	public static void setObservablePrintStream(ObservablePrintStream newVal) {
 		ObservablePrintStreamFactory.observablePrintStream = newVal;

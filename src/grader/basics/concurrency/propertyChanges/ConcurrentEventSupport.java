@@ -29,4 +29,7 @@ public interface ConcurrentEventSupport<EventType, ObservableType>  {
 	Thread[] getNotifyingNewThreads();
 	void timeOutBasedWait(long aTimeOut);
 //	int getNumberOfCreatedThreads();
+	void resetConcurrentEvents(long aResetTime);
+	Set<Thread> getAllKnownThreads();
+	void setGiveEventsFrozenWarning(boolean s);
 }
