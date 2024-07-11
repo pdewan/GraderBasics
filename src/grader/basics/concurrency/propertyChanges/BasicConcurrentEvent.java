@@ -10,12 +10,14 @@ public class BasicConcurrentEvent<EventType> implements ConcurrentEvent<EventTyp
 	
 	public BasicConcurrentEvent (
 			long aStartTime,
-			int aSequenceNumber, 
+			int aSequenceNumber,
+			long aTime,
+			Thread aThread,
 			EventType anEvent) {
 		sequenceNumber = aSequenceNumber;
-		thread = Thread.currentThread();
+		thread = aThread;
 		event = anEvent;
-		time = System.currentTimeMillis();
+		time = aTime;
 		relativeTime = time -aStartTime;
 		startTime = aStartTime;
 				

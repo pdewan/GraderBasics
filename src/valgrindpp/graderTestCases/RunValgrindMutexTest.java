@@ -1,7 +1,7 @@
 package valgrindpp.graderTestCases;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
-import gradingTools.valgrindTestCases.MutexTestSuite;
+import gradingTools.shared.testcases.valgrindTestCases.ProducerConsumerTestSuite;
 import trace.grader.basics.GraderBasicsTraceUtility;
 import util.trace.Tracer;
 
@@ -15,7 +15,7 @@ public class RunValgrindMutexTest {
 		setStudentGradableProjectLocation("D:\\dewan_backup\\Java\\eclipse\\test-c");
 
 		
-		MutexTestSuite.main(args);
+		ProducerConsumerTestSuite.main(args);
 //		AddMultiplySuite.main(args);
 	}
 }

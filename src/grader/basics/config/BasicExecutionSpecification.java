@@ -120,6 +120,8 @@ public interface BasicExecutionSpecification {
 	void setMaxTraces(int newVal);
 	int getMaxPrintedTraces();
 	void setMaxPrintedTraces(int newVal);
+	int getMaxOutputLines();
+	void setMaxOutputLines(int newVal);
 	boolean getStarterUI();
 	void setStarterUI(boolean newVal);
 	String setNavigationKind(String newVal);
@@ -155,5 +157,8 @@ public interface BasicExecutionSpecification {
 	boolean getLoadClasses();
 	void setLoadClasses(boolean newVal);
 	boolean getHideRedirectedOutput();
-	void setHideRedirectedOuput(boolean newVal);	
+	void setHideRedirectedOuput(boolean newVal);
+	List<String> getDereferencedArgumentTypes();
+	void addDereferencedArgumentTypes(String[] newVal);
+	void setDereferencedArgumentTypes(List<String> newVal);	
 }

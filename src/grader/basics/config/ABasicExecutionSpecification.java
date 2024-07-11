@@ -28,6 +28,7 @@ import static grader.basics.config.BasicStaticConfigurationUtils.toCompoundPrope
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -975,6 +976,36 @@ protected String requirementsLocation = null;
 		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_TRACE_DIRECTORY, newVal);
 
 	}
+	@Override
+	public List<String> getDereferencedArgumentTypes() {
+		
+		return getListProperty(BasicStaticConfigurationUtils.DEREFERENCED_ARGUMENT_TYPES, new ArrayList());
+//		return processTeams;
+	}
+	@Override
+     public void addDereferencedArgumentTypes(String[] newVal) {
+		List<String> aDereferencedTypes = runtimeStudentListProperties.get(BasicStaticConfigurationUtils.DEREFERENCED_ARGUMENT_TYPES);
+		if (aDereferencedTypes == null) {
+			aDereferencedTypes = new ArrayList();
+			runtimeGraderListProperties.put(BasicStaticConfigurationUtils.DEREFERENCED_ARGUMENT_TYPES, aDereferencedTypes );
+		}
+		aDereferencedTypes.addAll(Arrays.asList(newVal));
+//		return processTeams;
+	}
+
+	
+	
+	/* (non-Javadoc)
+	 * @see grader.execution.ExecutionSpecification#setProcessTeams(java.util.List)
+	 */
+	@Override
+	public void setDereferencedArgumentTypes(List<String> newVal) {
+		Tracer.info(this, "Setting dreferenced argument types team: " + newVal);
+		runtimeGraderListProperties.put(BasicStaticConfigurationUtils.DEREFERENCED_ARGUMENT_TYPES, newVal);
+//		processTeams = aProcessTeamNames;
+//		BasicStaticConfigurationUtils.setProcessTeams(processTeams);
+	}
+	
 	
 	@Override
 	public boolean getTracing() {
@@ -995,6 +1026,18 @@ protected String requirementsLocation = null;
 	@Override
 	public void setMaxTraces(int newVal) {
 		runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.MAX_TRACES, newVal);		
+	}
+
+	@Override
+	public int getMaxOutputLines() {
+		return getIntegerProperty(BasicStaticConfigurationUtils.MAX_OUTPUT_LINES, BasicStaticConfigurationUtils.DEFAULT_MAX_OUTPUT_LINES);
+
+	}
+	@Override
+	public void setMaxOutputLines(int newVal) {
+		runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.MAX_OUTPUT_LINES, newVal);		
+
+		
 	}
 	@Override
 	public int getMaxPrintedTraces() {
@@ -1168,4 +1211,5 @@ protected String requirementsLocation = null;
 		Tracer.setKeywordPrintStatus(TracingHashMap.class, true);
 
 	}
+
 }

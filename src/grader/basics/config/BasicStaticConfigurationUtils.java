@@ -150,6 +150,9 @@ public class BasicStaticConfigurationUtils {
 	
 	public static final String VALGRIND_TRACE_DIRECTORY = "valgrindTraceDirectory";
 	public static final String DEFAULT_VALGRIND_TRACE_DIRECTORY = "Logs//Valgrind";
+	public static final String DEREFERENCED_ARGUMENT_TYPES = "dereferencedArgumentTypes";
+	public static final List<String> DEFAULT_DEREFERENCED_ARGUMENT_TYPES = new ArrayList();
+
 	
 	public static final String DOCKER_PROGRAM_NAME = "docker_program_name";
 	public static final String DEFAULT_DOCKER_PRORAM_NAME = "docker";
@@ -162,6 +165,9 @@ public class BasicStaticConfigurationUtils {
 	
 	public static final String MAX_TRACES = "maxTraces";
 	public static final int DEFAULT_MAX_TRACES = 2000;
+	
+	public static final String MAX_OUTPUT_LINES = "maxOutputLines";
+	public static final int DEFAULT_MAX_OUTPUT_LINES = 600;
 	
 	public static final String MAX_PRINTED_TRACES = "maxPrintedTraces";
 	public static final int DEFAULT_MAX_PRINTED_TRACES = 600;

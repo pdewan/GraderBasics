@@ -8,6 +8,7 @@ public class ValgrindTrace {
 	public long timestamp, thread;
 	public String fnname, result;
 	public String[] arguments;
+	public int repetitons = 1;
 	
 	public class TraceParsingException extends Exception {
 		public TraceParsingException(String trace) {
@@ -18,23 +19,46 @@ public class ValgrindTrace {
 	}
 	
 	public String toString() {
+		return 
+				"Timestamp:" + timestamp +
+						toStringWithoutTimestamp();
+//		String aString = 
+//				"Timestamp:" + timestamp + 
+//				  "Funname:" + fnname +
+//				" Thread:" + thread + 
+//				" Arguments:" + Arrays.toString(arguments) + 
+//				" Result:" + result;
+//		return aString;
+	}
+	
+	public String toStringWithoutTimestamp() {
 		String aString = 
-				"Funname:" + fnname +
-				" Timestamp:" + timestamp + 
+				 " Funname:" + fnname +
 				" Thread:" + thread + 
 				" Arguments:" + Arrays.toString(arguments) + 
 				" Result:" + result;
 		return aString;
 	}
 	
+	
+	public ValgrindTrace(long timestamp, long thread, String fnname, String result, String[] arguments) {
+		super();
+		this.timestamp = timestamp;
+		this.thread = thread;
+		this.fnname = fnname;
+		this.result = result;
+		this.arguments = arguments;
+	}
+
+
 	public ValgrindTrace(String trace) throws Exception {
 		String aPrcessedTrace = trace;
 		if (trace.endsWith("\n")) {
 			aPrcessedTrace = trace.substring(0, trace.length() - 1);
 		}
-		Pattern pattern = Pattern.compile("I\\*\\*\\*([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
+//		Pattern pattern = Pattern.compile("I\\*\\*\\*([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
 
-//		Pattern pattern = Pattern.compile("([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
+		Pattern pattern = Pattern.compile("([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
 		Matcher m = pattern.matcher(aPrcessedTrace);
 		
 		if(m.matches()) {

@@ -2,6 +2,7 @@ package grader.basics.execution;
 
 import java.io.InputStream;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import util.trace.Tracer;
 
 public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamProcessor implements Runnable {
@@ -26,13 +27,15 @@ public class ABasicRunnerOutputStreamProcessor extends ARunnerErrorOrOutStreamPr
 		// }
 	}
 	
-	public static  int maxOutputLines = Tracer.getMaxTraces();
+//	public static  int maxOutputLines = Tracer.getMaxTraces();
 	 public static int getMaxOutputLines() {
-		return maxOutputLines;
+//		return maxOutputLines;
+		return BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getMaxOutputLines();
 	}
 
 	public static void setMaxOutputLines(int maxOutputLines) {
-		ABasicRunnerOutputStreamProcessor.maxOutputLines = maxOutputLines;
+//		ABasicRunnerOutputStreamProcessor.maxOutputLines = maxOutputLines;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setMaxOutputLines(maxOutputLines);
 	}
 
 	int numLinesOutput = 0;

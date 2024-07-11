@@ -1,9 +1,11 @@
 package valgrindpp.codegen;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import util.trace.Tracer;
 
 public class Function {
@@ -174,6 +176,8 @@ public class Function {
 			
 			if(argType(arguments[i]) == StringType.OTHER) {
 				sb.append("&");
+			} else if (argType(arguments[i]) == StringType.DREFERENCED_POINTER) {
+				sb.append("*");
 			}
 			
 			sb.append(parseArgName(arguments[i]));
@@ -214,10 +218,26 @@ public class Function {
 		LONG, UNSIGNED_LONG, LONG_LONG, UNSIGNED_LONG_LONG,
 		SHORT,UNSIGNED_SHORT,
 		FLOAT, DOUBLE, LONG_DOUBLE,
-		CHAR, POINTER, ARRAY, OTHER
+		CHAR, POINTER, DREFERENCED_POINTER, ARRAY, OTHER
 	}
-	
+	static List<String> dreferencedTypes = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDereferencedArgumentTypes();
+
+	private boolean isDereferencedType(String arg) {
+		if (dreferencedTypes == null) {
+			return false;
+		}
+		for (String aDreferencedType:dreferencedTypes) {
+			if (arg.contains(aDreferencedType)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	private StringType argType(String arg) {
+		if (isDereferencedType(arg)) {
+//		if (arg.contains("pthread_t") ) 
+			return StringType.DREFERENCED_POINTER;
+		}
 		if(arg.contains("*")) return StringType.POINTER;
 		if(arg.contains("[]")) return StringType.ARRAY;
 		
@@ -245,7 +265,10 @@ public class Function {
 	
 	private String argStringFormatter(String arg) {
 		switch(argType(arg)) {
-		case POINTER: return "p";
+		case POINTER: 
+			return "p";
+		case DREFERENCED_POINTER: 
+			return "d";
 		case ARRAY: return "p";
 		
 		case LONG_DOUBLE: return "Lg";

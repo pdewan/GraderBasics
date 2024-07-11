@@ -11,5 +11,7 @@ public interface ObservablePrintStream extends PropertyListenerRegisterer{
 	void registerPropertyChangeConverter(ObjectToPropertyChange aConverter);
 	void removePropertyChangeListener(PropertyChangeListener aListener);
 	void setRedirectionFrozen(boolean newVal);
+	PropertyOutputSelector getPropertyOutputSelector();
+	void setPropertyOutputSelector(PropertyOutputSelector propertyOutputSelector);
 
 }

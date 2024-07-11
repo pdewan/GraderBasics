@@ -909,7 +909,7 @@ public class BasicProcessRunner implements Runner {
 					else {
 
 					builder = new ProcessBuilder(aCommand);
-					System.out.println("Running command:" + Common.toString(aCommand, " "));
+//					System.out.println("Running command:" + Common.toString(aCommand, " "));
 					Tracer.info(this, "Running command:" + Common.toString(aCommand, " "));
 					}
 //					System.out.println("Running command:" + Common.toString(aCommand, " "));
@@ -922,7 +922,7 @@ public class BasicProcessRunner implements Runner {
 			}
 			if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getForkInProjectFolder()) {
 				Tracer.info(this, "Running in project folder:" + folder);
-				System.out.println("Running in project folder:" + folder);
+//				System.out.println("Running in project folder:" + folder);
 
 				builder.directory(folder);
 			} else {

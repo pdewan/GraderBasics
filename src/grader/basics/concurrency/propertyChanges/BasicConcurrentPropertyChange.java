@@ -8,15 +8,17 @@ public class BasicConcurrentPropertyChange extends BasicConcurrentEvent<Property
 	public BasicConcurrentPropertyChange (
 			long aStartTime,
 			int aSequenceNumber, 
+			long aTime,
+			Thread aThread,			
 			PropertyChangeEvent anEvent) {
-		super(aStartTime, aSequenceNumber, anEvent);
+		super(aStartTime, aSequenceNumber, aTime, aThread,  anEvent);
 		
 				
 	}
 	public BasicConcurrentPropertyChange (
 			
 			PropertyChangeEvent anEvent) {
-		super(-1, -1, anEvent);
+		super(-1, -1, System.currentTimeMillis(),Thread.currentThread(), anEvent);
 		
 				
 	}

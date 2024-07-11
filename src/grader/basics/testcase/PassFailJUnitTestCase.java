@@ -150,6 +150,12 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected List<PassFailJUnitTestCase> getPrecedingTestInstances() {
 		return precedingTestInstances;
 	}
+	protected PassFailJUnitTestCase getFirstPrecedingTestInstance() {
+		return precedingTestInstances.get(0);
+	}
+	protected PassFailJUnitTestCase getLastPrecedingTestInstance() {
+		return precedingTestInstances.get(precedingTestInstances.size()-1);
+	}
 
 	protected boolean failedTestVetoes(Class aClass) {
 		return true;
@@ -158,6 +164,8 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected boolean partialPassTestVetoes(Class aClass) {
 		return false;
 	}
+	
+	
 
 	protected void possiblyRunAndCheckPrecedingTests() {
 		Class[] aPrecedingTests;
