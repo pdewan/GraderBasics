@@ -16,7 +16,7 @@ public class ConcurrentCounterInterleavedProducerConsumer extends InterleavedThr
 	protected Class[] precedingTests() {
 		return new Class[] {
 				ConcurrentCounterTracesProduced.class,
-				ConcurrentCounterThreadCount.class
+				ConcurrentCounterActiveThreadCount.class
 		};
 	}
 	

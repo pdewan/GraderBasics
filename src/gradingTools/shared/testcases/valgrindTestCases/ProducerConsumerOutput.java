@@ -8,7 +8,7 @@ import java.util.Map;
 import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChangeSupport;
-import grader.basics.concurrency.propertyChanges.ValgrindConcrrentPropertyChangeSupport;
+import grader.basics.concurrency.propertyChanges.BasicValgrindConcurrentPropertyChangeSupport;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.execution.RunningProject;
 import grader.basics.junit.NotAutomatableException;
@@ -26,7 +26,7 @@ import gradingTools.utils.RunningProjectUtils;
 import valgrindpp.grader.ValgrindTrace;
 
 public class ProducerConsumerOutput extends PassFailJUnitTestCase {
-	ConcurrentPropertyChangeSupport concurrentPropertyChangeSupport = new ValgrindConcrrentPropertyChangeSupport();
+	ConcurrentPropertyChangeSupport concurrentPropertyChangeSupport = new BasicValgrindConcurrentPropertyChangeSupport();
 	ConcurrentPropertyChange[] concurrentPrpertyChanges;
 	public ConcurrentPropertyChange[] getConcurrentPrpertyChanges() {
 		return concurrentPrpertyChanges;

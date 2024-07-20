@@ -12,7 +12,8 @@ import grader.basics.junit.BasicJUnitUtils;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	ConcurrentCounterTracesProduced.class,
-	ConcurrentCounterThreadCount.class,
+	ConcurrentCounterCreatedThreadCount.class,
+	ConcurrentCounterActiveThreadCount.class,
 	ConcurrentCounterMutexCount.class,
 	ConcurrentCounterPropertyCount.class,
 	ConcurrentCounterPropertyValueCount.class

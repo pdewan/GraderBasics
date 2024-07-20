@@ -15,6 +15,7 @@ import java.util.Set;
 import grader.basics.concurrency.propertyChanges.ConcurrentEventUtility;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChangeSupport;
+import grader.basics.concurrency.propertyChanges.ValgrindConcurrentPropertyChangeSupport;
 import grader.basics.execution.AValgrindCommandGenerator;
 import grader.basics.execution.RunningProject;
 import grader.basics.junit.NotAutomatableException;
@@ -44,11 +45,19 @@ public class InterleavedProducerConsumerThreads extends PassFailJUnitTestCase {
 			throws NotAutomatableException, NotGradableException {	
 
 		
-		ProducerConsumerOutput anOutput = (ProducerConsumerOutput) getFirstPrecedingTestInstance();
-		ConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport =
+//		ProducerConsumerOutput anOutput = (ProducerConsumerOutput) getFirstPrecedingTestInstance();
+//		ConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport =
+//				anOutput.getConcurrentPropertyChangeSupport();
+//		Thread[] aNotifyingThreads = aConcurrentPropertyChangeSupport.getNotifyingThreads();
+//		
+		ValgrindOutputProduced anOutput = (ValgrindOutputProduced) getFirstPrecedingTestInstance();
+		ValgrindConcurrentPropertyChangeSupport aConcurrentPropertyChangeSupport =
 				anOutput.getConcurrentPropertyChangeSupport();
-		Thread[] aNotifyingThreads = aConcurrentPropertyChangeSupport.getNotifyingThreads();
-		producerConsumerThreads = new Thread[] {aNotifyingThreads[1], aNotifyingThreads[2]};
+		
+		producerConsumerThreads = aConcurrentPropertyChangeSupport.getReturnedThreads().toArray(producerConsumerThreads);
+//				new Thread[] {aNotifyingThreads[1], aNotifyingThreads[2]};
+		
+		
 		ConcurrentPropertyChange[] anOrginalEvents = aConcurrentPropertyChangeSupport.getConcurrentPropertyChanges();
 		boolean anInterleavingOccurred = ConcurrentEventUtility.someInterleaving(anOrginalEvents, producerConsumerThreads, null);
 		if (anInterleavingOccurred) {

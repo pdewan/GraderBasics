@@ -8,7 +8,7 @@ import java.util.Map;
 
 import valgrindpp.grader.ValgrindTrace;
 
-public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyChange   implements ValgrindTraceToPropertyChange {
+public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyChange implements ValgrindTraceToPropertyChange {
 	
 //	private Map<String, Thread> threadIdToProxyThread = new HashMap();
 	private long lastTime = 0;
@@ -18,13 +18,13 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 	private static String[] printArgs = {"placeholder"};
 	Object[][] conversionSpecifications = {
 			//fnname, source arg, propery, new value
-			{"pthread_mutex_init", 0, "init", 2},
-			{"pthread_mutex_lock", 0, "lock", true},
-			{"pthread_mutex_unlock", 0, "lock", false},
-			{"pthread_cond_wait", 0, "wait", 1},
-			{"pthread_cond_broadcast", 0, "broadcast", null},
-			{"pthread_cond_signal", 0, "signal", null},
-			{"pthread_create", 0, "threadCreated", -2} // result is the value of prpperty
+			{"pthread_mutex_init", 0, "init", 2, -1},
+			{"pthread_mutex_lock", 0, "lock", true, -1},
+			{"pthread_mutex_unlock", 0, "lock", false, -1},
+			{"pthread_cond_wait", 0, "wait", 1, -1},
+			{"pthread_cond_broadcast", 0, "broadcast", null, -1},
+			{"pthread_cond_signal", 0, "signal", null, -1},
+			{"pthread_create", 0, "threadCreated", -2, 0} // result is the property value, 0 is a thread id
 //			{".*", -1, 0, 1}
 	};
 	
@@ -74,6 +74,10 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 				String aProperty = getValue(aFunctionName, aValgrindTrace, aSpecification[2]).toString();
 				Object aNewValue = getValue(aFunctionName, aValgrindTrace, aSpecification[3]);
 				Object anOldValue = aValgrindTrace;
+				aValgrindTrace.threadArgument = (Integer) aSpecification[aSpecification.length - 1];
+//				if (aValgrindTrace.threadArgument >= 0) {
+//					int j = 1; // found thread argument
+//				}
 				return new PropertyChangeEvent(aSource, aProperty, anOldValue, aNewValue);
 			};			
 			

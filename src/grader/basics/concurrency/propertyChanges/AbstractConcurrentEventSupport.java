@@ -202,13 +202,16 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 		Tracer.info(this, "Give frozen even warning:" + newVal);
 		giveWarning = newVal;
 	}
-	protected void recordEventThreadAndTime(EventType anEvent) {
-		System.err.println("Event thread not recorded");
+	protected EventType recordEventThreadAndTime(EventType anEvent) {
+		return anEvent;
 	}
 	protected synchronized void addEvent(EventType anEvent) {
 //		System.out.println("received event:" + anEvent);
 		if (ConcurrentEventUtility.getThreadsInDifferentProcess()) {
-			recordEventThreadAndTime(anEvent);
+			EventType aNewEvent = recordEventThreadAndTime(anEvent);
+			if (aNewEvent != anEvent) {
+				anEvent = aNewEvent;
+			}
 		}
 		if (isEventsFrozen()) {
 			eventsReceivedWhenFrozen = true;			

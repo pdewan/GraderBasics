@@ -9,6 +9,7 @@ public class ValgrindTrace {
 	public String fnname, result;
 	public String[] arguments;
 	public int repetitons = 1;
+	public int threadArgument = -1;
 	
 	public class TraceParsingException extends Exception {
 		public TraceParsingException(String trace) {

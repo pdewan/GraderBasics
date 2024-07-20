@@ -889,6 +889,10 @@ public class ConcurrentEventUtility {
 		}
 		return retVal;
 	}
+	
+//	public static Map<Thread, Map<Object, List<ConcurrentPropertyChange>>> getThreadSourceMap() {
+////		return threadSourceMap;
+//	}
 	public static  Map<Thread, List<ConcurrentPropertyChange>> getConcurrentPropertyChangeListByThread(
 			ConcurrentPropertyChange[] anOriginalEvents, int from, int to) {
 		Map<Thread, List<ConcurrentPropertyChange>> retVal = new HashMap<>();
