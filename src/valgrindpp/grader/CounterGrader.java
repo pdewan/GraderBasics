@@ -1,8 +1,9 @@
 package valgrindpp.grader;
 import java.util.ArrayList;
 import java.util.List;
-public class SimpleGrader extends AbstractGrader {
-	public SimpleGrader(String studentDir, String filename) throws Exception {
+public class CounterGrader extends AbstractGrader {
+	public CounterGrader(String studentDir, String filename) 
+				throws Exception {
 		super(studentDir, filename);
 	}
 	public List<Test> grade() {

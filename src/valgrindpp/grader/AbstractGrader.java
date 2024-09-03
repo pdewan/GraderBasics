@@ -36,6 +36,15 @@ public abstract class AbstractGrader implements Grader {
 		
 		scanner.close();
 	}
+	protected Test countFuncCall(String fnname, int requiredCount) {
+		int count = 0; 		
+		for(ValgrindTrace trace: traces) {
+			if(trace.fnname.equals(fnname)) {
+				count ++;
+			}
+		}		
+		return new Test("Called " + fnname, count >= requiredCount);
+	}
 	
 	public abstract List<Test> grade();
 }
