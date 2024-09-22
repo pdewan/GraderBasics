@@ -218,12 +218,14 @@ public class Function {
 		LONG, UNSIGNED_LONG, LONG_LONG, UNSIGNED_LONG_LONG,
 		SHORT,UNSIGNED_SHORT,
 		FLOAT, DOUBLE, LONG_DOUBLE,
-		CHAR, POINTER, DREFERENCED_POINTER, ARRAY, OTHER
+		CHAR, POINTER, DREFERENCED_POINTER, REFERENCED_POINTER, ARRAY, OTHER
 	}
 	static List<String> dreferencedTypes = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getDereferencedArgumentTypes();
 
 	private boolean isDereferencedType(String arg) {
-		if (dreferencedTypes == null) {
+		if (dreferencedTypes == null 
+//				|| arg.contains("*")
+				) {
 			return false;
 		}
 		for (String aDreferencedType:dreferencedTypes) {
@@ -235,8 +237,13 @@ public class Function {
 	}
 	private StringType argType(String arg) {
 		if (isDereferencedType(arg)) {
-//		if (arg.contains("pthread_t") ) 
+//		if (arg.contains("pthread_t") )
+//			return StringType.DREFERENCED_POINTER;
+//
+			if (arg.contains("*"))
 			return StringType.DREFERENCED_POINTER;
+			else
+				return StringType.REFERENCED_POINTER;
 		}
 		if(arg.contains("*")) return StringType.POINTER;
 		if(arg.contains("[]")) return StringType.ARRAY;
@@ -268,6 +275,8 @@ public class Function {
 		case POINTER: 
 			return "p";
 		case DREFERENCED_POINTER: 
+			return "d";
+		case REFERENCED_POINTER: 
 			return "d";
 		case ARRAY: return "p";
 		

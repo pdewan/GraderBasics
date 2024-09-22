@@ -21,6 +21,9 @@ public class CompilerHelper {
 	
 	
 	public static String toRelativePath (String aParentAbsolutePath, String aChildAbsolutePath) {
+		if (!aChildAbsolutePath.contains("/") && !aChildAbsolutePath.contains("\\")) {
+			return aChildAbsolutePath;
+		}
 		URI aParentFile = new File(aParentAbsolutePath).toURI() ;
 		URI aChildFile = new File(aChildAbsolutePath).toURI();
 		return aParentFile.relativize(aChildFile).getPath();
@@ -58,14 +61,24 @@ public class CompilerHelper {
 	}
 	
 	public int compileStudentCode() throws Exception {
-		File dir = new File(executionDirectory + "/" + src);
+		
+//		File dir = new File(executionDirectory + "/" + src);
+		String suffix = src == null?"":"/" + src;
+//		File dir = new File(executionDirectory + "/" + src);
+		File dir = new File(executionDirectory + suffix);
+
 
 		
 		List<String> srcFiles = new ArrayList<String>();
 		
 		for(String filename: dir.list()) {
 			if(filename.endsWith(".c")) {
+				if (src == null) {
+					srcFiles.add(filename);
+				} else {
+				
 				srcFiles.add(src + filename);
+				}
 			}
 		}
 		
@@ -75,7 +88,12 @@ public class CompilerHelper {
 		command[1] = FLAGS;
 		command[2] = objFile;
 		command[3] = "-o";
+		if (bin != null) {
 		fullExecName = bin + EXEC_NAME;
+		} else {
+			fullExecName = EXEC_NAME;
+
+		}
 //		command[4] = EXEC_NAME;
 		command[4] = fullExecName;
 

@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 import valgrindpp.codegen.Parser;
 import valgrindpp.codegen.Wrapper;
 import valgrindpp.grader.Grader;
+import valgrindpp.grader.MutexGrader;
 import valgrindpp.grader.MutexLruGrader;
 import valgrindpp.grader.SimpleGrader;
 import valgrindpp.grader.Test;
@@ -23,7 +24,7 @@ public class Main {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new App());
 	}
-	
+	// called by App, action performed, need to uncomment and coment to call it
 	public static List<Test> testMakefileDirectory(String directory) {
 		try {
 			DockerHelper.deleteContainer();
@@ -57,6 +58,7 @@ public class Main {
 		return error;
 	}
 	
+	// called by App, action performed, need to uncomment and coment to call it
 	public static List<Test> testDirectory(String directory) {
 		try {
 			DockerHelper.deleteContainer();
@@ -78,7 +80,9 @@ public class Main {
 			
 			DockerHelper.stopContainer();
 			
-			Grader grader = new SimpleGrader(directory, TRACE_FILE);
+//			Grader grader = new SimpleGrader(directory, TRACE_FILE);
+			Grader grader = new MutexGrader(directory, TRACE_FILE);
+
 			ch.deleteTraces();
 			return grader.grade();
 			

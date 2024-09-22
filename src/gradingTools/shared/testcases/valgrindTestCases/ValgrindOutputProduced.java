@@ -11,6 +11,7 @@ import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChangeSupport
 import grader.basics.concurrency.propertyChanges.ValgrindConcurrentPropertyChangeSupport;
 import grader.basics.concurrency.propertyChanges.BasicValgrindConcurrentPropertyChangeSupport;
 import grader.basics.config.BasicExecutionSpecificationSelector;
+import grader.basics.execution.BasicProjectExecution;
 import grader.basics.execution.RunningProject;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -66,8 +67,8 @@ public class ValgrindOutputProduced extends PassFailJUnitTestCase {
 		anObservablePrintStream.setPropertyOutputSelector(new ValgrindRepetitionBasedPropertyChangeSelector(maxTraceRepetitions()));
 		PrintStream anOriginalOut = System.out;
 		System.setOut((PrintStream) anObservablePrintStream);
-
-		RunningProject noInputRunningProject = RunningProjectUtils.runProject(project, 1);
+		int timeOut = BasicProjectExecution.getProcessTimeOut();
+		RunningProject noInputRunningProject = RunningProjectUtils.runProject(project, timeOut);
 		String mutexOut = noInputRunningProject.await();
 		System.setOut(anOriginalOut);
 		concurrentPrpertyChanges = concurrentPropertyChangeSupport.getConcurrentPropertyChanges();

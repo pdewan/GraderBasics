@@ -17,8 +17,8 @@ import util.annotations.MaxValue;
 @Explanation("This test checks if eactly three threads produce traces")
 public abstract class ExpectedPropertyValueCount extends PassFailJUnitTestCase {
 	Object[][] propertyValueCounts = { 
-			{true, 20, 25},
-			{false, 20, 25}				
+			{true, 24, 24},
+			{false, 22, 22}				
 			};
 	protected Object[][] propertyValueCounts() {
 		return propertyValueCounts;

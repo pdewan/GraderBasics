@@ -2,8 +2,8 @@ package gradingTools.shared.testcases.valgrindTestCases;
 
 public class ConcurrentCounterPropertyValueCount extends ExpectedPropertyValueCount{
 	Object[][] propertyValueCounts = { 
-			{true, 20, 25},
-			{false, 20, 20}				
+			{true, 24, 24}, // join lock + initial lock and and a final lock that does not get unlocked
+			{false, 22, 22}	 // join unlock, extra unlock of first value			
 			};
 	@Override
 	protected Object[][] propertyValueCounts() {

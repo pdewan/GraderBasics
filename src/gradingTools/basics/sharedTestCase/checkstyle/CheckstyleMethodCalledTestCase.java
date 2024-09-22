@@ -18,7 +18,7 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 //	 public static final String WARNING_NAME = "has not made expected call";
 //	 public static final String INFO_NAME = "has made expected call";
 	 public static final String WARNING_NAME = "MissingMethodCall";
-
+// is this the calling or called type? There is some confusion in the code
 	 public CheckstyleMethodCalledTestCase(String aType, String aCalledMethod) {
 		 this(aType, "", aCalledMethod);	        
 	  }
@@ -49,14 +49,16 @@ public class CheckstyleMethodCalledTestCase extends CheckStyleTestCase {
 	
 	@Override
 	public String negativeRegexLineFilter() {
-		return ".*" + "WARN" + ".*:"  + callingMethod + " .*" + typeTag + "(.*) " + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
+//		return ".*" + "WARN" + ".*:"  + callingMethod + " .*" + typeTag + "(.*) " + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
+		return ".*" + "WARN" + ".*:"  + callingMethod + " .*" + typeTag + "(.*)." + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*" ;
 
 
 	}
 	@Override
 	public String positiveRegexLineFilter() {
-		return ".*" + "INFO" + ".*:" + callingMethod + " .*" +typeTag + "(.*) " + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
+//		return ".*" + "INFO" + ".*:" + callingMethod + " .*" +typeTag + "(.*) " + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
 		
+		return ".*" + "INFO" + ".*:" + callingMethod + " .*" +typeTag + "(.*)." + calledMethod + "(.*)" + "\\[MissingMethodCall\\]" + ".*";
 
 	}
 	// [INFO] D:\dewan_backup\Java\PLTeaching\PL_Java\.\src\byteman\examples\BytemanMerge.java:1: Method:sort:int[]->int[] in class byteman.examples.BytemanMerge:[@MergeSort] has made expected call sort:int[]->int[]. Good! [MissingMethodCall]

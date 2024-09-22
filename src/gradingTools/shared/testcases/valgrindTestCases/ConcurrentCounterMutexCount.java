@@ -7,6 +7,8 @@ public class ConcurrentCounterMutexCount extends ExpectedSourceCount{
 	}
 	@Override
 	int expectedNumSourcesTraced() {
-		return 3;
+//		return 3;
+		return 5; // 2 mutexes, 2 threads, 1 implicit mutex for join
+
 	}
 }

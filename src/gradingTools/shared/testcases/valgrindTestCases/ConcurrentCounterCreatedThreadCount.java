@@ -7,7 +7,7 @@ public class ConcurrentCounterCreatedThreadCount extends ExpectedCreatedThreadCo
 	}
 	@Override
 	int expectedNumThreadsCreated() {
-		return 3;
+		return 2; // 2 threads created
 	}
 
 }

@@ -2,7 +2,7 @@ package gradingTools.shared.testcases.valgrindTestCases;
 
 public class ConcurrentCounterPropertyCount extends ExpectedPropertyCount{
 	Object[][] propertyCounts = { 
-			{"lock", 40, 50},
+			{"lock", 46, 46},
 			{"init", 2, 2}				
 	
 	};
