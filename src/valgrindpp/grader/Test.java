@@ -12,7 +12,7 @@ public class Test {
 	public Test(String name, boolean passed) {
 		this.name = name;
 		this.passed = passed;
-	}
+	}	
 	
 	public Component view() {
 		JLabel view = new JLabel((passed ? "PASSED - " : "FAILED - ") + name);

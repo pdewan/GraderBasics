@@ -7,11 +7,14 @@ import javax.swing.SwingUtilities;
 
 import valgrindpp.codegen.Parser;
 import valgrindpp.codegen.Wrapper;
+import valgrindpp.grader.CondGrader;
 import valgrindpp.grader.Grader;
 import valgrindpp.grader.MutexGrader;
 import valgrindpp.grader.MutexLruGrader;
 import valgrindpp.grader.SimpleGrader;
+import valgrindpp.grader.SleepGrader;
 import valgrindpp.grader.Test;
+import valgrindpp.grader.ThreadGrader;
 import valgrindpp.gui.App;
 import valgrindpp.helpers.CompilerHelper;
 import valgrindpp.helpers.DockerHelper;
@@ -81,7 +84,10 @@ public class Main {
 			DockerHelper.stopContainer();
 			
 //			Grader grader = new SimpleGrader(directory, TRACE_FILE);
-			Grader grader = new MutexGrader(directory, TRACE_FILE);
+//			Grader grader = new MutexGrader(directory, TRACE_FILE);
+//			Grader grader = new SleepGrader(directory, TRACE_FILE);
+//			Grader grader = new ThreadGrader(directory, TRACE_FILE);
+			Grader grader = new CondGrader(directory, TRACE_FILE);
 
 			ch.deleteTraces();
 			return grader.grade();

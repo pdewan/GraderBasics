@@ -45,6 +45,7 @@ public abstract class AbstractGrader implements Grader {
 		}		
 		return new Test("Called " + fnname, count >= requiredCount);
 	}
+	
 	protected Test countFuncCall(String fnname, int minCount, int maxCount) {
 		int count = 0; 		
 		for(ValgrindTrace trace: traces) {
@@ -52,7 +53,9 @@ public abstract class AbstractGrader implements Grader {
 				count ++;
 			}
 		}		
-		return new Test("Called " + fnname + " " + count + " times. Expected (" + minCount  + "..." + maxCount + ")", count >= minCount && count <= maxCount);
+		return new Test("Called " + fnname + " " + count +
+			" times. Expected (" + minCount  + "..." +	maxCount + ")",
+			count >= minCount && count <= maxCount);
 	}
 	
 
