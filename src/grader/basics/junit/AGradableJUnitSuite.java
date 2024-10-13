@@ -42,6 +42,8 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	Set<Class> previousPassClasses, previousFailClasses, previousPartialPassClasses;
 	double previousScore;
 	List<GradableJUnitTest> children = new ArrayList();
+	
+
 	boolean implicit;
 	
 	public AGradableJUnitSuite(Class aJUnitClass) {
@@ -655,6 +657,11 @@ public class AGradableJUnitSuite extends AGradableJUnitTest implements
 	@Visible(false)
 	public boolean isImplicit() {
 		return implicit;
+	}
+	@Override
+	@Visible(false)
+	public List<GradableJUnitTest> getChildren() {
+		return children;
 	}
 
 }

@@ -829,4 +829,9 @@ public class AGradableJUnitTest implements GradableJUnitTest {
 	public void setPreTest(boolean newVal) {
 		isPreTest = newVal;
 	}
+
+//	@Override
+//	public List<GradableJUnitTest> getChildren() {
+//		return children;
+//	}
 }

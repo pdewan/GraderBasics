@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 
@@ -17,6 +18,7 @@ import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.observers.logSending.ALogSendingRunnable;
+import grader.basics.observers.logSending.JSONObject;
 import grader.basics.observers.logSending.LocalChecksLogSender;
 import grader.basics.vetoers.AConsentFormVetoer;
 
@@ -44,6 +46,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 	private int sessionNumber = 0;
 
 	File sessionDataFile;
+	File schemaFile;
 	public static final int SESSION_DATA_SESSION_NUMBER_INDEX = 0;
 	public static final int SESSION_DATA_TOTAL_RUN_INDEX = 1;
 
@@ -103,6 +106,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 				logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 				logFilePath = fileLoc + logFileName;
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
+				String aSchemaFileName = sessionDataFile.getCanonicalPath().replace("data", "schema");
+				schemaFile = new File(aSchemaFileName);			
 				if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
 					if (getLogSender() == null) {
 						setLogSender(ALogSendingRunnable.getInstance());
@@ -121,6 +126,10 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 				}
 
 			}
+			maybeWriteToSchemaFile();
+//			if (sessionNumber == 0) {
+//				writeToSchemaFile();
+//			}
 			currentTopSuite = aTopLevelSuite;
 			currentTest = description.getClassName();
 			saveState();
@@ -174,6 +183,48 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 		}
 	}
 
+	private void maybeWriteToSchemaFile() {
+		try {
+			if (schemaFile == null) {
+				throw new Exception("Session Data File Never Set");
+			}
+			if (schemaFile.exists()) {
+				return;
+			}
+			schemaFile.createNewFile();
+			FileWriter fw = new FileWriter(schemaFile);
+			JSONObject aTopJSONObject = toJSONObject(topLevelSuite);
+			String aSchema = aTopJSONObject.toString();
+			fw.write(aSchema);
+			fw.close();
+			getLogSender().addToQueue(LogEntryKind.SCHEMA, schemaFile.getName(), aSchema, getTopLevelInfo(), numTotalRuns);
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public static JSONObject toJSONObject(GradableJUnitSuite aSuite) {
+		JSONObject retVal = new JSONObject();
+		retVal.put("name", aSuite.getSimpleName());
+		JSONObject aChildrenJSON = new JSONObject();
+		retVal.put("children", aChildrenJSON);
+		List<GradableJUnitTest> aChildrenList = aSuite.getChildren();
+		for (int anIndex = 0; anIndex < aChildrenList.size(); anIndex++) {
+			GradableJUnitTest aChildTest = aChildrenList.get(anIndex);
+			String anIndexString = Integer.toString(anIndex);
+			if (aChildTest instanceof GradableJUnitSuite) {
+				GradableJUnitSuite aChildSuite = (GradableJUnitSuite) aChildTest;
+				JSONObject aChildJSONObject = toJSONObject(aChildSuite);
+				aChildrenJSON.put(anIndexString, aChildJSONObject);
+			} else {
+				aChildrenJSON.put(anIndexString, aChildTest.getSimpleName());
+			}
+		}
+		return retVal;
+
+	}
+
 	private void writeToSessionDataFile() {
 		try {
 			if (sessionDataFile == null)
@@ -203,7 +254,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 			System.err.println(e);
 		}
 	}
-	
+
 	@Override
 	public void testRunFinished(Result aResult) throws Exception {
 		try {
@@ -225,7 +276,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 //				String aLogFileName = getLogFileName();
 				String aLogFileName = getLogFilePath();
 //				LocalChecksLogSender.sendToServer(fullTrace.toString(), topLevelInfo, numTotalRuns);
-				getLogSender().addToQueue(LogEntryKind.TEST, aLogFileName, fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
+				getLogSender().addToQueue(LogEntryKind.TEST, aLogFileName, fullTrace.toString(), getTopLevelInfo(),
+						numTotalRuns);
 
 //				getLogSender().addToQueue(true, aLogFileName, fullTrace.toString(), getTopLevelInfo(), numTotalRuns);
 			} catch (Exception e) {
