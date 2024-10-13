@@ -21,6 +21,7 @@ import grader.basics.observers.logSending.ALogSendingRunnable;
 import grader.basics.observers.logSending.JSONObject;
 import grader.basics.observers.logSending.LocalChecksLogSender;
 import grader.basics.vetoers.AConsentFormVetoer;
+import util.misc.Common;
 
 public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 
@@ -47,6 +48,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 
 	File sessionDataFile;
 	File schemaFile;
+//	File receivedHelpFile;
+//	File readHelpFile;
 	public static final int SESSION_DATA_SESSION_NUMBER_INDEX = 0;
 	public static final int SESSION_DATA_TOTAL_RUN_INDEX = 1;
 
@@ -107,7 +110,12 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 				logFilePath = fileLoc + logFileName;
 				sessionDataFile = new File(fileLoc + toFileName(aTopLevelSuite) + FILENAME_MODIFIER + "_data.txt");
 				String aSchemaFileName = sessionDataFile.getCanonicalPath().replace("data", "schema");
-				schemaFile = new File(aSchemaFileName);			
+				schemaFile = new File(aSchemaFileName);	
+				String aReceivedHelpFileName = sessionDataFile.getCanonicalPath().replace("data", "received_help");
+				receivedHelpFile = new File (aReceivedHelpFileName);
+				String aReadHelpFileName = sessionDataFile.getCanonicalPath().replace("data", "read_help");
+				readHelpFile = new File (aReadHelpFileName);
+
 				if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
 					if (getLogSender() == null) {
 						setLogSender(ALogSendingRunnable.getInstance());
@@ -127,6 +135,8 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 
 			}
 			maybeWriteToSchemaFile();
+			maybeCreateFile(receivedHelpFile);
+			maybeCreateFile(readHelpFile);
 //			if (sessionNumber == 0) {
 //				writeToSchemaFile();
 //			}
@@ -182,7 +192,55 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 			}
 		}
 	}
+//public static void maybeCreateFile(File aFile) {
+//	try {
+//		if (aFile == null) {
+//			throw new Exception("Null file passed to maybeCreateFile");
+//		}
+//		if (aFile.exists()) {
+//			return;
+//		}
+//		aFile.createNewFile();
+//		
+//	} catch (Exception e) {
+//		System.out.println(e);
+//	}
+//}
 
+//public static void appendToFile (File aFile, String aTextToAppend) {
+//	try (FileWriter fileWriter = new FileWriter(aFile, true)) {
+//        fileWriter.write(aTextToAppend);
+//    } catch (IOException e) {
+//        System.out.println("An error occurred: " + e.getMessage());
+//    }
+//}
+//
+//public static String readFile (File aFile) {
+//	return Common.toText(aFile);
+//}
+
+	
+//	private void maybeCreateReceivedHelpFile() {
+//	
+//		try {
+//			if (receivedHelpFile == null) {
+//				throw new Exception("Received Data File Never Set");
+//			}
+//			if (schemaFile.exists()) {
+//				return;
+//			}
+//			schemaFile.createNewFile();
+//			FileWriter fw = new FileWriter(schemaFile);
+//			JSONObject aTopJSONObject = toJSONObject(topLevelSuite);
+//			String aSchema = aTopJSONObject.toString();
+//			fw.write(aSchema);
+//			fw.close();
+//			getLogSender().addToQueue(LogEntryKind.SCHEMA, schemaFile.getName(), aSchema, getTopLevelInfo(), numTotalRuns);
+//
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}
+//	}
 	private void maybeWriteToSchemaFile() {
 		try {
 			if (schemaFile == null) {
@@ -204,26 +262,26 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 		}
 	}
 
-	public static JSONObject toJSONObject(GradableJUnitSuite aSuite) {
-		JSONObject retVal = new JSONObject();
-		retVal.put("name", aSuite.getSimpleName());
-		JSONObject aChildrenJSON = new JSONObject();
-		retVal.put("children", aChildrenJSON);
-		List<GradableJUnitTest> aChildrenList = aSuite.getChildren();
-		for (int anIndex = 0; anIndex < aChildrenList.size(); anIndex++) {
-			GradableJUnitTest aChildTest = aChildrenList.get(anIndex);
-			String anIndexString = Integer.toString(anIndex);
-			if (aChildTest instanceof GradableJUnitSuite) {
-				GradableJUnitSuite aChildSuite = (GradableJUnitSuite) aChildTest;
-				JSONObject aChildJSONObject = toJSONObject(aChildSuite);
-				aChildrenJSON.put(anIndexString, aChildJSONObject);
-			} else {
-				aChildrenJSON.put(anIndexString, aChildTest.getSimpleName());
-			}
-		}
-		return retVal;
-
-	}
+//	public static JSONObject toJSONObject(GradableJUnitSuite aSuite) {
+//		JSONObject retVal = new JSONObject();
+//		retVal.put("name", aSuite.getSimpleName());
+//		JSONObject aChildrenJSON = new JSONObject();
+//		retVal.put("children", aChildrenJSON);
+//		List<GradableJUnitTest> aChildrenList = aSuite.getChildren();
+//		for (int anIndex = 0; anIndex < aChildrenList.size(); anIndex++) {
+//			GradableJUnitTest aChildTest = aChildrenList.get(anIndex);
+//			String anIndexString = Integer.toString(anIndex);
+//			if (aChildTest instanceof GradableJUnitSuite) {
+//				GradableJUnitSuite aChildSuite = (GradableJUnitSuite) aChildTest;
+//				JSONObject aChildJSONObject = toJSONObject(aChildSuite);
+//				aChildrenJSON.put(anIndexString, aChildJSONObject);
+//			} else {
+//				aChildrenJSON.put(anIndexString, aChildTest.getSimpleName());
+//			}
+//		}
+//		return retVal;
+//
+//	}
 
 	private void writeToSessionDataFile() {
 		try {

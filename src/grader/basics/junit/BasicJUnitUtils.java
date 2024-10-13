@@ -23,6 +23,7 @@ import org.junit.runners.Suite;
 import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
 import bus.uigen.attributes.AttributeNames;
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.config.BasicStaticConfigurationUtils;
 import grader.basics.execution.GradingMode;
 import grader.basics.observers.TestLogFileWriterFactory;
@@ -42,6 +43,7 @@ import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.Tot
 import gradingTools.logs.localChecksStatistics.collectors.StandardCollectors.WorkTimeCollector;
 import gradingTools.logs.models.ATestMetricsList;
 import gradingTools.logs.models.TestMetrics;
+import gradingTools.shared.testcases.logging.InstructorHelpSuite;
 import trace.grader.basics.GraderBasicsTraceUtility;
 import util.annotations.PreferredWidgetClass;
 import util.trace.Tracer;
@@ -124,7 +126,7 @@ public class BasicJUnitUtils {
 		aGradable.testAll();
 		ObjectEditor.treeEdit(aGradable);
 	}
-	
+
 	public static GradableJUnitSuite testAll(Class<?> aJUnitSuiteClass) {
 		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
@@ -135,8 +137,6 @@ public class BasicJUnitUtils {
 		return aGradable;
 //		ObjectEditor.treeEdit(aGradable);
 	}
-	
-	
 
 	static String lastAssignmentNumber = "-1";
 
@@ -247,7 +247,6 @@ public class BasicJUnitUtils {
 //		aClassName = "F21Assignmment12";
 //		Pattern p = Pattern.compile("\\d+");
 		Pattern p = Pattern.compile("\\d+_*\\d*");
-		
 
 		Matcher m = p.matcher(aClassName);
 		String aDigitString = null;
@@ -283,7 +282,7 @@ public class BasicJUnitUtils {
 //				}
 ////        		lastAssignmentNumber = Integer.parseInt(aDigitString);
 //				lastAssignmentNumber = aPrefix + aDigitString;
-			
+
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //			}
@@ -303,6 +302,13 @@ public class BasicJUnitUtils {
 		BasicStaticConfigurationUtils.setModuleProblemAndSuite(aJUnitSuiteClass);
 		GraderBasicsTraceUtility.setTracing();
 		GradableJUnitSuite aGradable = BasicJUnitUtils.toGradableTree(aJUnitSuiteClass).rootNode;
+
+		if (BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEnableInstructorHelp()) {
+			GradableJUnitSuite aHelpSuite = BasicJUnitUtils.toGradableTree(InstructorHelpSuite.class, false).rootNode;
+
+			aGradable.add(aHelpSuite);
+		}
+
 //		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AnAlwaysNaySayer());
 		RunVetoerFactory.getOrCreateRunVetoer().addVetoableChangeListener(new AConsentFormVetoer());
 		for (RunListener listener : TestLogFileWriterFactory.getFileWriter())
@@ -338,11 +344,43 @@ public class BasicJUnitUtils {
 	}
 
 	public static GradableTreeConstructionResult toGradableTree(Class<?> aJUnitSuiteClass) {
+		return toGradableTree(aJUnitSuiteClass, true);
+//		GradableTreeConstructionResult aResult = new GradableTreeConstructionResult();
+//		if (aJUnitSuiteClass == null) {
+//			return aResult;
+//		}
+//		GradableJUnitSuite rootNode = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+//		aResult.rootNode = rootNode;
+//
+//		Map<String, List<GradableJUnitTest>> aGradableJUnitTestCaseMap = BasicJUnitUtils.toGroupedGradables(rootNode,
+//				aJUnitSuiteClass);
+////		GradableJUnitSuite retVal = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+//		aResult.groupedGradables = aGradableJUnitTestCaseMap;
+//		for (String aGroup : aGradableJUnitTestCaseMap.keySet()) {
+//			List<GradableJUnitTest> aGradables = aGradableJUnitTestCaseMap.get(aGroup);
+//			if (aGradables.size() == 2 && aGradables.get(0) instanceof GradableJUnitSuite
+//					&& ((GradableJUnitSuite) aGradables.get(0)).isImplicit()) { // an ungrouped test
+//				rootNode.add(aGradables.get(1));
+//			} else {
+//				rootNode.add(aGradables.get(0)); // will also have the children
+//			}
+//		}
+//		rootNode.assignMaxScores();
+//		return aResult;
+	}
+
+	public static GradableTreeConstructionResult toGradableTree(Class<?> aJUnitSuiteClass, boolean isRoot) {
 		GradableTreeConstructionResult aResult = new GradableTreeConstructionResult();
 		if (aJUnitSuiteClass == null) {
 			return aResult;
 		}
-		GradableJUnitSuite rootNode = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+		GradableJUnitSuite rootNode = null;
+		if (isRoot) {
+			rootNode = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
+		} else {
+			rootNode = new AGradableJUnitSuite(aJUnitSuiteClass);
+		}
+//		GradableJUnitSuite rootNode = new AGradableJUnitTopLevelSuite(aJUnitSuiteClass);
 		aResult.rootNode = rootNode;
 
 		Map<String, List<GradableJUnitTest>> aGradableJUnitTestCaseMap = BasicJUnitUtils.toGroupedGradables(rootNode,

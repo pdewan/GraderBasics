@@ -1198,6 +1198,15 @@ protected String requirementsLocation = null;
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.INSTRUMENT_USING_VALGRIND, newVal);		
 	}
 	@Override
+	public boolean getEnableInstructorHelp() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.ENABLE_INSTRUCTOR_HELP, 
+				BasicStaticConfigurationUtils.DEFAULT_ENABLE_INSTRUCTOR_HELP);
+	}
+	@Override
+	public void setEnableInstructorHelp(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.ENABLE_INSTRUCTOR_HELP, newVal);		
+	}
+	@Override
 	public boolean getHideRedirectedOutput() {
 		return getBooleanProperty(BasicStaticConfigurationUtils.HIDE_REDIRECTED_OUTPUT, 
 				BasicStaticConfigurationUtils.DEFAULT_HIDE_REDIRECTED_OUTPUT);

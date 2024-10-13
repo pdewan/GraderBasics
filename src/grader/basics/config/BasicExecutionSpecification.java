@@ -160,5 +160,7 @@ public interface BasicExecutionSpecification {
 	void setHideRedirectedOuput(boolean newVal);
 	List<String> getDereferencedArgumentTypes();
 	void addDereferencedArgumentTypes(String[] newVal);
-	void setDereferencedArgumentTypes(List<String> newVal);	
+	void setDereferencedArgumentTypes(List<String> newVal);
+	boolean getEnableInstructorHelp();
+	void setEnableInstructorHelp(boolean newVal);	
 }

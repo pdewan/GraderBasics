@@ -216,6 +216,8 @@ public class BasicStaticConfigurationUtils {
 	public static final Boolean DEFAULT_LOG_TEST_DATA = true;
 	public static final String LOAD_CLASSES = "loadClasses";	
 	public static final Boolean DEFAULT_LOAD_CLASSES= true;
+	public static final String ENABLE_INSTRUCTOR_HELP = "enableInstructorHelp";	
+	public static final Boolean DEFAULT_ENABLE_INSTRUCTOR_HELP = false;
 	
 
 

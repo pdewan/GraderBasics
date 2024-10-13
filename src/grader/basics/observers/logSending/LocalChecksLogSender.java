@@ -109,6 +109,7 @@ public class LocalChecksLogSender {
 		message.put("password",password);
 		//message.put("course_id",determineSemester());
 //		String BS = "\\\\\\";
+//		if (aLogEntryKind != LogEntryKind.SCHEMA) {
 		String BS = " B*S ";
 		log = log.replaceAll("\n",  BS + "n");
 		log = log.replaceAll("\r", BS + "r");
@@ -119,6 +120,7 @@ public class LocalChecksLogSender {
 		log = log.replaceAll("\\=", BS + "=" );
 		log = log.replaceAll("\\-", BS + "-" );
 		log = log.replaceAll("\\+", BS + "+" );
+//		}
 
 //		log = log.replaceAll("\\", "BSBS");
 

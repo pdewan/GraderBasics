@@ -11,6 +11,11 @@ public class TestLogFileWriterFactory {
 	public static AnAbstractTestLogFileWriter [] getFileWriter() {
 		return singletons;
 	}
+	
+	public static AnAbstractTestLogFileWriter getMainFileWriter() {
+		return singletons[0];
+	}
+
 
 	public static void setFileWriter(AnAbstractTestLogFileWriter [] singleton) {
 		TestLogFileWriterFactory.singletons = singleton;

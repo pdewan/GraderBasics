@@ -70,6 +70,12 @@ public class GraderBasicsTraceUtility {
 //		bufferTracedMessages  = newVal;
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setBufferTracedMessages(newVal);
 	}
+	
+	public static void setEnableInstructorHelp(boolean newVal) {
+//		bufferTracedMessages  = newVal;
+		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setEnableInstructorHelp(newVal);
+	}
+
 
 	public static boolean getBufferTracedMessages() {
 //		return bufferTracedMessages;

@@ -2,6 +2,7 @@ package grader.basics.observers;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
@@ -18,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.antlr.v4.runtime.WritableToken;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -26,6 +28,7 @@ import org.junit.runner.notification.RunListener;
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
+import grader.basics.observers.logSending.JSONObject;
 import grader.basics.project.CurrentProjectHolder;
 import grader.basics.trace.CheckersLogFolderCreated;
 import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
@@ -51,6 +54,8 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 	int numRuns = 0;
 	int numTotalRuns = 0;
 	Integer totalTests = null;
+	File receivedHelpFile;
+	File readHelpFile;
 	
 	protected  PrintWriter out = null, out_altLocation = null;
 	protected  BufferedWriter bufWriter, bufWriter_altLocation;	
@@ -612,6 +617,82 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 		currentUntested = toSet(anUntested);
 		setPassPercentage();
 	}
+	public static JSONObject toJSONObject(GradableJUnitSuite aSuite) {
+		JSONObject retVal = new JSONObject();
+		retVal.put("name", aSuite.getSimpleName());
+		JSONObject aChildrenJSON = new JSONObject();
+		retVal.put("children", aChildrenJSON);
+		List<GradableJUnitTest> aChildrenList = aSuite.getChildren();
+		for (int anIndex = 0; anIndex < aChildrenList.size(); anIndex++) {
+			GradableJUnitTest aChildTest = aChildrenList.get(anIndex);
+			String anIndexString = Integer.toString(anIndex);
+			if (aChildTest instanceof GradableJUnitSuite) {
+				GradableJUnitSuite aChildSuite = (GradableJUnitSuite) aChildTest;
+				JSONObject aChildJSONObject = toJSONObject(aChildSuite);
+				aChildrenJSON.put(anIndexString, aChildJSONObject);
+			} else {
+				aChildrenJSON.put(anIndexString, aChildTest.getSimpleName());
+			}
+		}
+		return retVal;
+
+	}
+	
+	public  void appendToReceivedHelpFile(String aTextToAppend) {
+		appendToFile(receivedHelpFile, aTextToAppend);
+	}
+	
+	public void appendToReadHelpFile (String aTextToAppend) {
+		appendToFile(readHelpFile, aTextToAppend);
+	}
+	
+	public String readReceivedHelp() {
+		return readFile(receivedHelpFile);
+	}
+	public void clearReceivedHelp() {
+		writeToFile(receivedHelpFile, "");
+	}
+	public String readReadHelp() {
+		return readFile(readHelpFile);
+	}
+	public void clearPastHelp() {
+		writeToFile(readHelpFile, "");
+	}
+	public static void maybeCreateFile(File aFile) {
+		try {
+			if (aFile == null) {
+				throw new Exception("Null file passed to maybeCreateFile");
+			}
+			if (aFile.exists()) {
+				return;
+			}
+			aFile.createNewFile();
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	public static void appendToFile (File aFile, String aTextToAppend) {
+		try (FileWriter fileWriter = new FileWriter(aFile, true)) {
+	        fileWriter.write(aTextToAppend);
+	    } catch (IOException e) {
+	        System.out.println("An error occurred: " + e.getMessage());
+	    }
+	}
+	
+	public static void writeToFile(File aFile, String aTextToWrite) {
+		try {
+			Common.writeText(aFile, aTextToWrite);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static String readFile (File aFile) {
+		return Common.toText(aFile);
+	}
+
 //	public static void main (String[] anArgs) {
 //		long time = System.currentTimeMillis();
 //		Date aDate = new Date(time);
