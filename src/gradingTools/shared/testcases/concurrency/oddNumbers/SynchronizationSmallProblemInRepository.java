@@ -2,6 +2,8 @@ package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import java.util.Map;
 
+import org.eclipse.jdt.core.dom.ThisExpression;
+
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
@@ -11,21 +13,24 @@ import gradingTools.basics.sharedTestCase.checkstyle.CheckstyleMethodCalledTestC
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
-@MaxValue(0)
-@Explanation(BasicsProblem.EXPLANATION + LargerNumberTests.LARGER_EXPLANATION)
-public class BasicsLargerProblem extends BasicsProblem {
+@MaxValue(10)
+@Explanation(SynchronizationProblem.EXPLANATION + SmallNumberTests.SMALL_EXPLANATION)
+public class SynchronizationSmallProblemInRepository extends SynchronizationProblem {
 	
-	Class[] PRECEDING_TESTS = {LargerNumberOfRandoms.class};
+	Class[] PRECEDING_TESTS = {
+			SmallNumberOfRandoms.class,
+			ForkJoinSmallProblem.class
+			};
 //	String[] relevantCheckNames = {
-//			THREAD_COUNT,
-//			PRE_FORK_OUTPUT,
-//			PRE_FORK_EVENTS,
-//			ITERATION_EVENTS,
-//			TOTAL_ITERATION_COUNT
+//			this.POST_JOIN_EVENTS
 //			};
 	@Override
 	protected Class[] precedingTests() {
 		return PRECEDING_TESTS;
+	}
+	
+	public SynchronizationSmallProblemInRepository() {
+		super("OddNumbersRepository");
 	}
 	
 //	protected  String[] relevantCheckNames(  ) {

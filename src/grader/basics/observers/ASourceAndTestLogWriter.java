@@ -177,6 +177,11 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		append( aNextLogEntry);
 		}
 	}
+	public static String composeSourceLogFileName(Project aProject, GradableJUnitSuite aTopLevelSuite ) {
+		return composeLogFilePrefix(aProject, aTopLevelSuite) 
+				+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
+
+	}
 	protected String getSourceLogFileName() {
 		return getSourceLogFileName(topLevelSuite);
 //		if (sourceLogFileName == null) {
@@ -188,8 +193,9 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	}
 	protected String getSourceLogFileName(GradableJUnitSuite aTopLevelSuite) {
 		if (sourceLogFileName == null) {
-			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
-					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
+//			sourceLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+//					+ SOURCE_LOG_FILE_NAME_MODIFIER + SOURCE_LOG_FILE_NAME_SUFFIX;
+			sourceLogFileName = composeSourceLogFileName(getProject(), aTopLevelSuite);		
 		}
 		File temp = new File(sourceLogFileName);
 		if(!temp.exists()){
@@ -230,12 +236,18 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		return lastSourceFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 	}
-
+	
+	public static String composeLastSourcesFileName(Project aProject, GradableJUnitSuite aTopLevelSuite) {
+		return composeLogFilePrefix(aProject, aTopLevelSuite) 
+				+ LAST_SOURCES_FILE_NAME_MODIFIER + LAST_SOURCES_FILE_NAME_SUFFIX;
+	}
 	protected String getLastSourcesFileName(GradableJUnitSuite aTopLevelSuite) {
 		if (lastSourceFileName == null) {
-			lastSourceFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
-					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
-					+ LAST_SOURCES_FILE_NAME_MODIFIER + LAST_SOURCES_FILE_NAME_SUFFIX;
+			
+//			lastSourceFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
+//					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+//					+ LAST_SOURCES_FILE_NAME_MODIFIER + LAST_SOURCES_FILE_NAME_SUFFIX;
+			lastSourceFileName = composeLastSourcesFileName(getProject(), aTopLevelSuite);
 		}
 		return lastSourceFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
@@ -278,7 +290,8 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 		}
 		return retVal;
 	}
-	protected Map<String, String> getCurrentSourcesMap() {
+	
+	public Map<String, String> getCurrentSourcesMap() {
 		if (currentSourcesMap == null) {
 			currentSourcesMap = getProject().getTextManager().getFileToText();
 			currentSourcesLength = getLength(currentSourcesMap);

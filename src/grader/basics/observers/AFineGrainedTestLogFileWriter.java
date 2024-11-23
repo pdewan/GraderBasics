@@ -58,7 +58,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 	private String topLevelInfo;
 	private ALogSendingRunnable logSender;
 
-	GradableJUnitSuite topLevelSuite;
+	protected GradableJUnitSuite topLevelSuite;
 
 	public AFineGrainedTestLogFileWriter() {
 		super();
@@ -67,6 +67,10 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 	@Override
 	protected String getHeader() {
 		return EXTENDED_HEADER;
+	}
+	
+	public GradableJUnitSuite getTopLevelSute() {
+		return topLevelSuite;
 	}
 
 	@Override

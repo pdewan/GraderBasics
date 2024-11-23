@@ -190,7 +190,8 @@ public class ObservablePrintStreamUtility {
 	protected static String[] emptyStringArray = {};
 
 	public static String[] parseStringArray(String anArrayToString) {
-		if (!anArrayToString.contains(",")) {
+		if (anArrayToString.length() <= 2) {
+//		if (!anArrayToString.contains(",")) {
 			return emptyStringArray;
 		}
 		String aValuesPart = anArrayToString.substring(1, anArrayToString.length() - 1);

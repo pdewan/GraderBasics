@@ -63,18 +63,18 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 //	Map<String, String> currentSourcesMap;
 //	int currentSourcesLength;
 //	Map<String, String> diffMap;
-	String lastOutputFileName;
-	String outputLogFileName;
-	String outputLogFileShortName;
+	private String lastOutputFileName;
+	private String outputLogFileName;
+	private String outputLogFileShortName;
 
 //	String replayedSourceFileName;
 //	boolean isAppended;
-	String[] emptyStrings = {};
+	private String[] emptyStrings = {};
 	
-	StringBuffer lastOutputLogEntry = new StringBuffer(MAX_IO_SIZE);
+	private StringBuffer lastOutputLogEntry = new StringBuffer(MAX_IO_SIZE);
 	
-	String lastTrace;
-	StringBuffer currentTrace = new StringBuffer(MAX_IO_SIZE);
+	private String lastTrace;
+	private StringBuffer currentTrace = new StringBuffer(MAX_IO_SIZE);
 
 	
 	public ATraceSourceAndTestLogWriter() {
@@ -209,10 +209,27 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 //		return sourceLogFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 	}
+//	public static String composeLogFilePrefix (Project aProject, GradableJUnitSuite aTopLevelSuite ) {
+//		return aProject.getProjectFolder().getAbsolutePath() +
+//		"/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite);
+//	}
+	
+	public static String composeOutputLogFileName (Project aProject, GradableJUnitSuite aTopLevelSuite ) {
+		return composeLogFilePrefix(aProject, aTopLevelSuite)
+				+ OUTPUT_LOG_FILE_NAME_MODIFIER + OUTPUT_LOG_FILE_NAME_SUFFIX;
+	}
+	
 	protected String getOutputLogFileName(GradableJUnitSuite aTopLevelSuite) {
 		if (outputLogFileName == null) {
-			outputLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+			
+//			outputLogFileName = getProject().getProjectFolder().getAbsolutePath() + "/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+//					+ OUTPUT_LOG_FILE_NAME_MODIFIER + OUTPUT_LOG_FILE_NAME_SUFFIX;
+//			outputLogFileName = composeLogFilePrefix(getProject(), aTopLevelSuite)
+//			+ OUTPUT_LOG_FILE_NAME_MODIFIER + OUTPUT_LOG_FILE_NAME_SUFFIX;
+			
+			outputLogFileName = composeLogFilePrefix(getProject(), aTopLevelSuite)
 					+ OUTPUT_LOG_FILE_NAME_MODIFIER + OUTPUT_LOG_FILE_NAME_SUFFIX;
+
 		}
 		File temp = new File(outputLogFileName);
 		if(!temp.exists()){
@@ -253,12 +270,20 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 //		return lastSourceFileName;
 ////		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
 //	}
+	
+	public static String composeLastOutputLogFileName (Project aProject, GradableJUnitSuite aTopLevelSuite ) {
+		return composeLogFilePrefix(aProject, aTopLevelSuite)
+				+ LAST_OUTPUT_FILE_NAME_MODIFIER + LAST_OUTPUT_FILE_NAME_SUFFIX;
+
+//				+ OUTPUT_LOG_FILE_NAME_MODIFIER + OUTPUT_LOG_FILE_NAME_SUFFIX;
+	}
 
 	protected String getLastOutputFileName(GradableJUnitSuite aTopLevelSuite) {
 		if (lastOutputFileName == null) {
-			lastOutputFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
-					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
-					+ LAST_OUTPUT_FILE_NAME_MODIFIER + LAST_OUTPUT_FILE_NAME_SUFFIX;
+//			lastOutputFileName = getProject().getProjectFolder().getAbsolutePath() + "/" +
+//					AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite)
+//					+ LAST_OUTPUT_FILE_NAME_MODIFIER + LAST_OUTPUT_FILE_NAME_SUFFIX;
+			lastOutputFileName = composeLastOutputLogFileName(getProject(), aTopLevelSuite);
 		}
 		return lastOutputFileName;
 //		logFileName = toFileName(aTopLevelSuite) + FILENAME_MODIFIER + LOG_SUFFIX;
@@ -697,28 +722,51 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 //    		System.err.println("Corrupted " + aFile + " after entries: " + aNumSessionsRead);
 //    	}
 //	}
-	
+	public String getCurrentTrace() {
+		return currentTrace.toString();
+	}
 	protected void composeCurrentOutput() {
+		composeCurrentOutput(currentTrace);
+//		List<String> aPreOutputs = IOTraceRepository.getPreAnnouncements();
+//		List<String> aPostOutputs = IOTraceRepository.getPostAnnouncements();
+//		String anOutput = IOTraceRepository.getOutput();
+//		String anError = IOTraceRepository.getError();
+//		currentTrace.setLength(0);
+//		currentTrace.append(PRE_OUTPUT + "\n");
+//		for (String aPreOutput:aPreOutputs) {
+//			currentTrace.append(aPreOutput + "\n");
+//		}
+//		currentTrace.append(OUTPUT + "\n");
+//		currentTrace.append(anOutput);
+//		currentTrace.append(ERRORS + "\n");
+//		currentTrace.append(anError + "\n");
+//		currentTrace.append(POST_OUTPUT + "\n");
+//		for (String aPostOutput:aPostOutputs) {
+//			currentTrace.append(aPostOutput + "\n");
+//		}
+//		currentTrace.append(END_OUTPUT + "\n");
+
+							 
+	}
+	public static void composeCurrentOutput (StringBuffer aCurrentTrace) {
 		List<String> aPreOutputs = IOTraceRepository.getPreAnnouncements();
 		List<String> aPostOutputs = IOTraceRepository.getPostAnnouncements();
 		String anOutput = IOTraceRepository.getOutput();
 		String anError = IOTraceRepository.getError();
-		currentTrace.setLength(0);
-		currentTrace.append(PRE_OUTPUT + "\n");
+		aCurrentTrace.setLength(0);
+		aCurrentTrace.append(PRE_OUTPUT + "\n");
 		for (String aPreOutput:aPreOutputs) {
-			currentTrace.append(aPreOutput + "\n");
+			aCurrentTrace.append(aPreOutput + "\n");
 		}
-		currentTrace.append(OUTPUT + "\n");
-		currentTrace.append(anOutput);
-		currentTrace.append(ERRORS + "\n");
-		currentTrace.append(anError + "\n");
-		currentTrace.append(POST_OUTPUT + "\n");
+		aCurrentTrace.append(OUTPUT + "\n");
+		aCurrentTrace.append(anOutput);
+		aCurrentTrace.append(ERRORS + "\n");
+		aCurrentTrace.append(anError + "\n");
+		aCurrentTrace.append(POST_OUTPUT + "\n");
 		for (String aPostOutput:aPostOutputs) {
-			currentTrace.append(aPostOutput + "\n");
+			aCurrentTrace.append(aPostOutput + "\n");
 		}
-		currentTrace.append(END_OUTPUT + "\n");
-
-							 
+		aCurrentTrace.append(END_OUTPUT + "\n");
 	}
 
 	protected void writeOutputLogData() {

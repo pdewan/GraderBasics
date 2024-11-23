@@ -29,7 +29,7 @@ public class NotificationDemo2 {
 	        System.out.println("Created Image");
 	     // Load the image (replace with your image path)
 
-	        SwingUtilities.invokeLater(() -> new ImageDisplay(image));
+//	        SwingUtilities.invokeLater(() -> new ImageDisplay(image));
 	        
 	        try {
 				displayTray(image);

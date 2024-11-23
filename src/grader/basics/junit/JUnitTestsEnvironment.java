@@ -47,6 +47,9 @@ public class JUnitTestsEnvironment {
 	}
 	public static GradableJUnitTest getGradableJUnitTest(Class<? extends PassFailJUnitTestCase> aClass) {
 		JUnitTestContext aContext = history.get(aClass);
+		if (aContext == null) {
+			return null;
+		}
 		return aContext.getGradableJUnitTest();
 	}
 	/**

@@ -30,6 +30,7 @@ import grader.basics.junit.GradableJUnitSuite;
 import grader.basics.junit.GradableJUnitTest;
 import grader.basics.observers.logSending.JSONObject;
 import grader.basics.project.CurrentProjectHolder;
+import grader.basics.project.Project;
 import grader.basics.trace.CheckersLogFolderCreated;
 import grader.basics.trace.JUnitLogFileCreatedOrLoaded;
 import grader.basics.vetoers.AConsentFormVetoer;
@@ -417,6 +418,10 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 		}
 		String anAssignmentName = aClassParts[2];
 		return anAssignmentName;
+	}
+	public static String composeLogFilePrefix (Project aProject, GradableJUnitSuite aTopLevelSuite ) {
+		return aProject.getProjectFolder().getAbsolutePath() +
+		"/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite);
 	}
 	public static String toFileName (GradableJUnitTest aTest) {
 		String aClassName = aTest.getJUnitClass().getName();

@@ -12,13 +12,11 @@ import grader.basics.junit.TestCaseResult;
 import grader.basics.trace.GraderInfo;
 import util.annotations.MaxValue;
 @MaxValue(5)
-public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin {
-	protected static final String EXPLANATION = "This test checks if race conditions in ConcurrentOddumbers have been eliminated for the ";
+public abstract class HardwiredSynchronizationProblem extends PostTestExecutorOfForkJoin {
+	public static final String EXPLANATION = "This test checks if race conditions in ConcurrentOddumbers have been eliminated for the ";
 //	public static final String SMALL_EXPLANATION = " for the small problem";
 	
-	
-	
-	private  String synchronizationClassName = "BasicSynchronizationDemo";
+
 //	Class[] PRECEDING_TESTS = {
 //			SmallNumberOfRandoms.class,
 //			ForkJoinSmallProblem.class
@@ -30,13 +28,6 @@ public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin 
 //	protected Class[] precedingTests() {
 //		return PRECEDING_TESTS;
 //	}
-	
-	public SynchronizationProblem () {
-		
-	}
-	public SynchronizationProblem(String aSynchronizationClassName) {
-		synchronizationClassName = aSynchronizationClassName;
-	}
 	
 	protected  String[] relevantCheckNames(  ) {
 		return relevantCheckNames;
@@ -76,9 +67,7 @@ public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin 
 
 		synchronizedMethods = new ArrayList();
 		try {
-//			Class aSynchronizationClass = Class.forName("BasicSynchronizationDemo");
-			Class aSynchronizationClass = Class.forName(synchronizationClassName);
-
+			Class aSynchronizationClass = Class.forName("BasicSynchronizationDemo");
 			isOnlyOneMethodSynchronizedResult = partialPass(0.1, "Exactly one method synchronized");
 
 			Method[] aMethods = aSynchronizationClass.getDeclaredMethods();
@@ -96,13 +85,13 @@ public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin 
 			
 			if (synchronizedMethods.size() == 0) {				
 				isAddOddNumberResult = fail("Race conditions exist");
-//				isOnlyOneMethodSynchronizedResult = fail ("No synchronized method in class SynchrnoizationDemo"); 
-				isOnlyOneMethodSynchronizedResult = fail ("No synchronized method in class " + synchronizationClassName); 				return;
+				isOnlyOneMethodSynchronizedResult = fail ("No synchronized method in class SynchrnoizationDemo"); 
+				return;
 			}
 			if (synchronizedMethods.size() == 1) {
 				if (isAddOddNumberResult == null) {
 					isAddOddNumberResult = fail("Race conditions exist");
-					isOnlyOneMethodSynchronizedResult = fail ("It is not sufficient to synchronize: " + synchronizedMethods);
+					isOnlyOneMethodSynchronizedResult = fail ("Think of synchronizing a method other than: " + synchronizedMethods);
 				} else {
 //					isAddOddNumberResult = fail("No race conditions");
 					isOnlyOneMethodSynchronizedResult = partialPass (0.1, "Correct method synchronized: " + synchronizedMethods);
@@ -117,7 +106,7 @@ public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin 
 
 			}
 			
-			isOnlyOneMethodSynchronizedResult = fail ("More than minimum numer of methods synchronized: " + synchronizedMethods);
+			isOnlyOneMethodSynchronizedResult = fail ("More than one method synchronized: " + synchronizedMethods);
 
 			
 //			if (synchronizedMethods.size() > 1) {
