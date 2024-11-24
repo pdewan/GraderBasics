@@ -46,7 +46,7 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	static final String DIFF_INDICATOR = "\n(DIFF_FROM_PREVIOUS_FILE)\n";
 
 
-	Project project;
+//	Project project;
 	private List<String> lastSourcesLines;
 	private List<String> currentSourcesLines;
 
@@ -300,12 +300,12 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 	}
 	
 	
-	protected Project getProject() {
-		if (project == null) {
-			project = CurrentProjectHolder.getCurrentProject();
-		}
-		return project;
-	}
+//	protected Project getProject() {
+//		if (project == null) {
+//			project = CurrentProjectHolder.getCurrentProject();
+//		}
+//		return project;
+//	}
 	protected void writeLastSourcesText() {
 		Project aProject = getProject();
 		StringBuffer aStringBuffer = aProject.getTextManager().getAllSourcesText();

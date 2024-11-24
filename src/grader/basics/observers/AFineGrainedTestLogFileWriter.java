@@ -20,6 +20,8 @@ import grader.basics.junit.GradableJUnitTest;
 import grader.basics.observers.logSending.ALogSendingRunnable;
 import grader.basics.observers.logSending.JSONObject;
 import grader.basics.observers.logSending.LocalChecksLogSender;
+import grader.basics.project.CurrentProjectHolder;
+import grader.basics.project.Project;
 import grader.basics.vetoers.AConsentFormVetoer;
 import util.misc.Common;
 
@@ -59,6 +61,7 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 	private ALogSendingRunnable logSender;
 
 	protected GradableJUnitSuite topLevelSuite;
+	protected Project project;
 
 	public AFineGrainedTestLogFileWriter() {
 		super();
@@ -168,7 +171,16 @@ public class AFineGrainedTestLogFileWriter extends AnAbstractTestLogFileWriter {
 			unsortedSuiteTests.add(test.getSimpleName());
 		}
 	}
+	protected Project getProject() {
+		if (project == null) {
+			project = CurrentProjectHolder.getCurrentProject();
+		}
+		return project;
+	}
+	public  String 	composeLogFilePrefix () {
+	return composeLogFilePrefix(getProject(), topLevelSuite);
 
+}
 	private void maybeDetermineConsecutiveTestRunNumber(GradableJUnitSuite aTopLevelSuite) {
 		if (sessionDataFile.exists()) {
 			try {

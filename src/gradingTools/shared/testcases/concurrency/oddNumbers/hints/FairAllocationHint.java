@@ -13,7 +13,7 @@ import util.annotations.MaxValue;
 @MaxValue(0)
 public abstract class FairAllocationHint extends AbstractHint {
 	
-	static Class[] PRECEDING_TESTS = {
+	private static Class[] PRECEDING_TESTS = {
 			FairAllocationSmallProblem.class,
 //			FairAllocationLargerProblem.class
 	};

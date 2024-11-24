@@ -423,6 +423,12 @@ public abstract class AnAbstractTestLogFileWriter extends RunListener {
 		return aProject.getProjectFolder().getAbsolutePath() +
 		"/" + AConsentFormVetoer.LOG_DIRECTORY + "/" + toFileName(aTopLevelSuite);
 	}
+//	public  String 	composeLogFilePrefix () {
+//		return composeLastSourcesFileName(getProject(), aTopLevelSuite);
+//
+//	}
+
+	
 	public static String toFileName (GradableJUnitTest aTest) {
 		String aClassName = aTest.getJUnitClass().getName();
 		String[] aClassParts = aClassName.split("\\.");
