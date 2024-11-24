@@ -9,8 +9,8 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem
 import gradingTools.shared.testcases.concurrency.oddNumbers.hints.ForkJoinHint;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get help for the fork join problem")
-public class ForkJoinProblemContext extends AbstractOddNumberProblemContext{
+@Explanation("This is a request to create context to get Piazza help for the fork join problem")
+public class ForkJoinProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	
 	private static Class[] PRECEDING_TESTS = {
 			ForkJoinSmallProblem.class,

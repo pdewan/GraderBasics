@@ -122,7 +122,7 @@ public class ASourceAndTestLogWriter extends AFineGrainedTestLogFileWriter {
 //			e.printStackTrace();
 //		}
 //	}
-	public void append(String aFile, String aText) {
+	public static void append(String aFile, String aText) {
 		boolean firstLine = false;
 		try {
 			File file = new File(aFile);
