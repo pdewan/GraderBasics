@@ -80,14 +80,39 @@ public abstract  class AbstractProblemContext extends AbstractHint{
 	 protected String getRelevantCodeEnd() {
 			return "";
 	 }
+	 
+	
+	 
+	 protected boolean missingCompleteCode() {
+			return false;
+		}
+	 
+	 
 	
 	protected String getCompleteCode() {
 		return "";
 	}
 	protected String getRelevantCode() {
 		String aCompleteCode = getCompleteCode();
-		int aStartIndex = aCompleteCode.indexOf(getRelevantCodeStart());
-		int anEndIndex = aCompleteCode.indexOf(getRelevantCodeEnd(), aStartIndex);
+		if (aCompleteCode == null) {
+			return "Could not find the source code";
+		}
+		String aStartText = getRelevantCodeStart();
+		int aStartIndex = aCompleteCode.indexOf(aStartText);
+		if (aStartIndex < 0) {
+			if (missingCompleteCode()) {
+				return aCompleteCode;
+			}
+			return "Could not find in complete code text start: " + aStartText;
+		}
+		String anEndText = getRelevantCodeEnd();
+		int anEndIndex = aCompleteCode.indexOf(anEndText, aStartIndex);
+		if (anEndIndex < 0) {
+			if (missingCompleteCode()) {
+				return aCompleteCode;
+			}
+			return "Could not find in complete code text end: " + anEndText;
+		}
 		String retVal = aCompleteCode.substring(aStartIndex, anEndIndex);
 		return retVal;
 	}
@@ -194,6 +219,9 @@ public abstract  class AbstractProblemContext extends AbstractHint{
 	protected String getMarkedRelevantCompleteCode() {
 		String aCompleteCodeStart = "\nSTART OF COMPLETE CODE\n";
 		String aCompleteCode = getCompleteCode();
+		if (aCompleteCode == null) {
+			aCompleteCode = "Could not find source code";
+		}
 		String aCompleteCodeEnd = "End of COMPLETE CODE\n";
 		return aCompleteCodeStart + aCompleteCode + aCompleteCodeEnd;
 	}	

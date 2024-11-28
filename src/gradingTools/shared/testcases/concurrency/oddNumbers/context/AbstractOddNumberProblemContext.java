@@ -22,11 +22,36 @@ public abstract class AbstractOddNumberProblemContext extends AbstractProblemCon
 //		return PRECEDING_TESTS;
 //	}
 	
+	protected boolean missingCompleteCode = false;
+	protected boolean missingCompleteCode() {
+		return missingCompleteCode;
+	}	
 	
-	
+	 public static String findInPackageCompleteCode(Map<String, String> aMap, String aFileName) {
+			for (String aKey: aMap.keySet()) {
+				if (aKey.endsWith("/" + aFileName)) {
+					String aPrefixString = "// Source code should be in file " + aFileName + " but was found in file "  + aKey + "\n" +
+					"// Please put the class in the default package after removing the package declaration\n" +
+							"// Delete any moduleinfo file in your project\n";
+					
+					return aPrefixString + aMap.get(aKey);
+				}
+			}
+			return null;
+		}
 	protected String getCompleteCode() {
+
 		Map<String, String> aMap = getOrCreateCurrentSourcesMap();
 		oddNumbersCode = aMap.get(oddNumbersFileName);
+		if (oddNumbersCode == null) {
+			oddNumbersCode = findInPackageCompleteCode(aMap, oddNumbersFileName);
+			if (oddNumbersCode == null) {
+			missingCompleteCode = true;
+			oddNumbersCode = "Could not find code for file:"  + oddNumbersFileName + " in project directory \n" +
+					"Found the following files:" + aMap.keySet() + "\n";
+			}
+			
+		}
 		return oddNumbersCode;
 	}
 	
