@@ -33,6 +33,7 @@ public abstract class AbstractOddNumberProblemContext extends AbstractProblemCon
 					String aPrefixString = "// Source code should be in file " + aFileName + " but was found in file "  + aKey + "\n" +
 					"// Please put the class in the default package after removing the package declaration\n" +
 							"// Delete any moduleinfo file in your project\n";
+					System.err.println(aPrefixString);
 					
 					return aPrefixString + aMap.get(aKey);
 				}

@@ -134,8 +134,9 @@ public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin 
 //
 //			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			isAddOddNumberResult = fail ("Missing class: " + e.getMessage() + "\nIt is probably not in the default  package."+ "\nRemove any moduleinfo file from the project folder and remove any package declaration you added in ConcurrentOddNumbers.java.\nPut the class in the default package.");
+			isOnlyOneMethodSynchronizedResult = fail ("");
+//			e.printStackTrace();
 //			return aSynchrnoizedMethods;
 		}
 
