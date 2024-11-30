@@ -117,7 +117,7 @@ public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin 
 
 			}
 			
-			isOnlyOneMethodSynchronizedResult = fail ("More than minimum numer of methods synchronized: " + synchronizedMethods);
+			isOnlyOneMethodSynchronizedResult = fail ("More than minimum number of methods synchronized: " + synchronizedMethods);
 
 			
 //			if (synchronizedMethods.size() > 1) {

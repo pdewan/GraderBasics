@@ -4,16 +4,18 @@ import java.util.Map;
 
 import grader.basics.observers.ATraceSourceAndTestLogWriter;
 import grader.basics.observers.TestLogFileWriterFactory;
+import gradingTools.shared.testcases.concurrency.oddNumbers.BasicsSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.hints.ForkJoinHint;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get Piazza help for the fair allocation problem")
-public class FairAllocationProblemPiazzaMessage extends AbstractOddNumberProblemContext{
+@Explanation("This is a request to create context to get Piazza help if in the process of solving the fair allocation problem you break basics small problem")
+public class BasicsSmallProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	
 	private static Class[] PRECEDING_TESTS = {
-			FairAllocationSmallProblem.class,
+			BasicsSmallProblem.class,
+//			FairAllocationLargerProblem.class
 	};
 	
 	protected Class[] precedingTests() {

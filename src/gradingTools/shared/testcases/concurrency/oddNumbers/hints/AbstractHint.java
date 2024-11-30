@@ -66,9 +66,12 @@ public abstract class AbstractHint extends PostTestExecutorOfForkJoin {
 	@Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 			throws NotAutomatableException, NotGradableException {
+		String aPrecedingTestName = precedingTests()[0].getSimpleName() ;
 		if (precedingTestsMustBeCorrected()) {
-			return partialPass(0.2, "Hint cannot be  given until you run the test "
-					+ precedingTests()[0].getSimpleName() + "\n You need to successfully execute its preceding test");
+//			return partialPass(0.2, "Hint cannot be  given until you run the test "
+//					+ precedingTests()[0].getSimpleName() + "\n You need to successfully execute its preceding test");
+			return partialPass(0.2, "Hint cannot be  given until "+ aPrecedingTestName + " runs its checks. \n"
+					+ "Look at the output of this test to see which preceding test should successfully execute");
 		}
 		if (isCheckIfPrecedingTestIsCorrect()) {
 			if (precedingTestsCorrect()) {

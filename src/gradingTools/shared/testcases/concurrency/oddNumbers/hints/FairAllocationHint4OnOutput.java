@@ -23,7 +23,7 @@ public class FairAllocationHint4OnOutput extends FairAllocationHint {
 		String aLine2 = "Lines with \"(MA)\" indicate the mininimum number of items allocated to each thread. ";
 		String aLine3 = "They are output by calls to the predefined method, traceMinimumAllocation(). ";
 		String aLine4 = "Lines with \"(RA)\" indicate per-therad allocation of the remainder of items after the mimimum allocation has been allocated to each thread. ";
-		String aLine5 = "For each of the four threads in the small problem try to determine the fair minimum and remaninder allocation. ";
+		String aLine5 = "For each of the four threads in the small problem try to determine the fair minimum and remainder  allocation. ";
 		String aLine6 = "Now try to determine a general scheme for allocating N work items to M threads. ";
 		String aLine7 = "that works for both the small and larger problem in particular, and arbitrary values of N amd M in general. ";
 		return "\n" + aLine1 + "\n" + aLine2 + "\n" + aLine3 + "\n" + aLine4 + "\n" + aLine5 + "\n" + aLine6 + "\n" + aLine7;		   

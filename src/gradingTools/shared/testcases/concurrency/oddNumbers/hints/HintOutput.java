@@ -22,7 +22,7 @@ public class HintOutput {
 	}
 	
 	protected static String hint2() {
-		String aLine1 = "A race condition occurs when multiple threads attempt to execute the instructions of some method simultaneoulsy. ";
+		String aLine1 = "A race condition occurs when multiple threads attempt to execute the instructions of some method simultaneously. ";
 		String aLine2 = "Race conditions are undesirable when the method changes a data structure shared among the threads. ";
 		String aLine3 = "Such a method is called a critical region or critical method. ";
 		String aLine4 = "The reason for synchronizations error are race conditions. ";
@@ -58,8 +58,8 @@ public class HintOutput {
 	protected static String hint5() {
 		String aLine1 = "Look in the code for the sleep call. ";
 		String aLine2 = "Before this line call a load occurs. ";
-		String aLine3 = "Afer this line a save occurs. ";
-		String aLine4 = "A sleep call results in a thread switch. ";
+		String aLine3 = "After this line a save occurs. ";
+		String aLine4 = "A sleep call results in a thread switch.";
 		String aLine5 = "What problem can occur if another thread executes between the load and save? ";
 
 
