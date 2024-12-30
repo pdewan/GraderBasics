@@ -59,9 +59,11 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 		return conversionSpecifications;
 	}
 	
+	public static final String CALLED_PROPERTY = "Called";
 	
 	public PropertyChangeEvent toPropertyChange (ValgrindTrace aValgrindTrace) {
 		String aFunctionName = aValgrindTrace.fnname;
+//		System.err.println("toproperty change:" + aValgrindTrace);
 //		String[] anArgs = aValgrindTrace.arguments;
 //		String aResult = aValgrindTrace.result;
 		Object[][] aConversionSpecifications = conversionSpecifications();
@@ -82,7 +84,9 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 			};			
 			
 		}
-		return null;
+		return new PropertyChangeEvent(aFunctionName, CALLED_PROPERTY, aValgrindTrace, null);
+
+//		return null;
 	}
 	private List<ValgrindTrace>  valgrindTraces = new ArrayList();
 	@Override
@@ -91,7 +95,7 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 	}
 
 	@Override
-	public PropertyChangeEvent toPropertyChange(Object anObject) {	
+	public  PropertyChangeEvent toPropertyChange(Object anObject) {	
 		
 		if (!(anObject instanceof String)) {
 			return null;

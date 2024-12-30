@@ -187,7 +187,7 @@ public	void	println(Object x) {
 
 }
 //	Prints an Object and then terminate the line.
-public	void	println(String x) {
+public	void println(String x) {
 //	if (hidePrints()) return;
 //	delegate.println(x);
 //	maybeConvertAndAnnounceOutput(x);

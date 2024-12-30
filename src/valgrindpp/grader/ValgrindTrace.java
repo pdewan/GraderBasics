@@ -53,12 +53,13 @@ public class ValgrindTrace {
 
 
 	public ValgrindTrace(String trace) throws Exception {
+//		System.err.println("Converting o ValgrindTrace:" + trace);
 		String aPrcessedTrace = trace;
 		if (trace.endsWith("\n")) {
 			aPrcessedTrace = trace.substring(0, trace.length() - 1);
 		}
 //		Pattern pattern = Pattern.compile("I\\*\\*\\*([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
-
+//1735493359 - Thread: 86762304 - allocate_and_initialize_array: 9 -> 0x6179f50
 		Pattern pattern = Pattern.compile("([0-9]+) - Thread: ([0-9]+) - (.*): (.*) -> (.*)");
 		Matcher m = pattern.matcher(aPrcessedTrace);
 		
@@ -73,6 +74,7 @@ public class ValgrindTrace {
 				arguments[i] = arguments[i].trim();
 			}
 		} else {
+//			System.err.println("Trace did not match");
 			throw new TraceParsingException(trace);
 		}
 	}

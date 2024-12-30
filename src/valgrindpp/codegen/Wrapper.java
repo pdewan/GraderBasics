@@ -15,7 +15,9 @@ public class Wrapper {
 	
 	
 	
-	public static final String PATH_TO_VALGRIND = "/valgrind/include/valgrind.h";
+//	public static final String PATH_TO_VALGRIND = "/valgrind/include/valgrind.h";
+	public static final String PATH_TO_VALGRIND = "/usr/include/valgrind/valgrind.h";
+
 	
 	public static final String TRACE_FUNCTION = 
 			"void trace(const char* format, ...) {\n"

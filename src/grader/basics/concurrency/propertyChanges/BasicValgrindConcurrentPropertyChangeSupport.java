@@ -16,6 +16,7 @@ public class BasicValgrindConcurrentPropertyChangeSupport
 	private Map<Long, Thread> threadIdToJavaThread = new HashMap();
 	@Override
 	protected PropertyChangeEvent recordEventThreadAndTime(PropertyChangeEvent aPropertyChangeEvent) {
+//		System.err.println("Property change support:" + aPropertyChangeEvent);
 		Object anOldValue = aPropertyChangeEvent.getOldValue();
 		if ((anOldValue instanceof ValgrindTrace)) {
 			ValgrindTrace aValgrindTrace = (ValgrindTrace) anOldValue;

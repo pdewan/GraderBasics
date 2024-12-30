@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import grader.basics.config.BasicExecutionSpecificationSelector;
 import util.trace.Tracer;
 
 public class CompilerHelper {
-	static final String CC = "gcc";
-	static final String FLAGS = "-pthread";
+//	static final String CC = "gcc";
+	static final String CC = "mpicc";
+
+	static final String FLAGS = "-pthread -fopenmp";
 	public static final String EXEC_NAME = "WrappedStudentCode";
 	private static  String fullExecName;
 	
@@ -51,9 +54,17 @@ public class CompilerHelper {
 		this.traceFile = traceFile;
 	}
 	
-	public int compileWrapper() throws Exception {	
+	public int compileWrapper() throws Exception {
+		File aFile = new File(executionDirectory);
+		String aFileName = aFile.getCanonicalPath();
+		aFileName = aFile.getAbsolutePath();
 
 		String[] command = {CC, "-c", FLAGS, cFile, "-o", objFile};
+
+//		String[] command = {"pwd"};
+
+//		String[] command = {CC, "-c", FLAGS, "-fopenmp", cFile, "-o", objFile};
+
 
 		Tracer.info(this, "Compiling wrapper in " + executionDirectory + " using command:" + Arrays.toString(command));
 		
@@ -81,8 +92,13 @@ public class CompilerHelper {
 				}
 			}
 		}
-		
-		String[] command = new String[srcFiles.size() + 5];
+		String anEntryPoint = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
+		String[] command;
+		if (anEntryPoint != null && srcFiles.contains(anEntryPoint)) {
+			command = new String[1 + 5];
+		} else {
+		    command = new String[srcFiles.size() + 5];
+		}
 		
 		command[0] = CC;
 		command[1] = FLAGS;
@@ -97,10 +113,15 @@ public class CompilerHelper {
 //		command[4] = EXEC_NAME;
 		command[4] = fullExecName;
 
-		
+		if (anEntryPoint != null && srcFiles.contains(anEntryPoint)) {
+			command[5] = anEntryPoint;
+		} else {
+
 		for(int i=0; i<srcFiles.size(); i++) {
 			command[i+5] = srcFiles.get(i);
 		}
+		}
+//		String anEntryPoint = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getEntryPoint();
 		Tracer.info(this, "Compiling student code in " + executionDirectory + " using command:" + command);
 		return CommandLineHelper.execute(command, executionDirectory);
 	}

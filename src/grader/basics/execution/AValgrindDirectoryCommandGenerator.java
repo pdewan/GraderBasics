@@ -50,6 +50,7 @@ protected String[] getBasicTraceCommand( ) {
 		String[] command = {
 				"valgrind",
 				"--trace-children=yes",
+				"mpirun -np 3",
 //				"./"+EXEC_NAME,
 				"./" + fullExecName,
 				redirection(),

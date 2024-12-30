@@ -136,7 +136,16 @@ public class BasicStaticConfigurationUtils {
 	public static final String DEFAULT_CHECKSTYLE_OUTPUT_DIRECTORY = null;
 	
 	public static final String VALGRIND_IMAGE = "valgrindImage";
-	public static final String DEFAULT_VALGRIND_IMAGE = "nalingaddis/valgrind";
+//	public static final String DEFAULT_VALGRIND_IMAGE = "nalingaddis/valgrind";
+//	public static final String DEFAULT_VALGRIND_IMAGE = "prasundewan/pd-mpi";
+//	public static final String DEFAULT_VALGRIND_IMAGE = "prasundewan/pd-valgrind:1.0";
+	public static final String DEFAULT_VALGRIND_IMAGE = "prasundewan/pd-pdc";
+	
+	public static final String VALGRIND_INCLUDE = "valgrindInclude";
+	public static final String DEFAULT_VALGRIND_INCLUDE = "/usr/include/valgrind/valgrind.h";
+	
+//	public static final String DEFAILT_VALGRIND_INCLUDE = "/valgrind/include/valgrind.h";
+
 	
 	public static final String VALGRIND_CONFIGURATION = "valgrindConfiguration";
 	public static final String DEFAULT_VALGRIND_CONFIGURATION = null;
