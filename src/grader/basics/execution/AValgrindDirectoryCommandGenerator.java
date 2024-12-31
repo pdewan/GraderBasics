@@ -34,6 +34,14 @@ public class AValgrindDirectoryCommandGenerator extends AValgrindCommandGenerato
 			getCompilerHelper().compileStudentCode();
 		
 	}
+	protected String getCommandExecutor() {
+		int aNumProcesses = BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getNumberOfProcesses();
+		if (aNumProcesses == 1) {
+			return null;
+		}
+		String anMPIRunCommand = "mpirun -np " + aNumProcesses;
+		return anMPIRunCommand;
+	}
 protected String[] getBasicTraceCommand( ) {
 		
 //		String aRelativeTraceFile = CompilerHelper.toRelativePath(studentDir, traceFileName);
@@ -47,16 +55,43 @@ protected String[] getBasicTraceCommand( ) {
 			aTraceFile = getProjectDirectory() + "/" + aTraceFile;
 	
 		}
-		String[] command = {
-				"valgrind",
-				"--trace-children=yes",
-				"mpirun -np 3",
-//				"./"+EXEC_NAME,
-				"./" + fullExecName,
-				redirection(),
-				aTraceFile
-//getRelativeTraceFileName()
+		String aCommandExecutor = getCommandExecutor();
+		String[] command;
+		if (aCommandExecutor != null) {
+			command = new String[] {
+					"valgrind",
+					"--trace-children=yes",
+					aCommandExecutor,
+//					"mpirun -np 3",
+//					"./"+EXEC_NAME,
+					"./" + fullExecName,
+					redirection(),
+					aTraceFile
+	//getRelativeTraceFileName()
+			};
+		} else {
+			command = new String[] {
+					"valgrind",
+					"--trace-children=yes",
+//					"mpirun -np 3",
+//					"./"+EXEC_NAME,
+					"./" + fullExecName,
+					redirection(),
+					aTraceFile
 		};
+		}
+		
+//		String[] command = {
+//				"valgrind",
+//				"--trace-children=yes",
+//				anMPIRunCommand,
+////				"mpirun -np 3",
+////				"./"+EXEC_NAME,
+//				"./" + fullExecName,
+//				redirection(),
+//				aTraceFile
+////getRelativeTraceFileName()
+//		};
 		return command;
 }
 

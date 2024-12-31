@@ -19,11 +19,26 @@ public class Wrapper {
 	public static final String PATH_TO_VALGRIND = "/usr/include/valgrind/valgrind.h";
 
 	
+//	public static final String TRACE_FUNCTION = 
+//			"void trace(const char* format, ...) {\n"
+////					+ "    printf(\"I***%ld - Thread: %lu - \",\n"
+//					+ "    printf(\"%ld - Thread: %lu - \",\n"
+//					+ "        time(NULL),\n"
+//					+ "        pthread_self()\n"
+//					+ "    );\n"
+//					+ "\n"
+//					+ "    va_list args;\n"
+//					+ "    va_start(args, format);\n"
+//					+ "    vprintf(format, args);\n"
+//					+ "\n"
+//					+ "    printf(\"\\n\");\n"
+//					+ "}\n\n";
+	
 	public static final String TRACE_FUNCTION = 
 			"void trace(const char* format, ...) {\n"
-//					+ "    printf(\"I***%ld - Thread: %lu - \",\n"
-					+ "    printf(\"%ld - Thread: %lu - \",\n"
+					+ "    printf(\"%ld - Process: %u Thread: %lu - \",\n"
 					+ "        time(NULL),\n"
+					+ "        getpid(),\n"
 					+ "        pthread_self()\n"
 					+ "    );\n"
 					+ "\n"

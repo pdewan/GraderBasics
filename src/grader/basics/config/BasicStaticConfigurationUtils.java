@@ -168,6 +168,11 @@ public class BasicStaticConfigurationUtils {
 	
 	public static final String DOCKER_CONTAINER_NAME = "docker_container";
 	public static final String DEFAULT_DOCKER_CONTAINER_NAME = "grader-container";
+	
+	public static final String NUMBER_OF_PROCESSES = "numberOfProcesses";
+	public static final int DEFAULT_NUMBER_OF_PROCESSES = 1;
+
+
 
 	public static final String TRACING= "tracing";
 	public static final boolean DEFAULT_TRACING = true;

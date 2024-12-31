@@ -152,6 +152,8 @@ public interface BasicExecutionSpecification {
 	void setCreateDockerContainer(boolean newVal);
 	boolean getInstrumentUsingValgrind();
 	void setInstrumentUsingValgrind(boolean newVal);
+	int getNumberOfProcesses();
+	void setNumberOfProcesses(int newValue);
 	boolean getLogTestData();
 	void setLogTestData(boolean newVal);
 	boolean getLoadClasses();

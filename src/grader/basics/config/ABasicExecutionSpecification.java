@@ -920,6 +920,14 @@ protected String requirementsLocation = null;
 		runtimeGraderStringProperties.put(BasicStaticConfigurationUtils.VALGRIND_CONFIGURATION, newVal);
 	}
 	
+	public int getNumberOfProcesses() {
+		return getIntegerProperty(BasicStaticConfigurationUtils.NUMBER_OF_PROCESSES, BasicStaticConfigurationUtils.DEFAULT_NUMBER_OF_PROCESSES);
+
+	}
+	public void setNumberOfProcesses(int newValue) {
+		runtimeGraderIntegerProperties.put(BasicStaticConfigurationUtils.NUMBER_OF_PROCESSES, newValue);
+	}
+	
 	@Override
 	public String getDockerPath() {
 		return getStringProperty(BasicStaticConfigurationUtils.DOCKER_PROGRAM_NAME, BasicStaticConfigurationUtils.DEFAULT_DOCKER_PRORAM_NAME);

@@ -12,6 +12,7 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 	
 //	private Map<String, Thread> threadIdToProxyThread = new HashMap();
 	private long lastTime = 0;
+	private int lastProcess = -1;
 	private Thread lastThread = null;
 	private long lastThreadId = -1;
 	public static final String PRINT_NAME = "printf";
@@ -138,15 +139,19 @@ public class BasicValgrindTraceToPropertyChange extends BasicObjectToPropertyCha
 		long aTime = lastTime;
 		Thread aThread = lastThread;
 		long aThreadId = lastThreadId;
+		int aProcessId = lastProcess;
 		String aProperty = ANONYMOUS_PROPERTY;
 		
 
 		try {
 		    aValgrindTrace = new ValgrindTrace(aTraceLine);
+		    lastTime = aValgrindTrace.timestamp;
+		    lastThreadId = aValgrindTrace.thread;
+		    lastProcess = aValgrindTrace.process;
 		    
 		} catch (Exception e) {
 			printArgs[0] = aTraceLine;
-			aValgrindTrace = new ValgrindTrace(aTime, aThreadId, PRINT_NAME, null, printArgs);
+			aValgrindTrace = new ValgrindTrace(aTime, aProcessId, aThreadId, PRINT_NAME, null, printArgs);
 			
 //			return new PropertyChangeEvent(anonymousSource(), ANONYMOUS_PROPERTY, null, aTraceLine);			
 		}
