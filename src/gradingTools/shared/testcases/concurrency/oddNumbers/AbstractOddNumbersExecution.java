@@ -1,6 +1,8 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -10,13 +12,78 @@ import util.annotations.MaxValue;
 
 @MaxValue(2)
 public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecker {
-	public static final String ROOT_CLASS = "ConcurrentOddNumbers";
-	public static final String DISPATCHER_CLASS = "OddNumbersDispatcher";
+	private static final String ROOT_CLASS = "ConcurrentOddNumbers";
+	private static final String DISPATCHER_CLASS = "OddNumbersDispatcher";
+	private static final String UTIL_CLASS = "OddNumbersUtil";
+	private static final String TRACE_FORK_JOIN_METHOD = "isTraceForkJoin";
+	private static final String TRACE_FAIR_ALLOCATION_METHOD = "isTraceFairAllocation";
+	private static final String TRACE_SYNCHRONIZATION_METHOD = "isTraceSynchronization";
+	private static final String TRACE_CALLS_METHOD = "isTraceSynchronization";	
+
 
 //	public static final String WORKER_CLASS = "OddNumbersWorke";
 	public static final String WORKER_CLASS = "OddNumbersWorkerCode";
 	// The testing code needs to know what main class to call,
 	// what arguments to pass to it, and how many forked threads are expected
+	
+	public static String composNotEnabledMessage(String aTraceName) {
+	  return aTraceName + " traces not enabled. Please run the appropriate test program given to you to enable them.";
+
+	}
+	
+	public static Class getClass(String aClassName) {
+		try {
+			return Class.forName(aClassName);
+		} catch (Exception e){
+			return null;
+		}
+	}
+	
+	public static Method getIsTraceMethod(Class aClass, String aTraceMethodNmae) {
+		if (aClass == null) {
+			return null;
+		}
+		try {
+			return aClass.getMethod(aTraceMethodNmae);
+		} catch (NoSuchMethodException | SecurityException e) {
+			return null;
+		}
+	}
+	
+	public static Boolean isTrace(Class aClass, Method aTraceMethod ) {		
+		try {
+			aTraceMethod.setAccessible(true);
+			return (Boolean) aTraceMethod.invoke(aClass);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}		
+	}
+	
+	public static Boolean isTrace(String aClassName, String aTraceMethodName) {
+		Class aUtilClass = getClass(aClassName);
+		if (aUtilClass == null) {
+			return null;
+		}
+		Method aTraceMethod = getIsTraceMethod(aUtilClass, aTraceMethodName);
+		if (aTraceMethod == null) {
+			return null;
+		}
+		Boolean retVal = isTrace(aUtilClass, aTraceMethod);
+		return retVal;		
+	}
+	
+	public static Boolean isTraceForkJoin() {
+		return isTrace(UTIL_CLASS, TRACE_FORK_JOIN_METHOD);
+	}
+	public static Boolean isTraceFairAllocation() {
+		return isTrace(UTIL_CLASS, TRACE_FAIR_ALLOCATION_METHOD);
+	}
+	public static Boolean isTraceSynchronization() {
+		return isTrace(UTIL_CLASS, TRACE_SYNCHRONIZATION_METHOD);
+	}
+	public static Boolean isTraceCalls() {
+		return isTrace(UTIL_CLASS, TRACE_CALLS_METHOD);
+	}	
 
 	/**
 	 * The full name of the main concurrency class

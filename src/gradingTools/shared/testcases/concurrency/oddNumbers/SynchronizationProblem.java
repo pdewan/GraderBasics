@@ -13,7 +13,7 @@ import grader.basics.trace.GraderInfo;
 import util.annotations.MaxValue;
 @MaxValue(5)
 public abstract class SynchronizationProblem extends PostTestExecutorOfForkJoin {
-	protected static final String EXPLANATION = "This test checks if race conditions in ConcurrentOddumbers have been eliminated for the ";
+	public static final String EXPLANATION = "This test checks if race conditions in ConcurrentOddumbers have been eliminated for the ";
 //	public static final String SMALL_EXPLANATION = " for the small problem";
 	
 	

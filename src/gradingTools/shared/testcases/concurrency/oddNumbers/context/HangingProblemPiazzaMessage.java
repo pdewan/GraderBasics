@@ -8,8 +8,8 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.AbstractOddNumbersEx
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblemInRepository;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get Piazza help for the synchronization problem")
-public class SynchronizationProblemPiazzaMessage extends AbstractOddNumberProblemContext{
+@Explanation("This is a request to create context to get Piazza help for the hanging problem")
+public class HangingProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	
 	private static Class[] PRECEDING_TESTS = {
 			SynchronizationSmallProblemInRepository.class
@@ -34,11 +34,11 @@ public class SynchronizationProblemPiazzaMessage extends AbstractOddNumberProble
 	 @Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 				throws NotAutomatableException, NotGradableException {
-		    Boolean isSynchronizationTraced = AbstractOddNumbersExecution.isTraceSynchronization();
-		    if (isSynchronizationTraced == null || isSynchronizationTraced) {
+		    Boolean isCallsTraced = AbstractOddNumbersExecution.isTraceCalls();
+		    if (isCallsTraced == null || isCallsTraced) {
 		    	return super.test(project, autoGrade);
 		    }
-		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Synchronization");		    		
+		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Hanging");		    		
 		    return fail(aMessage);
 	}
 

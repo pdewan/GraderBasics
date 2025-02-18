@@ -3,7 +3,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import gradingTools.shared.testcases.concurrency.oddNumbers.HangingScenario;
+import gradingTools.shared.testcases.concurrency.oddNumbers.hanging.HangingScenario;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

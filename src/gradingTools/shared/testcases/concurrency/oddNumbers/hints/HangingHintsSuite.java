@@ -5,8 +5,8 @@ import org.junit.runners.Suite;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.BasicJUnitUtils;
-import gradingTools.shared.testcases.concurrency.oddNumbers.HangingScenario;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import gradingTools.shared.testcases.concurrency.oddNumbers.hanging.HangingScenario;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

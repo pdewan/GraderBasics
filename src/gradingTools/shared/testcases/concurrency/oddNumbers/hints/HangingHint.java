@@ -2,7 +2,7 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.hints;
 
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblem;
-import gradingTools.shared.testcases.concurrency.oddNumbers.HangingScenario;
+import gradingTools.shared.testcases.concurrency.oddNumbers.hanging.HangingScenario;
 import util.annotations.MaxValue;
 @MaxValue(0)
 public abstract class HangingHint extends AbstractHint {

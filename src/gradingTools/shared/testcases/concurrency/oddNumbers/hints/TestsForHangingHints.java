@@ -10,11 +10,11 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.BasicsSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinLargerProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
-import gradingTools.shared.testcases.concurrency.oddNumbers.HangingScenario;
 import gradingTools.shared.testcases.concurrency.oddNumbers.LargerNumberOfRandoms;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationLargerProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblem;
+import gradingTools.shared.testcases.concurrency.oddNumbers.hanging.HangingScenario;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
