@@ -60,8 +60,11 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	protected ABufferingTestInputGenerator outputBasedInputGenerator;
 	protected RunningProject interactiveInputProject;
 	protected Map<String, TestCaseResult> nameToResult = new HashMap();
+	
+	protected Exception timeoutException = null;
 
 
+	
 	/**
 	 * This is where we add an instance of the test case. This means only subclasses
 	 * of PassFailJUnitTestCase can be made dependent.This makes sense since they
@@ -233,7 +236,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 					!aLastResult.isPass()) {
 
 				Tracer.info(PassFailJUnitTestCase.class, "Preceding test " + aPrecedingTestElement.getSimpleName()
-						+ " partially passed:" + aLastResult.getPercentage());
+						+ " partially passed or failed:" + aLastResult.getPercentage());
 				Tracer.info(PassFailJUnitTestCase.class, "Scores of this test will be scaled");
 
 			}
@@ -377,7 +380,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		boolean allNoOps = true;
 		
 		for (TestCaseResult aTestCaseResult : aResultArray) {
-			if (aTestCaseResult == NO_OP_RESULT ) {
+			if (aTestCaseResult == NO_OP_RESULT || aTestCaseResult == null) {
 				continue;
 			}
 			allNoOps = false;
@@ -501,6 +504,15 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 
 //		postAnnouncements.add(aNewValue);
 	}
+	
+	public Exception getTimeoutException() {
+		return timeoutException;
+	}
+
+	public void setTimeoutException(Exception timeoutException) {
+		this.timeoutException = timeoutException;
+	}
+
 //	public void clearAnnouncements() {
 //		preAnnouncements.clear();
 //	}

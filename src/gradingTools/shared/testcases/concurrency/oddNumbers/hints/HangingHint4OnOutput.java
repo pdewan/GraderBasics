@@ -17,6 +17,11 @@ public class HangingHint4OnOutput extends HangingHint{
 			
 		return "\n" + aLine1 + "\n" +aLine2;
 
+	} 
+	
+	public static void main(String[] args)  {
+		String aFullHint = new HangingHint4OnOutput().hint();
+		System.out.println(aFullHint);
 	}
 
 }

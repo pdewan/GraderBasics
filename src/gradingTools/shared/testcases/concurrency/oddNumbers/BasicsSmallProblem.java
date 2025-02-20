@@ -1,5 +1,9 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers;
 
+import grader.basics.junit.NotAutomatableException;
+import grader.basics.junit.TestCaseResult;
+import grader.basics.project.NotGradableException;
+import grader.basics.project.Project;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
 @MaxValue(0)
@@ -42,5 +46,10 @@ public class BasicsSmallProblem extends BasicsProblem {
 ////		return oddNumbersExecution().getLastResult();
 ////	}
 //	
-
+@Override
+public TestCaseResult test(Project project, boolean autoGrade)
+		throws NotAutomatableException, NotGradableException {
+	return super.test(project, autoGrade);
+}
+	
 }

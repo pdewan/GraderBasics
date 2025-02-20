@@ -18,7 +18,7 @@ public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecke
 	private static final String TRACE_FORK_JOIN_METHOD = "isTraceForkJoin";
 	private static final String TRACE_FAIR_ALLOCATION_METHOD = "isTraceFairAllocation";
 	private static final String TRACE_SYNCHRONIZATION_METHOD = "isTraceSynchronization";
-	private static final String TRACE_CALLS_METHOD = "isTraceSynchronization";	
+	private static final String TRACE_CALLS_METHOD = "isTraceCalls";	
 
 
 //	public static final String WORKER_CLASS = "OddNumbersWorke";

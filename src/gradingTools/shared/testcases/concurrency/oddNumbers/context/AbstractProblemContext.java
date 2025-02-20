@@ -113,7 +113,7 @@ public abstract  class AbstractProblemContext extends AbstractHint{
 			}
 			return "Could not find in complete code text end: " + anEndText;
 		}
-		String retVal = aCompleteCode.substring(aStartIndex, anEndIndex);
+		String retVal = aCompleteCode.substring(aStartIndex, anEndIndex + anEndText.length());
 		return retVal;
 	}
 	protected String getRelevanTraceStart(Class aPrecedingTestClass) {
@@ -205,7 +205,7 @@ public abstract  class AbstractProblemContext extends AbstractHint{
 	protected String getMarkedRelevantCode() {
 		String aRelevantCodeStart = "\nSTART OF RELEVANT CODE\n";
 		String aRelevantCode = getRelevantCode();
-		String aRelevantCodeEnd = "END OF RELEVANT CODE\n";
+		String aRelevantCodeEnd = "\nEND OF RELEVANT CODE\n";
 		return aRelevantCodeStart + aRelevantCode + aRelevantCodeEnd;
 	}
 	

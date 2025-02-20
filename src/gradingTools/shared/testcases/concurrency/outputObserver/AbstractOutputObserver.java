@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import grader.basics.concurrency.propertyChanges.BasicConcurrentPropertyChangeSupport;
 import grader.basics.concurrency.propertyChanges.ConcurrentPropertyChange;
@@ -199,7 +200,12 @@ public abstract class AbstractOutputObserver extends AbstractConcurrencyPerforma
 		observablePrintStream = redirectOutput();
 		receivePropertyChanges();
 		BasicProjectExecution.setMethodTimeOut(timeOut());
+		try {
 		invokeMainMethod(aMainClass, anArgs, anInputs);
+		} catch (TimeoutException e) {
+			timeoutException = e;
+			return fail ("Test timed out, please check console output");
+		}
 		waitForTermination();
 		restoreOutput();
 		doNotReceiveEvents();

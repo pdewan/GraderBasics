@@ -58,6 +58,10 @@ public class PostTestExecutorOfForkJoin
 
 		AbstractForkJoinChecker preExecution =
 				(AbstractForkJoinChecker) getPrecedingTestInstances().get(0);
+		
+		if (preExecution.getLastResult().isFail()) {
+			return fail("Preceding test: " + preExecution.getClass().getSimpleName() + " failed. Please see its test result");
+		}
 		String[] aTestNames = relevantCheckNames();
 		TestCaseResult[] aResults = preExecution.toTestResults(relevantCheckNames());
 		aResults = maybeAddToResults(aResults);

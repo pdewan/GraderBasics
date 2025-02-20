@@ -10,6 +10,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.BasicsLargerProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
+import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblem;
 import gradingTools.shared.testcases.concurrency.oddNumbers.context.BasicsLargerProblemPiazzaMessage;
 import gradingTools.shared.testcases.concurrency.oddNumbers.context.BasicsSmallProblemPiazzaMessage;
 import gradingTools.shared.testcases.concurrency.oddNumbers.context.FairAllocationLargerProblemPiazzaMessage;
@@ -44,6 +45,8 @@ public class OddNumbersPiazzaPosts extends ConcurrencySuiteSkeleton {
 			e.printStackTrace();
 		}
 	}
+	
+	
 //	static {
 //		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().
 //		setCheckStyleConfiguration("unc_checks_533_A0_1.xml");

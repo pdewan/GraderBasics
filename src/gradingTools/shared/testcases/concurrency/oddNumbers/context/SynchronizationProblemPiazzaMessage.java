@@ -10,9 +10,21 @@ import util.annotations.Explanation;
 
 @Explanation("This is a request to create context to get Piazza help for the synchronization problem")
 public class SynchronizationProblemPiazzaMessage extends AbstractOddNumberProblemContext{
+	private static Class synchronizationTestClass = SynchronizationSmallProblemInRepository.class;
+//	private static Class[] PRECEDING_TESTS = {
+//			SynchronizationSmallProblemInRepository.class
+//	};
 	
+	public static Class getSynchronizationTestClass() {
+		return synchronizationTestClass;
+	}
+	public static void setSynchronizationTestClass(Class newVal) {
+		SynchronizationProblemPiazzaMessage.synchronizationTestClass = newVal;
+		PRECEDING_TESTS[0] = newVal;
+	}
+
 	private static Class[] PRECEDING_TESTS = {
-			SynchronizationSmallProblemInRepository.class
+			 synchronizationTestClass
 	};
 	
 	protected Class[] precedingTests() {

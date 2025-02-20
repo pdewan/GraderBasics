@@ -151,10 +151,10 @@ public class BasicProjectExecution {
 		} catch (CancellationException | InterruptedException
 				| TimeoutException e) {
 			
-			e.printStackTrace();
+//			e.printStackTrace();
 			future.cancel(true); // not needed really
-			System.err.println("Terminated execution of method" +  aMethod + " after milliseconds:"
-					+ aMillSeconds + " suspecting infinite loop or sequential execution of expected parallel program");
+			System.err.println("Terminated execution of method " +  aMethod + " after milliseconds:"
+					+ aMillSeconds + " suspecting infinite loop, starvation, deadlock or some other reason for program hanging");
 //			executor = Executors.newSingleThreadExecutor();
 			executor = createExecutor();
 
@@ -1453,6 +1453,13 @@ public class BasicProjectExecution {
 			}
 			return aResult;
 			// return anOutput;
+		} catch (TimeoutException e) {
+			String aMessage = "Invocation of main method of " + aMainClass + " did not complete within expected time." + 
+					"\nPlease increase timeout in test program or check why program is hanging." +
+					"\nAll tests that depend on the method executing completely will fail";
+			System.err.println(aMessage);
+			throw e;
+//			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

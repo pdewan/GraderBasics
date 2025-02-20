@@ -72,8 +72,10 @@ public class ObservablePrintStreamUtility {
 
 	public static PropertyChangeEvent toPropertyChange(Object anObject, String aSourceSuffix, String aPropertySuffix,
 			String anAnonymousSource) {
-
 		String aString = anObject.toString();
+
+		try {
+//		String aString = anObject.toString();
 		int aSourceSuffixIndex = aString.indexOf(aSourceSuffix);
 		int aPropertySuffixIndex = aString.indexOf(aPropertySuffix);
 		if (!(anObject instanceof String) || aSourceSuffixIndex < 0 || aPropertySuffixIndex < 0) {
@@ -84,6 +86,11 @@ public class ObservablePrintStreamUtility {
 		String aNewValue = aString.substring(aPropertySuffixIndex + aPropertySuffix.length(), aString.length());
 
 		return new PropertyChangeEvent(aSource, aProperty, null, aNewValue);
+		} catch (Exception e) {
+			return toDefaultPropertyChange(anObject, anAnonymousSource);
+//			e.printStackTrace();
+//			return new PropertyChangeEvent(aString, aSourceSuffix, aPropertySuffix, e.getMessage()); 
+		}
 	}
 
 	public static Object toTypedObject(String aName, String aValueString, Class aValueClass) {

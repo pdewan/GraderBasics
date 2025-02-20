@@ -7,6 +7,9 @@ public abstract class PreTestExecutorOfForkJoin extends AbstractOddNumbersExecut
 	
 	@Override
 	public boolean isShowResult() {
+		if (timeoutException != null) {
+			return true;
+		}
 		return false;
 	}
 

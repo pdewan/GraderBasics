@@ -269,7 +269,7 @@ public class AbstractConcurrentEventSupport<EventType, ObservableType>
 				Tracer.info(this, "Added new notifying thread " + anEventThread);
 				notifyingNewThreads.add(anEventThread);
 			} else {
-				String aMessage = "If threads created by previous testcases that should have terminatd did not terminate, this test may give erroneous result";
+				String aMessage = "If threads created by previous testcases that should have terminated did not terminate, this test may give erroneous result";
 				Tracer.info(this, aMessage);
 				System.err.println(aMessage);
 //				Tracer.info(this, "all known threads:" + allKnownThreads);

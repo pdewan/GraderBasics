@@ -21,5 +21,9 @@ public class HangingHint3OnOutput extends HangingHint{
 		return "\n" + aLine1 + "\n" +aLine2 + "\n" + aLine3 + "\n" + aLine4;
 
 	}
+	public static void main(String[] args)  {
+		String aFullHint = new HangingHint3OnOutput().hint();
+		System.out.println(aFullHint);
+	}
 
 }
