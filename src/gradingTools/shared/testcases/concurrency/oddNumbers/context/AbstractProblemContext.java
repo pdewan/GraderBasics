@@ -128,6 +128,10 @@ public abstract  class AbstractProblemContext extends AbstractHint{
 		Class aPrecedingTestClass = precedingTests()[0];
 		return aPrecedingTestClass.getSimpleName();
 	}
+	@Override
+	public boolean isShowMessage() {
+		return false;
+	}
 	protected String getRelevantTrace() {
 		if (relevantTrace == null) {
 		Class aPrecedingTestClass = precedingTests()[0];

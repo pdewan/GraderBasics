@@ -1456,10 +1456,12 @@ public class BasicProjectExecution {
 		} catch (TimeoutException e) {
 			String aMessage = "Invocation of main method of " + aMainClass + " did not complete within expected time." + 
 					"\nPlease increase timeout in test program or check why program is hanging." +
-					"\nAll tests that depend on the method executing completely will fail";
+					"\nAll test results and output that depend on the method executing completely will be misleading";
 			System.err.println(aMessage);
-			throw e;
-//			return null;
+			ResultingOutErr aResult = BasicProjectExecution
+					.restoreAndGetRedirectedIOStreams();
+			aResult.setInvocationException(e);
+			return aResult;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -1,6 +1,7 @@
 package grader.basics.testcase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -278,8 +279,36 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		      aResult.setPercentage(anOriginalFractionComplete*anAverageFractionComplete); 
 			 return aResult;
 		 }
+	  
+	  public static long composeTime(int aYear, int aMonth, int aDay, int anHour, int aMinute) {
+		  Calendar calendar = Calendar.getInstance();
+	        
+	        // Set the desired fields. Note: months are zero-indexed (January is 0, April is Calendar.APRIL which equals 3)
+	        calendar.set(Calendar.YEAR, aYear);
+	        calendar.set(Calendar.MONTH, aMonth);
+	        calendar.set(Calendar.DAY_OF_MONTH, aDay);
+	        calendar.set(Calendar.HOUR_OF_DAY, anHour); // 24-hour clock
+	        calendar.set(Calendar.MINUTE, aMinute);
+	        calendar.set(Calendar.SECOND, 0);
+	        calendar.set(Calendar.MILLISECOND, 0);
+	        return calendar.getTimeInMillis();  
+	        
+		  
+	  }
+	  public static void setTimeToStart(int aYear, int aMonth, int aDay, int anHour, int aMinute) {
+		  setTimeToStart(composeTime(aYear, aMonth, aDay, anHour, aMinute));
+	  }
+	  public static void setTimeToEnd(int aYear, int aMonth, int aDay, int anHour, int aMinute) {
+		  setTimeToEnd(composeTime(aYear, aMonth, aDay, anHour, aMinute));
+	  }
+
 
 	public void passfailDefaultTest() {
+		String aMessage = canRunTestMessage();
+		if (aMessage != null) {
+			BasicJUnitUtils.assertTrue(aMessage, 0, false);
+			return;
+		}
 		possiblyRunAndCheckPrecedingTests();
 //		TestCaseResult result = null;
 		TestCaseResult lastResult = null;
@@ -409,12 +438,51 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 		return partialPass(aPercentage, aMessage.toString());
 	
 	}
+	static long timeToStart = System.currentTimeMillis();
+	static long startTime = System.currentTimeMillis();;
+	public static long getTimeToStart() {
+		return timeToStart;
+	}
+	public static void setTimeToStart (long newVal) {
+		 timeToStart = newVal;
+	}
+	static long timeToEnd =  System.currentTimeMillis();
+	
+	public static long getTimeToEnd() {
+		return timeToEnd;
+	}
+	public static void setTimeToEnd (long newVal) {
+		 timeToEnd = newVal;
+	}
+	
+	private static final long THRESHOLD = 5000;
+	protected boolean canRunTestBasedOnTime() {
+		long aCurrentTime = startTime;
+		long aTimeToStart = getTimeToStart();
+		long aTimeToEnd = getTimeToEnd(); 
+		return aCurrentTime >=aTimeToStart - THRESHOLD &&
+				aCurrentTime <= aTimeToEnd + THRESHOLD;
+		
+	}
+	protected String  canRunTestMessage() {
+		if (!canRunTestBasedOnTime()) {
+			return "Cannot run test based on time of execution";
+		}
+		return null;
+	}
 	protected boolean showResult = true;
 	public boolean isShowResult() {
 		return showResult;
 	}
 	public void setShowResult(boolean newVal) {
 		showResult = newVal;
+	}
+	protected boolean showMessage = true;
+	public boolean isShowMessage() {
+		return showMessage;
+	}
+	public void setShowMessage(boolean newVal) {
+		showMessage = newVal;
 	}
 	public Map<String, TestCaseResult> getNameToResult() {
 		return nameToResult;

@@ -2,9 +2,14 @@ package gradingTools.shared.testcases.concurrency.oddNumbers.context;
 
 import java.util.Map;
 
+import grader.basics.junit.BasicJUnitUtils;
+import grader.basics.junit.JUnitTestsEnvironment;
 import grader.basics.observers.ATraceSourceAndTestLogWriter;
 import grader.basics.observers.TestLogFileWriterFactory;
+import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.shared.testcases.concurrency.oddNumbers.FairAllocationSmallProblem;
+import gradingTools.shared.testcases.concurrency.oddNumbers.LargerNumberOfRandoms;
+import gradingTools.shared.testcases.concurrency.oddNumbers.SmallNumberOfRandoms;
 import gradingTools.shared.testcases.concurrency.oddNumbers.hints.ForkJoinHint;
 import util.annotations.Explanation;
 
@@ -68,6 +73,33 @@ public abstract class AbstractOddNumberProblemContext extends AbstractProblemCon
 		return noPreviousHints();
 	}
 	
+	public static boolean precedingTestHasBeenRun() {
+		PassFailJUnitTestCase aSmallTest = JUnitTestsEnvironment.getPassFailJUnitTest(SmallNumberOfRandoms.class);
+		if (aSmallTest != null) {
+			return true;
+		}
+		PassFailJUnitTestCase aLargeTest = JUnitTestsEnvironment.getPassFailJUnitTest(LargerNumberOfRandoms.class);
+		return aLargeTest != null;
+		
+	}
+	protected String previousTestErrorMessage = null;
+	
+	public void passfailDefaultTest() {
+		checkIfPrecedingTestHasBeenRun();
+		if (previousTestErrorMessage != null) {
+			BasicJUnitUtils.assertTrue(previousTestErrorMessage, 0, false);
+			return;
+
+		}
+		super.passfailDefaultTest();
+	}
+
+	protected void checkIfPrecedingTestHasBeenRun() {
+		if (precedingTestHasBeenRun()) {
+		 previousTestErrorMessage = "Please rerun localchecks and execute this as the first and only test";	
+		}
+		
+	}
 	
 
 //	@Override

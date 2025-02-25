@@ -16,7 +16,9 @@ public class ResultingOutErr {
 	protected List<String>  outputLinesList;
 	protected String[]  outputLines;
 	protected LinesMatcher linesMatcher;
+	protected Exception invocationException;
 
+	
 	public ResultingOutErr(String anOut, String anErr) {
 		out = anOut;
 		err = anErr;
@@ -112,4 +114,10 @@ public class ResultingOutErr {
 		return linesMatcher;
 	}
 
+	public Exception getInvocationException() {
+		return invocationException;
+	}
+	public void setInvocationException(Exception invocationException) {
+		this.invocationException = invocationException;
+	}
 }

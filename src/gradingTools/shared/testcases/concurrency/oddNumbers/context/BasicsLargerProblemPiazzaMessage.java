@@ -40,15 +40,22 @@ public class BasicsLargerProblemPiazzaMessage extends AbstractOddNumberProblemCo
 	 protected String getRelevantCodeEnd() {
 			return "// End fairThreadRemainderSize (DO NOT EDIT THIS LINE)" ;
 	 }
+	 public void passfailDefaultTest() {
+			AbstractOddNumbersExecution.setTraceFairAllocation(true);
+			super.passfailDefaultTest();
+	}
+	 
 	 @Override
 		public TestCaseResult test(Project project, boolean autoGrade)
 					throws NotAutomatableException, NotGradableException {
-			    Boolean isFairAllocationTraced = AbstractOddNumbersExecution.isTraceFairAllocation();
-			    if (isFairAllocationTraced == null || isFairAllocationTraced) {
-			    	return super.test(project, autoGrade);
-			    }
-			    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Fair Allocation");		    		
-			    return fail(aMessage);
+	    	return super.test(project, autoGrade);
+
+//			    Boolean isFairAllocationTraced = AbstractOddNumbersExecution.isTraceFairAllocation();
+//			    if (isFairAllocationTraced == null || isFairAllocationTraced) {
+//			    	return super.test(project, autoGrade);
+//			    }
+//			    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Fair Allocation");		    		
+//			    return fail(aMessage);
 		}
 
 }

@@ -1,5 +1,6 @@
 package gradingTools.shared.testcases.concurrency.oddNumbers.context;
 
+import grader.basics.junit.BasicJUnitUtils;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
@@ -11,7 +12,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmall
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblemInRepository;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get Piazza help for the hanging problem")
+@Explanation("This is a request to create context to get Piazza hints for answering the hanging problem quiz question")
 public class HangingProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	
 	private static Class[] PRECEDING_TESTS = {			
@@ -37,21 +38,40 @@ public class HangingProblemPiazzaMessage extends AbstractOddNumberProblemContext
 			return false; // the test will fail if it hangs
 	}
 	 
+	 
+	 
+//	 @Override
+//	public TestCaseResult test(Project project, boolean autoGrade)
+//				throws NotAutomatableException, NotGradableException {	
+//		  
+//		    Boolean isCallsTraced = AbstractOddNumbersExecution.isTraceHanging();
+//		    PassFailJUnitTestCase aPrecedingTest = getFirstPrecedingTestInstance();
+//		    Exception aTimeoutException = aPrecedingTest.getTimeoutException();
+//		    if (aTimeoutException == null) {
+//		    	String aMessage = "Program did not timeout, does not seem to be hanging.\nPlease follow instructions to make it hang.";
+//		    	return fail(aMessage);
+//		    }
+//		    if (isCallsTraced != null && !isCallsTraced) {
+//		    	 String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Hanging");		    		
+//				    return fail(aMessage);
+//		    }		    
+//		    return super.test(project, autoGrade);		   
+//	}
+	 public void passfailDefaultTest() {
+		 	AbstractOddNumbersExecution.setTraceHanging(true);
+		 	super.passfailDefaultTest();
+		}
 	 @Override
-	public TestCaseResult test(Project project, boolean autoGrade)
-				throws NotAutomatableException, NotGradableException {
-		    Boolean isCallsTraced = AbstractOddNumbersExecution.isTraceCalls();
-		    PassFailJUnitTestCase aPrecedingTest = getFirstPrecedingTestInstance();
-		    Exception aTimeoutException = aPrecedingTest.getTimeoutException();
-		    if (aTimeoutException == null) {
-		    	String aMessage = "Program did not timeout, does not seem to be hanging.\nPlease follow instructions to make it hang.";
-		    	return fail(aMessage);
-		    }
-		    if (isCallsTraced != null && !isCallsTraced) {
-		    	 String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Hanging");		    		
-				    return fail(aMessage);
-		    }		    
-		    return super.test(project, autoGrade);		   
-	}
+		public TestCaseResult test(Project project, boolean autoGrade)
+					throws NotAutomatableException, NotGradableException {	
+
+			    PassFailJUnitTestCase aPrecedingTest = getFirstPrecedingTestInstance();
+			    Exception aTimeoutException = aPrecedingTest.getTimeoutException();
+			    if (aTimeoutException == null) {
+			    	String aMessage = "Program did not timeout, does not seem to be hanging.\nPlease follow instructions to make it hang.";
+			    	return fail(aMessage);
+			    }			    		    
+			    return super.test(project, autoGrade);		   
+		}
 
 }

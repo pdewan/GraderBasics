@@ -256,9 +256,13 @@ public class AGradableJUnitTest implements GradableJUnitTest {
 	protected void printResult() {
 
 		if (getJUnitTestCase().isShowResult() && !hasShownResult) {
+			String aMessage = "";
+			if (getJUnitTestCase().isShowMessage() ) {
+				aMessage = message;
+			}
 			String aPostAnnouncement = ">>Test Result:\n" +
 
-					getSimpleName() + "," + status + "," + score + "," + maxScore + "," + message + "\n<<";
+					getSimpleName() + "," + status + "," + score + "," + maxScore + "," + aMessage + "\n<<";
 //		System.err.println(getName() + ">>Test Result:\n>>" + 
 //		System.out.println(">>Test Result:\n" + 
 //

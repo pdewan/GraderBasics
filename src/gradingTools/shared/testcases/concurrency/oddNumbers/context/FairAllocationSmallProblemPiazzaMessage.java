@@ -14,7 +14,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem
 import gradingTools.shared.testcases.concurrency.oddNumbers.hints.ForkJoinHint;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get Piazza help for the fair allocation problem")
+@Explanation("Run this \"test\" to get Piazza hints to make the FairAllocationSmallProblem test succeed")
 public class FairAllocationSmallProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	
 	private static Class[] PRECEDING_TESTS = {
@@ -36,15 +36,20 @@ public class FairAllocationSmallProblemPiazzaMessage extends AbstractOddNumberPr
 	 protected String getRelevantCodeEnd() {
 			return "// End fairThreadRemainderSize (DO NOT EDIT THIS LINE)" ;
 	 }
+	 public void passfailDefaultTest() {
+			AbstractOddNumbersExecution.setTraceFairAllocation(true);
+			super.passfailDefaultTest();
+	}
 	 @Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 				throws NotAutomatableException, NotGradableException {
-		    Boolean isFairAllocationTraced = AbstractOddNumbersExecution.isTraceFairAllocation();
-		    if (isFairAllocationTraced == null || isFairAllocationTraced) {
-		    	return super.test(project, autoGrade);
-		    }
-		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Fair Allocation");		    		
-		    return fail(aMessage);
+	    	return super.test(project, autoGrade);
+//		    Boolean isFairAllocationTraced = AbstractOddNumbersExecution.isTraceFairAllocation();
+//		    if (isFairAllocationTraced == null || isFairAllocationTraced) {
+//		    	return super.test(project, autoGrade);
+//		    }
+//		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Fair Allocation");		    		
+//		    return fail(aMessage);
 	}
 
 }

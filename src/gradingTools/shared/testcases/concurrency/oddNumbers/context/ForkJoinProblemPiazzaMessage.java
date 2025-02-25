@@ -14,7 +14,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.ForkJoinSmallProblem
 import gradingTools.shared.testcases.concurrency.oddNumbers.hints.ForkJoinHint;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get Piazza help for the fork join problem")
+@Explanation("Run this \"test\" to get Piazza hints to make the ForkJoinSmallProblem and ForkJoinLargeProblem tests succeed")
 public class ForkJoinProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	
 	private static Class[] PRECEDING_TESTS = {
@@ -38,14 +38,21 @@ public class ForkJoinProblemPiazzaMessage extends AbstractOddNumberProblemContex
 			return "// End of forkAndJoinThreads (DO NOT EDIT THIS LINE)" ;
 	 }
 	 @Override
+	public void passfailDefaultTest() {
+		AbstractOddNumbersExecution.setTraceForkJoin(true);
+		super.passfailDefaultTest();
+	}
+
+	 @Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 				throws NotAutomatableException, NotGradableException {
-		    Boolean isForkJoinTraced = AbstractOddNumbersExecution.isTraceForkJoin();
-		    if (isForkJoinTraced == null || isForkJoinTraced) {
-		    	return super.test(project, autoGrade);
-		    }
-		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Fork Join");		    		
-		    return fail(aMessage);
+	    	return super.test(project, autoGrade);
+//		    Boolean isForkJoinTraced = AbstractOddNumbersExecution.isTraceForkJoin();
+//		    if (isForkJoinTraced == null || isForkJoinTraced) {
+//		    	return super.test(project, autoGrade);
+//		    }
+//		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Fork Join");		    		
+//		    return fail(aMessage);
 	}
 
 }

@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.management.RuntimeErrorException;
+
 import gradingTools.shared.testcases.concurrency.outputObserver.AbstractForkJoinChecker;
 import util.annotations.MaxValue;
 
@@ -15,10 +17,17 @@ public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecke
 	private static final String ROOT_CLASS = "ConcurrentOddNumbers";
 	private static final String DISPATCHER_CLASS = "OddNumbersDispatcher";
 	private static final String UTIL_CLASS = "OddNumbersUtil";
-	private static final String TRACE_FORK_JOIN_METHOD = "isTraceForkJoin";
-	private static final String TRACE_FAIR_ALLOCATION_METHOD = "isTraceFairAllocation";
-	private static final String TRACE_SYNCHRONIZATION_METHOD = "isTraceSynchronization";
-	private static final String TRACE_CALLS_METHOD = "isTraceCalls";	
+	private static final String IS_TRACE_FORK_JOIN_METHOD = "isTraceForkJoin";
+	private static final String IS_TRACE_FAIR_ALLOCATION_METHOD = "isTraceFairAllocation";
+	private static final String IS_TRACE_SYNCHRONIZATION_METHOD = "isTraceSynchronization";
+	private static final String IS_TRACE_HANGING_METHOD = "isTraceHanging";
+	private static final String SET_TRACE_FORK_JOIN_METHOD = "setTraceForkJoin";
+	private static final String SET_TRACE_FAIR_ALLOCATION_METHOD = "setTraceFairAllocation";
+	private static final String SET_TRACE_SYNCHRONIZATION_METHOD = "setTraceSynchronization";
+	private static final String SET_TRACE_HANGING_METHOD = "setTraceHanging";	
+	private static final String IS_DO_TESTS_METHOD = "isDoTests";
+
+
 
 
 //	public static final String WORKER_CLASS = "OddNumbersWorke";
@@ -39,7 +48,7 @@ public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecke
 		}
 	}
 	
-	public static Method getIsTraceMethod(Class aClass, String aTraceMethodNmae) {
+	public static Method getBooleanGetter(Class aClass, String aTraceMethodNmae) {
 		if (aClass == null) {
 			return null;
 		}
@@ -49,8 +58,19 @@ public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecke
 			return null;
 		}
 	}
+	private static Class[] BOOLEAN_ARGUMENT = {Boolean.TYPE};
+	public static Method getBooleanSetter(Class aClass, String aMethodName) {
+		if (aClass == null) {
+			return null;
+		}
+		try {
+			return aClass.getMethod(aMethodName, BOOLEAN_ARGUMENT);
+		} catch (NoSuchMethodException | SecurityException e) {
+			return null;
+		}
+	}
 	
-	public static Boolean isTrace(Class aClass, Method aTraceMethod ) {		
+	public static Boolean callBooleanGetter(Class aClass, Method aTraceMethod ) {		
 		try {
 			aTraceMethod.setAccessible(true);
 			return (Boolean) aTraceMethod.invoke(aClass);
@@ -58,32 +78,71 @@ public abstract class AbstractOddNumbersExecution extends AbstractForkJoinChecke
 			return null;
 		}		
 	}
+	public static void callBooleanSetter(Class aClass, Method aMethod, boolean newVal ) {		
+		try {
+			aMethod.setAccessible(true);
+		 aMethod.invoke(aClass, newVal);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new RuntimeException("Could not invoke method:" + e.getMessage());
+		}		
+	}
 	
-	public static Boolean isTrace(String aClassName, String aTraceMethodName) {
+	public static Boolean getBoolean(String aClassName, String aTraceMethodName) {
 		Class aUtilClass = getClass(aClassName);
 		if (aUtilClass == null) {
 			return null;
 		}
-		Method aTraceMethod = getIsTraceMethod(aUtilClass, aTraceMethodName);
+		Method aTraceMethod = getBooleanGetter(aUtilClass, aTraceMethodName);
 		if (aTraceMethod == null) {
 			return null;
 		}
-		Boolean retVal = isTrace(aUtilClass, aTraceMethod);
+		Boolean retVal = callBooleanGetter(aUtilClass, aTraceMethod);
 		return retVal;		
 	}
+	public static void setBoolean(String aClassName, String aTraceMethodName, boolean newVal) {
+		
+		Class aUtilClass = getClass(aClassName);
+		if (aUtilClass == null) {
+			throw new RuntimeException("Did not find class:" + aClassName);
+			
+		}
+		Method aTraceMethod = getBooleanSetter(aUtilClass, aTraceMethodName);
+		if (aTraceMethod == null) {
+			throw new RuntimeException("Did not find method:" + aTraceMethodName + " in " + aUtilClass.getSimpleName());
+
+		}
+		callBooleanSetter(aUtilClass, aTraceMethod, newVal);
+	}
+
 	
 	public static Boolean isTraceForkJoin() {
-		return isTrace(UTIL_CLASS, TRACE_FORK_JOIN_METHOD);
+		return getBoolean(UTIL_CLASS, IS_TRACE_FORK_JOIN_METHOD);
 	}
 	public static Boolean isTraceFairAllocation() {
-		return isTrace(UTIL_CLASS, TRACE_FAIR_ALLOCATION_METHOD);
+		return getBoolean(UTIL_CLASS, IS_TRACE_FAIR_ALLOCATION_METHOD);
 	}
 	public static Boolean isTraceSynchronization() {
-		return isTrace(UTIL_CLASS, TRACE_SYNCHRONIZATION_METHOD);
+		return getBoolean(UTIL_CLASS, IS_TRACE_SYNCHRONIZATION_METHOD);
 	}
-	public static Boolean isTraceCalls() {
-		return isTrace(UTIL_CLASS, TRACE_CALLS_METHOD);
-	}	
+	public static Boolean isTraceHanging() {
+		return getBoolean(UTIL_CLASS, IS_TRACE_HANGING_METHOD);
+	}
+	public static Boolean isDoTests() {
+		return getBoolean(UTIL_CLASS, IS_DO_TESTS_METHOD);
+	}
+	
+	public static void setTraceHanging(boolean newVal) {
+		 setBoolean(UTIL_CLASS, SET_TRACE_HANGING_METHOD, newVal);
+	}
+	public static void setTraceForkJoin(boolean newVal) {
+		 setBoolean(UTIL_CLASS, SET_TRACE_FORK_JOIN_METHOD, newVal);
+	}
+	public static void setTraceFairAllocation(boolean newVal) {
+		 setBoolean(UTIL_CLASS, SET_TRACE_FAIR_ALLOCATION_METHOD, newVal);
+	}
+	public static void setTracSynchronization(boolean newVal) {
+		 setBoolean(UTIL_CLASS, SET_TRACE_SYNCHRONIZATION_METHOD, newVal);
+	}
 
 	/**
 	 * The full name of the main concurrency class

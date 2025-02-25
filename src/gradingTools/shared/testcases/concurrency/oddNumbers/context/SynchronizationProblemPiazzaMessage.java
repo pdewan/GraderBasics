@@ -8,7 +8,7 @@ import gradingTools.shared.testcases.concurrency.oddNumbers.AbstractOddNumbersEx
 import gradingTools.shared.testcases.concurrency.oddNumbers.SynchronizationSmallProblemInRepository;
 import util.annotations.Explanation;
 
-@Explanation("This is a request to create context to get Piazza help for the synchronization problem")
+@Explanation("Run this \"test\" to get Piazza hints to make the SynchronizationSmallProblem and SynchornizationLargeProblem tests succeed")
 public class SynchronizationProblemPiazzaMessage extends AbstractOddNumberProblemContext{
 	private static Class synchronizationTestClass = SynchronizationSmallProblemInRepository.class;
 //	private static Class[] PRECEDING_TESTS = {
@@ -42,16 +42,23 @@ public class SynchronizationProblemPiazzaMessage extends AbstractOddNumberProble
 	 protected String getRelevantCodeEnd() {
 			return "//End OddNumbersRepository (DO NOT EDIT THIS LINE)";
 	 }
+	 public void passfailDefaultTest() {
+			AbstractOddNumbersExecution.setTracSynchronization(true);
+			super.passfailDefaultTest();
+	}
+	 
 	 
 	 @Override
 	public TestCaseResult test(Project project, boolean autoGrade)
 				throws NotAutomatableException, NotGradableException {
-		    Boolean isSynchronizationTraced = AbstractOddNumbersExecution.isTraceSynchronization();
-		    if (isSynchronizationTraced == null || isSynchronizationTraced) {
-		    	return super.test(project, autoGrade);
-		    }
-		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Synchronization");		    		
-		    return fail(aMessage);
+	    	return super.test(project, autoGrade);
+
+//		    Boolean isSynchronizationTraced = AbstractOddNumbersExecution.isTraceSynchronization();
+//		    if (isSynchronizationTraced == null || isSynchronizationTraced) {
+//		    	return super.test(project, autoGrade);
+//		    }
+//		    String aMessage = AbstractOddNumbersExecution.composNotEnabledMessage("Synchronization");		    		
+//		    return fail(aMessage);
 	}
 
 }

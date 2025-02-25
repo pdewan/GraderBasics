@@ -114,10 +114,13 @@ public abstract class AbstractConcurrencyPerformanceChecker extends TaggedOrName
 	protected void invokeMainMethod(Class aMainClass, String[] anArgs, String[] anInputs) throws Throwable {
 		int aPreviousTimeout = BasicProjectExecution.getMethodTimeOut();
 		BasicProjectExecution.setMethodTimeOut(mainTimeOut());
-		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);
+		resultingOutErr = BasicProjectExecution.invokeMain(aMainClass, anArgs, anInputs);		
 		BasicProjectExecution.setMethodTimeOut(aPreviousTimeout);
 		rootThread = BasicProjectExecution.getLastMainMethodThread();
-
+		Exception anException = resultingOutErr.getInvocationException();
+		if (anException != null) {
+			throw anException;
+		}
 
 	}
 	protected int mainTimeOut() {
