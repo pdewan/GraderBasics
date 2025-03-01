@@ -99,6 +99,12 @@ public class GraderBasicsTraceUtility {
 	public static void setHideRedirectedPrints(boolean newVal) {
 		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setHideRedirectedOuput(newVal);
 	}
+//	public static void setLogOutput (boolean newVal) {
+//		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogOutput(newVal);
+//	}
+//	public static void setLogSource (boolean newVal) {
+//		BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogSource(newVal);
+//	}
 	
 static boolean printPreTestAnnoucement = true; // for hints, we will disable it
 	

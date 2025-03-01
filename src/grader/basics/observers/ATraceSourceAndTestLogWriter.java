@@ -782,6 +782,10 @@ public class ATraceSourceAndTestLogWriter extends ASourceAndTestLogWriter {
 	public void testRunFinished(Result aResult) throws Exception {
 //		String aSourceFileName = getSourceLogFileName();
 		super.testRunFinished(aResult);
+		if (!BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogOutput()) {
+			return;
+		}
+		
 		readLastTrace();
 		composeCurrentOutput();
 		writeOutputLogData();

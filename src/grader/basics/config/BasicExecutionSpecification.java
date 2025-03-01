@@ -164,5 +164,9 @@ public interface BasicExecutionSpecification {
 	void addDereferencedArgumentTypes(String[] newVal);
 	void setDereferencedArgumentTypes(List<String> newVal);
 	boolean getEnableInstructorHelp();
-	void setEnableInstructorHelp(boolean newVal);	
+	void setEnableInstructorHelp(boolean newVal);
+	boolean getLogSource();
+	void setLogSource(boolean newVal);
+	boolean getLogOutput();
+	void setLogOutput(boolean newVal);	
 }

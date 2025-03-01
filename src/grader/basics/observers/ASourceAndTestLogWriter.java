@@ -672,6 +672,9 @@ return getDiffMap(aCurrentSourcesMap,aLastSourcesMap );
 		if (!BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogTestData()) {
 			return;
 		}
+		if (!BasicExecutionSpecificationSelector.getBasicExecutionSpecification().getLogSource()) {
+			return;
+		}
 //		writeLastSourcesText();
 		if (!isAppended) {
 			appendChanges();

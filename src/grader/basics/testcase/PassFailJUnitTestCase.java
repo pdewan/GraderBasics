@@ -285,7 +285,7 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	        
 	        // Set the desired fields. Note: months are zero-indexed (January is 0, April is Calendar.APRIL which equals 3)
 	        calendar.set(Calendar.YEAR, aYear);
-	        calendar.set(Calendar.MONTH, aMonth);
+	        calendar.set(Calendar.MONTH, aMonth - 1);
 	        calendar.set(Calendar.DAY_OF_MONTH, aDay);
 	        calendar.set(Calendar.HOUR_OF_DAY, anHour); // 24-hour clock
 	        calendar.set(Calendar.MINUTE, aMinute);
@@ -456,19 +456,51 @@ public abstract class PassFailJUnitTestCase implements JUnitTestCase {
 	}
 	
 	private static final long THRESHOLD = 5000;
+	private static String runMagic = "";
+	
+	private static String testerMagic = runMagic;
+
+	public static String getTesterMagic() {
+		return testerMagic;
+	}
+
+	public static void setTesterMagic(String testerMagic) {
+		PassFailJUnitTestCase.testerMagic = testerMagic;
+	}
+
+	public static String getRunMagic() {
+		return runMagic;
+	}
+
+	public static void setRunMagic(String runMagic) {
+		PassFailJUnitTestCase.runMagic = runMagic;
+	}
+
+	public static void setTesterRunMagic(String bewVal) {
+		PassFailJUnitTestCase.testerMagic = bewVal;
+	}
 	protected boolean canRunTestBasedOnTime() {
 		long aCurrentTime = startTime;
 		long aTimeToStart = getTimeToStart();
 		long aTimeToEnd = getTimeToEnd(); 
+//		Date aCurrentDate = new Date(aCurrentTime);
+//		Date aTimeToStartDate = new Date (aTimeToStart);
+//		Date aTimeEndDate = new Date (aTimeToEnd);
 		return aCurrentTime >=aTimeToStart - THRESHOLD &&
 				aCurrentTime <= aTimeToEnd + THRESHOLD;
 		
 	}
+	protected boolean cabRunTestBasedOnMagic() {
+		return getTesterMagic().equals(getRunMagic());
+	}
 	protected String  canRunTestMessage() {
-		if (!canRunTestBasedOnTime()) {
-			return "Cannot run test based on time of execution";
+		if (canRunTestBasedOnTime()) {
+			return null;
 		}
-		return null;
+		if (cabRunTestBasedOnMagic()) {
+			return null;
+		}
+		return "Cannot run test based on time of execution.\nGet magic password from instructor to run it earlier";
 	}
 	protected boolean showResult = true;
 	public boolean isShowResult() {

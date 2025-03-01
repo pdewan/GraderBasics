@@ -1185,6 +1185,25 @@ protected String requirementsLocation = null;
 	public void setLogTestData(boolean newVal) {
 		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.LOG_TEST_DATA, newVal);		
 	}
+	@Override
+	public boolean getLogSource() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.LOG_SOURCE, 
+				BasicStaticConfigurationUtils.DEFAULT_LOG_SOURCE);
+	}
+	@Override
+	public void setLogSource(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.LOG_SOURCE, newVal);		
+	}
+	
+	@Override
+	public boolean getLogOutput() {
+		return getBooleanProperty(BasicStaticConfigurationUtils.LOG_OUTPUT, 
+				BasicStaticConfigurationUtils.DEFAULT_LOG_OUTPUT);
+	}
+	@Override
+	public void setLogOutput(boolean newVal) {
+		runtimeGraderBooleanProperties.put(BasicStaticConfigurationUtils.LOG_OUTPUT, newVal);		
+	}
 	
 	@Override
 	public boolean getLoadClasses() {
