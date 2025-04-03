@@ -15,6 +15,7 @@ import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.output.observer.ValgrindRepetitionBasedPropertyChangeSelector;
 import grader.basics.output.observer.ValgrindTraceToPropertyChange;
+import grader.basics.output.observer.ValgrindTraceToPropertyChangeFactory;
 import grader.basics.output.observer.BasicPositiveOutputSelector;
 import grader.basics.output.observer.BasicValgrindTraceToPropertyChange;
 import grader.basics.output.observer.ObservablePrintStream;
@@ -40,7 +41,7 @@ public class ProducerConsumerOutput extends PassFailJUnitTestCase {
 		return valgrindTraceToPropertyChange;
 	}
 
-	ValgrindTraceToPropertyChange valgrindTraceToPropertyChange = new BasicValgrindTraceToPropertyChange();
+	ValgrindTraceToPropertyChange valgrindTraceToPropertyChange = ValgrindTraceToPropertyChangeFactory.getSingleton();
 
 	@Override
 	public TestCaseResult test(Project project, boolean autoGrade)
@@ -51,7 +52,7 @@ public class ProducerConsumerOutput extends PassFailJUnitTestCase {
 																										// be actually
 																										// output
 		ObservablePrintStream anObservablePrintStream = ObservablePrintStreamFactory.getObservablePrintStream();
-		valgrindTraceToPropertyChange = new BasicValgrindTraceToPropertyChange();
+		valgrindTraceToPropertyChange = ValgrindTraceToPropertyChangeFactory.getSingleton();
 		anObservablePrintStream.registerPropertyChangeConverter(valgrindTraceToPropertyChange);
 		anObservablePrintStream.addPropertyChangeListener(concurrentPropertyChangeSupport);
 		anObservablePrintStream.addPositiveSelector(new BasicPositiveOutputSelector());
