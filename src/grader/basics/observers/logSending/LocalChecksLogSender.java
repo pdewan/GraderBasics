@@ -3,18 +3,13 @@ package grader.basics.observers.logSending;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.Calendar;
 
 import analyzer.extension.timerTasks.LogNameManager;
@@ -25,8 +20,10 @@ public class LocalChecksLogSender {
 	private static long totalTimeTaken = 0;
 	private static long totalSends = 0;
 	private static final String TIME_STATISTICS_FILE_NAME = "timeStatistics.csv";
+//	private static final String reportURL=
+//			"https://us-east-1.aws.data.mongodb-api.com/app/rest-api-vsfoo/endpoint/add_log?db=studies&collection=dewan-localchecks";
 	private static final String reportURL=
-			"https://us-east-1.aws.data.mongodb-api.com/app/rest-api-vsfoo/endpoint/add_log?db=studies&collection=dewan-localchecks";
+			"https://lb4qj4y2suhukbhyrxmfy47qqe0ymmpf.lambda-url.us-east-1.on.aws?db=studies&collection=dewan-fall-2025";
 	private static final String password = "sYCUBa*shZKU4F-yxHrTk8D7FHo4xbBBV.-BK!-L";
 //	private static final String reportURL="https://us-south.functions.appdomain.cloud/api/v1/web/ORG-UNC-dist-seed-james_dev/cyverse/add-cyverse-log";
 	private static String lastLogFilePath = null;

@@ -17,15 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.print.attribute.HashAttributeSet;
-
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 
 import grader.basics.config.BasicExecutionSpecificationSelector;
 import grader.basics.junit.GradableJUnitSuite;
-import grader.basics.junit.GradableJUnitTest;
-import grader.basics.project.CurrentProjectHolder;
 import grader.basics.project.Project;
 import grader.basics.project.source.ABasicTextManager;
 import grader.basics.vetoers.AConsentFormVetoer;
